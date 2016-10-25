@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- This stylesheet contains specific styles for displaying the map
+         on this page. Replace it with your own styles as described in the
+         documentation:
+         https://developers.google.com/maps/documentation/javascript/tutorial -->
+   <style type="text/css">
+	  html, body { height: 100%; margin: 0; padding: 0; }
+	  #map { height: 100%; }
+	</style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        console.log("hello")
+        // var data = [[12.92908, 77.62474358081818],[12.930011939588985, 77.62474358081818],[12.931444516664055, 77.62464702129364],[12.932113746931863, 77.62368679046631],[12.934325331065297, 77.62361705303192],[12.931323157570429, 77.62162902432863],[12.925682788093471, 77.61667549610138],[12.923371785183274, 77.61576890945435]]
+        //var data = [[12.92908, 77.62474358081818],[12.92409332232521, 77.62592375278473],[12.921745704705058, 77.62393355369568],[12.924192664232187, 77.61876225471497],[12.923936466602155, 77.63002753257751]]
+        var data = [[12.9329359, 80.2305887],[12.9416037, 80.2362096],[12.9416037, 80.2362096],[12.9416037, 80.2362096]]
+
+        function get_coords(a) {
+        	return {lat: a[0], lng: a[1]}
+        }
+
+        var source = get_coords(data[0])
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: source,
+          scrollwheel: false,
+          zoom: 7
+        });
+
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+          map: map
+        });
+
+        w_data = data.slice(1, data.length -2)
+        waypoints = []
+
+        for (coord of w_data) {
+        	waypoints.push({location: get_coords(coord)})
+      }
+
+        console.log(waypoints)
+        // Set destination, origin and travel mode.
+        var request = {
+          destination: get_coords(data[data.length - 1]),
+          origin: source,
+          travelMode: 'DRIVING',
+          waypoints: waypoints
+        };
+
+        // Pass the directions request to the directions service.
+        var directionsService = new google.maps.DirectionsService();
+        directionsService.route(request, function(response, status) {
+          console.log(response)
+          if (status == 'OK') {
+            // Display the route on the map.
+            directionsDisplay.setDirections(response);
+          }
+        });
+      }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU&callback=initMap"
+        async defer></script>
+  </body>
+</html>
