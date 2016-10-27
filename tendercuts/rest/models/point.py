@@ -74,7 +74,8 @@ class AbstractMapPoint(models.Model):
 
 class Order(AbstractMapPoint):
     order_id = models.CharField(max_length=50, primary_key=True)
-    route = models.ForeignKey('route', null=True, related_name='orders')
+    route = models.ForeignKey('route', models.SET_NULL, null=True, related_name='orders')
+    route_order = models.IntegerField(default=0)
 
     @classmethod
     def from_dict(cls, data):
@@ -86,9 +87,8 @@ class Order(AbstractMapPoint):
         return self.route is not None
 
     def assign_route(self, route):
-#         self.route = route
         route.orders.add(self)
 
     def unassign_route(self):
-#         self.route = None
         self.route.orders.remove(self)
+        self.route = None

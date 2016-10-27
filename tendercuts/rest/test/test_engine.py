@@ -16,7 +16,7 @@ class TestEngine:
         assigned_orders = 0
         for route in routes:
             print(route.total_duration)
-            print (route.orders.all())
+            print (len(route.orders.all()))
             assert route.total_duration < 5400
             assigned_orders += len(route.points)
 

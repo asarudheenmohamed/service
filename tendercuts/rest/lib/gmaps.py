@@ -78,6 +78,7 @@ class GMaps(metaclass=Singleton):
         res = self._api.directions(origin=source,
                              destination=destination,
                              waypoints=waypoints)
+#         for source, destination, data in zip(query_set[:len(query_set) - 1], query_set[1:], res[0]['legs']):
 
         legs = []
         for source, destination, data in zip(route.points[:-1], route.points[1:], res[0]['legs']):
