@@ -15,7 +15,7 @@ class OrderTree(scipy.spatial.KDTree):
         setattr(self, func_name, self.__query)
 
     def _extract_coords(self, orders):
-        return [(order.x, order.y, order.z) for order in orders]
+        return [(order.location.x, order.location.y, order.location.z) for order in orders]
 
     def __query(self, x, k=1, eps=0, p=2, distance_upper_bound=np.inf):
 
@@ -121,7 +121,7 @@ class LocationIndexer:
     def get_nearby_orders(self, target_order,  radius=100, neighbours=30, exclude_assigned=True):
         neighbours += 1
 
-        input_coords = (target_order.x, target_order.y, target_order.z)
+        input_coords = (target_order.location.x, target_order.location.y, target_order.location.z)
         self.log.debug ("Computing nearby cordinates for order {}".format(
                 target_order))
         distances, indexes = self._tree.query(input_coords, k=neighbours, p=1)#, distance_upper_bound=radius)

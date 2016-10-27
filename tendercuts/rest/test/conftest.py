@@ -4,7 +4,7 @@ import pytest
 import googlemaps
 
 from rest.lib.indexer import LocationIndexer
-from rest.lib.models.point import Order
+from rest.models.point import Order
 
 
 @pytest.fixture

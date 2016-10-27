@@ -3,8 +3,7 @@ import logging
 
 import googlemaps
 
-from .models import route as model
-
+from rest.models import Leg
 
 class Singleton(type):
     _instances = {}
@@ -71,7 +70,7 @@ class GMaps(metaclass=Singleton):
         return model.Leg.from_gmaps_data(source, destination, data)
 
     def get_route(self, route):
-        coords = [(order.lat, order.long) for order in route.points]
+        coords = [(order.location.lat, order.location.long) for order in route.points]
         source = coords[0]
         destination = coords[-1]
         waypoints = coords[1:-1]
@@ -82,7 +81,9 @@ class GMaps(metaclass=Singleton):
 
         legs = []
         for source, destination, data in zip(route.points[:-1], route.points[1:], res[0]['legs']):
-            legs.append(model.Leg.from_gmaps_data(source, destination, data))
+            duration = data['duration']['value']
+            distance = data['distance']['value']
+            legs.append(Leg(source=source, destination=destination, duration=duration, distance=distance))
 
         return legs
 

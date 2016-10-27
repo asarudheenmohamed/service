@@ -5,7 +5,7 @@ import time
 import numpy
 import scipy.spatial
 
-from .models import route as models
+from rest.models import Route, Leg
 from .indexer import LocationIndexer
 from .gmaps import GMaps
 
@@ -19,8 +19,9 @@ class Engine:
         self._gapi = GMaps()
 
     def generate_route(self, orders ,indexer):
-        route = models.PseudoRoute(self.distribution_center)
-
+        route = Route()
+        route.save()
+        route.points.append(self.distribution_center)
 
         neighbours = 6 ## Hack!! Needs to derived from route
 
@@ -32,10 +33,12 @@ class Engine:
         # done.
         while nearby_orders:
             time = distances[0] * 60
-            if not route.can_add(time):
+            leg = Leg(source=route.latest_stop, destination=nearby_orders[0], duration=time, distance=distances[0])
+            if not route.can_add(leg):
                 break
 
-            route.add_point(nearby_orders[0], distances[0])
+
+            route.add_leg(leg)
             distances, nearby_orders = indexer.get_nearby_orders(
                 route.latest_stop,
                 neighbours=neighbours)
@@ -54,7 +57,7 @@ class Engine:
             print ("Time take to compute a pseudo route {}".format(end_time - start_time))
 
             start_time = time.time()
-            route = models.Route.from_psuedo_route(pseudo_route, self._gapi)
+            route = Route.from_psuedo_route(pseudo_route, self._gapi)
             end_time = time.time()
 #             print ("Time take to compute a route {}".format(end_time - start_time))
             routes.append(route)

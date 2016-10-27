@@ -3,7 +3,6 @@ import pprint
 import collections
 import json
 
-from ..models.magento import ShippingAddress, SalesOrder
 
 
 class MockSource():

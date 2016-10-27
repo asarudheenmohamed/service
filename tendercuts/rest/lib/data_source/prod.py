@@ -4,7 +4,7 @@ import collections
 import json
 import logging
 
-from rest.lib.models.point import Order
+from rest.models.point import Order
 
 class TenderCuts():
 

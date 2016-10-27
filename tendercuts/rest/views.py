@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from rest.lib.models.point import DistributionCenter
+# from rest.lib.models.point import DistributionCenter
 from rest.lib.engine import Engine
 
 # Create your views here.
 
 from django.http import HttpResponse
-from rest.lib.models.point import Order
+from rest.models.point import Order
 import rest.lib.store
 from rest_framework.views import APIView
 from rest_framework.response import Response

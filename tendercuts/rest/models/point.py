@@ -1,7 +1,6 @@
 from django.db import models
 import math
 
-
 class GeoCoordinate(object):
 
     def __init__(self, lat, long):
@@ -66,9 +65,8 @@ class GeoCoordinateField(models.CharField):
     def get_prep_value(self, value):
         return ','.join([str(value.lat),str(value.long)])
 
-
 class AbstractMapPoint(models.Model):
-    coordinates = GeoCoordinateField()
+    location = GeoCoordinateField()
     class Meta:
         app_label="rest"
         abstract = True
@@ -81,14 +79,16 @@ class Order(AbstractMapPoint):
     @classmethod
     def from_dict(cls, data):
         geo = GeoCoordinate(data['lat'], data['long'])
-        return cls(coordinates=geo)
+        return cls.objects.create(order_id=data['id'], location=geo)
 
-#     @property
-#     def is_assigned(self):
-#         return self._route is not None
-#
-#     def assign_route(self, route):
-#         self._route = route
-#
-#     def unassign_route(self):
-#         self._route = None
+    @property
+    def is_assigned(self):
+        return self.route is not None
+
+    def assign_route(self, route):
+#         self.route = route
+        route.orders.add(self)
+
+    def unassign_route(self):
+#         self.route = None
+        self.route.orders.remove(self)
