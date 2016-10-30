@@ -2,10 +2,14 @@
 from rest.lib.engine import Engine
 import rest.models as models
 import pytest
+import logging
 
 class TestEngine:
     @pytest.mark.django_db
     def test_kora(self, orders):
+        FORMAT = 'TEST %(message)s'
+        logging.basicConfig(format=FORMAT)
+        logging.getLogger().setLevel(logging.DEBUG)
         dist = orders[0]
 
         eng = Engine(dist)
@@ -15,12 +19,9 @@ class TestEngine:
         # check if all orders area assigned
         assigned_orders = 0
         for route in routes:
-            print(route.total_duration)
-            print (len(route.orders.all()))
             assert route.total_duration < 5400
             assigned_orders += len(route.points)
 
         # Each route will start with the distribution center
         assert assigned_orders == len(orders[1:]) + len(routes)
-        print (models.Order.objects.all()[0].route)
 

@@ -20,11 +20,8 @@ class Engine:
 
     def generate_route(self, orders ,indexer):
 
-        route = Route.objects.create(route_type=RouteType.PseudoRoute)
-        route.points.append(self.distribution_center)
-        route.orders.add(self.distribution_center)
-#         self.distribution_center.route_order = 0
-#         route._counter += 1
+        route = Route.objects.create(source=self.distribution_center,
+                                     route_type=RouteType.PseudoRoute)
 
         neighbours = 6 ## Hack!! Needs to derived from route
 
@@ -36,7 +33,12 @@ class Engine:
         # done.
         while nearby_orders:
             time = distances[0] * 60
-            leg = Leg(source=route.latest_stop, destination=nearby_orders[0], duration=time, distance=distances[0])
+            leg = Leg(
+                    source=route.latest_stop,
+                    destination=nearby_orders[0],
+                    duration=time,
+                    distance=distances[0])
+
             if not route.can_add(leg):
                 break
 
@@ -53,17 +55,17 @@ class Engine:
         routes = []
         all_done = False
         while not all_done:
+
             start_time = time.time()
             pseudo_route = self.generate_route(orders, self._location_indexer)
             end_time = time.time()
-            print ("Time take to compute a pseudo route {}".format(end_time - start_time))
-#             import pdb
-#             pdb.set_trace()
+            self.log.debug("Time take to compute a pseudo route {}".format(end_time - start_time))
 
             start_time = time.time()
             route = Route.from_psuedo_route(pseudo_route, self._gapi)
             end_time = time.time()
-#             print ("Time take to compute a route {}".format(end_time - start_time))
+            self.log.debug("Time take to compute a route {}".format(end_time - start_time))
+
             routes.append(route)
             all_done = [order.is_assigned for order in orders]
             all_done = all(all_done)

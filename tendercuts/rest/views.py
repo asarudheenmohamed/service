@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest.lib.store.orders import OrderStore
 from rest.lib.data_source.mock import MockSource
 from rest.lib.data_source.prod import TenderCuts
+from . import serializers
 
 import random
 import time
@@ -68,31 +69,28 @@ def make_orders():
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-
 class RestApi(APIView):
     # @ensure_csrf_cookie
     def get(self, request):
         start_time = time.time()
-
-        # store = OrderStore(TenderCuts())
-        # orders = store.fetch()
         orders = make_orders()
 
-        dist = DistributionCenter(0, 12.9329359, 80.2305887)
+        dist = orders[0]#DistributionCenter(0, 12.9329359, 80.2305887)
 
         eng = Engine(dist)
-        routes = eng.generate_routes(orders)
-        routes = [r.as_dict() for r in routes]
-        end_time = time.time()
-        count = 0
-        for route in routes:
-            count += len(route['orders'])
+        routes = eng.generate_routes(orders[1:])
 
 
-        print ("===============")
-        print (len(routes))
-        print (count)
-        print (end_time - start_time)
+        serializer= serializers.RouteSerializer(routes, many=True)
 
-        return Response({'route': routes})
 
+        return Response(serializer.data)
+
+from rest_framework import viewsets
+
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
+    queryset = Order.objects.all()
+    serializer_class = serializers.OrderSerializer

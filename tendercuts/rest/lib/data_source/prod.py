@@ -5,6 +5,7 @@ import json
 import logging
 
 from rest.models.point import Order
+from rest.constants import REDIS
 
 class TenderCuts():
 
@@ -33,25 +34,38 @@ class TenderCuts():
         self.log = log or logging.getLogger()
 
 
-    def fetch(self):
+    def _fetch(self):
+        from_ = '2016-10-29 08:00:41',
+        to_ = '2016-10-29 19:00:43'
         orders = self._api.sales_order.list({
                 "created_at": {
-                    "from":'2016-10-21 08:00:41',
-                    "to": '2016-10-22 19:00:43'
+                    "from": from_,
+                    "to": to_
                     },
-                "status": {"in": ['completed']}
+                "status": {"in": ['processing']}
              })
+
+        self.log.info("Got {} orders for the time period {} - {}".format(
+            len(orders), from_ , to_))
 
         increment_ids = {}
         for ord in orders:
             ord = self.__class__.MagentoOrder(**ord)
             increment_ids[ord.increment_id] = ord
 
-
         pending_orders = []
         for inc_id, ord in increment_ids.items():
             info = self._api.sales_order.info({'increment_id': inc_id})
             ord.shipping = info['shipping_address']
+            pending_orders.append(ord)
+
+        return pending_orders
+
+    def fetch(self):
+        orders = self._fetch()
+
+        pending_orders = []
+        for ord in orders:
             add = ord.shipping['street']
             add = add.split('\n')[0]
             resp = self.gapi.geocode(add,
@@ -69,9 +83,31 @@ class TenderCuts():
 
             pending_orders.append(Order(ord.order_id, ord.lat, ord.long))
 
-
         return pending_orders
 
+    def cache_addresses(self, cache):
+        orders = self._fetch()
+
+        for ord in orders:
+            print (ord)
+            add = ord.shipping['street']
+            add = add.split('\n')[0]
+            resp = self.gapi.geocode(add)
+#                     components={'postal_code': ord.shipping['postcode']})
+
+            try:
+                data = resp[0]['geometry']['location']
+                ord.lat = data['lat']
+                ord.long = data['lng']
+
+                key = "{}:{}".format(
+                        REDIS.SHIPPING_ADRRESS.value,
+                        ord.shipping_address_id)
+
+                value = "{},{}".format(ord.lat, ord.long)
+                cache.set(key, value)
+            except Exception as e:
+                self.log.exception("Unable to resolve {}".format(ord.shipping))
 
     def dump(self):
         orders = self.fetch()

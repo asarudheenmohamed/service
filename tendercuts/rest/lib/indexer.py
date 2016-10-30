@@ -103,6 +103,7 @@ class OrderTree(scipy.spatial.KDTree):
         else:
             return sorted([((-d)**(1./p),i) for (d,i) in neighbors])
 
+
 class LocationIndexer:
     def __init__(self, orders, log=None):
         """
@@ -123,7 +124,7 @@ class LocationIndexer:
 
         input_coords = (target_order.location.x, target_order.location.y, target_order.location.z)
         self.log.debug ("Computing nearby cordinates for order {}".format(
-                target_order))
+                target_order.order_id))
         distances, indexes = self._tree.query(input_coords, k=neighbours, p=1)#, distance_upper_bound=radius)
 
         if type(distances) is not np.ndarray:

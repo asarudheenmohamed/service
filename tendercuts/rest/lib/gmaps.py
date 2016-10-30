@@ -75,16 +75,20 @@ class GMaps(metaclass=Singleton):
         destination = coords[-1]
         waypoints = coords[1:-1]
 
+        self.log.debug("Generating legs from Route {} containing {} orders".format(
+                route, len(coords)))
+
         res = self._api.directions(origin=source,
                              destination=destination,
                              waypoints=waypoints)
-#         for source, destination, data in zip(query_set[:len(query_set) - 1], query_set[1:], res[0]['legs']):
 
         legs = []
         for source, destination, data in zip(route.points[:-1], route.points[1:], res[0]['legs']):
             duration = data['duration']['value']
             distance = data['distance']['value']
             legs.append(Leg(source=source, destination=destination, duration=duration, distance=distance))
+
+        self.log.debug("Generated {} legs for {} route".format(len(legs), route))
 
         return legs
 

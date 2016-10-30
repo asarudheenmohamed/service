@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pytest
 import googlemaps
+import logging
 
 from rest.lib.indexer import LocationIndexer
 from rest.models.point import Order
@@ -41,10 +42,12 @@ def orders():
         ]
 
     for order_id, cord in enumerate(coords):
-        model = Order.from_dict({'id': order_id,
+        model = Order.from_dict({'id': str(order_id),
                               'lat': cord[0],
                               'long': cord[1]})
         orders.append(model)
+
+    logging.debug("Generating test data for {} orders".format(len(orders)))
 
     return orders
 
@@ -67,7 +70,6 @@ def distance_between():
                     departure_time=now,
                     mode="driving")
 
-        print (response)
         data = response['rows'][0]['elements'][0]
 
         return data['distance']['value'], data['duration_in_traffic']['value']

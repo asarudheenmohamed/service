@@ -19,9 +19,7 @@ class GeoCoordinates(TestCase):
     def test_model_fetch(self):
         """Animals that can speak are correctly identified"""
         data = Order.objects.get(order_id="1")
-        print (data.coordinates)
         assert data.coordinates.lat == 1.1
-        print (data.coordinates.x)
 #         self.assertEqual(lion.speak(), 'The lion says "roar"')
 
     def test_leg(self):

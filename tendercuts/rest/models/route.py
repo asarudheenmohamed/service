@@ -23,13 +23,9 @@ class Route(models.Model):
 
     @classmethod
     def from_psuedo_route(cls, psuedo_route, gapi):
-#         gapi = gmaps.GMaps()
         legs = gapi.get_route(psuedo_route)
-        route = cls.objects.create()
-        route.orders.add(legs[0].source)
-#         route._counter += 1
-        route.points.append(legs[0].source)
-        legs[0].source.route = route
+
+        route = cls.objects.create(source=legs[0].source)
 
         for i, leg in enumerate(legs):
             if route.can_add(leg):
@@ -42,24 +38,24 @@ class Route(models.Model):
             for leg in legs[i:]:
                 leg.destination.unassign_route()
 
-#         Finally add the last leg from last order to distribution center
-#         final_leg = gapi.get_distance_between(route.latest_stop, route.start_point)
-#         route.add_leg(final_leg)
-        psuedo_route.delete()
+        route.commit()
 
         return route
 
-    def __init__(self, route_type=RouteType.Route, *args, **kwargs):
+    def __init__(self, *args, source=None, route_type=RouteType.Route, **kwargs):
         super().__init__(*args, **kwargs)
         self.route_type = route_type
         self.points = []
-        self._counter = 0
+
+        # Source
+        if source:
+            self._add_order(source)
 
     def can_add(self, leg):
         """
         Duration in seconds
         """
-        if len(self.orders.all()) == 1:
+        if len(self.points) == 1:
             return True
 
         return self.total_duration + leg.duration + self.point_buffer <= self.max_capacity
@@ -68,6 +64,7 @@ class Route(models.Model):
     def max_capacity(self):
         if self.route_type == RouteType.Route:
             return  90 * 60
+
         return  180 * 60
 
     @property
@@ -77,75 +74,23 @@ class Route(models.Model):
     @property
     def latest_stop(self):
         return self.points[-1]
-#          return self.orders.all().last()
 
     def add_leg(self, leg):
-        if self.latest_stop != leg.source:
+        if self.latest_stop.order_id != leg.source.order_id:
+#             print (self.latest_stop.__dict__, leg.source.__dict__)
             raise InvalidLeg
 
-        self.points.append(leg.destination)
-        leg.destination.assign_route(self)
-        leg.destination.route_order = self._counter
-        self._counter += 1
+        self._add_order(leg.destination)
 
         self.total_distance += leg.distance
         self.total_duration += leg.duration + self.point_buffer
-# class PseudoRoute(AbstractRoute):
-#     @property
-#     def max_capacity(self):
-#         return 180 * 60
-#
-#     def add_point(self, order, distance):
-#         time = distance * 60
-#         leg = Leg(self.latest_stop, order, distance, time)
-#         super().add_leg(leg)
-#
-#
-# class Route(AbstractRoute):
-#     @classmethod
-#     def from_psuedo_route(cls, psuedo_route, gapi):
-# #         gapi = gmaps.GMaps()
-#         legs = gapi.get_route(psuedo_route)
-#         route = cls(legs[0].source)
-#         for i, leg in enumerate(legs):
-#             if route.can_add(leg):
-#                 route.add_leg(leg)
-#             else:
-#                 break
-#         # reset the assigned flag
-#         if i != len(legs) - 1:
-#             for leg in legs[i:]:
-#                 leg.destination.unassign_route()
-#
-# #         Finally add the last leg from last order to distribution center
-# #         final_leg = gapi.get_distance_between(route.latest_stop, route.start_point)
-# #         route.add_leg(final_leg)
-#
-#         return route
-#
-#     @property
-#     def max_capacity(self):
-#         return 90 * 60
-#
-#     def can_add(self, leg):
-#         return super().can_add(leg.duration)
-#
-#     def as_dict(self):
-#         data = {'route_duration': self.total_duration,
-#                 'route_distance': self.total_distance,
-#                 'orders': []}
-#
-#
-#         for order in self.points:
-#             data['orders'].append({
-#                     "order_id": order.id,
-#                     "order_lat": order.lat,
-#                     "order_long": order.long,
-#                 })
-#
-#         return data
-#
-#
 
+    def _add_order(self, order):
+        self.points.append(order)
+        order.assign_route(self)
 
-
+    def commit(self):
+        for i, order in enumerate(self.points):
+            order.route_order = i
+            order.save()
+            self.orders.add(order)
