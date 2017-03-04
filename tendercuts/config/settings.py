@@ -119,9 +119,9 @@ DATABASES = {
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dbmaster',
+        'NAME': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
         'PORT': '3306',
 
