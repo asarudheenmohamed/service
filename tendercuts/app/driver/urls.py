@@ -1,0 +1,16 @@
+from django.conf.urls import url, include
+
+from . import views
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as rest_framework_views
+
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+# only viewset have to be registered!!
+router.register(r'account', views.DriverViewSet)
+
+urlpatterns = [
+   url(r'', include(router.urls)),
+   url(r'orders', views.DriverSalesOrderViewSet.as_view()),
+   url(r'complete_order', views.OrderCompleteApi.as_view())
+]

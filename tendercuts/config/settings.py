@@ -25,7 +25,14 @@ SECRET_KEY = 'pb#ie&)83+5_0-yo0@62@sx2kr0l=&j4u2q+%axw(@3=*#0^qk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["testserver", "localhost"]
+
+# AUTH_USER_MODEL = 'driver.DriverManagement'
+AUTHENTICATION_BACKENDS = (
+    # 'driver.auth.DriverAuthBackend', 
+    'django.contrib.auth.backends.ModelBackend', 
+)
+DATABASE_ROUTERS = ['config.db.DBRouter']
 
 
 # Application definition
@@ -37,20 +44,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'corsheaders',
+    'rest_framework',
     'django_extensions',
-    'rest'
+    'app.driver'
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
-    'PAGE_SIZE': 10
-}
-
-REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        # 'driver.auth.DriverAuthentication', 
+        #'rest_framework.authentication.TokenAuthentication',
         # ...
     ),
 }
@@ -68,10 +73,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ALLOW_CREDENTIALS = True
 
-# CORS_ORIGIN_REGEX_WHITELIST = ('.*', )
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_REGEX_WHITELIST = ('.*', )
 
 
 TEMPLATES = [
@@ -96,10 +101,30 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'services',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+
+    },
+    'magento': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dbmaster',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+
     }
 }
 
