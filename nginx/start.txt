@@ -1,0 +1,3 @@
+sudo ln -s /etc/nginx/sites-available/sample /etc/nginx/sites-enabled
+sudo service nginx configtest && sudo service nginx restart
+

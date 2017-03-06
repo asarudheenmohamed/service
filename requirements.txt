@@ -1,0 +1,19 @@
+# virtualenv
+# virtualenvwrapper
+# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+uwsgi
+django
+# Appcongi
+django_extensions
+djangorestframework
+django-cors-headers
+enum
+
+pytest
+pytest-django
+googlemaps
+
+# sudo apt-get install libmysqlclient-dev
+MySQL-python
+python-magento
+

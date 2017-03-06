@@ -25,7 +25,7 @@ SECRET_KEY = 'pb#ie&)83+5_0-yo0@62@sx2kr0l=&j4u2q+%axw(@3=*#0^qk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["testserver", "localhost"]
+ALLOWED_HOSTS = ["testserver", "localhost", "staging.tendercuts.in"]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
 AUTHENTICATION_BACKENDS = (
@@ -112,14 +112,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'services',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
         'PORT': '3306',
 
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'localhost',
+        'NAME': 'v2',
         'USER': 'root',
         'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',

@@ -1,0 +1,15 @@
+# /etc/nginx/sites-available/sample
+server {
+    listen 82;
+    server_name staging.tendercuts.in;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/django/api/tendercuts;
+    }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/home/django/api/tendercuts/sample.sock;
+    }
+}
