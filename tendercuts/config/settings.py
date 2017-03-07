@@ -112,16 +112,18 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'services',
         'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
+        # 'PASSWORD': '!qazmlp)5',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
 
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v2',
+        'NAME': 'dbmaster',
         'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
+        'PASSWORD': 'root',
+        # 'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
         'PORT': '3306',
 

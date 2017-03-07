@@ -5,24 +5,25 @@ from app.tcuts.models import DriverManagement
 from django.db import models
 from app.tcuts import models as tcuts
 from django.contrib.auth.models import User
+import math
 
 
 class GeoCoordinate(object):
 
     def __init__(self, lat, lng):
         self.lat = lat
-        self.long = lng
+        self.lng = lng
 
-        self.x, self.y,  self.z = self._generate_cartesian_coords()
+        self.x, self.y, self.z = self._generate_cartesian_coords()
 
     def _generate_cartesian_coords(self):
-        lat, long = float(self.lat), float(self.long)
+        lat, lng = float(self.lat), float(self.lng)
 
-        lat, long = math.radians(lat), math.radians(long)
+        lat, lng = math.radians(lat), math.radians(lng)
         R = 6373  # radius of earth
 
-        x = R * math.cos(lat) * math.cos(long)
-        y = R * math.cos(lat) * math.sin(long)
+        x = R * math.cos(lat) * math.cos(lng)
+        y = R * math.cos(lat) * math.sin(lng)
         z = R * math.sin(lat)
 
         return x, y, z
@@ -68,11 +69,18 @@ class GeoCoordinateField(models.CharField):
         return self.parse_coord(value)
 
     def get_prep_value(self, value):
-        return ','.join([str(value.lat),str(value.long)])
+        value = self.parse_coord(value)
+        return ','.join([str(value.lat),str(value.lng)])
 
 
 class DriverLocation(models.Model):
     row_id = models.AutoField(primary_key=True)
-    driver = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     updated = models.DateTimeField(auto_now=True)
     location = GeoCoordinateField()
+
+    @property
+    def driver(self):
+        driver = tcuts.DriverManagement.objects.filter(phone=self.user.username)
+        return driver[0]
+

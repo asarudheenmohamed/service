@@ -1,4 +1,4 @@
-import driver.core.magento_api as mage
+import app.tcuts.core.magento_api as mage
 import pytest
 import types
 

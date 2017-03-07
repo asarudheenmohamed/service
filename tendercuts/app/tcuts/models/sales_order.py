@@ -9,41 +9,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from .driver_models import DriverManagement
-
-class SalesFlatOrderAddress(models.Model):
-    entity_id = models.AutoField(primary_key=True)
-    # parent = models.ForeignKey(SalesFlatOrder, models.DO_NOTHING, blank=True, null=True, related_name="shipping_address")
-    customer_address_id = models.IntegerField(blank=True, null=True)
-    quote_address_id = models.IntegerField(blank=True, null=True)
-    region_id = models.IntegerField(blank=True, null=True)
-    customer_id = models.IntegerField(blank=True, null=True)
-    fax = models.CharField(max_length=255, blank=True, null=True)
-    region = models.CharField(max_length=255, blank=True, null=True)
-    postcode = models.CharField(max_length=255, blank=True, null=True)
-    lastname = models.CharField(max_length=255, blank=True, null=True)
-    street = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    telephone = models.CharField(max_length=255, blank=True, null=True)
-    country_id = models.CharField(max_length=2, blank=True, null=True)
-    firstname = models.CharField(max_length=255, blank=True, null=True)
-    address_type = models.CharField(max_length=255, blank=True, null=True)
-    prefix = models.CharField(max_length=255, blank=True, null=True)
-    middlename = models.CharField(max_length=255, blank=True, null=True)
-    suffix = models.CharField(max_length=255, blank=True, null=True)
-    company = models.CharField(max_length=255, blank=True, null=True)
-    vat_id = models.TextField(blank=True, null=True)
-    vat_is_valid = models.SmallIntegerField(blank=True, null=True)
-    vat_request_id = models.TextField(blank=True, null=True)
-    vat_request_date = models.TextField(blank=True, null=True)
-    vat_request_success = models.SmallIntegerField(blank=True, null=True)
-    giftregistry_item_id = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sales_flat_order_address'
-        app_label = "magento"
-
+from .store import CoreStore
 
 class SalesFlatOrder(models.Model):
     entity_id = models.AutoField(primary_key=True)
@@ -289,8 +255,8 @@ class SalesFlatOrder(models.Model):
     base_customercredit_shipping_hidden_tax = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
     customercredit_shipping_hidden_tax = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
 
+    store = models.ForeignKey(CoreStore, models.DO_NOTHING, blank=True, null=True)
     # removing it till a time comes to integrate this
-    # store = models.ForeignKey('CoreStore', models.DO_NOTHING, blank=True, null=True)
     # customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
 
     # Replace these ID fields with models
@@ -304,12 +270,17 @@ class SalesFlatOrder(models.Model):
     # name, can be changed by db_colum
     # https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.to_field
     driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
-    shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
+    # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'sales_flat_order'
         app_label = "magento"
+
+    @property
+    def is_cod(self):
+        return self.payment.all()[0].method == "cashondelivery"
+
 
 
 class SalesFlatOrderItem(models.Model):
@@ -428,3 +399,111 @@ class SalesFlatOrderItem(models.Model):
         db_table = 'sales_flat_order_item'
         app_label = "magento"
 
+
+class SalesFlatOrderAddress(models.Model):
+    entity_id = models.AutoField(primary_key=True)
+    parent = models.ForeignKey(SalesFlatOrder, models.DO_NOTHING, blank=True, null=True, related_name="shipping_address")
+    customer_address_id = models.IntegerField(blank=True, null=True)
+    quote_address_id = models.IntegerField(blank=True, null=True)
+    region_id = models.IntegerField(blank=True, null=True)
+    customer_id = models.IntegerField(blank=True, null=True)
+    fax = models.CharField(max_length=255, blank=True, null=True)
+    region = models.CharField(max_length=255, blank=True, null=True)
+    postcode = models.CharField(max_length=255, blank=True, null=True)
+    lastname = models.CharField(max_length=255, blank=True, null=True)
+    street = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
+    telephone = models.CharField(max_length=255, blank=True, null=True)
+    country_id = models.CharField(max_length=2, blank=True, null=True)
+    firstname = models.CharField(max_length=255, blank=True, null=True)
+    address_type = models.CharField(max_length=255, blank=True, null=True)
+    prefix = models.CharField(max_length=255, blank=True, null=True)
+    middlename = models.CharField(max_length=255, blank=True, null=True)
+    suffix = models.CharField(max_length=255, blank=True, null=True)
+    company = models.CharField(max_length=255, blank=True, null=True)
+    vat_id = models.TextField(blank=True, null=True)
+    vat_is_valid = models.SmallIntegerField(blank=True, null=True)
+    vat_request_id = models.TextField(blank=True, null=True)
+    vat_request_date = models.TextField(blank=True, null=True)
+    vat_request_success = models.SmallIntegerField(blank=True, null=True)
+    giftregistry_item_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sales_flat_order_address'
+        app_label = "magento"
+
+
+class SalesFlatOrderPayment(models.Model):
+    entity_id = models.AutoField(primary_key=True)
+    parent = models.ForeignKey(SalesFlatOrder, models.DO_NOTHING, related_name='payment')
+    base_shipping_captured = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    shipping_captured = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_refunded = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_paid = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_canceled = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_authorized = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_paid_online = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_refunded_online = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_shipping_amount = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    shipping_amount = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_paid = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_authorized = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_ordered = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_shipping_refunded = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    shipping_refunded = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_refunded = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_ordered = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_amount_canceled = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    quote_payment_id = models.IntegerField(blank=True, null=True)
+    additional_data = models.TextField(blank=True, null=True)
+    cc_exp_month = models.CharField(max_length=255, blank=True, null=True)
+    cc_ss_start_year = models.CharField(max_length=255, blank=True, null=True)
+    echeck_bank_name = models.CharField(max_length=255, blank=True, null=True)
+    method = models.CharField(max_length=255, blank=True, null=True)
+    cc_debug_request_body = models.CharField(max_length=255, blank=True, null=True)
+    cc_secure_verify = models.CharField(max_length=255, blank=True, null=True)
+    protection_eligibility = models.CharField(max_length=255, blank=True, null=True)
+    cc_approval = models.CharField(max_length=255, blank=True, null=True)
+    cc_last4 = models.CharField(max_length=255, blank=True, null=True)
+    cc_status_description = models.CharField(max_length=255, blank=True, null=True)
+    echeck_type = models.CharField(max_length=255, blank=True, null=True)
+    cc_debug_response_serialized = models.CharField(max_length=255, blank=True, null=True)
+    cc_ss_start_month = models.CharField(max_length=255, blank=True, null=True)
+    echeck_account_type = models.CharField(max_length=255, blank=True, null=True)
+    last_trans_id = models.CharField(max_length=255, blank=True, null=True)
+    cc_cid_status = models.CharField(max_length=255, blank=True, null=True)
+    cc_owner = models.CharField(max_length=255, blank=True, null=True)
+    cc_type = models.CharField(max_length=255, blank=True, null=True)
+    po_number = models.CharField(max_length=255, blank=True, null=True)
+    cc_exp_year = models.CharField(max_length=255, blank=True, null=True)
+    cc_status = models.CharField(max_length=255, blank=True, null=True)
+    echeck_routing_number = models.CharField(max_length=255, blank=True, null=True)
+    account_status = models.CharField(max_length=255, blank=True, null=True)
+    anet_trans_method = models.CharField(max_length=255, blank=True, null=True)
+    cc_debug_response_body = models.CharField(max_length=255, blank=True, null=True)
+    cc_ss_issue = models.CharField(max_length=255, blank=True, null=True)
+    echeck_account_name = models.CharField(max_length=255, blank=True, null=True)
+    cc_avs_status = models.CharField(max_length=255, blank=True, null=True)
+    cc_number_enc = models.CharField(max_length=255, blank=True, null=True)
+    cc_trans_id = models.CharField(max_length=255, blank=True, null=True)
+    paybox_request_number = models.CharField(max_length=255, blank=True, null=True)
+    address_status = models.CharField(max_length=255, blank=True, null=True)
+    additional_information = models.TextField(blank=True, null=True)
+    cybersource_token = models.CharField(max_length=255, blank=True, null=True)
+    flo2cash_account_id = models.CharField(max_length=255, blank=True, null=True)
+    ideal_issuer_id = models.CharField(max_length=255, blank=True, null=True)
+    ideal_issuer_title = models.CharField(max_length=255, blank=True, null=True)
+    ideal_transaction_checked = models.IntegerField(blank=True, null=True)
+    paybox_question_number = models.CharField(max_length=255, blank=True, null=True)
+    ccforpos_ref_no = models.CharField(max_length=255)
+    cp1forpos_ref_no = models.CharField(max_length=255)
+    cp2forpos_ref_no = models.CharField(max_length=255)
+    codforpos_ref_no = models.CharField(max_length=255)
+    cashforpos_ref_no = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'sales_flat_order_payment'
+        app_label = "magento"

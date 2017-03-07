@@ -1,4 +1,4 @@
-import driver.models as models
+import app.driver.models as models
 
 def test_fetch_driver():
     magento_user = models.DriverManagement.objects.filter(phone="9908765678")

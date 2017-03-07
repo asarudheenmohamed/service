@@ -9,8 +9,8 @@ settings.DATABASES = DATABASES
 
 django.setup()
 
-#tables = ["driver_management"]
-tables = ["sales_flat_order", "sales_flat_order_address", "sales_flat_order_item"]
+tables = ["sales_flat_order_payment"]
+# tables = ["sales_flat_order", "sales_flat_order_address", "sales_flat_order_item"]
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
     database='magento',

@@ -8,9 +8,12 @@ from rest_framework.authtoken import views as rest_framework_views
 router = DefaultRouter()
 # only viewset have to be registered!!
 router.register(r'account', views.DriverViewSet)
+router.register(r'location', views.DriverLocationViewSet, base_name="DriverLocation")
 
 urlpatterns = [
    url(r'', include(router.urls)),
+   url(r'home', views.HomePageView.as_view()),
    url(r'orders', views.DriverSalesOrderViewSet.as_view()),
-   url(r'complete_order', views.OrderCompleteApi.as_view())
+   url(r'complete_order', views.OrderCompleteApi.as_view()),
+   url(r'sfx_update', views.ShadowFaxUpdate.as_view())
 ]

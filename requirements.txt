@@ -17,3 +17,4 @@ googlemaps
 MySQL-python
 python-magento
 
+celery
