@@ -1,5 +1,7 @@
 import os
 import django
+import pytest
+
 from django.conf import settings
 
 # We manually designate which settings we will be using in an environment variable
@@ -18,3 +20,8 @@ def pytest_configure():
     django.setup()
     # Note: In Django =< 1.6 you'll need to run this instead
     # settings.configure()
+
+
+@pytest.yield_fixture(scope='session')
+def django_db_setup():
+    yield

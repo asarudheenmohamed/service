@@ -25,13 +25,17 @@ class ShadowFaxDriverController(DriverController):
             if len(queryset) > 0:
                 continue
 
-            responses.append(ShadowFaxRequest(order).create_order())
+            try:
+                responses.append(ShadowFaxRequest(order).create_order())
+            except Exception as e:
+                print (str(e))
 
         return responses
 
     def update_order(self, data):
         try:
             response = ShadowFaxDriverCallbackResponse(data)
+            print (response)
             response.to_model().save()
         except Exception as e:
             raise ValueError(str(e))

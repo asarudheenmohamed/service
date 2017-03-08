@@ -8,15 +8,17 @@ def order_id(generate_mock_order):
     return generate_mock_order
 
 
+@pytest.mark.django_db
 @pytest.mark.incremental
 class TestFetchOrder():
+    @pytest.mark.django_db
     def test_mock_order_create(self, order_id):
         # move the order to out_delivery and assign a driver
         sales_order = models.SalesFlatOrder.objects.filter(increment_id=order_id)
         assert sales_order[0]
 
         sales_order = sales_order[0]
-        sales_order.driver_id = 2
+        sales_order.driver_id = 7
         sales_order.status = "out_delivery"
         # sales_order.status = "processing"
         sales_order.save()

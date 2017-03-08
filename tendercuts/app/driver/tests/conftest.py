@@ -54,8 +54,8 @@ def generate_mock_order(conn):
     cart_id = api.cart.create("7")
 
     # customer = api.customer.info(16654)
-    # customer = api.customer.info(16034)
-    customer = api.customer.info(18963)
+    customer = api.customer.info(16034)
+    # customer = api.customer.info(18963)
     customer['mode'] = 'customer'
     api.cart_customer.set(cart_id, customer)
 
