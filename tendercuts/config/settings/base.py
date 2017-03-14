@@ -22,9 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pb#ie&)83+5_0-yo0@62@sx2kr0l=&j4u2q+%axw(@3=*#0^qk'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ["testserver", "localhost", "staging.tendercuts.in"]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
@@ -44,14 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'rest_framework',
-    'django_extensions',
-    'app.driver'
+    'app.tcuts',
+    'app.driver',
+    'app.login'
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'driver.auth.DriverAuthentication', 
@@ -96,37 +95,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'services',
-        'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
-        'HOST': 'localhost',
-        'PORT': '3306',
-
-    },
-    'magento': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v2',
-        'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
-        'HOST': 'localhost',
-        'PORT': '3306',
-
-    }
-}
 
 
 # Password validation

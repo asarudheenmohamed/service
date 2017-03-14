@@ -24,7 +24,7 @@ class TestFetchOrder():
         sales_order.save()
         time.sleep(1)
 
-    def test_fetch_order_for_driver(self, rest, order_id, username, auth):
+    def _test_fetch_order_for_driver(self, rest, order_id, username, auth):
         """
         Verify if the mock order created above is fetch correctly
         """

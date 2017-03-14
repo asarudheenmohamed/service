@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 from requests.auth import HTTPBasicAuth
 import base64
 from rest_framework import HTTP_HEADER_ENCODING
-import app.tcuts.core.magento_api as mage
+
 
 
 @pytest.fixture
@@ -32,15 +32,8 @@ def auth(username, password):
 
     return auth
 
-
 @pytest.fixture(scope="module")
-def conn():
-    conn = mage.Connector()
-    return conn
-
-
-@pytest.fixture(scope="module")
-def generate_mock_order(conn):
+def generate_mock_order(magento):
     """
     1\ Creat cart
     2\ get and set customer
@@ -50,18 +43,20 @@ def generate_mock_order(conn):
     6\ payment info
 
     """
-    api = conn.api
+    api = magento.api
     cart_id = api.cart.create("7")
 
     # customer = api.customer.info(16654)
-    customer = api.customer.info(16034)
-    # customer = api.customer.info(18963)
+    # staging
+    #customer = api.customer.info(16034)
+    customer = api.customer.info(18963)
     customer['mode'] = 'customer'
     api.cart_customer.set(cart_id, customer)
 
-    product = api.catalog_product.info(192)
+    product = api.catalog_product.info(196)
     product['qty'] = 1
-    api.cart_product.add(cart_id, [product])
+    api.cart_product.add(cart_id, [product], "7", "7")
+    return 1
 
     address =  [{
         'mode': 'shipping',

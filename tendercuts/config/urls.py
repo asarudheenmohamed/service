@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'core/', include('app.tcuts.urls')),
     url(r'drivers/', include('app.driver.urls')),
+    url(r'user/', include('app.login.urls')),
 ]
