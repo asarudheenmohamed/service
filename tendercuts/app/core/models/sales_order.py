@@ -256,8 +256,10 @@ class SalesFlatOrder(models.Model):
     customercredit_shipping_hidden_tax = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
 
     store = models.ForeignKey(CoreStore, models.DO_NOTHING, blank=True, null=True)
+    store_id = models.IntegerField()
     # removing it till a time comes to integrate this
     # customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
+    customer_id = models.IntegerField()
 
     # Replace these ID fields with models
     # driver_id = models.IntegerField()

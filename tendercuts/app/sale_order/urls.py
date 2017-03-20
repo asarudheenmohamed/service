@@ -7,7 +7,9 @@ from rest_framework.authtoken import views as rest_framework_views
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 # only viewset have to be registered!!
-router.register(r'orders', views.SalesOrderViewSet)
+router.register(r'orders',
+        views.SalesOrderViewSet,
+        base_name="SalesOrderViewSet")
 # router.register(r'product', views.ProductViewSet)#, base_name='CatalogProductEntity')
 
 urlpatterns = [

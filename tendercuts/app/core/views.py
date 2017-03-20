@@ -104,3 +104,12 @@ class CartAddApi(APIView):
 
         return Response(status)
 
+
+class CustomerDataApi(APIView):
+    def get(self, request):
+
+        user_id = self.request.query_params['user_id']
+        data = models.Customer().get_data(user_id)
+
+        return Response(data)
+

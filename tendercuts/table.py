@@ -17,7 +17,12 @@ tables = ["catalog_category_flat_store_1", "catalog_category_flat_store_4", "cat
 "catalog_category_entity"]
 # tables = ["sales_flat_order", "sales_flat_order_address", "sales_flat_order_item"]
 # tables = ["catalog_category_product", "catalog_category_entity"]
-tables = ["catalog_category_product"]
+# tables = ["catalog_category_product"]
+tables = ["customer_entity", "customer_entity_datetime",
+"customer_entity_decimal", "customer_entity_int",
+"customer_entity_text", "customer_entity_varchar"]
+tables = ["rewardpoints_customer"]
+
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
     database='magento',

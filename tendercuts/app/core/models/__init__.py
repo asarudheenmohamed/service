@@ -23,3 +23,5 @@ from .category import (
     CatalogCategoryFlatStore9)
 
 from .catalog import ProductStore
+
+from .customer import Customer

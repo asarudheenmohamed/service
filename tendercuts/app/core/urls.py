@@ -13,7 +13,8 @@ router.register(r'store', views.StoreViewSet)
 urlpatterns = [
    url(r'', include(router.urls)),
    url(r'product', views.ProductViewSet.as_view()),
-   url(r'cart/add/', views.CartAddApi.as_view())
+   url(r'cart/add/', views.CartAddApi.as_view()),
+   url(r'customer/', views.CustomerDataApi.as_view())
 ]
 
 if settings.DEBUG:

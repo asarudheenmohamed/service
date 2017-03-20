@@ -28,7 +28,7 @@ def django_db_setup():
     yield
 
 
-import app.tcuts.core.magento_api as mage
+import app.core.core.magento_api as mage
 @pytest.fixture(scope="session")
 def magento():
     conn = mage.Connector()
