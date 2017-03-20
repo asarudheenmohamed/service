@@ -56,7 +56,6 @@ def generate_mock_order(magento):
     product = api.catalog_product.info(196)
     product['qty'] = 1
     api.cart_product.add(cart_id, [product], "7", "7")
-    return 1
 
     address =  [{
         'mode': 'shipping',

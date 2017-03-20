@@ -12,8 +12,12 @@ django.setup()
 tables = ["catalog_product_entity", "catalog_product_entity_datetime", "catalog_product_entity_decimal",
           "catalog_product_entity_int", "catalog_product_entity_text", "catalog_product_entity_text",
           "catalog_product_entity_varchar"]
+tables = ["catalog_category_flat_store_1", "catalog_category_flat_store_4", "catalog_category_flat_store_5",
+"catalog_category_flat_store_7", "catalog_category_flat_store_8", "catalog_category_flat_store_9",
+"catalog_category_entity"]
 # tables = ["sales_flat_order", "sales_flat_order_address", "sales_flat_order_item"]
-tables = ["eav_attribute"]
+# tables = ["catalog_category_product", "catalog_category_entity"]
+tables = ["catalog_category_product"]
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
     database='magento',

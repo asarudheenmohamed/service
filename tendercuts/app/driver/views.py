@@ -1,17 +1,18 @@
-import app.tcuts.core.magento_api as magento
-from app.tcuts import models as models
-from app.tcuts import serializers as serializers
-from app.tcuts.lib.order_controller import OrderController
-from . import serializers as driver_serializers
-from . import models as driver_models
-from .lib import driver_controller as driver_lib
-from .lib import ShadowFaxDriverController
+import app.core.core.magento_api as magento
 
-from rest_framework.views import APIView
-from rest_framework import viewsets, generics
-import json
+from . import models as models
+from . import serializers as serializers
+from .lib import ShadowFaxDriverController
+from .lib import driver_controller as driver_lib
+
+from app.core.lib.order_controller import OrderController
+
 import datetime
+import json
+
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from rest_framework import status
 
@@ -25,16 +26,6 @@ class DriverViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.DriverManagement.objects.all()
     serializer_class = serializers.DriverSerializer
     lookup_field = "phone"
-
-
-class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    This viewset automatically provides `list` and `detail` actions.
-
-    Enpoint to provide a list for sales orders
-    """
-    queryset = models.SalesFlatOrder.objects.all()
-    serializer_class = serializers.SalesOrderSerializer
 
 
 class DriverSalesOrderViewSet(generics.ListAPIView):
@@ -86,22 +77,23 @@ class DriverLocationViewSet(viewsets.ModelViewSet):
 
     Get all the location udpates of the current driver.
     """
-    serializer_class = driver_serializers.DriverLocationSerializer
+    serializer_class = serializers.DriverLocationSerializer
     # Since queryset is not defined, we will specify the model in the uRL
 
     def get_queryset(self):
         user = self.request.user
 
-        queryset = driver_models.DriverLocation.objects \
+        queryset = models.DriverLocation.objects \
             .filter(driver=user)
             # .filter(updated_at=str(datetime.datetime.today()))
 
         return queryset
 
 
-from django.views.generic.base import TemplateView
+from datetime import date
+from datetime import timedelta
 from django.db.models import Q
-from datetime import date, timedelta
+from django.views.generic.base import TemplateView
 
 
 class HomePageView(TemplateView):

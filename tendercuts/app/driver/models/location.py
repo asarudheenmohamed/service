@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
 
-from app.tcuts.models import DriverManagement
 
-from django.db import models
-from app.tcuts import models as tcuts
-from django.contrib.auth.models import User
 import math
+
+from app.core import models as core_model
+from django.contrib.auth.models import User
+from django.db import models
 
 
 class GeoCoordinate(object):
@@ -81,6 +81,6 @@ class DriverLocation(models.Model):
 
     @property
     def driver(self):
-        driver = tcuts.DriverManagement.objects.filter(phone=self.user.username)
+        driver = core_model.DriverManagement.objects.filter(phone=self.user.username)
         return driver[0]
 

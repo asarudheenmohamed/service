@@ -1,7 +1,8 @@
-from app.tcuts import models as base_models
-from .. import models
-import requests
 import json
+import requests
+
+from .. import models
+from app.core import models as core_models
 
 class DriverController(object):
     """docstring for DriverController"""
@@ -10,7 +11,7 @@ class DriverController(object):
         self.driver = driver
 
     def _get_orders(self, status):
-        queryset = base_models.SalesFlatOrder.objects \
+        queryset = core_models.SalesFlatOrder.objects \
             .filter(driver=self.driver) \
             .filter(status=status)
             # .filter(updated_at=str(datetime.datetime.today()))

@@ -1,5 +1,5 @@
-from config.celery import app
 from .lib import ShadowFaxDriverController
+from config.celery import app
 
 @app.task
 def push_orders_to_shawdowfax():

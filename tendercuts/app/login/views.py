@@ -1,7 +1,8 @@
 # Create your views here.magent
-import app.tcuts.core.magento_api as magento
-from rest_framework.views import APIView
+import app.core.core.magento_api as magento
+
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 class UserLoginApi(APIView):
     """

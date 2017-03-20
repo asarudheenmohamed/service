@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'rest_framework',
-    'app.tcuts',
+    'app.core',
     'app.driver',
-    'app.login'
+    'app.login',
+    'app.sale_order'
 ]
 
 REST_FRAMEWORK = {
