@@ -1,3 +1,49 @@
-from django.shortcuts import render
+from . import models as models
 
-# Create your views here.
+from rest_framework.views import APIView
+from rest_framework import viewsets, generics
+import json
+import datetime
+from rest_framework.response import Response
+import itertools
+from rest_framework import status
+from django.db.models import F
+
+
+
+class InventoryViewSet(APIView):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+
+    Enpoint to provide a list for sales orders
+    """
+    # queryset = models.CatalogProductFlat1.objects.all()
+    # serializer_class = serializers.CatalogProductFlat1Serializer
+    def merge_lists(self, l1, l2, key):
+        merged = {}
+        for item in list(l1) + list(l2):
+            if item[key] in merged:
+                merged[item[key]].update(item)
+            else:
+                merged[item[key]] = item
+
+        return [val for (_, val) in merged.items()]
+
+    def get(self, request):
+        store_id = self.request.GET['store_id']
+        website_id = self.request.GET['website_id']
+
+        future = models.CatalogProductFlat1.objects.all() \
+            .annotate(product=F("entity_id")) \
+            .values('product','scheduledqty')
+
+        today = models.AitocCataloginventoryStockItem.objects.all() \
+            .filter(website_id=1).values('product', 'qty')
+
+
+        inventory = self.merge_lists(today, future, "product")
+
+        return Response(inventory)
+
+
+

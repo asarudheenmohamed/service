@@ -31,7 +31,7 @@ class ProductViewSet(APIView):
     # queryset = models.CatalogProductFlat1.objects.all()
     # serializer_class = serializers.CatalogProductFlat1Serializer
     def get(self, request):
-        store_id = 1#self.request.GET['store_id']
+        store_id = self.request.GET['store_id']
 
         try:
             category = getattr(

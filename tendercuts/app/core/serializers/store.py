@@ -21,4 +21,4 @@ class StoreSerializer(serializers.ModelSerializer):
     location = GMapsStoreLinkSerializer()
     class Meta:
         model = models.CoreStore
-        fields = ('name', "code", "store_id", "location")
+        fields = ('name', "code", "store_id", "location", "website_id")

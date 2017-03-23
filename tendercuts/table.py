@@ -22,7 +22,8 @@ tables = ["customer_entity", "customer_entity_datetime",
 "customer_entity_decimal", "customer_entity_int",
 "customer_entity_text", "customer_entity_varchar"]
 tables = ["rewardpoints_customer"]
-
+tables = ["aitoc_cataloginventory_stock_item"]
+tables = ["otp_list"]
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
     database='magento',

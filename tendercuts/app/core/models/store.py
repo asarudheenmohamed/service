@@ -42,6 +42,7 @@ class GmapLangandlatisLongandlatisStore(models.Model):
 class CoreStore(models.Model):
     store_id = models.SmallIntegerField(primary_key=True)
     code = models.CharField(unique=True, max_length=32, blank=True, null=True)
+    website_id = models.SmallIntegerField()
     # website = models.ForeignKey('CoreWebsite', models.DO_NOTHING)
     # group = models.ForeignKey('CoreStoreGroup', models.DO_NOTHING)
     name = models.CharField(max_length=255)

@@ -25,3 +25,5 @@ from .category import (
 from .catalog import ProductStore
 
 from .customer import Customer
+
+from .inventory import AitocCataloginventoryStockItem

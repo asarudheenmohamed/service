@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'app.core',
     'app.driver',
     'app.login',
-    'app.sale_order'
+    'app.sale_order',
+    'app.inventory'
 ]
 
 REST_FRAMEWORK = {
