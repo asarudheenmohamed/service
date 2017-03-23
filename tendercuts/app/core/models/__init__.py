@@ -22,8 +22,6 @@ from .category import (
     CatalogCategoryFlatStore8,
     CatalogCategoryFlatStore9)
 
-from .catalog import ProductStore
-
 from .customer import Customer
 
 from .inventory import AitocCataloginventoryStockItem
