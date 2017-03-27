@@ -1,0 +1,58 @@
+1. INstall necessary packages
+
+sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+
+2. Install virtualenv & uwsgi
+sudo pip install virtualenv virtualenvwrapper uwsgi 
+
+3. Create an user django
+groupadd django
+useradd -d /home/django -gsudo -gdjango -s /bin/bash ifensys
+mkdir /home/django
+chown django:django /home/django
+passwd django
+
+4. cd /home/django
+pull in the changes
+
+5. set up env for virtual end
+>echo "export WORKON_HOME=~/Env" >> ~/.bashrc
+>echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+
+6. Start env
+> mkvirtualenv tendercuts
+
+7. Install the requirements
+> pip install -r requirements.txt
+
+8. Collect all static file and run server
+>./manage.py collectstatic
+>./manage.py runserver
+
+    8.a: Create database services
+        > create database services;
+
+    8.b: Make migrations
+        > python manage.py migrate
+
+
+PART - 2: uwsgi deployment
+1. sudo mkdir -p /etc/uwsgi/sites
+2. copy the config file 
+    > sudo cp uwsgi/tendercuts.ini /etc/uwsgi/sites/
+3. Add entry for booting the process
+    > sudo cp uwsgi/uwsgi.conf /etc/init/
+4. sudo service uwsgi start
+
+
+Part - 3 Nginx server
+1. set up the config and make the site available
+    >sudo cp nginx/tendercuts /etc/nginx/sites-available
+2. enable the config
+    >sudo ln -s /etc/nginx/sites-available/tendercuts /etc/nginx/sites-enabled
+3. Start
+ > sudo service nginx configtest && sudo service nginx restart
+
+
+
+
