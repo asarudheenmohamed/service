@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pb#ie&)83+5_0-yo0@62@sx2kr0l=&j4u2q+%axw(@3=*#0^qk'
 
-ALLOWED_HOSTS = ["testserver", "localhost", "staging.tendercuts.in"]
+ALLOWED_HOSTS = ["testserver", "localhost", "staging.tendercuts.in", "api.tendercuts.in"]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
 AUTHENTICATION_BACKENDS = (
@@ -134,5 +134,5 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'

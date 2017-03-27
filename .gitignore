@@ -4,6 +4,7 @@ node_modules/
 .swp
 __pycache__/
 *.pyc
+tendercuts/config/static
 
 dump.rdb
 celerybeat-schedule

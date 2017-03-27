@@ -19,4 +19,4 @@ python-magento
 
 celery
 requests
-debug_toolbar
+django-debug-toolbar

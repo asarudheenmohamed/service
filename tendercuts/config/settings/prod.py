@@ -16,18 +16,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'services',
-        'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
-        'HOST': 'localhost',
+        'USER': 'tcuser',
+        'PASSWORD': 'aiz8Ahquiey9ieV',
+        'HOST': 'dbmaster',
         'PORT': '3306',
 
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'v2',
-        'USER': 'root',
-        'PASSWORD': '!qazmlp)5',
-        'HOST': 'localhost',
+        'USER': 'tcuser',
+        'PASSWORD': 'aiz8Ahquiey9ieV',
+        'HOST': 'dbmaster',
         'PORT': '3306',
 
     }

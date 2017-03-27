@@ -1,0 +1,15 @@
+# /etc/nginx/sites-available/sample
+server {
+    listen 80;
+    server_name api.tendercuts.in;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/django/api/tendercuts/config;
+    }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/home/django/api/tendercuts/tendercuts.sock;
+    }
+}
