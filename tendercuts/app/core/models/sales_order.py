@@ -283,6 +283,11 @@ class SalesFlatOrder(models.Model):
     def is_cod(self):
         return self.payment.all()[0].method == "cashondelivery"
 
+    @property
+    def is_payu(self):
+        return self.payment.all()[0].method == "payubiz"
+
+
 
 
 class SalesFlatOrderItem(models.Model):
