@@ -53,7 +53,7 @@ Part - 3 Nginx server
 3. Start
  > sudo service nginx configtest && sudo service nginx restart
 
- Part -4 :
+ Part -4 : Celery
  Activate: source Env/tendercuts/bin/activate
 
  Part 5: Celery deployment (check for usage)
@@ -64,6 +64,8 @@ Part - 3 Nginx server
  3. Note: in celerybeat => make sure
         DEFAULT_USER="celery" => "django":
 4. sudo cp celery/celerybeatd /etc/init.d/celerybeatd
+5. /etc/init.d/celerybeatd start
+6. flower -A config --port=5555
 
 
 

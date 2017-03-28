@@ -55,9 +55,13 @@ class PaymentAutomationController():
             # Save the record and cancel the order
             status.save()
 
-            order = order_map[status.tpn]
-            order_controller = OrderController(self.mage, order)
-            order_controller.cancel()
+            try:
+                order = order_map[status.tpn]
+                order_controller = OrderController(self.mage, order)
+                order_controller.cancel()
+            except Exception as e:
+                logging.erro(str(e))
+
 
         return statuses
 
