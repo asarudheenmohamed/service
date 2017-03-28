@@ -43,7 +43,8 @@ class Payu(AbstractGateway):
         res = requests.post(wsUrl, data=data, timeout=30)
         res.raise_for_status()
 
-        logging.debug("Payu response: {}".format(res.text))
+        logging.info("Payu response: {}".format(
+            res.text))
         payu_status = []
         try:
             response = res.json()
