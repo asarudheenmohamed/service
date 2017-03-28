@@ -12,7 +12,7 @@ class PaymentAutomationController():
         self.gateway = gateway
         self.mage = Connector()
 
-    def fetch_pending_orders(self, threshold=60 * 10):
+    def fetch_pending_orders(self, threshold=60 * 15):
         """
         Fetches all pending orders from payu.
         """
