@@ -8,9 +8,10 @@ import logging
 
 class PaymentAutomationController():
 
-    def __init__(self, gateway):
+    def __init__(self, gateway, log=None):
         self.gateway = gateway
         self.mage = Connector()
+        self.log = log or logging.getLogger()
 
     def fetch_pending_orders(self, threshold=60 * 15):
         """
@@ -24,13 +25,13 @@ class PaymentAutomationController():
                                 "payment_pending")) \
             .prefetch_related("payment")
 
-        logging.info("Fetched {} payment_pending orders".format(
+        self.log.info("Fetched {} payment_pending orders".format(
             len(orders)))
         # get only payu orders
         orders = [order for order in orders 
             if order.is_payu and order.time_elapsed().seconds > threshold]
 
-        logging.info("Fetched {} payment_pending orders to be queried".format(
+        self.log.info("Fetched {} payment_pending orders to be queried".format(
             len(orders)))
         return orders
 
@@ -53,14 +54,15 @@ class PaymentAutomationController():
                 continue
 
             # Save the record and cancel the order
+            order = order_map[status.tpn]
+            self.log.info("Cancelling {}".format(order.increment_id))
             status.save()
 
             try:
-                order = order_map[status.tpn]
                 order_controller = OrderController(self.mage, order)
                 order_controller.cancel()
             except Exception as e:
-                logging.error(str(e))
+                self.log.error(str(e))
 
 
         return statuses

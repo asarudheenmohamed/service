@@ -65,6 +65,8 @@ Part - 3 Nginx server
         DEFAULT_USER="celery" => "django":
 4. sudo cp celery/celerybeatd /etc/init.d/celerybeatd
 5. /etc/init.d/celerybeatd start
+
+Part-5: Deploying flower
 6. flower -A config --port=5555
 
 

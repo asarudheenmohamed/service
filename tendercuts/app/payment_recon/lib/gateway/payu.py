@@ -9,7 +9,6 @@ class Payu(AbstractGateway):
     MERCHANT_ID = "U6KiaG3M"
     KEY = "xV0BSL"
 
-
     def filter_orders(self, orders, threshold=60*15):
         # get only payu orders
         orders = [order for order in orders 
@@ -43,7 +42,7 @@ class Payu(AbstractGateway):
         res = requests.post(wsUrl, data=data, timeout=30)
         res.raise_for_status()
 
-        logging.info("Payu response: {}".format(
+        self.log.info("Payu response: {}".format(
             res.text))
         payu_status = []
         try:
@@ -56,6 +55,6 @@ class Payu(AbstractGateway):
                 payu_status.append(model)
 
         except ValueError as e:
-            logging.exception(str(e))
+            self.log.exception(str(e))
 
         return payu_status
