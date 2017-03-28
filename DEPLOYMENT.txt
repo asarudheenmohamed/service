@@ -57,17 +57,22 @@ Part - 3 Nginx server
  Activate: source Env/tendercuts/bin/activate
 
  Part 5: Celery deployment (check for usage)
- 1. sudo cp celery/default/celeryd /etc/default/celeryd
-    sudo cp celery/default/celerybeat /etc/default/celerybeat
+ 1. Config files
+    >sudo cp celery/default/celeryd /etc/default/celeryd
+    >sudo cp celery/default/celerybeat /etc/default/celerybeat
 
  2. Create direcotry for storing the schedule logs
     > sudo mkdir /var/run/celery
     > sudo chown django:django /var/run/celery/
+ 
  3. Note: in celerybeat => make sure
         DEFAULT_USER="celery" => "django":
-4. sudo cp celery/celerybeatd /etc/init.d/celerybeatd
-5. sudo cp celery/celeryd /etc/init.d/
-6. /etc/init.d/celerybeatd start
+    We will run it as django for now
+
+ 4. sudo cp celery/celerybeatd /etc/init.d/celerybeatd
+ 5. sudo cp celery/celeryd /etc/init.d/
+ 
+ 6. /etc/init.d/celerybeatd start
 
 Part-5: Deploying flower
 6. flower -A config --port=5555

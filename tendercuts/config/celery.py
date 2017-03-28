@@ -13,10 +13,7 @@ import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
 # django.setup()
 
-app = Celery('tendercuts',
-             broker='redis://localhost',
-             backend='redis://localhost')
-
+app = Celery('tendercuts')
 # Using a string here means the worker don't have to serialize
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
