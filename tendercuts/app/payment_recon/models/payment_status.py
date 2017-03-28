@@ -27,7 +27,9 @@ class PaymentStatusResponse(models.Model):
         vendor_id = status_dict['mihpayid']
         # Get the status, if present
         status = status_dict.get('status', "NA")
-        is_payment_captured = (status == "success")
+        # Cancel the order only when the status is failure
+        # so send payment capture to false accordingly
+        is_payment_captured = not (status == "failure")
 
         amount_captured = status_dict.get("net_amount_debit", "-1")
 
