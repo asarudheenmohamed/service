@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'app.driver',
     'app.login',
     'app.sale_order',
-    'app.inventory'
+    'app.inventory',
+    'app.payment_recon'
 ]
 
 REST_FRAMEWORK = {
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -136,3 +137,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATIC_URL = '/static/'
+
+
+# application specific: Communication
+SMS_GATEWAY = {
+    "KEY" : "A03daa52993fe5f1f3384925de5826b30",
+    "SENDER_ID": "TENDER",
+    "ENDPOINT": "http://alerts.synicsys.com/api/web2sms.php"
+}
+
+MAIL_GATEWAY = {
+    "TC_USER": "reports@tendercuts.in",
+    "TC_PASS": "D%6Byz6+no;Dhgv2"
+}

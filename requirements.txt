@@ -18,5 +18,8 @@ MySQL-python
 python-magento
 
 celery
+rediss
 requests
 django-debug-toolbar
+
+smtplib

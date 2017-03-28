@@ -1,3 +1,6 @@
+"""
+Contains all config for runnign pytest with django
+"""
 import os
 import django
 import pytest
@@ -8,7 +11,6 @@ from django.conf import settings
 # This is similar to what occurs in the `manage.py`
 # by default we move it to local
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
-
 
 # `pytest` automatically calls this function once when tests are run.
 def pytest_configure():
@@ -28,8 +30,9 @@ def django_db_setup():
     yield
 
 
-import app.core.core.magento_api as mage
+import app.core.lib.magento as mage
 @pytest.fixture(scope="session")
 def magento():
     conn = mage.Connector()
     return conn
+

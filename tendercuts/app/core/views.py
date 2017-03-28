@@ -6,7 +6,7 @@ from rest_framework import viewsets, generics
 import json
 import datetime
 from rest_framework.response import Response
-from .core import magento_api as magento
+from .lib import magento as magento
 import itertools
 
 from rest_framework import status

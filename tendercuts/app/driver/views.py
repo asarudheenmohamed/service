@@ -1,4 +1,4 @@
-import app.core.core.magento_api as magento
+import app.core.lib.magento as magento
 
 from . import models as models
 from . import serializers as serializers

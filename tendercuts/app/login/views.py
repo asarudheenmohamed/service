@@ -1,5 +1,5 @@
 # Create your views here.magent
-import app.core.core.magento_api as magento
+import app.core.lib.magento as magento
 
 from rest_framework.response import Response
 from rest_framework.views import APIView

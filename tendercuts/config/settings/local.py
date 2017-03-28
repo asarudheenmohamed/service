@@ -22,6 +22,8 @@ DATABASES = {
         'PORT': '3306',
 
     },
+
+    # Localhost
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbmaster',
@@ -29,9 +31,20 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
-
     }
+
+    # Forwarding config
+    # 'magento': {
+    #         'ENGINE': 'django.db.backends.mysql',
+    #         'NAME': 'v2',
+    #         'USER': 'tcuser',
+    #         'PASSWORD': 'oochahwielai9mahDah3',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '3307',
+    #     }
+
 }
+
 
 INSTALLED_APPS += ("debug_toolbar", )
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )

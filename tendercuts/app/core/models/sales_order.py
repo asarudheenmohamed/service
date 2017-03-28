@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils import timezone
 from .driver_models import DriverManagement
 from .store import CoreStore
 
@@ -271,7 +272,8 @@ class SalesFlatOrder(models.Model):
     # Behind the scenes, Django appends "_id" to the field name to create its database column
     # name, can be changed by db_colum
     # https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.to_field
-    driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
+    # driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
+
     # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
@@ -286,6 +288,13 @@ class SalesFlatOrder(models.Model):
     @property
     def is_payu(self):
         return self.payment.all()[0].method == "payubiz"
+
+    @property
+    def is_paytm(self):
+        return self.payment.all()[0].method == "payubiz"
+
+    def time_elapsed(self):
+        return timezone.now() - self.created_at
 
 
 
