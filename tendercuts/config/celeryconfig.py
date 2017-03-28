@@ -11,7 +11,7 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 
 CELERYBEAT_SCHEDULE = {
     'every-minute': {
-        'task': 'app.driver.tasks.push_orders_to_shawdowfax',
-        'schedule': crontab(minute='*/1')
+        'task': 'app.payment_recon.tasks.cancel_payu_orders',
+        'schedule': crontab(minute='*/5')
     },
 }
