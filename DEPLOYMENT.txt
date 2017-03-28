@@ -53,6 +53,19 @@ Part - 3 Nginx server
 3. Start
  > sudo service nginx configtest && sudo service nginx restart
 
+ Part -4 :
+ Activate: source Env/tendercuts/bin/activate
+
+ Part 5: Celery deployment (check for usage)
+ 1. sudo cp celery/celeryd /etc/default/celeryd
+ 2. Create direcotry for storing the schedule logs
+    > sudo mkdir /var/run/celery
+    > sudo chown django:django /var/run/celery/
+ 3. Note: in celerybeat => make sure
+        DEFAULT_USER="celery" => "django":
+4. sudo cp celery/celerybeatd /etc/init.d/celerybeatd
+
+
 
 
 
