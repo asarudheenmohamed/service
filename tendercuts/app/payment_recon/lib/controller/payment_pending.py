@@ -60,7 +60,7 @@ class PaymentAutomationController():
                 order_controller = OrderController(self.mage, order)
                 order_controller.cancel()
             except Exception as e:
-                logging.erro(str(e))
+                logging.error(str(e))
 
 
         return statuses
