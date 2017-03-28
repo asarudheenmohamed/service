@@ -37,7 +37,7 @@ MAGENTO = {
     "url": "tendercuts.in",
     "port": 443,
     "username": "admin",
-    "password": "Tendercuts123!",
+    "password": "fp/(%488kdjm",
     "endpoint": "/index.php/api/xmlrpc/",
     "proto": "https"
 }
