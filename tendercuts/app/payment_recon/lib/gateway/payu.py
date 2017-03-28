@@ -43,8 +43,6 @@ class Payu(AbstractGateway):
         res = requests.post(wsUrl, data=data, timeout=30)
         res.raise_for_status()
 
-        import ipdb
-        ipdb.set_trace()
         logging.debug("Payu response: {}".format(res.text))
         payu_status = []
         try:

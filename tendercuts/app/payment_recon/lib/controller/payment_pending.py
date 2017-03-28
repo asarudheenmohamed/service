@@ -4,6 +4,7 @@ from ..gateway import Payu
 from django.utils import timezone
 from app.core.lib.order_controller import OrderController
 from app.core.lib.magento import Connector
+import logging
 
 class PaymentAutomationController():
 
@@ -23,10 +24,14 @@ class PaymentAutomationController():
                                 "payment_pending")) \
             .prefetch_related("payment")
 
+        logging.info("Fetched {} payment_pending orders".format(
+            len(orders)))
         # get only payu orders
         orders = [order for order in orders 
             if order.is_payu and order.time_elapsed().seconds > threshold]
 
+        logging.info("Fetched {} payment_pending orders to be queried".format(
+            len(orders)))
         return orders
 
     def cancel_pending_orders(self, dry_run=True):
