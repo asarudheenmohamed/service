@@ -10,7 +10,7 @@ from . import celeryconfig
 
 import os, django
 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
 django.setup()
 
 app = Celery('tendercuts',
