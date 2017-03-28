@@ -10,6 +10,7 @@ class PaymentStatusResponse(models.Model):
     vendor_name = models.CharField(max_length=200)
     vendor_id = models.CharField(max_length=200)
     vendor_status = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 
     # Tendercuts custom status
     is_payment_captured = models.BooleanField()
