@@ -57,7 +57,9 @@ Part - 3 Nginx server
  Activate: source Env/tendercuts/bin/activate
 
  Part 5: Celery deployment (check for usage)
- 1. sudo cp celery/default/celery /etc/default/celeryd
+ 1. sudo cp celery/default/celeryd /etc/default/celeryd
+    sudo cp celery/default/celerybeat /etc/default/celerybeat
+
  2. Create direcotry for storing the schedule logs
     > sudo mkdir /var/run/celery
     > sudo chown django:django /var/run/celery/

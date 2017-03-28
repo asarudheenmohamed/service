@@ -11,7 +11,7 @@ from . import celeryconfig
 import os, django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
-django.setup()
+# django.setup()
 
 app = Celery('tendercuts',
              broker='redis://localhost',
