@@ -17,7 +17,14 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 
+from datetime import date
+from datetime import timedelta
+from django.db.models import Q
+from django.views.generic.base import TemplateView
+
+
 class DriverViewSet(viewsets.ReadOnlyModelViewSet):
+
     """
     This viewset automatically provides `list` and `detail` actions.
 
@@ -29,6 +36,7 @@ class DriverViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class DriverSalesOrderViewSet(generics.ListAPIView):
+
     """
     Endpoint that acts provides all the active order for the current driver.
     """
@@ -53,15 +61,17 @@ class DriverSalesOrderViewSet(generics.ListAPIView):
 
 
 class OrderCompleteApi(APIView):
+
     """
     Enpoint that uses magento API to mark an order as comple
     """
+
     def post(self, request, format=None):
         user = self.request.user
 
         increment_id = self.request.data['increment_id']
 
-        order = models.SalesFlatOrder.filter(increment_id=increment_id)
+        order = models.SalesFlatOrder.objects.filter(increment_id=increment_id)
         controller = OrderController(order)
         response_data = controller.complete_order()
 
@@ -69,8 +79,8 @@ class OrderCompleteApi(APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 
-
 class DriverLocationViewSet(viewsets.ModelViewSet):
+
     """
     A viewset that provides default `create()`, `retrieve()`, `update()`,
     `partial_update()`, `destroy()` and `list()` actions.
@@ -85,15 +95,9 @@ class DriverLocationViewSet(viewsets.ModelViewSet):
 
         queryset = models.DriverLocation.objects \
             .filter(driver=user)
-            # .filter(updated_at=str(datetime.datetime.today()))
+        # .filter(updated_at=str(datetime.datetime.today()))
 
         return queryset
-
-
-from datetime import date
-from datetime import timedelta
-from django.db.models import Q
-from django.views.generic.base import TemplateView
 
 
 class HomePageView(TemplateView):
@@ -109,30 +113,39 @@ class HomePageView(TemplateView):
             updated__range=(date.today(),
                             date.today() + timedelta(days=1)))
 
-        stores = models.CoreStore.objects.filter(~Q(store_id=0) & ~Q(store_id=9))
+        stores = models.CoreStore.objects.filter(
+            ~Q(store_id=0) & ~Q(store_id=9))
 
         context["selected_store"] = 0
         context['stores'] = stores
 
         if store_id:
-            drivers = [user for user in drivers if user.driver.store == store_id ]
+            drivers = [
+                user for user in drivers if user.driver.store == store_id]
             store = [dp for dp in stores if dp.store_id == int(store_id)]
             context["selected_store"] = store[0]
 
         context['locations'] = drivers
 
-
         return context
 
 
 class ShadowFaxUpdate(APIView):
+
     def post(self, request, format=None):
         try:
-            controller = ShadowFaxDriverController().update_order(self.request.data)
+            controller = ShadowFaxDriverController().update_order(
+                self.request.data)
         except Exception as e:
             return Response(
                 {"status": str(e)},
                 status=status.HTTP_400_BAD_REQUEST)
+        if self.request.data['order_status'] == "DELIVERED":
+            incrementid = self.request.data['client_order_id']
+            order = models.SalesFlatOrder.objects.filter(
+                increment_id=incrementid)
+            controller = OrderController(magento.Connector(),
+                                         order[0])
+            response_data = controller.complete()
 
         return Response(self.request.data, status=status.HTTP_201_CREATED)
-
