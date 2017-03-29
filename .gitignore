@@ -8,4 +8,5 @@ tendercuts/config/static
 
 dump.rdb
 celerybeat-schedule
+celerybeat-schedule.db
 tendercuts/npm-debug.log
