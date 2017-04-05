@@ -2,24 +2,56 @@ import requests
 import json
 from .response import *
 
+
 class ShadowFaxRequest(object):
     AUTH = "23bfc90a731d04ced956302c903ab8ea6b96b60a"
-    URL = "http://api.shadowfax.in/api/v1/orders/"
+    URL = "http://api.shadowfax.in/api/v1/"
     CODE = "tc00001"
+    _ADDRESS = {
+        "porur": {
+            "house_number": "162",
+            "street": "Kunarthur Main Road",
+            "address": "Gerugambakkam,Chennai-600122"
+        },
+        "tambaram": {
+            "house_number": "103/254",
+            "street": "Bharathamatha Street",
+            "address": "East Tambram,Chennai-600059"
+        },
+        "thoraipakkam": {
+            "house_number": "667",
+            "street": "Venkateswara Avenue",
+            "address": "OMR,PTC-Thooraipakkam,chennai-600097"
+        },
+        "adayar": {
+            "house_number": "192",
+            "street": "New No:8,Arangannal Salai,Canal Bank Road",
+            "address": "kashturibai Nagar,Adyar,Chennai-600020"
+        },
+        "arumbakkam": {
+            "house_number": "2A",
+            "street": "Visalatchi Street",
+            "address": "Balavinayager Nagar,Arumbakkam,Chennai-600106"
+        }
+    }
 
     def __init__(self, order):
         self.order = order
 
     def _prepare_headers(self):
         return {
-                "Content-Type": "application/json",
+            "Content-Type": "application/json",
                 "Authorization": "Token " + self.AUTH
-            }
+        }
 
     def create_order(self):
         shipping_address = [add for add in self.order.shipping_address.all()
-            if add.address_type == "shipping"]
+                            if add.address_type == "shipping"]
         shipping_address = shipping_address[0]
+        house_no = self._ADDRESS[
+            "" + self.order.store.name + ""]['house_number']
+        street_name = self._ADDRESS["" + self.order.store.name + ""]['street']
+        location = self._ADDRESS["" + self.order.store.name + ""]['address']
 
         data = {
             "client_code": self.CODE,
@@ -41,13 +73,14 @@ class ShadowFaxRequest(object):
             "pickup_details": {
                 "name": self.order.store.name,
                 "contact_number": "9999999999",
-                "locality": "600087", #shipping_address.telephone,
-                "house_number": "2",
-                "locality": "TN",
+                "house_number": house_no,
+                "street": street_name,
+                "locality": location,
                 "city": "chennai"
                 # shipping_address.fax,
                 # "street": shipping_address.street,
-                # "locality": shipping_address.region + ", " + shipping_address.postcode,
+                # "locality": shipping_address.region +
+                # ", " + shipping_address.postcode,
                 # "city": shipping_address.city,
                 # "lati"
             },
@@ -65,4 +98,3 @@ class ShadowFaxRequest(object):
         response.to_model().save()
 
         return response
-
