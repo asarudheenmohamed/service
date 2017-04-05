@@ -263,7 +263,7 @@ class SalesFlatOrder(models.Model):
     customer_id = models.IntegerField()
 
     # Replace these ID fields with models
-    # driver_id = models.IntegerField()
+    driver_id = models.IntegerField()
     # shipping_address_id = models.IntegerField(blank=True, null=True)
     
     # to_field by default points to the primay key

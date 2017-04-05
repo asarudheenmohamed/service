@@ -12,7 +12,7 @@ class DriverController(object):
 
     def _get_orders(self, status):
         queryset = core_models.SalesFlatOrder.objects \
-            .filter(driver=self.driver) \
+            .filter(driver_id=self.driver.entity_id) \
             .filter(status=status)
             # .filter(updated_at=str(datetime.datetime.today()))
 
