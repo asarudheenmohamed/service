@@ -3,9 +3,9 @@ import json
 from .response import *
 
 class ShadowFaxRequest(object):
-    AUTH = "fbd68d4f8b841746df202362b1dab2fc26896915"
-    URL = "https://hobbit.staging.shadowfax.in/api/v1/"
-    CODE = "tendercuts001"
+    AUTH = "23bfc90a731d04ced956302c903ab8ea6b96b60a"
+    URL = "http://api.shadowfax.in/api/v1/orders/"
+    CODE = "tc00001"
 
     def __init__(self, order):
         self.order = order
