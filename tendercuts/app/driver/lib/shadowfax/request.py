@@ -11,27 +11,42 @@ class ShadowFaxRequest(object):
         "porur": {
             "house_number": "162",
             "street": "Kunarthur Main Road",
-            "address": "Gerugambakkam,Chennai-600122"
+            "address": "Gerugambakkam,Chennai-600122",
+            "phone": "9962123577",
+            "latitude": "13.017100",
+            "longitude": "80.138710"
         },
         "tambaram": {
             "house_number": "103/254",
             "street": "Bharathamatha Street",
-            "address": "East Tambram,Chennai-600059"
+            "address": "East Tambram,Chennai-600059",
+            "phone": "9962123577",
+            "latitude": "12.932701",
+            "longitude": "80.128456"
         },
         "thoraipakkam": {
             "house_number": "667",
             "street": "Venkateswara Avenue",
-            "address": "OMR,PTC-Thooraipakkam,chennai-600097"
+            "address": "OMR,PTC-Thooraipakkam,chennai-600097",
+            "phone": "9962123577",
+            "latitude": "12.932999",
+            "longitude": "80.232793"
         },
         "adayar": {
             "house_number": "192",
             "street": "New No:8,Arangannal Salai,Canal Bank Road",
-            "address": "kashturibai Nagar,Adyar,Chennai-600020"
+            "address": "kashturibai Nagar,Adyar,Chennai-600020",
+            "phone": "9962123577",
+            "latitude": "13.006194",
+            "longitude": "80.248289"
         },
         "arumbakkam": {
             "house_number": "2A",
             "street": "Visalatchi Street",
-            "address": "Balavinayager Nagar,Arumbakkam,Chennai-600106"
+            "address": "Balavinayager Nagar,Arumbakkam,Chennai-600106",
+            "phone": "9962123577",
+            "latitude": "13.066978",
+            "longitude": "80.210991"
         }
     }
 
@@ -52,6 +67,9 @@ class ShadowFaxRequest(object):
             "" + self.order.store.name + ""]['house_number']
         street_name = self._ADDRESS["" + self.order.store.name + ""]['street']
         location = self._ADDRESS["" + self.order.store.name + ""]['address']
+        lattitude = self._ADDRESS["" + self.order.store.name + ""]['latitude']
+        longitude = self._ADDRESS["" + self.order.store.name + ""]['longitude']
+        phone = self._ADDRESS["" + self.order.store.name + ""]['phone']
 
         data = {
             "client_code": self.CODE,
@@ -72,7 +90,9 @@ class ShadowFaxRequest(object):
             },
             "pickup_details": {
                 "name": self.order.store.name,
-                "contact_number": "9999999999",
+                "contact_number": phone,
+                "latitude": lattitude,
+                "longitude": longitude,
                 "house_number": house_no,
                 "street": street_name,
                 "locality": location,
