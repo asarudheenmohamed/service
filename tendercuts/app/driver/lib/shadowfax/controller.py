@@ -2,11 +2,13 @@ from ..driver_controller import DriverController
 from .request import ShadowFaxRequest
 from .response import *
 from ... import models as models
+import logging
 
 class ShadowFaxDriverController(DriverController):
 
-    def __init__(self):
+    def __init__(self ,log=None):
         self.driver = self._get_shadowfax()
+        self.log = log or logging.getLogger()
 
     def _get_shadowfax(self):
         driver = models.DriverManagement.objects.filter(phone=9999999999)
@@ -15,9 +17,13 @@ class ShadowFaxDriverController(DriverController):
 
     def push_orders(self):
         orders = self.get_active_orders()
+        self.log.info("Got {} orders".format(len(orders)))
+
 
         responses = []
         for order in orders:
+            self.log.info("Pushing orderid: {} for value of {}".format(
+                order.increment_id, order.grand_total))
             queryset = models.ShadowFaxUpdates.objects.filter(
                     client_order_id=order.increment_id)
 
@@ -26,7 +32,7 @@ class ShadowFaxDriverController(DriverController):
                 continue
 
             try:
-                responses.append(ShadowFaxRequest(order).create_order())
+                responses.append(ShadowFaxRequest(order, self.log).create_order())
             except Exception as e:
                 print (str(e))
 

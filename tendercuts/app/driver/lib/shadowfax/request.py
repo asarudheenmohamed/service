@@ -1,7 +1,7 @@
 import requests
 import json
 from .response import *
-
+import logging
 
 class ShadowFaxRequest(object):
     AUTH = "23bfc90a731d04ced956302c903ab8ea6b96b60a"
@@ -50,8 +50,9 @@ class ShadowFaxRequest(object):
         }
     }
 
-    def __init__(self, order):
+    def __init__(self, order, log=None):
         self.order = order
+        self.log = log or logging.getLogger()
 
     def _prepare_headers(self):
         return {
@@ -106,6 +107,7 @@ class ShadowFaxRequest(object):
             },
 
         }
+        self.log.info("Posting data {}".format(json.dumps(data)))
 
         endpoint = self.URL + "orders/"
         data = requests.post(
@@ -114,6 +116,7 @@ class ShadowFaxRequest(object):
             headers=self._prepare_headers())
 
         response = data.json()
+        self.log.info("Response from shadowfax {}".format(response.text))
         response = ShadowFaxCreateResponse(response)
         response.to_model().save()
 
