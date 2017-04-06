@@ -22,7 +22,7 @@ class PaymentAutomationController():
 
         statuses = statuses or ("pending_payment", "payment_pending")
         start = date.today()
-        start = dt_parser.parse("2017-03-23")
+        # start = dt_parser.parse("2017-03-23")
         end = date.today() + timedelta(days=1)
         orders = models.SalesFlatOrder.objects \
             .filter(created_at__range=(start, end),
