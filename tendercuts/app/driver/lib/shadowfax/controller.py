@@ -35,6 +35,7 @@ class ShadowFaxDriverController(DriverController):
                 responses.append(ShadowFaxRequest(order, self.log).create_order())
             except Exception as e:
                 self.log.exception(str(e))
+                raise e
 
 
         return responses

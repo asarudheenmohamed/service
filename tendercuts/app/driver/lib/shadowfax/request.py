@@ -1,4 +1,5 @@
 import requests
+import requests.exceptions
 import json
 from .response import *
 import logging
@@ -114,9 +115,15 @@ class ShadowFaxRequest(object):
             endpoint,
             data=json.dumps(data),
             headers=self._prepare_headers())
+        
+        try:
+            data.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            raise requests.exceptions.HTTPError(data.text)
+            
 
         response = data.json()
-        self.log.info("Response from shadowfax {}".format(response.text))
+        self.log.info("Response from shadowfax {}".format(data.text))
         response = ShadowFaxCreateResponse(response)
         response.to_model().save()
 

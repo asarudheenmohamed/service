@@ -8,4 +8,5 @@ logger = get_task_logger(__name__)
 @app.task
 def push_orders_to_shawdowfax():
 	controller = ShadowFaxDriverController(log=logger)
-    controller.push_orders()
+        responses = controller.push_orders()
+        return responses

@@ -36,6 +36,10 @@ app.conf.beat_schedule = {
         'task': 'app.payment_recon.tasks.cancel_payu_orders',
         'schedule': crontab(minute='*/5')
     },
+    'every-1-mins-sfx-push': {
+        'task': 'app.driver.tasks.push_orders_to_shawdowfax',
+        'schedule': crontab(minute='*/1')
+    },
 }
 
 if __name__ == '__main__':
