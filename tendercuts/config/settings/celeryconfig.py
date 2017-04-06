@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from datetime import timedelta
 from celery.schedules import crontab
 
-# moving it here as the root is of no use.
+# moving it here as the root is of no use, and setting it to socket
 #CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_BROKER_URL = 'redis+socket:///var/run/redis/redis.sock'

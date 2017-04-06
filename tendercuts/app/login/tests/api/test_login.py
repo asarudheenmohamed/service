@@ -10,16 +10,17 @@ class TestApiLogin:
         assert type(response) is not HttpResponseNotFound
 
 
-    def test_driver_login(self, rest, mock_user):
+    def test_user_login(self, rest, mock_user):
         """
         """
         response = rest.post(
                 "/user/login/",
-                {"username": mock_user.username,
-                 "password": mock_user.password},
-                format='json')
+                {"email": mock_user.username,
+                 "password": mock_user.password})
 
-        assert response.data['status'] is True
+        print (response.data)
+        assert response.data['reward_points'] > 0
+        assert response.data['email'] == mock_user.username
 
 
     def test_signup_login(self, rest, mock_user):

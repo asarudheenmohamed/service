@@ -6,7 +6,7 @@ from random import randint
 def api(magento):
     return magento.api
 
-class TestLogin:
+class _TestLogin:
     def test_customer_login_with_mail(self, api):
         status = api.tendercuts_customer_apis.login("mail@varun.xyz", "qwerty123")
 

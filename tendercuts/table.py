@@ -24,6 +24,11 @@ tables = ["customer_entity", "customer_entity_datetime",
 tables = ["rewardpoints_customer"]
 tables = ["aitoc_cataloginventory_stock_item"]
 tables = ["otp_list"]
+
+tables = ["customer_address_entity", "customer_address_entity_datetime",
+"customer_address_entity_decimal", "customer_address_entity_int",
+"customer_address_entity_text", "customer_address_entity_varchar"]
+
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
     database='magento',

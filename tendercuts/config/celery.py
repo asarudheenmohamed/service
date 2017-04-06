@@ -6,6 +6,7 @@
 from __future__ import absolute_import
 
 from celery import Celery
+from celery.schedules import crontab
 #from . import celeryconfig
 
 import os, django
@@ -29,7 +30,6 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-from celery.schedules import crontab
 
 app.conf.beat_schedule = {
     'every-minute': {
