@@ -287,11 +287,15 @@ class SalesFlatOrder(models.Model):
 
     @property
     def is_payu(self):
-        return self.payment.all()[0].method == "payubiz"
+        try:
+            return self.payment.all()[0].method == "payubiz"
+        except:
+            # incase of buggy orders like 00000086
+            return False
 
     @property
     def is_paytm(self):
-        return self.payment.all()[0].method == "payubiz"
+        return self.payment.all()[0].method == "paytm"
 
     def time_elapsed(self):
         return timezone.now() - self.created_at

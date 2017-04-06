@@ -13,6 +13,7 @@ class PaymentStatusResponse(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, blank=True)
 
     # Tendercuts custom status
+    # Needs to be deprecated!
     is_payment_captured = models.BooleanField()
     amount_captured = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
 
@@ -28,7 +29,9 @@ class PaymentStatusResponse(models.Model):
         # Get the status, if present
         status = status_dict.get('status', "NA")
         # Cancel the order only when the status is failure
-        # so send payment capture to false accordingly
+        # Payu sometime can set it at an intermediate state also.
+        # so set payment capture to false accordingly
+        # status can be success/failure/pending/NA
         is_payment_captured = not (status == "failure")
 
         amount_captured = status_dict.get("net_amount_debit", "-1")

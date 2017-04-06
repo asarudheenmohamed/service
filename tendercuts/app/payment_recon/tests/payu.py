@@ -44,7 +44,7 @@ class TestPaymentAutomation:
         generate_mock_order.save()
 
     def test_fetch_orders(self, payment, generate_mock_order):
-        orders = payment.fetch_pending_orders(
+        orders = payment.fetch_orders(
             threshold=3)
         assert len(orders) > 1
 

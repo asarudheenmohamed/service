@@ -40,6 +40,10 @@ app.conf.beat_schedule = {
         'task': 'app.driver.tasks.push_orders_to_shawdowfax',
         'schedule': crontab(minute='*/1')
     },
+    "every-1-mins-payment-check": {
+        "task": 'app.payment_recon.tasks.print_failed_to_capture_payments',
+        'schedule': crontab(minute='*/3')
+    }
 }
 
 if __name__ == '__main__':
