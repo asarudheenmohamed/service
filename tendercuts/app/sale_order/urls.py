@@ -14,5 +14,6 @@ router.register(r'orders',
 
 urlpatterns = [
    url(r'', include(router.urls)),
-]
+   url(r'delivery_slots', views.DeliveryViewSet.as_view()),
 
+]

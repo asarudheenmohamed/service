@@ -8,6 +8,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from rest_framework import status
+from rest_framework.views import APIView
 
 
 
@@ -36,6 +37,22 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = []
 
         return queryset
+
+class DeliveryViewSet(APIView):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+
+    Enpoint to provide a list for sales orders
+    """
+    # queryset = models.CatalogProductFlat1.objects.all()
+    # serializer_class = serializers.CatalogProductFlat1Serializer
+
+    def get(self, request):
+        data = []
+        data.append(models.ScheduledDelivery().serialize())
+        data.append(models.ExpressDelivery().serialize())
+
+        return Response(data)
 
 
 

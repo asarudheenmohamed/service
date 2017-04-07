@@ -24,24 +24,24 @@ DATABASES = {
     },
 
     # Localhost
-    # 'magento': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'dbmaster',
-    #     'USER': 'root',
-    #     'PASSWORD': 'root',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',
-    # }
+    'magento': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dbmaster',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
 
     # Forwarding config
-    'magento': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'v2',
-            'USER': 'tcuser',
-            'PASSWORD': 'oochahwielai9mahDah3',
-            'HOST': '127.0.0.1',
-            'PORT': '3307',
-        }
+    # 'magento': {
+    #         'ENGINE': 'django.db.backends.mysql',
+    #         'NAME': 'v2',
+    #         'USER': 'tcuser',
+    #         'PASSWORD': 'oochahwielai9mahDah3',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '3307',
+    #     }
 
 }
 
