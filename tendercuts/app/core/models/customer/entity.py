@@ -131,3 +131,15 @@ class CustomerEntityVarchar(models.Model):
         unique_together = (('entity', 'attribute'),)
         app_label = "magento"
 
+class MCreditBalance(models.Model):
+    balance_id = models.AutoField(primary_key=True)
+    customer = models.ForeignKey(CustomerEntity, models.DO_NOTHING, blank=True, null=True, related_name="store_credit")
+    amount = models.FloatField(blank=True, null=True)
+    is_subscribed = models.IntegerField()
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'm_credit_balance'
+        app_label = "magento"

@@ -83,7 +83,7 @@ class CatalogProductFlat(models.Model):
     qty_inc = models.CharField(max_length=255, blank=True, null=True)
     rewardpoints_spend = models.IntegerField(blank=True, null=True)
     samples_title = models.CharField(max_length=255, blank=True, null=True)
-    scheduledqty = models.CharField(max_length=255, blank=True, null=True)
+    scheduledqty = models.IntegerField(max_length=255, blank=True, null=True)
     status = models.SmallIntegerField(blank=True, null=True)
     storecredit_dropdown = models.TextField(blank=True, null=True)
     storecredit_from = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)

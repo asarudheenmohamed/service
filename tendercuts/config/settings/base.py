@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'app.core',
     'app.driver',
     'app.login',
@@ -53,11 +54,11 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'driver.auth.DriverAuthentication', 
-        #'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         # ...
     ),
 }
@@ -143,7 +144,7 @@ STATIC_URL = '/static/'
 SMS_GATEWAY = {
     "KEY" : "A03daa52993fe5f1f3384925de5826b30",
     "SENDER_ID": "TENDER",
-    "ENDPOINT": "http://alerts.synicsys.com/api/web2sms.php"
+    "ENDPOINT": "http://alerts.synicsys.com/api/v4/"
 }
 
 MAIL_GATEWAY = {

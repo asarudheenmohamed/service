@@ -4,6 +4,9 @@ import itertools
 import sys
 import hashlib
 
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
 from django.db.models import Q
 from .core import *
 
@@ -43,6 +46,8 @@ class FlatAddress():
 
 
 class FlatCustomer():
+
+    PREFIX = "u"
 
     @classmethod
     def load_by_phone_mail(cls, username):
@@ -92,7 +97,7 @@ class FlatCustomer():
     @classmethod
     def load_by_id(cls, customer_id):
         customers = CustomerEntity.objects.filter(entity_id=customer_id).prefetch_related(
-            "reward_point",
+            "reward_point", "store_credit",
             "varchars", "varchars__attribute",
             "addresses", "addresses__varchars", "addresses__varchars__attribute",
             "addresses__texts", "addresses__texts__attribute")
@@ -103,6 +108,25 @@ class FlatCustomer():
         self.customer = customer
         self.message = None
         self._flat = self.deserialize()
+
+    @property
+    def dj_user_id(self):
+        return ("{}:{}".format(
+                self.PREFIX,
+                self.customer.entity_id))
+
+    def generate_token(self):
+        """
+        """
+        try:
+            user = User.objects.get(username=self.dj_user_id)
+        except User.DoesNotExist as e:
+            user = User.objects.create_user(
+                        username=self.dj_user_id)
+
+        token, created = Token.objects.get_or_create(user=user)
+        return token.key
+
 
     def deserialize(self):
         customer = {}
@@ -121,8 +145,13 @@ class FlatCustomer():
             self.customer.addresses.all()).deserialize()
         customer['email'] = self.customer.email
         customer['message'] = self.message
+        customer['entity_id'] = self.customer.entity_id
         customer['reward_points'] = \
             self.customer.reward_point.all()[0].point_balance
+        customer['store_credit'] = \
+            self.customer.store_credit.all()[0].amount
+
+        customer['token'] = self.generate_token()
 
         return customer
 
@@ -138,3 +167,14 @@ class FlatCustomer():
         computed_hash = hashlib.md5(salt + password)
 
         return computed_hash.hexdigest() == salted_hash
+
+
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

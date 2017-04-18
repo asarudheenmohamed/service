@@ -16,3 +16,5 @@ from .product import (
     CatalogProductFlat7Serializer,
     CatalogProductFlat8Serializer,
     CatalogProductFlat9Serializer)
+
+from .otp import OtpSerializer

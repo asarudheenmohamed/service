@@ -9,16 +9,18 @@ class SMS():
     def send(self, phnumber, message):
 
         data = {
-            "workingkey": settings.SMS_GATEWAY["KEY"],
+            "method": "sms",
+            "api_key": settings.SMS_GATEWAY["KEY"],
             "sender": settings.SMS_GATEWAY['SENDER_ID'],
             "to": phnumber,
             "message": message
         }
+        print (data)
 
         resp = requests.post(
                 settings.SMS_GATEWAY["ENDPOINT"],
-                data=data,
-                timeout=30)
+                data=data)
+        print(resp.__dict__)
 
         # Raise error
         resp.raise_for_status()

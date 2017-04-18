@@ -2,15 +2,18 @@
 import app.core.lib.magento as magento
 from . import lib
 from . import models
-
+from . import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework import viewsets, generics, mixins
+from app.core.lib.communication import SMS
 
 class UserLoginApi(APIView):
     """
     Enpoint that uses magento API to mark an order as comple
     """
+    authentication_classes = ()
+    permission_classes = ()
 
     def post(self, request, format=None):
         username = self.request.data['email'] or self.request.data['phone']
@@ -52,3 +55,29 @@ class UserSignUpApi(APIView):
             password)
 
         return Response(status)
+
+
+from django.http import Http404
+import random
+class OtpApiViewSet(
+        viewsets.GenericViewSet):
+    authentication_classes = ()
+    permission_classes = ()
+
+    queryset = models.OtpList.objects.all()
+    serializer_class = serializers.OtpSerializer
+    lookup_field = "mobile"
+
+    def retrieve(self, request, *args, **kwargs):
+        otp = None
+        try:
+            otp = self.get_object()
+        except Http404:
+            otp = models.OtpList(mobile=kwargs['mobile'], otp=random.randint(1000, 9999))
+            otp.save()
+    
+        #msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
+        #SMS().send(phnumber=otp.mobile, message=msg)
+
+        serializer = self.get_serializer(otp)
+        return Response(serializer.data)

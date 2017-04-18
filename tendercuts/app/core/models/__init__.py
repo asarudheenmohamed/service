@@ -25,3 +25,4 @@ from .category import (
 
 from .customer import *
 from .inventory import AitocCataloginventoryStockItem
+from .otp import OtpList

@@ -32,13 +32,22 @@ class InventoryViewSet(APIView):
     def get(self, request):
         store_id = self.request.GET['store_id']
         website_id = self.request.GET['website_id']
+        product_ids = self.request.GET.get("product_ids", [])
 
-        future = models.CatalogProductFlat1.objects.all() \
-            .annotate(product=F("entity_id")) \
-            .values('product','scheduledqty')
+        if product_ids:
+            product_ids = product_ids.split(",")
+            future = models.CatalogProductFlat1.objects.filter(
+                entity__entity_id__in=product_ids)
+            today = models.AitocCataloginventoryStockItem.objects.filter(
+                product__entity_id__in=product_ids)
+        else:
+            future = models.CatalogProductFlat1.objects.all()
+            today = models.AitocCataloginventoryStockItem.objects.all()
 
-        today = models.AitocCataloginventoryStockItem.objects.all() \
-            .filter(website_id=1).values('product', 'qty')
+        future = future.annotate(product=F("entity_id")) \
+            .values('product', 'scheduledqty')
+
+        today = today.filter(website_id=1).values('product', 'qty')
 
 
         inventory = self.merge_lists(today, future, "product")

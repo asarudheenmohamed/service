@@ -24,11 +24,11 @@ class ScheduledDelivery(Delivery):
     DAYS = 3
     CUT_OFF = 3  # hours
     SLOTS = [
-        (datetime.time(7, 0, 0), "7:00 - 9:00"),
-        (datetime.time(9, 0, 0), "9:00 - 11:00"),
-        (datetime.time(11, 0, 0), "11:00 - 13:00"),
-        (datetime.time(17, 0, 0), "17:00 - 19:00"),
-        (datetime.time(19, 0, 0), "19:00 - 21:00"),
+        (datetime.time(7, 0, 0), {"ddate_id": 52, "interval": "7:00 - 9:00"}),
+        (datetime.time(9, 0, 0), {"ddate_id": 53, "interval": "9:00 - 11:00"}),
+        (datetime.time(11, 0, 0), {"ddate_id": 54, "interval": "11:00 - 13:00"}),
+        (datetime.time(17, 0, 0), {"ddate_id": 55, "interval": "17:00 - 19:00"}),
+        (datetime.time(19, 0, 0), {"ddate_id": 56, "interval": "19:00 - 21:00"}),
     ]
 
     @property
@@ -54,12 +54,16 @@ class ScheduledDelivery(Delivery):
 
                 if seconds_left > 3600 * self.CUT_OFF:
                     slots[format(date, "%Y-%m-%d")].append(slot_desc)
+        
+        slots = [ {"date": date, "times": times} 
+            for date, times in slots.items()]
 
         return slots
 
     def serialize(self):
         data = {}
         data["name"] = "Scheduled Delivery"
+        data["cost"] = "19"
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = self.available_slots()
 
@@ -85,6 +89,7 @@ class ExpressDelivery(Delivery):
     def serialize(self):
         data = {}
         data["name"] = "Express Delivery"
+        data["cost"] = "49"
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = []
 
