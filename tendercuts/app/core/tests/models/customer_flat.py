@@ -49,6 +49,22 @@ class TestCustomerControllerAuth:
         with pytest.raises(CustomerNotFound):
             user_controller = cls.authenticate("mail@varun.xy", "qwerty123")
 
-    def test_invalid_username(self, cls):
+    def test_valid_username(self, cls):
+        flat = cls.authenticate("mail@varun.xyz", "qwerty123")
+        assert flat.customer.email == "mail@varun.xyz"
+
+class TestCustomerPasswordReset:
+    def test_customer_password_change(self, cls):
+        user = cls.load_by_id(18963)
+        user.reset_password("qwerty123123")
+
+        with pytest.raises(CustomerNotFound):
+            user_controller = cls.authenticate("mail@varun.xy", "qwerty123")
+
+        flat = cls.authenticate("mail@varun.xyz", "qwerty123123")
+        assert flat.customer.email == "mail@varun.xyz"
+
+        user.reset_password("qwerty123")
+        
         flat = cls.authenticate("mail@varun.xyz", "qwerty123")
         assert flat.customer.email == "mail@varun.xyz"

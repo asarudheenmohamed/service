@@ -18,3 +18,21 @@ class OtpList(models.Model):
         managed = False
         db_table = 'otp_list'
         app_label = "magento"
+
+    @staticmethod 
+    def redis_save(redis_conn, model, prefix="FORGOT_OTP"):
+        redis_conn.setex(
+            name="{}:{}".format(prefix, model.mobile),
+            value=model.otp,
+            time = 30 * 60 # 30 mins!
+        )
+    
+    @staticmethod
+    def redis_get(redis_conn, phone, prefix="FORGOT_OTP"):
+        otp = redis_conn.get("{}:{}".format(prefix, phone))
+        if otp is None:
+            return otp
+
+        return OtpList(mobile=phone, otp=otp)
+
+
