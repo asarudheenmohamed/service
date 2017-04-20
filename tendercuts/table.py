@@ -29,6 +29,7 @@ tables = ["customer_address_entity", "customer_address_entity_datetime",
 "customer_address_entity_decimal", "customer_address_entity_int",
 "customer_address_entity_text", "customer_address_entity_varchar"]
 tables = ["m_credit_balance"]
+tables = ["sales_flat_quote"]
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,

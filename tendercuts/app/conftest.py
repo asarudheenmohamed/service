@@ -3,6 +3,29 @@ Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
 
+@pytest.fixture
+def serializer():
+    class EavSerializer():
+        @classmethod
+        def serialize(cls, data):
+            obj = cls()
+            for eav in data:
+                print(eav)
+                attr_name = eav['code']
+                attr_value = eav['value']
+
+                if (type(attr_value) is not list):
+                    setattr(obj, attr_name, attr_value)
+                else:
+                    setattr(
+                        obj,
+                        attr_name,
+                        EavSerializer.serialize(attr_value))
+            return obj
+
+
+
+
 @pytest.fixture(scope="session")
 def generate_mock_order(magento):
     """
