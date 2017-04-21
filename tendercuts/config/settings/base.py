@@ -108,7 +108,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'config': {
+        'app': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
         },
