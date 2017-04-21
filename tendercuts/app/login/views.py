@@ -138,8 +138,6 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         otp = self.request.data['otp']
         dry_run = self.request.data.get('dry_run', False)
 
-        import ipdb
-        ipdb.set_trace()
         otp_object = models.OtpList.redis_get(redis_db, phone)
 
         if otp_object is None or otp_object.otp != otp:
