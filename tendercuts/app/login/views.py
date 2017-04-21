@@ -11,6 +11,11 @@ from app.core.lib.communication import SMS
 from django.http import Http404
 import random
 import string
+# import the logging library
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class UserLoginApi(APIView):
@@ -30,15 +35,21 @@ class UserLoginApi(APIView):
         try:
             user = models.FlatCustomer.authenticate(
                 username, password)
+            logger.debug("Logging successful for user {}".format(username))
         except models.CustomerNotFound:
             user = models.FlatCustomer(None)
             user.message = "User does not exists!"
+            logger.warn("user {} not found".format(username))
         except models.InvalidCredentials:
             user = models.FlatCustomer(None)
             user.message = "Invalid username/password"
-        except Exception:
+            logger.warn("user {} tried to login with invalid details".format(username))
+        except Exception as e:
             user = models.FlatCustomer(None)
             user.message = "Invalid username/password"
+            logger.error("user {} tried to login caused and exception {}".format(
+                username,
+                str(e)))
 
         return Response(user.deserialize())
 
