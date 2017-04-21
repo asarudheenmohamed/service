@@ -1,3 +1,6 @@
+0. Create /var/log/django and chown it
+sudo mkdir /var/log/django
+sudo chown django:django /var/log/django
 1. INstall necessary packages
 
 sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
