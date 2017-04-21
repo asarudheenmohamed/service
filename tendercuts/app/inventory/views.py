@@ -30,6 +30,10 @@ class InventoryViewSet(APIView):
         return [val for (_, val) in merged.items()]
 
     def get(self, request):
+        """
+        CatalogProductFlat1 contains global attributes such as sch delivery
+        Aitoc contains per store inventory
+        """
         store_id = self.request.GET['store_id']
         website_id = self.request.GET['website_id']
         product_ids = self.request.GET.get("product_ids", [])
@@ -44,10 +48,11 @@ class InventoryViewSet(APIView):
             future = models.CatalogProductFlat1.objects.all()
             today = models.AitocCataloginventoryStockItem.objects.all()
 
+        # rename entity_id to product andfetch only sch deliveyr
         future = future.annotate(product=F("entity_id")) \
             .values('product', 'scheduledqty')
 
-        today = today.filter(website_id=1).values('product', 'qty')
+        today = today.filter(website_id=website_id).values('product', 'qty')
 
 
         inventory = self.merge_lists(today, future, "product")
