@@ -108,7 +108,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'tendercuts': {
+        'django': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
         },
