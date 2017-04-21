@@ -149,10 +149,18 @@ class FlatCustomer():
         customer['email'] = self.customer.email
         customer['message'] = self.message
         customer['entity_id'] = self.customer.entity_id
-        customer['reward_points'] = \
-            self.customer.reward_point.all()[0].point_balance
-        customer['store_credit'] = \
-            self.customer.store_credit.all()[0].amount
+
+        try:
+            customer['reward_points'] = \
+                self.customer.reward_point.all()[0].point_balance
+        except Exception as e:
+            customer['reward_points'] = 0
+        
+        try:
+            customer['store_credit'] = \
+                self.customer.store_credit.all()[0].amount
+        except Exception as e:
+            customer['store_credit'] = 0
 
         customer['token'] = self.generate_token()
 
