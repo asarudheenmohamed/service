@@ -222,7 +222,6 @@ class SalesFlatOrder(models.Model):
     rewardpoints_invited_discount = models.DecimalField(max_digits=12, decimal_places=4)
     rewardpoints_invited_base_discount = models.DecimalField(max_digits=12, decimal_places=4)
     rewardpoints_refer_customer_id = models.IntegerField()
-    webpos_discount_amount = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
     webpos_giftwrap_amount = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
     webpos_admin_id = models.IntegerField(blank=True, null=True)
     webpos_admin_name = models.CharField(max_length=255, blank=True, null=True)
