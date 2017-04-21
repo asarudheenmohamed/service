@@ -223,7 +223,6 @@ class SalesFlatOrder(models.Model):
     rewardpoints_invited_base_discount = models.DecimalField(max_digits=12, decimal_places=4)
     rewardpoints_refer_customer_id = models.IntegerField()
     vtiger_id = models.IntegerField(blank=True, null=True)
-    till_id = models.IntegerField()
     location_id = models.IntegerField()
     custom_status = models.CharField(max_length=50)
     mail_send = models.IntegerField()
