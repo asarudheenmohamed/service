@@ -5,7 +5,7 @@
 # NO MOFULE NAMED CELLARY
 from __future__ import absolute_import
 
-from celery import Celery
+import celery
 from celery.schedules import crontab
 #from . import celeryconfig
 
@@ -14,7 +14,7 @@ import os, django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
 # django.setup()
 
-app = Celery('tendercuts')
+app = celery.Celery('tendercuts')
 #app = Celery('tendercuts',
 #             broker='redis://localhost',
 #             backend='redis://localhost')
