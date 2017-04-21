@@ -13,6 +13,7 @@ import random
 import string
 # import the logging library
 import logging
+import traceback
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -47,9 +48,10 @@ class UserLoginApi(APIView):
         except Exception as e:
             user = models.FlatCustomer(None)
             user.message = "Invalid username/password"
+            exception = traceback.format_exc()
             logger.error("user {} tried to login caused and exception {}".format(
                 username,
-                str(e)))
+                exception))
 
         return Response(user.deserialize())
 
