@@ -181,8 +181,6 @@ class UserDataFetch(APIView):
     def get(self, request, format=None):
         """
         """
-        import ipdb
-        ipdb.set_trace()
         username = self.request.GET.get('email', None) or \
                 self.request.GET.get('phone', None)
         fields = ['reward_points', 'store_credit']
