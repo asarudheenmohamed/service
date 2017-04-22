@@ -2,9 +2,18 @@ import pytest
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound
 from random import randint
+from rest_framework.test import APIClient
 import uuid
 import redis
 from rest_framework import viewsets, generics, mixins
+
+@pytest.fixture
+def auth_rest():
+    from django.contrib.auth.models import User
+    user = User.objects.get(username="u:18963")
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
 
 class TestOtp:
     def test_otp(self, rest):
@@ -56,4 +65,13 @@ class TestPasswordRestOtp:
         response = rest.post("/user/forgot_password_otp/", data, format='json')
         assert type(response) is not None
         assert response.data['mobile'] == "9908765678"
+
+
+
+class TestUserFetch:
+    def test_user_fetch(self, auth_rest):
+        
+        response = auth_rest.get("/user/fetch/?phone=9908765678", format='json')
+        assert type(response) is not None
+        assert len(response.data['attribute']) == 2
 

@@ -10,7 +10,6 @@ import collections
 def rest():
     return APIClient()
 
-
 @pytest.fixture
 def mock_user():
     MockUser = collections.namedtuple(

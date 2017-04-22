@@ -29,7 +29,7 @@ class UserLoginApi(APIView):
     def post(self, request, format=None):
         """
         """
-        username = self.request.data['email'] or self.request.data['phone']
+        username = self.request.GET.get('email', None) or self.request.GET.get('phone', None)
         password = self.request.data['password']
 
         user = None
@@ -53,6 +53,7 @@ class UserLoginApi(APIView):
                 username,
                 exception))
 
+        # Todo: Optimize and use flat
         return Response(user.deserialize())
 
 
@@ -170,3 +171,39 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         otp_object.otp = None
         serializer = self.get_serializer(otp_object)
         return Response(serializer.data)
+
+
+class UserDataFetch(APIView):
+    """
+    Enpoint that uses magento API to mark an order as comple
+    """
+
+    def get(self, request, format=None):
+        """
+        """
+        import ipdb
+        ipdb.set_trace()
+        username = self.request.GET.get('email', None) or \
+                self.request.GET.get('phone', None)
+        fields = ['reward_points', 'store_credit']
+
+        attributes = []
+
+        try:
+            user = models.FlatCustomer.load_by_phone_mail(username)
+            logger.debug("Fetched user data {} successfully".format(username))
+
+            for f in fields:
+                attributes.append({
+                    "code": f,
+                    "value": user._flat[f]
+                })
+
+        except Exception as e:
+            exception = traceback.format_exc()
+            logger.error("user {} tried to fetch data caused and exception {}".format(
+                username,
+                exception))
+            raise exceptions.ValidationError("Invalid user")
+
+        return Response({"attribute": attributes})
