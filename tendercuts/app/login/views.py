@@ -185,6 +185,10 @@ class UserDataFetch(APIView):
                 self.request.GET.get('phone', None)
         fields = ['reward_points', 'store_credit']
 
+
+        if username is None:
+            raise exceptions.ValidationError("Invalid user")
+
         attributes = []
 
         try:
