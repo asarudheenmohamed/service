@@ -193,7 +193,7 @@ class UserDataFetch(APIView):
 
         try:
             user = models.FlatCustomer.load_by_phone_mail(username)
-            logger.debug("Fetched user data {} successfully".format(username))
+            logger.debug("Fetched user data {} for {} successfully".format(username, user.__dict__))
 
             for f in fields:
                 attributes.append({
