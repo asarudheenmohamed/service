@@ -97,7 +97,7 @@ LOGGING = {
         'applogfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join("/tmp", 'tendercuts.log'),
+            'filename': os.path.join("/var/log/django", 'tendercuts.log'),
             'maxBytes': 1024*1024*15, # 15MB
             'backupCount': 10,
         }
