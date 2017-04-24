@@ -14,4 +14,5 @@ urlpatterns = [
    url(r'login', views.UserLoginApi.as_view()),
    url(r'signup', views.UserSignUpApi.as_view()),
    url(r'fetch', views.UserDataFetch.as_view()),
+   url(r'exists', views.UserExistsApi.as_view()),
 ]

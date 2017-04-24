@@ -69,9 +69,36 @@ class TestPasswordRestOtp:
 
 
 class TestUserFetch:
-    def test_user_fetch(self, auth_rest):
+    def test_user_fetch(self, rest):
         
-        response = auth_rest.get("/user/fetch/?phone=9908765678", format='json')
+        response = rest.get("/user/fetch/?phone=9908765678", format='json')
         assert type(response) is not None
         assert len(response.data['attribute']) == 2
 
+class TestUserExists:
+    def test_user_exists_phone(self, rest):
+        
+        response = rest.get("/user/exists/?phone=9908765678", format='json')
+        assert type(response) is not None
+        assert response.data['status'] == True
+    
+    def test_user_exists_email(self, rest):
+        
+        response = rest.get("/user/exists/?email=mail@varun.xyz", format='json')
+        assert type(response) is not None
+        assert response.data['status'] == True
+    
+    def test_user_exists_invalid(self, rest):
+        response = rest.get("/user/exists/", format='json')
+        assert type(response) is not None
+        assert response.data['status'] == True
+    
+    def test_user_exists_valid_phone(self, rest):
+        response = rest.get("/user/exists/?phone=90909090", format='json')
+        assert type(response) is not None
+        assert response.data['status'] == False
+    
+    def test_user_exists_valid_email(self, rest):
+        response = rest.get("/user/exists/?email=90909090@xoxo.com", format='json')
+        assert type(response) is not None
+        assert response.data['status'] == False

@@ -51,6 +51,19 @@ class FlatAddress():
 class FlatCustomer():
 
     PREFIX = "u"
+ 
+    @classmethod
+    def is_user_exists(cls, username):
+        """
+        TODO: NEEDS to be rewritten
+        """
+        query_set = CustomerEntityVarchar.objects.filter(
+            Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
+
+        if len(query_set) == 0:
+            return False
+
+        return True
 
     @classmethod
     def load_by_phone_mail(cls, username):
