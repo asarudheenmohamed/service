@@ -80,25 +80,25 @@ class TestUserExists:
         
         response = rest.get("/user/exists/?phone=9908765678", format='json')
         assert type(response) is not None
-        assert response.data['status'] == True
+        assert response.data['result'] == True
     
     def test_user_exists_email(self, rest):
         
         response = rest.get("/user/exists/?email=mail@varun.xyz", format='json')
         assert type(response) is not None
-        assert response.data['status'] == True
+        assert response.data['result'] == True
     
     def test_user_exists_invalid(self, rest):
         response = rest.get("/user/exists/", format='json')
         assert type(response) is not None
-        assert response.data['status'] == True
+        assert response.data['result'] == True
     
     def test_user_exists_valid_phone(self, rest):
         response = rest.get("/user/exists/?phone=90909090", format='json')
         assert type(response) is not None
-        assert response.data['status'] == False
+        assert response.data['result'] == False
     
     def test_user_exists_valid_email(self, rest):
         response = rest.get("/user/exists/?email=90909090@xoxo.com", format='json')
         assert type(response) is not None
-        assert response.data['status'] == False
+        assert response.data['result'] == False

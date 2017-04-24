@@ -53,7 +53,7 @@ class UserExistsApi(APIView):
             message = ""
 
         # Todo: Optimize and use flat
-        return Response({"status": user_exists, "message": message})
+        return Response({"result": user_exists, "message": message})
 
 class UserLoginApi(APIView):
     """
