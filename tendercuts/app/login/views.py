@@ -65,7 +65,7 @@ class UserLoginApi(APIView):
     def post(self, request, format=None):
         """
         """
-        username = self.request.data.get('email',self.request.data['phone'])
+        username = self.request.data.get('email', None) or self.request.data['phone']
         password = self.request.data['password']
 
         user = None
