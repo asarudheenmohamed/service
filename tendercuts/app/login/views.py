@@ -19,6 +19,42 @@ import traceback
 logger = logging.getLogger(__name__)
 
 
+class UserExistsApi(APIView):
+    """
+    Enpoint that uses magento API to mark an order as comple
+    """
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request, format=None):
+        """
+        """
+        email = self.request.GET.get('email', None)
+        phone = self.request.GET.get('phone', None)
+
+
+        user_exists = False
+        message = ""
+
+        if email and models.FlatCustomer.is_user_exists(email):
+            message = "A user with the same email exists, try Forgot password?"
+            user_exists = True
+            logger.debug("user already exists for the email user {}".format(email))
+        elif phone and models.FlatCustomer.is_user_exists(phone):
+            message = "A user with the same phone number exists, try Forgot password?"
+            user_exists = True
+            logger.debug("user already exists for the phone user {}".format(phone))
+        elif phone is None and email is None:
+            message = "Invalid data"
+            user_exists = True
+            logger.debug("invalid credentials as both were none")
+        else:
+            user_exists = False
+            message = ""
+
+        # Todo: Optimize and use flat
+        return Response({"status": user_exists, "message": message})
+
 class UserLoginApi(APIView):
     """
     Enpoint that uses magento API to mark an order as comple
@@ -96,13 +132,15 @@ class OtpApiViewSet(viewsets.GenericViewSet):
         otp = None
         try:
             otp = self.get_object()
+            logger.debug("Got an existing OTP for the number {}".format(otp.mobile))
         except Http404:
             otp = models.OtpList(
                 mobile=kwargs['mobile'], otp=random.randint(1000, 9999))
             otp.save()
+            logger.debug("Generated a new OTP for the number {}".format(otp.mobile))
 
-        #msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
-        #SMS().send(phnumber=otp.mobile, message=msg)
+        msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
+        SMS().send(phnumber=otp.mobile, message=msg)
 
         serializer = self.get_serializer(otp)
         return Response(serializer.data)
