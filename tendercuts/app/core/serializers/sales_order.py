@@ -34,6 +34,6 @@ class SalesOrderSerializer(serializers.ModelSerializer):
             "customer_firstname", "customer_firstname",
             "grand_total", "updated_at", "payment",
             "store_id", "shipping_address", 'driver', "items",
-            "status")
+            "status", "order_now")
 
 

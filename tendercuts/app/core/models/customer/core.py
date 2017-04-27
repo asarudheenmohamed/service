@@ -6,6 +6,7 @@ import hashlib
 import hashlib
 import uuid
 
+from django.db.models import Sum
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
@@ -165,7 +166,7 @@ class FlatCustomer():
 
         try:
             customer['reward_points'] = \
-                self.customer.reward_point.all()[0].point_balance
+                self.customer.reward_point.filter(is_expired=0).aggregate(Sum('amount'))
         except Exception as e:
             customer['reward_points'] = 0
         

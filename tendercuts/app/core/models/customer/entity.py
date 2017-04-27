@@ -43,23 +43,23 @@ class CustomerEntity(models.Model):
         app_label = "magento"
 
 
-class RewardpointsCustomer(models.Model):
-    reward_id = models.AutoField(primary_key=True)
-    customer = models.ForeignKey(
-        CustomerEntity, models.DO_NOTHING, related_name="reward_point")
-    point_balance = models.IntegerField()
-    holding_balance = models.IntegerField()
-    spent_balance = models.IntegerField()
-    is_notification = models.SmallIntegerField()
-    expire_notification = models.SmallIntegerField()
-    referal_id = models.IntegerField()
-    ip_adress = models.CharField(max_length=255, blank=True, null=True)
-    created_time = models.DateTimeField(blank=True, null=True)
+# class RewardpointsCustomer(models.Model):
+#     reward_id = models.AutoField(primary_key=True)
+#     customer = models.ForeignKey(
+#         CustomerEntity, models.DO_NOTHING, related_name="reward_point")
+#     point_balance = models.IntegerField()
+#     holding_balance = models.IntegerField()
+#     spent_balance = models.IntegerField()
+#     is_notification = models.SmallIntegerField()
+#     expire_notification = models.SmallIntegerField()
+#     referal_id = models.IntegerField()
+#     ip_adress = models.CharField(max_length=255, blank=True, null=True)
+#     created_time = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'rewardpoints_customer'
-        app_label = "magento"
+#     class Meta:
+#         managed = False
+#         db_table = 'rewardpoints_customer'
+#         app_label = "magento"
 
 
 class CustomerEntityDatetime(models.Model):
@@ -142,4 +142,23 @@ class MCreditBalance(models.Model):
     class Meta:
         managed = False
         db_table = 'm_credit_balance'
+        app_label = "magento"
+
+class MRewardsTransaction(models.Model):
+    transaction_id = models.AutoField(primary_key=True)
+    customer = models.ForeignKey(
+        CustomerEntity, models.DO_NOTHING, related_name="reward_point")
+    amount = models.IntegerField(blank=True, null=True)
+    amount_used = models.IntegerField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=255)
+    is_expired = models.IntegerField()
+    is_expiration_email_sent = models.IntegerField()
+    expires_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'm_rewards_transaction'
         app_label = "magento"
