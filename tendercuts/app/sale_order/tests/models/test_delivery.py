@@ -1,6 +1,7 @@
 from app.sale_order.models import *
 from django.http import HttpResponseNotFound
 import datetime
+
 class TestDeliveryModel:
     def test_delivery_fetch(self):
         assert ScheduledDelivery() is not None
@@ -25,15 +26,15 @@ class TestDeliveryModel:
         dt_now = now.replace(hour=12)
         slots = delivery.available_slots(now=dt_now)
         assert len(slots) == 3
-        assert slots[format(datetime.date.today(), "%Y-%m-%d")] == \
-            ["17:00 - 19:00", "19:00 - 21:00"]
+        print (slots)
+        assert len(slots[0]['times']) == 2
 
         dt_now = now.replace(hour=5)
         slots = delivery.available_slots(now=dt_now)
         print(slots)
         assert len(slots) == 3
-        assert slots[format(datetime.date.today(), "%Y-%m-%d")] == \
-            ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
+        assert len(slots[0]['times']) == 4
+            # ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
 
         dt_now = now.replace(hour=19)
         slots = delivery.available_slots(now=dt_now)
@@ -42,12 +43,12 @@ class TestDeliveryModel:
 
 class TestDeliveryRestApi:
 
-    def test_endpoint_exists(self, rest):
-        response = rest.get("/sale_order/delivery_slots/", format='json')
+    def test_endpoint_exists(self, auth_rest):
+        response = auth_rest.get("/sale_order/delivery_slots/", format='json')
         assert type(response) is not HttpResponseNotFound
 
-    def test_endpoint(self, rest):
-        response = rest.get("/sale_order/delivery_slots/", format='json')
+    def test_endpoint(self, auth_rest):
+        response = auth_rest.get("/sale_order/delivery_slots/", format='json')
         print(response.data)
         assert len(response.data) == 2
         assert response.data[0]['name'] == "Scheduled Delivery"

@@ -24,11 +24,11 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         try:
             user_id = self.request.query_params['user_id']
+                # .select_related("driver")       \
             queryset = models.SalesFlatOrder.objects        \
                 .filter(customer_id=user_id)                \
                 .exclude(status__in=['canceled', 'closed']) \
                 .order_by('-created_at')                     \
-                .select_related("driver")       \
                 .prefetch_related("items")                  \
                 .prefetch_related("payment")                \
                 .prefetch_related("shipping_address")                 \
