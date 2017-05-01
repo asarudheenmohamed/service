@@ -1,5 +1,5 @@
 import pytest
-import app.tcuts.models as models
+import app.core.models as models
 import time
 
 
@@ -24,12 +24,12 @@ class TestFetchOrder():
         sales_order.save()
         time.sleep(1)
 
-    def _test_fetch_order_for_driver(self, rest, order_id, username, auth):
+    def test_fetch_order_for_driver(self, rest, order_id, username, auth):
         """
         Verify if the mock order created above is fetch correctly
         """
         rest.credentials(HTTP_AUTHORIZATION=auth)
-        response = rest.get("/drivers/orders/".format(username), format='json')
+        response = rest.get("/drivers/orders/" , format='json')
 
         assert response.data
 
@@ -39,7 +39,7 @@ class TestFetchOrder():
 
         assert order_id in order_ids
 
-    def _test_complete_order(self, rest, auth, order_id):
+    def test_complete_order(self, rest, auth, order_id):
         rest.credentials(HTTP_AUTHORIZATION=auth)
         response = rest.post(
                 "/drivers/complete_order/",

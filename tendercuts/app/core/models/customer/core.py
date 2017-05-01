@@ -119,6 +119,9 @@ class FlatCustomer():
                 "addresses__varchars__attribute",
                 "addresses__texts", "addresses__texts__attribute")
 
+        if (len(customers) == 0):
+            raise CustomerNotFound
+
         return cls(customers[0])
 
     def __init__(self, customer):

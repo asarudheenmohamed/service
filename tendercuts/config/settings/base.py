@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'app.login',
     'app.sale_order',
     'app.inventory',
-    'app.payment_recon'
+    'app.payment'
 ]
 
 REST_FRAMEWORK = {

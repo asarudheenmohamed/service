@@ -21,18 +21,3 @@ class TestApiLogin:
         print (response.data)
         assert response.data['reward_points'] > 0
         assert response.data['email'] == mock_user.username
-
-
-    def test_signup_login(self, rest, mock_user):
-        phno = randint(8000000000, 9999999999)
-        password = "foobarbaz"
-        email = "{}@test.com".format(uuid.uuid4())
-        response = rest.post(
-                "/user/signup/",
-                {"email": email,
-                 "password": password,
-                 "name": mock_user.fullname,
-                 "phone": str(phno)},
-                format='json')
-
-        assert response.data['status'] is True

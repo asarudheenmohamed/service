@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 
 class PaymentReconConfig(AppConfig):
-    name = 'payment_recon'
+    name = 'payment'

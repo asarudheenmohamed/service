@@ -254,7 +254,7 @@ class SalesFlatOrder(models.Model):
     # Behind the scenes, Django appends "_id" to the field name to create its database column
     # name, can be changed by db_colum
     # https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ForeignKey.to_field
-    driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
+    # driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
 
     # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
 

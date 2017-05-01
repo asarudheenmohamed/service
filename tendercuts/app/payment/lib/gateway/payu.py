@@ -1,5 +1,5 @@
 from .base import AbstractGateway
-from app.payment_recon import models as models
+from app.payment import models as models
 import requests
 import hashlib
 import json
@@ -55,6 +55,8 @@ class Payu(AbstractGateway):
                 payu_status.append(model)
 
         except ValueError as e:
+            self.log.exception(str(e))
+        except KeyError as e:
             self.log.exception(str(e))
 
         return payu_status

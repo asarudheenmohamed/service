@@ -33,7 +33,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'every-minute': {
-        'task': 'app.payment_recon.tasks.cancel_payu_orders',
+        'task': 'app.payment.tasks.cancel_payu_orders',
         'schedule': crontab(minute='*/5')
     },
     'every-1-mins-sfx-push': {
@@ -41,7 +41,7 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute='*/1')
     },
     "every-1-mins-payment-check": {
-        "task": 'app.payment_recon.tasks.print_failed_to_capture_payments',
+        "task": 'app.payment.tasks.print_failed_to_capture_payments',
         'schedule': crontab(minute='*/3')
     }
 }

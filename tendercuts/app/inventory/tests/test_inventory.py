@@ -10,39 +10,32 @@ from rest_framework import HTTP_HEADER_ENCODING
 import collections
 import json
 
-@pytest.fixture
-def rest():
-    user = User.objects.get(username="u:18963")
-    client = APIClient()
-    client.force_authenticate(user=user)
-    return client
 
 class TestApiLogin:
-    def test_fetch_inventory(self, rest):
+    def test_fetch_inventory(self, auth_rest):
         """
         """
-        response = rest.get(
-                "/inventory/store/",
-                {"store_id": 1,
-                 "website_id": 2},
-                format='json')
-        
+        response = auth_rest.get(
+            "/inventory/store/",
+            {"store_id": 1,
+             "website_id": 2},
+            format='json')
+
         assert len(response.json()) > 20
 
-    def test_fetch_inventory_product(self, rest):
+    def test_fetch_inventory_product(self, auth_rest):
         """
         """
         data = {
             "store_id": 1,
             "website_id": 2,
-            "product_ids" : ",".join(["193" ,"194"])
+            "product_ids": ",".join(["193", "194"])
         }
 
-        response = rest.get(
-                "/inventory/store/",
-                data,
-                format='json')
+        response = auth_rest.get(
+            "/inventory/store/",
+            data,
+            format='json')
         print(response)
-        
-        assert len(response.json()) == 2
 
+        assert len(response.json()) == 2
