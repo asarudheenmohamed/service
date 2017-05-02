@@ -168,8 +168,9 @@ class FlatCustomer():
         customer['entity_id'] = self.customer.entity_id
 
         try:
-            customer['reward_points'] = \
-                self.customer.reward_point.filter(is_expired=0).aggregate(Sum('amount'))
+            reward_pts_sum = self.customer.reward_point.filter(is_expired=0) \
+                .aggregate(amount=Sum('amount'))
+            customer['reward_points'] = reward_pts_sum['amount'] or 0
         except Exception as e:
             customer['reward_points'] = 0
         
