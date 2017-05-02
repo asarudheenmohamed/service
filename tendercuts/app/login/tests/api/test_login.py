@@ -19,5 +19,5 @@ class TestApiLogin:
                  "password": mock_user.password})
 
         print (response.data)
-        assert response.data['reward_points'] > 0
+        assert response.data['reward_points'] >= 0
         assert response.data['email'] == mock_user.username

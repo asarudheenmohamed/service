@@ -79,7 +79,7 @@ class TestUserFetch:
             "/user/fetch/?phone=9908765678", format='json')
         print(response)
         assert type(response) is not None
-        assert len(response.data['attribute']) == 2
+        assert len(response.data['attribute']) == 3
 
 
 class TestUserExists:

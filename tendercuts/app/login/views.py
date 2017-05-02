@@ -221,7 +221,7 @@ class UserDataFetch(APIView):
         """
         username = self.request.GET.get('email', None) or \
                 self.request.GET.get('phone', None)
-        fields = ['reward_points', 'store_credit']
+        fields = ['reward_points', 'store_credit', 'address']
 
 
         if username is None:
