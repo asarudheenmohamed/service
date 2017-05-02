@@ -33,7 +33,11 @@ class InventoryViewSet(APIView):
         for (_, val) in merged.items():
             # double check if both quantity and schedule qty are present
             val.setdefault("qty", 0)
-            val.setdefault("scheduledqty", 0)
+            scheduled_qty = val.setdefault("scheduledqty", 0)
+            # In case it is set as none in DB, then replace with 0
+            if scheduled_qty is None:
+                val['scheduledqty'] = 0
+
             values.append(val)
         
         return values
