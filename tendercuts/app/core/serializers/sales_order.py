@@ -25,15 +25,16 @@ class SalesOrderSerializer(serializers.ModelSerializer):
     shipping_address = SalesOrderAddressSerializer(many=True)
     items = SalesFlatOrderItemSerializer(many=True)
     payment = SalesFlatOrderPaymentSerializer(many=True)
-    driver = DriverSerializer()
+    # driver = DriverSerializer()
     # store = StoreSerializer()
 
     class Meta:
+        #'driver',
         model = models.SalesFlatOrder
         fields = ('entity_id', "increment_id", "customer_id",
             "customer_firstname", "customer_firstname",
             "grand_total", "updated_at", "payment",
-            "store_id", "shipping_address", 'driver', "items",
+            "store_id", "shipping_address", "items",
             "status", "order_now")
 
 

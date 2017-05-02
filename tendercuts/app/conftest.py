@@ -2,6 +2,21 @@
 Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
+from rest_framework.test import APIClient
+
+@pytest.fixture
+def rest():
+    return APIClient()
+
+
+@pytest.fixture
+def auth_rest():
+    from django.contrib.auth.models import User
+    user = User.objects.get(username="u:18963")
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
+
 
 @pytest.fixture
 def serializer():
@@ -22,9 +37,6 @@ def serializer():
                         attr_name,
                         EavSerializer.serialize(attr_value))
             return obj
-
-
-
 
 @pytest.fixture(scope="session")
 def generate_mock_order(magento):

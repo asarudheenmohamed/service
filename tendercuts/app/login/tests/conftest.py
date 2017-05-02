@@ -5,11 +5,6 @@ import base64
 from rest_framework import HTTP_HEADER_ENCODING
 import collections
 
-
-@pytest.fixture
-def rest():
-    return APIClient()
-
 @pytest.fixture
 def mock_user():
     MockUser = collections.namedtuple(
