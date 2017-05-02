@@ -21,13 +21,22 @@ class InventoryViewSet(APIView):
     # serializer_class = serializers.CatalogProductFlat1Serializer
     def merge_lists(self, l1, l2, key):
         merged = {}
+        # list of dicts containning keys: product and qty|scheduledQty
+        # join them on product IDs
         for item in list(l1) + list(l2):
             if item[key] in merged:
                 merged[item[key]].update(item)
             else:
                 merged[item[key]] = item
 
-        return [val for (_, val) in merged.items()]
+        values = []
+        for (_, val) in merged.items():
+            # double check if both quantity and schedule qty are present
+            val.setdefault("qty", 0)
+            val.setdefault("scheduledqty", 0)
+            values.append(val)
+        
+        return values
 
     def get(self, request):
         """
