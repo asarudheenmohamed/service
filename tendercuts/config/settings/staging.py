@@ -41,3 +41,8 @@ MAGENTO = {
     "endpoint": "/v2_external/tendercuts-site/index.php/api/xmlrpc/",
     "proto": "https"
 }
+
+PAYMENT_SIMPL = {
+    "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",
+    "url": "https://sandbox-api.getsimpl.com"
+}
