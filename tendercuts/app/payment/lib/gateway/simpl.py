@@ -1,6 +1,6 @@
 from app.core.lib.exceptions import OrderNotFound
 from .base import AbstractGateway
-import ..models as models
+from ... import models as models
 
 from django.conf import settings
 import logging
@@ -11,7 +11,7 @@ import json
 class GetSimplGateway(AbstractGateway):
 
     def __init__(self, log=None):
-        super().__init__()
+        super(GetSimplGateway, self).__init__()
         self.api_secret = settings.PAYMENT_SIMPL["secret"]
         self.url = settings.PAYMENT_SIMPL["url"]
 
@@ -28,29 +28,31 @@ class GetSimplGateway(AbstractGateway):
         if (len(sale_order) == 0):
             raise OrderNotFound()
 
+        sale_order = sale_order[0]
         items = []
-        for item in sale_order.items:
+        for item in sale_order.items.all():
             items.append({
                 "sku": item.sku,
-                "quantity": item.qty_ordered,
-                "unit_price_in_paise": item.price * 100,
+                "quantity": int(item.qty_ordered),
+                "unit_price_in_paise": int(item.price * 100),
                 "display_name": item.name
             })
 
+        shipping_address = sale_order.shipping_address.all()[0]
         address = {
-            "line1": sale_order.shipping_address.fax,
-            "line2": sale_order.shipping_address.street,
-            "city": sale_order.shipping_address.city,
-            "state": sale_order.shipping_address.region,
-            "pincode": sale_order.shipping_address.postcode
+            "line1": shipping_address.fax,
+            "line2": shipping_address.street,
+            "city": shipping_address.city,
+            "state": shipping_address.region,
+            "pincode": shipping_address.postcode
         }
 
         data = {
             "transaction_token": transaction_token,
-            "amount_in_paise": sale_order.grand_total * 100,
-            "order_id": sale_order.increment_id,
-            "shipping_amount_in_paise": sale_order.shipping_amount * 100,
-            "discount_in_paise": sale_order.discount_amount * 100,
+            "amount_in_paise": int(sale_order.grand_total * 100),
+            #"order_id": sale_order.increment_id,
+            "shipping_amount_in_paise": int(sale_order.shipping_amount * 100),
+            "discount_in_paise": int(sale_order.discount_amount * 100),
             "items": items,
             "shipping_address": address,
             "billing_address": address
@@ -68,4 +70,4 @@ class GetSimplGateway(AbstractGateway):
 
         response.raise_for_status()
 
-        return response.data['status']
+        return response.json()['success']

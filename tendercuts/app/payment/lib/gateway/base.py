@@ -1,7 +1,7 @@
 import abc
 import logging
 
-class AbstractGateway:
+class AbstractGateway(object):
     def __init__(self, log=None):
         self.log = log or logging.getLogger()
 
