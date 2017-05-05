@@ -31,5 +31,14 @@ class VerifyTransaction(APIView):
             raise exceptions.ValidationError(('Invalid data'))
 
         gateway = self.GW_MAP[gateway](log=logger)
-        status = gateway.verify_transaction(order_id=increment_id, vendor_id=vendor_id)
-        return Response({"status": status})
+
+	try:
+            logger.info("Making payment with {} for the order Is: {}".format(
+                gateway, increment_id))
+            status = gateway.verify_transaction(order_id=increment_id, vendor_id=vendor_id)
+            return Response({"status": status})
+        except Exception as e:
+            logger.info("Payemnt failed for {} with error".format(
+                increment_id, str(e)))
+            return Response({"status": False})
+            
