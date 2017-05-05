@@ -28,7 +28,7 @@ class JusPayGateway(AbstractGateway):
             order_id (str): Increment_id
             vendort_id (str): Not used
         """
-        self.log.debug("Checking order status from JUSPAY")
+        self.log.debug("Checking order status for {} from JUSPAY".format(order_id))
         # response = juspay.Orders.status(order_id=order_id)
         order = core_models.SalesFlatOrder.objects.filter(
             increment_id=order_id)
