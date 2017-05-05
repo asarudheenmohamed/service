@@ -509,3 +509,28 @@ class SalesFlatOrderPayment(models.Model):
         managed = False
         db_table = 'sales_flat_order_payment'
         app_label = "magento"
+
+class SalesFlatOrderGrid(models.Model):
+    entity = models.OneToOneField(SalesFlatOrder, models.DO_NOTHING, primary_key=True, related_name="grid")
+    status = models.CharField(max_length=32, blank=True, null=True)
+    # store = models.ForeignKey('CoreStore', models.DO_NOTHING, blank=True, null=True)
+    store_name = models.CharField(max_length=255, blank=True, null=True)
+    # customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
+    base_grand_total = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    base_total_paid = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    grand_total = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    total_paid = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    increment_id = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    base_currency_code = models.CharField(max_length=3, blank=True, null=True)
+    order_currency_code = models.CharField(max_length=255, blank=True, null=True)
+    shipping_name = models.CharField(max_length=255, blank=True, null=True)
+    billing_name = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    vtiger_id = models.IntegerField(blank=True, null=True)
+    driver = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sales_flat_order_grid'
+        app_label = "magento"

@@ -4,19 +4,19 @@ from django.http import HttpResponseNotFound
 from random import randint
 import uuid
 
+
 class TestApiLogin:
     def test_endpoint_exists(self, rest):
         response = rest.get("/user/login/", format='json')
         assert type(response) is not HttpResponseNotFound
 
-
     def test_user_login(self, rest, mock_user):
         """
         """
         response = rest.post(
-                "/user/login/",
-                {"email": mock_user.username,
-                 "password": mock_user.password})
+            "/user/login/",
+            {"email": mock_user.username,
+             "password": mock_user.password})
 
         print (response.data)
         assert response.data['reward_points'] >= 0

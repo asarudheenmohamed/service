@@ -42,7 +42,22 @@ MAGENTO = {
     "proto": "https"
 }
 
-PAYMENT_SIMPL = {
-    "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",
-    "url": "https://sandbox-api.getsimpl.com"
+PAYMENT = {
+    "SIMPL": {
+        "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",
+        "url": "https://sandbox-api.getsimpl.com"
+    },
+    "RZP": {
+        "merchant_id": "6gzz9v5B2a354o",
+        "id": "rzp_test_CHbBWl0VBUXzyU",
+        "secret": "CGnPUkQSpWevFi33ElQY7rjI",
+        "url": ""
+    },
+    "JUSPAY": {
+        "merchant_id": "tendercuts",
+        "id": "0F38CA55EAA0492987E8B5FB5635D223",
+        "secret": "C8B21475421D4A14AE78A825344B7E65",
+        "url": "",
+        "environment": "sandbox"
+    }
 }

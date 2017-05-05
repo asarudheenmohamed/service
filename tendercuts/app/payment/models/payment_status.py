@@ -15,12 +15,12 @@ class PaymentStatusResponse(models.Model):
     # Tendercuts custom status
     # Needs to be deprecated!
     is_payment_captured = models.BooleanField()
-    amount_captured = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    amount_captured = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
 
     @property
     def order(self):
         return SalesFlatOrder.objects.filter(increment_id=self.tpn)
-
 
     @classmethod
     def from_payu_status(cls, order, status_dict):
@@ -37,10 +37,9 @@ class PaymentStatusResponse(models.Model):
         amount_captured = status_dict.get("net_amount_debit", "-1")
 
         return cls(
-                tpn=order.increment_id,
-                vendor_name="payu",
-                vendor_id=vendor_id,
-                vendor_status=status,
-                is_payment_captured=is_payment_captured,
-                amount_captured=amount_captured)
-
+            tpn=order.increment_id,
+            vendor_name="payu",
+            vendor_id=vendor_id,
+            vendor_status=status,
+            is_payment_captured=is_payment_captured,
+            amount_captured=amount_captured)

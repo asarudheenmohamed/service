@@ -1,3 +1,7 @@
+"""
+GetSimpl implementation
+"""
+
 from app.core.lib.exceptions import OrderNotFound
 from .base import AbstractGateway
 from ... import models as models
@@ -8,22 +12,37 @@ import requests
 import requests.exceptions
 import json
 
+
 class GetSimplGateway(AbstractGateway):
+    """
+    Simpl gateway implemenatation
+    """
 
     def __init__(self, log=None):
-        super(GetSimplGateway, self).__init__()
-        self.api_secret = settings.PAYMENT_SIMPL["secret"]
-        self.url = settings.PAYMENT_SIMPL["url"]
+        """
+        constructor
+        """
+        super(self.__class__, self).__init__()
+        self.api_secret = settings.PAYMENT['SIMPL']["secret"]
+        self.url = settings.PAYMENT['SIMPL']["url"]
 
-    def check_payment_status(self, orders):
-        pass
+    def check_payment_status(self, order_id, vendor_id):
+        """
+        Here we need to use the transaction token given by simpl to claim
+        the transaction
 
-    def update_order_with_payment(self, increment_id, transaction_token):
+        params:
+            order_id (str): Incement Id
+            vendor_id(str): Token given by simpl
+
+        returns:
+            status (boolean) True in case of sucess otherwise fail
+        """
         sale_order = models.SalesFlatOrder.objects         \
-                .filter(increment_id=increment_id)         \
-                .prefetch_related("items")                 \
-                .prefetch_related("payment")               \
-                .prefetch_related("shipping_address")
+            .filter(increment_id=order_id)         \
+            .prefetch_related("items")                 \
+            .prefetch_related("payment")               \
+            .prefetch_related("shipping_address")
 
         if (len(sale_order) == 0):
             raise OrderNotFound()
@@ -48,7 +67,7 @@ class GetSimplGateway(AbstractGateway):
         }
 
         data = {
-            "transaction_token": transaction_token,
+            "transaction_token": vendor_id,
             "amount_in_paise": int(sale_order.grand_total * 100),
             #"order_id": sale_order.increment_id,
             "shipping_amount_in_paise": int(sale_order.shipping_amount * 100),

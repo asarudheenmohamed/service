@@ -31,6 +31,7 @@ tables = ["customer_address_entity", "customer_address_entity_datetime",
 tables = ["m_credit_balance"]
 tables = ["sales_flat_quote"]
 tables = ["m_rewards_transaction"]
+tables = ["sales_flat_order_grid"]
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
