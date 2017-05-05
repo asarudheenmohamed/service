@@ -40,5 +40,4 @@ class VerifyTransaction(APIView):
         except Exception as e:
             logger.info("Payemnt failed for {} with error".format(
                 increment_id, str(e)))
-            return Response({"status": False})
-            
+            return Response({"status": False}) 
