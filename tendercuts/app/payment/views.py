@@ -32,4 +32,5 @@ class VerifyTransaction(APIView):
 
         gateway = self.GW_MAP[gateway](log=logger)
         status = gateway.verify_transaction(order_id=increment_id, vendor_id=vendor_id)
+        logger.info("Sending back {} for the transaction {}".format(status, vendor_id))
         return Response({"status": status})
