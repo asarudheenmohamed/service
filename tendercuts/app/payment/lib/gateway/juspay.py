@@ -5,6 +5,9 @@ from __future__ import absolute_import, unicode_literals
 import juspay
 from django.conf import settings
 
+from app.core.lib.exceptions import OrderNotFound
+from app.core import models as core_models
+
 from .base import AbstractGateway
 
 
@@ -26,8 +29,13 @@ class JusPayGateway(AbstractGateway):
             vendort_id (str): Not used
         """
         self.log.debug("Checking order status from JUSPAY")
-        response = juspay.Orders.status(order_id=order_id)
+        # response = juspay.Orders.status(order_id=order_id)
+        order = core_models.SalesFlatOrder.objects.filter(
+            increment_id=order_id)
 
-        if response:
-            self.log.debug("Response from server: {}".format(response.status))
-        return response.status == self.SUCCESS
+        if not order:
+            raise OrderNotFound()
+
+        order = order[0]
+
+        return order.status == 'pending' or order.status == "scheduled_order"
