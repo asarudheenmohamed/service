@@ -40,7 +40,7 @@ class RzpGateway(AbstractGateway):
         if not order:
             raise OrderNotFound()
 
-        response = self.client.order.capture(
+        response = self.client.payment.capture(
             vendor_id,
             int(order[0].grand_total * 100))  # in paise
 
