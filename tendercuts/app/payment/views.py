@@ -89,14 +89,21 @@ class JusPayApprovalCallBack(APIView):
                        msg=encoded_string,
                        digestmod=hashlib.sha256).digest()
 
-        is_match = urllib.quote_plus(base64.b64encode(dig).decode()) == \
-            hash_code
+        computed_hash = urllib.quote_plus(base64.b64encode(dig).decode())
+        is_match = computed_hash == hash_code
+        
+        logger.debug("Trying to verify signature {} and computed signature".format(
+                computed_hash, hash_code))
 
         if not is_match:
             raise exceptions.PermissionDenied()
 
-        is_charged = request.query_params['status'] == "CHARGED"
+        payment_status = request.query_params['status']
+        is_charged =  payment_status == "CHARGED"
         increment_id = request.query_params['order_id']
+        
+        logger.debug("Trying to approve {} with statu: {}".format(
+                increment_id, payment_status))
 
         if not is_charged:
             return Response({"status": False})
