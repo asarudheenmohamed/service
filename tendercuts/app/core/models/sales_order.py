@@ -528,7 +528,7 @@ class SalesFlatOrderGrid(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
     vtiger_id = models.IntegerField(blank=True, null=True)
-    driver = models.IntegerField(blank=True, null=True)
+    #driver = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
