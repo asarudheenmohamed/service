@@ -28,10 +28,12 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = models.SalesFlatOrder.objects        \
                 .filter(customer_id=user_id)                \
                 .exclude(status__in=['canceled', 'closed']) \
-                .order_by('-created_at')                     \
+                .order_by('-created_at')                    \
                 .prefetch_related("items")                  \
                 .prefetch_related("payment")                \
-                .prefetch_related("shipping_address")                 \
+                .prefetch_related("shipping_address")       \
+                .prefetch_related("schedule")               \
+                .prefetch_related("schedule__ddate")        \
                 [:10]
 
         except KeyError:
