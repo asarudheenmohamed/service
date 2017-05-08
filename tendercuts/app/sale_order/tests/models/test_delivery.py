@@ -2,22 +2,35 @@ from app.sale_order.models import *
 from django.http import HttpResponseNotFound
 import datetime
 
+
 class TestDeliveryModel:
+    """
+    Tests for model delivery
+    """
     def test_delivery_fetch(self):
+        """
+        Check delivery
+        """
         assert ScheduledDelivery() is not None
 
     def test_delivery_cost(self):
+        """
+        Verify delivery cost
+        """
         assert ScheduledDelivery().cost == 0
         assert ExpressDelivery().cost == 49
 
     def test_slots_available(self):
+        """
+        Verify slots availabilty
+        """
         assert ScheduledDelivery().is_slots_available() is True
         assert ExpressDelivery().is_slots_available() is True
 
         assert ExpressDelivery().is_slots_available(
-                now=datetime.time(20, 0, 1)) is False
+            now=datetime.time(20, 0, 1)) is False
         assert ExpressDelivery().is_slots_available(
-                now=datetime.time(6, 29, 59)) is False
+            now=datetime.time(6, 29, 59)) is False
 
     def test_slots(self):
         delivery = ScheduledDelivery()
@@ -34,12 +47,13 @@ class TestDeliveryModel:
         print(slots)
         assert len(slots) == 3
         assert len(slots[0]['times']) == 4
-            # ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
+        # ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
 
         dt_now = now.replace(hour=19)
         slots = delivery.available_slots(now=dt_now)
         print(slots)
         assert len(slots) == 2
+
 
 class TestDeliveryRestApi:
 
@@ -53,4 +67,3 @@ class TestDeliveryRestApi:
         assert len(response.data) == 2
         assert response.data[0]['name'] == "Scheduled Delivery"
         assert response.data[1]['name'] == "Express Delivery"
-
