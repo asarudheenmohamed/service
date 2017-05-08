@@ -92,7 +92,7 @@ class JusPayApprovalCallBack(APIView):
         computed_hash = urllib.quote_plus(base64.b64encode(dig).decode())
         is_match = computed_hash == hash_code
         
-        logger.debug("Trying to verify signature {} and computed signature".format(
+        logger.debug("Trying to verify signature {} and computed signature {}".format(
                 computed_hash, hash_code))
 
         if not is_match:
