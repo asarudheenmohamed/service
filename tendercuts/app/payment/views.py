@@ -92,7 +92,7 @@ class JusPayApprovalCallBack(APIView):
         computed_hash = urllib.quote_plus(base64.b64encode(dig).decode())
         is_match = computed_hash == hash_code
         
-        logger.debug("Trying to verify signature {} and computed signature".format(
+        logger.debug("Trying to verify signature {} and computed signature {}".format(
                 computed_hash, hash_code))
 
         if not is_match:
@@ -102,7 +102,7 @@ class JusPayApprovalCallBack(APIView):
         is_charged =  payment_status == "CHARGED"
         increment_id = request.query_params['order_id']
         
-        logger.debug("Trying to approve {} with statu: {}".format(
+        logger.debug("Trying to approve {} with status: {}".format(
                 increment_id, payment_status))
 
         if not is_charged:
@@ -113,6 +113,8 @@ class JusPayApprovalCallBack(APIView):
             logger.info(
                 "confirming payment for the order ID: {}".format(increment_id))
             status = gateway.update_order_status(increment_id)
+            logger.info(
+                "confirmed payment for the order ID: {} with status {}".format(increment_id, status))
             return Response({"status": True})
         except Exception as e:
             exception = traceback.format_exc()

@@ -37,5 +37,6 @@ class JusPayGateway(AbstractGateway):
             raise OrderNotFound()
 
         order = order[0]
+        self.log.debug("Order status for {} is {}".format(order_id, order.status))
 
         return order.status == 'pending' or order.status == "scheduled_order"
