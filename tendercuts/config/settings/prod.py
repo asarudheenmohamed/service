@@ -55,9 +55,9 @@ PAYMENT = {
         "url": ""
     },
     "JUSPAY": {
-        "merchant_id": "tendercuts",
-        "id": "0F38CA55EAA0492987E8B5FB5635D223",
-        "secret": "C8B21475421D4A14AE78A825344B7E65",
+        "merchant_id": "TenderCuts",
+        "id": "12CC428E2EF843059C3EAC10AE14F06F",
+        "secret": "7E93DB150C034DF79E5C21BB61D9D5EB",
         "url": "",
         "environment": "production"
     }
