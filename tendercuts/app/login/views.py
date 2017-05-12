@@ -175,8 +175,10 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
                 otp=random.randint(1000, 9999))
             models.OtpList.redis_save(redis_db, otp)
 
+        logger.info("Generating OTP for {} with code: {}".format(otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
         SMS().send(phnumber=otp.mobile, message=msg)
+        logger.info("OTP sent")
 
         otp.otp = None
         serializer = self.get_serializer(otp)
