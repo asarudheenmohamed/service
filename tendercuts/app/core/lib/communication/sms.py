@@ -36,4 +36,4 @@ class SMS():
     def send(self, phnumber, message):
 
         self.otp.msg = message
-        self.otp.send(phnumber, settings.SMS_GATEWAY["SENDER"])
+        self.otp.send(phnumber, settings.SMS_GATEWAY["SENDER_ID"])
