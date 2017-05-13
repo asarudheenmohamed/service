@@ -24,3 +24,4 @@ django-debug-toolbar
 flower
 juspay
 razorpay
+python-dateutil
