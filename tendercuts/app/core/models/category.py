@@ -10,7 +10,7 @@ from __future__ import unicode_literals
 
 from .product import CatalogProductEntity
 from django.conf import settings
-from django.db mport models
+from django.db import models
 
 
 class CatalogCategoryEntity(models.Model):
