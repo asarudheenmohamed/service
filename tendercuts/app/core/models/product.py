@@ -4,10 +4,13 @@
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+# Feel free to rename the models, but don't rename db_table values or
+# field names.
 from __future__ import unicode_literals
 
 from django.db import models
+from django.conf import settings
+
 
 class CatalogProductEntity(models.Model):
     # entity_type = models.ForeignKey('EavEntityType', models.DO_NOTHING)
@@ -31,12 +34,13 @@ class CatalogProductEntity(models.Model):
         return str(self.entity_id)
 
 
-
 class CatalogProductFlat(models.Model):
-    entity = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING, primary_key=True)
+    entity = models.ForeignKey(
+        CatalogProductEntity, models.DO_NOTHING, primary_key=True)
     attribute_set_id = models.SmallIntegerField()
     type_id = models.CharField(max_length=32)
-    cost = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    cost = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     gift_message_available = models.SmallIntegerField(blank=True, null=True)
     has_options = models.SmallIntegerField()
@@ -44,13 +48,16 @@ class CatalogProductFlat(models.Model):
     is_recurring = models.SmallIntegerField(blank=True, null=True)
     links_purchased_separately = models.IntegerField(blank=True, null=True)
     links_title = models.CharField(max_length=255, blank=True, null=True)
-    msrp = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
-    msrp_display_actual_price_type = models.CharField(max_length=255, blank=True, null=True)
+    msrp = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
+    msrp_display_actual_price_type = models.CharField(
+        max_length=255, blank=True, null=True)
     msrp_enabled = models.SmallIntegerField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     news_from_date = models.DateTimeField(blank=True, null=True)
     news_to_date = models.DateTimeField(blank=True, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    price = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
     price_type = models.IntegerField(blank=True, null=True)
     price_view = models.IntegerField(blank=True, null=True)
     recurring_profile = models.TextField(blank=True, null=True)
@@ -62,7 +69,8 @@ class CatalogProductFlat(models.Model):
     small_image = models.CharField(max_length=255, blank=True, null=True)
     small_image_label = models.CharField(max_length=255, blank=True, null=True)
     special_from_date = models.DateTimeField(blank=True, null=True)
-    special_price = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    special_price = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
     special_to_date = models.DateTimeField(blank=True, null=True)
     tax_class_id = models.IntegerField(blank=True, null=True)
     thumbnail = models.CharField(max_length=255, blank=True, null=True)
@@ -71,14 +79,17 @@ class CatalogProductFlat(models.Model):
     url_key = models.CharField(max_length=255, blank=True, null=True)
     url_path = models.CharField(max_length=255, blank=True, null=True)
     visibility = models.SmallIntegerField(blank=True, null=True)
-    weight = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    weight = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
     weight_type = models.IntegerField(blank=True, null=True)
     credit_amount = models.TextField(blank=True, null=True)
     credit_rate = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    gross_weight_description = models.CharField(max_length=255, blank=True, null=True)
+    gross_weight_description = models.CharField(
+        max_length=255, blank=True, null=True)
     product_sold = models.IntegerField(blank=True, null=True)
-    product_sold_value = models.CharField(max_length=255, blank=True, null=True)
+    product_sold_value = models.CharField(
+        max_length=255, blank=True, null=True)
     product_spec = models.CharField(max_length=255, blank=True, null=True)
     qty_inc = models.CharField(max_length=255, blank=True, null=True)
     rewardpoints_spend = models.IntegerField(blank=True, null=True)
@@ -87,11 +98,19 @@ class CatalogProductFlat(models.Model):
     status = models.SmallIntegerField(blank=True, null=True)
     uom = models.IntegerField(blank=True, null=True)
     uom_value = models.CharField(max_length=255, blank=True, null=True)
-    weight_description = models.CharField(max_length=255, blank=True, null=True)
+    weight_description = models.CharField(
+        max_length=255, blank=True, null=True)
 
     class Meta:
         app_label = "magento"
         abstract = True
+
+    @property
+    def thumb(self):
+        """
+        Append URL
+        """
+        return "{}/media/catalog/product/{}".format(settings.CDN, self.small_image)
 
 
 class CatalogProductFlat1(CatalogProductFlat):
@@ -134,4 +153,3 @@ class CatalogProductFlat9(CatalogProductFlat):
         managed = False
         db_table = 'catalog_product_flat_9'
         app_label = "magento"
-
