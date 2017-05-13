@@ -109,14 +109,14 @@ class CatalogCategoryFlatStore(models.Model):
         """
         Append URL: png image for the samll icons
         """
-        return "{}/media/catalog/category/{}.png".format(settings.CDN, self.id)
+        return "{}/media/catalog/category/{}.png".format(settings.CDN, self.entity_id)
 
     @property
     def image(self):
         """
         Append URL: jpg image for the actual image
         """
-        return "{}/media/catalog/category/{}.jpg".format(settings.CDN, self.id)
+        return "{}/media/catalog/category/{}.jpg".format(settings.CDN, self.entity_id)
 
 
 class CatalogCategoryFlatStore1(CatalogCategoryFlatStore):
