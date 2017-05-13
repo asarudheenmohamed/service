@@ -3,7 +3,8 @@ from .. import models as models
 from . import attribute
 from . import product
 
-PRODUCT_FIELDS = ('image', 'is_active', 'name', "entity_id")
+# thumb is a generated property with CDN
+PRODUCT_FIELDS = ('thumb', 'image', 'is_active', 'name', "entity_id")
 
 class CatalogCategoryFlatStore1Serializer(serializers.ModelSerializer):
     class Meta:
