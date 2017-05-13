@@ -1,8 +1,9 @@
 from django.conf import settings
 
 import requests
+import sendotp
 
-class SMS():
+class OldSMS():
     def __init__(self):
         pass
 
@@ -24,3 +25,15 @@ class SMS():
 
         # Raise error
         resp.raise_for_status()
+
+
+class SMS():
+    def __init__(self):
+        self.otp =  sendotp.sendotp(
+            settings.SMS_GATEWAY["KEY"],
+            "")
+
+    def send(self, phnumber, message):
+
+        self.otp.msg = message
+        self.otp.send(phnumber, settings.SMS_GATEWAY["SENDER"])

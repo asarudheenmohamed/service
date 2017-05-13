@@ -183,10 +183,17 @@ STATIC_URL = '/static/'
 
 
 # application specific: Communication
-SMS_GATEWAY = {
+# Deprecated: 
+OLD_SMS_GATEWAY = {
     "KEY" : "A03daa52993fe5f1f3384925de5826b30",
     "SENDER_ID": "TENDER",
     "ENDPOINT": "http://alerts.synicsys.com/api/v4/"
+}
+
+SMS_GATEWAY = {
+    "KEY": "152377Awdd5u4YpFi5917274f",
+    "SENDER_ID": "TENDER",
+    "ENDPOINT": ""
 }
 
 MAIL_GATEWAY = {
