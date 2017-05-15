@@ -193,7 +193,7 @@ OLD_SMS_GATEWAY = {
 SMS_GATEWAY = {
     "KEY": "152377Awdd5u4YpFi5917274f",
     "SENDER_ID": "TENDER",
-    "ENDPOINT": "https://control.msg91.com/api/sendhttp.php"
+    "ENDPOINT": "http://control.msg91.com/api/sendhttp.php"
 }
 
 MAIL_GATEWAY = {
