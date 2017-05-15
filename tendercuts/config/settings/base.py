@@ -83,6 +83,15 @@ MIDDLEWARE = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            # 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -100,6 +109,7 @@ LOGGING = {
             'filename': os.path.join("/var/log/django", 'tendercuts.log'),
             'maxBytes': 1024*1024*15, # 15MB
             'backupCount': 10,
+            'formatter': 'verbose'
         }
     },
     'loggers': {
@@ -108,6 +118,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        # Anything
         '': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
