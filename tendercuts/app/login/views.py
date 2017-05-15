@@ -146,7 +146,7 @@ class OtpApiViewSet(viewsets.GenericViewSet):
                 "Generated a new OTP for the number {}".format(otp.mobile))
 
         msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
-        SMS().sendOTP(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
 
         serializer = self.get_serializer(otp)
         return Response(serializer.data)
@@ -194,7 +194,7 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-        SMS().sendOTP(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
         logger.info("OTP sent")
 
         otp.otp = None
