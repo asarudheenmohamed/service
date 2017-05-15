@@ -73,7 +73,7 @@ class SMS():
         requests.get(
             settings.SMS_GATEWAY["ENDPOINT"],
             verify=False,
-            data=data)
+            params=data)
 
     def send_otp(self, phnumber, message, otp):
         """
