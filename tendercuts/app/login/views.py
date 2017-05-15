@@ -1,19 +1,19 @@
 # Create your views here.magent
-import redis
-import app.core.lib.magento as magento
-from . import lib
-from . import models
-from . import serializers
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import viewsets, generics, mixins, exceptions
-from app.core.lib.communication import SMS
-from django.http import Http404
-import random
-import string
 # import the logging library
 import logging
+import random
+import string
 import traceback
+
+import app.core.lib.magento as magento
+import redis
+from app.core.lib.communication import SMS
+from django.http import Http404
+from rest_framework import exceptions, generics, mixins, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from . import lib, models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -32,18 +32,19 @@ class UserExistsApi(APIView):
         email = self.request.GET.get('email', None)
         phone = self.request.GET.get('phone', None)
 
-
         user_exists = False
         message = ""
 
         if email and models.FlatCustomer.is_user_exists(email):
             message = "A user with the same email exists, try Forgot password?"
             user_exists = True
-            logger.debug("user already exists for the email user {}".format(email))
+            logger.debug(
+                "user already exists for the email user {}".format(email))
         elif phone and models.FlatCustomer.is_user_exists(phone):
             message = "A user with the same phone number exists, try Forgot password?"
             user_exists = True
-            logger.debug("user already exists for the phone user {}".format(phone))
+            logger.debug(
+                "user already exists for the phone user {}".format(phone))
         elif phone is None and email is None:
             message = "Invalid data"
             user_exists = True
@@ -55,6 +56,7 @@ class UserExistsApi(APIView):
         # Todo: Optimize and use flat
         return Response({"result": user_exists, "message": message})
 
+
 class UserLoginApi(APIView):
     """
     Enpoint that uses magento API to mark an order as comple
@@ -65,7 +67,8 @@ class UserLoginApi(APIView):
     def post(self, request, format=None):
         """
         """
-        username = self.request.data.get('email', None) or self.request.data['phone']
+        username = self.request.data.get(
+            'email', None) or self.request.data['phone']
         password = self.request.data['password']
 
         user = None
@@ -80,7 +83,8 @@ class UserLoginApi(APIView):
         except models.InvalidCredentials:
             user = models.FlatCustomer(None)
             user.message = "Invalid username/password"
-            logger.warn("user {} tried to login with invalid details".format(username))
+            logger.warn(
+                "user {} tried to login with invalid details".format(username))
         except Exception as e:
             user = models.FlatCustomer(None)
             user.message = "Invalid username/password"
@@ -132,16 +136,18 @@ class OtpApiViewSet(viewsets.GenericViewSet):
         otp = None
         try:
             otp = self.get_object()
-            logger.debug("Got an existing OTP for the number {}".format(otp.mobile))
+            logger.debug(
+                "Got an existing OTP for the number {}".format(otp.mobile))
         except Http404:
             otp = models.OtpList(
                 mobile=kwargs['mobile'], otp=random.randint(1000, 9999))
             otp.save()
-            logger.debug("Generated a new OTP for the number {}".format(otp.mobile))
+            logger.debug(
+                "Generated a new OTP for the number {}".format(otp.mobile))
 
         logger.info("Generating OTP for {} with code: {}".format(otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-        SMS().send(phnumber=otp.mobile, message=msg)
+        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
         logger.info("OTP sent")
 
         serializer = self.get_serializer(otp)
@@ -162,12 +168,22 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         """
+        params:
+            mobile (str): Phone number to generate an OTP
+
+        1. Generate OTP/ get existin OTP, which is valid for 15 mins
+        2. send the code
+
+        If the customer is not available then thrown an error
         """
         redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
 
         phone = kwargs['mobile']
         # check if user exists
-        customer = models.FlatCustomer.load_by_phone_mail(phone)
+        try:
+            customer = models.FlatCustomer.load_by_phone_mail(phone)
+        except models.CustomerNotFound:
+            exceptions.PermissionDenied("User does not exits")
 
         otp = models.OtpList.redis_get(redis_db, phone)
 
@@ -177,8 +193,11 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
                 otp=random.randint(1000, 9999))
             models.OtpList.redis_save(redis_db, otp)
 
+        logger.info("Generating OTP for {} with code: {}".format(
+            otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-        SMS().send(phnumber=otp.mobile, message=msg)
+        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        logger.info("OTP sent")
 
         otp.otp = None
         serializer = self.get_serializer(otp)
@@ -222,9 +241,8 @@ class UserDataFetch(APIView):
         """
         """
         username = self.request.GET.get('email', None) or \
-                self.request.GET.get('phone', None)
+            self.request.GET.get('phone', None)
         fields = ['reward_points', 'store_credit', 'address']
-
 
         if username is None:
             raise exceptions.ValidationError("Invalid user")
@@ -233,7 +251,8 @@ class UserDataFetch(APIView):
 
         try:
             user = models.FlatCustomer.load_by_phone_mail(username)
-            logger.debug("Fetched user data {} for {} successfully".format(username, user.__dict__))
+            logger.debug("Fetched user data {} for {} successfully".format(
+                username, user.__dict__))
 
             for f in fields:
                 attributes.append({
