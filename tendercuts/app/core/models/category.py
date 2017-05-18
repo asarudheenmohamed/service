@@ -4,11 +4,14 @@
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+# Feel free to rename the models, but don't rename db_table values or
+# field names.
 from __future__ import unicode_literals
 
 from .product import CatalogProductEntity
+from django.conf import settings
 from django.db import models
+
 
 class CatalogCategoryEntity(models.Model):
     entity_id = models.AutoField(primary_key=True)
@@ -22,15 +25,14 @@ class CatalogCategoryEntity(models.Model):
     level = models.IntegerField()
     children_count = models.IntegerField()
 
-
     # TODO
     products = models.ManyToManyField(CatalogProductEntity,
-        through="CatalogCategoryProduct",
-        # db_table="catalog_category_product",
-        through_fields=("category", "product"))
-        # through_fields=("category", "product"))
-        # related_name='categories',)
-        # related_query_name='entity_id')
+                                      through="CatalogCategoryProduct",
+                                      # db_table="catalog_category_product",
+                                      through_fields=("category", "product"))
+    # through_fields=("category", "product"))
+    # related_name='categories',)
+    # related_query_name='entity_id')
 
     def __str__(self):              # __unicode__ on Python 2
         return str(self.entity_id)
@@ -40,13 +42,14 @@ class CatalogCategoryEntity(models.Model):
         db_table = 'catalog_category_entity'
         app_label = "magento"
 
+
 class CatalogCategoryProduct(models.Model):
     category = models.ForeignKey(
-            CatalogCategoryEntity, models.DO_NOTHING, 
-            db_column="category_id", primary_key=True,
-            to_field="entity_id")
+        CatalogCategoryEntity, models.DO_NOTHING,
+        db_column="category_id", primary_key=True,
+        to_field="entity_id")
     product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING,
-        db_column="product_id", primary_key=True, to_field="entity_id")
+                                db_column="product_id", primary_key=True, to_field="entity_id")
     position = models.IntegerField()
 
     class Meta:
@@ -55,8 +58,10 @@ class CatalogCategoryProduct(models.Model):
         unique_together = (('category', 'product'),)
         app_label = "magento"
 
+
 class CatalogCategoryFlatStore(models.Model):
-    entity = models.ForeignKey(CatalogCategoryEntity, models.DO_NOTHING, primary_key=True)
+    entity = models.ForeignKey(
+        CatalogCategoryEntity, models.DO_NOTHING, primary_key=True)
     parent_id = models.IntegerField()
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
@@ -78,8 +83,10 @@ class CatalogCategoryFlatStore(models.Model):
     default_sort_by = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     display_mode = models.CharField(max_length=255, blank=True, null=True)
-    filter_price_range = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
-    image = models.CharField(max_length=255, blank=True, null=True)
+    filter_price_range = models.DecimalField(
+        max_digits=12, decimal_places=4, blank=True, null=True)
+    # overriding the magneto image!!
+    # image = models.CharField(max_length=255, blank=True, null=True)
     include_in_menu = models.IntegerField(blank=True, null=True)
     is_active = models.IntegerField(blank=True, null=True)
     is_anchor = models.IntegerField(blank=True, null=True)
@@ -96,6 +103,20 @@ class CatalogCategoryFlatStore(models.Model):
     class Meta:
         app_label = "magento"
         abstract = True
+
+    @property
+    def thumb(self):
+        """
+        Append URL: png image for the samll icons
+        """
+        return "{}/media/catalog/category/{}.png".format(settings.CDN, self.entity_id)
+
+    @property
+    def image(self):
+        """
+        Append URL: jpg image for the actual image
+        """
+        return "{}/media/catalog/category/{}.jpg".format(settings.CDN, self.entity_id)
 
 
 class CatalogCategoryFlatStore1(CatalogCategoryFlatStore):
@@ -139,6 +160,3 @@ class CatalogCategoryFlatStore9(CatalogCategoryFlatStore):
         managed = False
         db_table = 'catalog_category_flat_store_9'
         app_label = "magento"
-
-
-

@@ -83,6 +83,15 @@ MIDDLEWARE = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            # 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -100,6 +109,7 @@ LOGGING = {
             'filename': os.path.join("/var/log/django", 'tendercuts.log'),
             'maxBytes': 1024*1024*15, # 15MB
             'backupCount': 10,
+            'formatter': 'verbose'
         }
     },
     'loggers': {
@@ -108,6 +118,7 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        # Anything
         '': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
@@ -174,6 +185,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+CDN = "https://cdn1.tendercuts.in"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -182,10 +194,17 @@ STATIC_URL = '/static/'
 
 
 # application specific: Communication
-SMS_GATEWAY = {
+# Deprecated: 
+OLD_SMS_GATEWAY = {
     "KEY" : "A03daa52993fe5f1f3384925de5826b30",
     "SENDER_ID": "TENDER",
     "ENDPOINT": "http://alerts.synicsys.com/api/v4/"
+}
+
+SMS_GATEWAY = {
+    "KEY": "152377Awdd5u4YpFi5917274f",
+    "SENDER_ID": "TENDER",
+    "ENDPOINT": "https://control.msg91.com/api/sendhttp.php"
 }
 
 MAIL_GATEWAY = {

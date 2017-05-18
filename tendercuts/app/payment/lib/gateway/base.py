@@ -45,6 +45,8 @@ class AbstractGateway(object):
         order = OrderController(None, sale_order[0])
         order.payment_success()
 
+        return sale_order[0].status
+
     def verify_transaction(self, order_id, vendor_id):
         """
         Check the status of the order and update the magento state

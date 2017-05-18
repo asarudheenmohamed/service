@@ -3,10 +3,12 @@ from .. import models as models
 from .driver_serializer import DriverSerializer
 from .store import StoreSerializer
 
+
 class SalesOrderAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SalesFlatOrderAddress
-        fields = ('fax', "street", "region", "city", 'postcode', "telephone", "email", "address_type")
+        fields = ('fax', "street", "region", "city", 'postcode',
+                  "telephone", "email", "address_type")
 
 
 class SalesFlatOrderItemSerializer(serializers.ModelSerializer):
@@ -33,9 +35,7 @@ class SalesOrderSerializer(serializers.ModelSerializer):
         #'driver',
         model = models.SalesFlatOrder
         fields = ('entity_id', "increment_id", "customer_id",
-            "customer_firstname", "customer_firstname",
-            "grand_total", "updated_at", "payment",
-            "store_id", "shipping_address", "items",
-            "status", "order_now", "promised_delivery_time")
-
-
+                  "customer_firstname", "customer_firstname",
+                  "grand_total", "updated_at", "payment",
+                  "store_id", "shipping_address", "items",
+                  "status", "order_now", "promised_delivery_time")

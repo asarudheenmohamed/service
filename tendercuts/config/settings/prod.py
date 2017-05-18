@@ -50,8 +50,8 @@ PAYMENT = {
     },
     "RZP": {
         "merchant_id": "6gzz9v5B2a354o",
-        "id": "rzp_live_9widvJZaxTLejS",
-        "secret": "leoARfYDXDDY9szTxk40ZQbXv",
+        "id": "rzp_live_GnowTFwKbmjJAw",
+        "secret": "rKZcwb0mSFk01WnyLhg4OeAg",
         "url": ""
     },
     "JUSPAY": {

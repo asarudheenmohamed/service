@@ -15,6 +15,10 @@ from .store import CoreStore
 import datetime
 import dateutil.parser
 import pytz
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class SalesFlatOrder(models.Model):
@@ -469,8 +473,13 @@ class SalesFlatOrder(models.Model):
             else:
                 timetext = "00"
 
-            promised_time = dateutil.parser.parse(
-                "{} {}".format(date_obj, timetext))
+            logger.debug("Formatting {}: {} to text").format(date_obj, timetext)
+            try:
+                promised_time = dateutil.parser.parse(
+                    "{} {}".format(date_obj, timetext))
+            except Exception as e:
+                logger.info("Conversion to date faile")
+                promised_time = None
 
         return format(promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
 
