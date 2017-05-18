@@ -1,4 +1,4 @@
-from app.sale_order.models import *
+from app.sale_order.models import ScheduledDelivery, ExpressDelivery
 from django.http import HttpResponseNotFound
 import datetime
 
@@ -7,6 +7,7 @@ class TestDeliveryModel:
     """
     Tests for model delivery
     """
+
     def test_delivery_fetch(self):
         """
         Check delivery
@@ -33,25 +34,32 @@ class TestDeliveryModel:
             now=datetime.time(6, 29, 59)) is False
 
     def test_slots(self):
+        """
+        Asserts:
+            1. At 12 only 3 slots are there
+            2. At 5 only 4 slots are there
+            3. At 19 only 2 are there
+
+        """
         delivery = ScheduledDelivery()
         now = datetime.datetime.now(tz=delivery.tz)
 
         dt_now = now.replace(hour=12)
         slots = delivery.available_slots(now=dt_now)
+
+        today = [s for s in slots if s['date'] == str(datetime.date.today())][0]
         assert len(slots) == 3
-        print (slots)
-        assert len(slots[0]['times']) == 2
+        assert len(today['times']) == 2
 
         dt_now = now.replace(hour=5)
         slots = delivery.available_slots(now=dt_now)
-        print(slots)
+        today = [s for s in slots if s['date'] == str(datetime.date.today())][0]
         assert len(slots) == 3
-        assert len(slots[0]['times']) == 4
+        assert len(today['times']) == 4
         # ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
 
         dt_now = now.replace(hour=19)
         slots = delivery.available_slots(now=dt_now)
-        print(slots)
         assert len(slots) == 2
 
 

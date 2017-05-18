@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 #     return views.DriverViewSet.as_view({"get": "retrieve"})
 
 
-def test_driver_login(rest, auth, username, password):
+def _test_driver_login(rest, auth, username, password):
     """
     Kinda weird because, the login also serves as a usercreation in django
 

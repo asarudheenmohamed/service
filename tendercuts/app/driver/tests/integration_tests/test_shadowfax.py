@@ -12,7 +12,7 @@ def shadowfax():
 
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.incremental
-class TestShadowFax:
+class _TestShadowFax:
 
     def test_mock_order_create(self, generate_mock_order):
         # move the order to out_delivery and assign a driver

@@ -12,6 +12,7 @@ class TestApiLogin:
 
     def test_user_login(self, rest, mock_user):
         """
+        DEPRECATED
         """
         response = rest.post(
             "/user/login/",

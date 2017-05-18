@@ -1,5 +1,5 @@
-from app.core.models.sales_order import *
-from app.core.models.ddate import *
+from app.core.models.sales_order import SalesFlatOrder
+
 
 def test_orders(auth_rest):
     order_id = 76106

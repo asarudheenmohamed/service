@@ -10,7 +10,7 @@ def order_id(generate_mock_order):
 
 @pytest.mark.django_db
 @pytest.mark.incremental
-class TestFetchOrder():
+class _TestFetchOrder():
     @pytest.mark.django_db
     def test_mock_order_create(self, order_id):
         # move the order to out_delivery and assign a driver
