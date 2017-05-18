@@ -108,7 +108,9 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         serialized.is_valid(raise_exception=True)
 
         payment_mode = serialized.save()
-
+        logger.debug("Creating a transaction with the following param: {}".format(
+            payment_mode.__dict__()
+        ))
 
         gateway = gw.JusPayGateway(log=logger)
         transaction = gateway.create_payment(payment_mode)
