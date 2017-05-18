@@ -1,14 +1,22 @@
+"""
+TEst for simple gw
+"""
 from app.payment.lib.gateway import GetSimplGateway
 
+
 class TestSimplTransactionClaim:
+    """
+    Test simple GW
+    """
     def test_claim(self):
+        """
+        Ensure the test transaciotn is claimed
+        """
         gw = GetSimplGateway()
-        status =  gw.check_payment_status(
-            order_id="W800005227",
-            #"100054118", 
+
+        status = gw.check_payment_status(
+            order_id="W700002925",
+            #"100054118",
             vendor_id="8be510c41687284f3f70f2e75f92153f")
 
-        # TODO: fix this shit
         assert status is False
-        
-

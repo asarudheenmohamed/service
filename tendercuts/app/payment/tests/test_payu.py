@@ -15,7 +15,7 @@ def payment(payu_gw):
 
 @pytest.mark.django_db
 @pytest.mark.incremental
-class TestPayuGateway:
+class _TestPayuGateway:
 
     def test_mock_order(self, generate_mock_order):
         generate_mock_order.status = "pending_payment"
@@ -38,7 +38,7 @@ class TestPayuGateway:
 
 @pytest.mark.django_db
 @pytest.mark.incremental
-class TestPaymentAutomation:
+class _TestPaymentAutomation:
     def test_mock_order(self, generate_mock_order):
         generate_mock_order.status = "pending_payment"
         generate_mock_order.save()

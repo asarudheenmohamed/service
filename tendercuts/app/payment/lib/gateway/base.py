@@ -18,6 +18,14 @@ class AbstractGateway(object):
     def __init__(self, log=None):
         self.log = log or logging.getLogger()
 
+    @abc.abstractproperty
+    @property
+    def magento_code(self):
+        """
+        Payment mehtod name in magento
+        """
+        pass
+
     @abc.abstractmethod
     def check_payment_status(self, order_id, vendor_id):
         """

@@ -11,6 +11,10 @@ class Payu(AbstractGateway):
     MERCHANT_ID = "U6KiaG3M"
     KEY = "xV0BSL"
 
+    @property
+    def magento_code(self):
+        return "payubiz"
+
     def filter_orders(self, orders, threshold=60 * 15):
         # get only payu orders
         orders = [order for order in orders

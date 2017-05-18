@@ -28,6 +28,10 @@ class RzpGateway(AbstractGateway):
             api_key, api_secret))
         self.client = razorpay.Client(auth=(api_key, api_secret))
 
+    @property
+    def magento_code(self):
+        return "razorpay"
+
     def check_payment_status(self, order_id, vendor_id):
         """
         params:
@@ -35,7 +39,8 @@ class RzpGateway(AbstractGateway):
         """
         self.log.debug("Checking payment status for id {} and vendorid: {}".format(
             order_id, vendor_id))
-        order = core_models.SalesFlatOrder.objects.filter(increment_id=order_id)
+        order = core_models.SalesFlatOrder.objects.filter(
+            increment_id=order_id)
 
         if not order:
             raise OrderNotFound()

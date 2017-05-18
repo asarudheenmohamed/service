@@ -110,15 +110,3 @@ class CustomerDataApi(APIView):
         data = models.Customer().get_data(user_id)
 
         return Response(data)
-
-    
-            
-
-    # @detail_route(methods=['post'])
-    # def get(self, request, *args, **kwargs):
-    #     otp = models.OtpList.objects.filter()
-
-    #     if (len())
-    #     return Response(snippet.highlighted)
-
-

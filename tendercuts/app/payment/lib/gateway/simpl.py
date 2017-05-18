@@ -26,6 +26,10 @@ class GetSimplGateway(AbstractGateway):
         self.api_secret = settings.PAYMENT['SIMPL']["secret"]
         self.url = settings.PAYMENT['SIMPL']["url"]
 
+    @property
+    def magento_code(self):
+        return "getsimpl"
+
     def check_payment_status(self, order_id, vendor_id):
         """
         Here we need to use the transaction token given by simpl to claim

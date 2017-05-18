@@ -1,0 +1,52 @@
+"""
+Verify transactions form various gateways endpoints
+"""
+
+import logging
+import traceback
+
+from rest_framework import exceptions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.conf import settings
+
+from ..lib import gateway as gw
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
+
+class VerifyTransaction(APIView):
+    """
+    Enpoint that uses magento API to mark an order as comple
+    """
+    GW_MAP = {
+        "getsimpl": gw.GetSimplGateway,
+        "juspay": gw.JusPayGateway,
+        "razorpay": gw.RzpGateway
+    }
+
+    def post(self, request, format=None):
+        """
+        Check the gw code and trigger the appropriate gw action.
+        """
+        increment_id = self.request.data['increment_id']
+        vendor_id = self.request.data.get('vendor_id', None)
+        gateway = self.request.data.get('gw', None)
+
+        if gateway not in self.GW_MAP:
+            raise exceptions.ValidationError(('Invalid data'))
+
+        gateway = self.GW_MAP[gateway](log=logger)
+
+        try:
+            logger.info("Making payment with {} for the order Is: {}".format(
+                gateway, increment_id))
+            status = gateway.verify_transaction(
+                order_id=increment_id, vendor_id=vendor_id)
+            return Response({"status": status})
+        except Exception as e:
+            exception = traceback.format_exc()
+            logger.info("Payemnt failed for {} with error {}".format(
+                increment_id, str(exception)))
+            return Response({"status": False})
