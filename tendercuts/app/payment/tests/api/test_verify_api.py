@@ -103,6 +103,10 @@ class TestJusPayApi:
     def test_order_success(self, rest):
         """
         Verify if the order has been successfully marked complete
+
+        Asserts:
+            1. Get Request to the API set the order status to sc.order or pending
+            from payment pending
         """
         order_id = "400006313"
 

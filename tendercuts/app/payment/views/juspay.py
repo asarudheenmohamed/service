@@ -88,6 +88,9 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
 
         if len(user_id) < 1:
             user_id = None
+        else:
+            user_id = user_id[1]
+
 
         return user_id
 
@@ -109,7 +112,7 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
 
         payment_mode = serialized.save()
         logger.debug("Creating a transaction with the following param: {}".format(
-            payment_mode.__dict__()
+            payment_mode.__dict__
         ))
 
         gateway = gw.JusPayGateway(log=logger)

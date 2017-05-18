@@ -14,21 +14,30 @@ class PaymentMode(models.Model):
         method (str): Main payment mode name (juspay, simpl), should corerspond
             to magento
         gateway_code (str): Gateway specific name, such as "NB", CARDS etc
-        gateway_code_level_1 (str): More specific code
+        gateway_code_level_1 (str): More specific code of the GW vendor [TOKEN, NB CODE]etc
         priority(int): what should be the priority of these method
+        order_id(str): Id of the order from magento
+        pin (str): Can be a password/pin/cvv
+        expiry_month (str): MM format
+        expiry_year (str): YYYY format
     """
     title = models.CharField(max_length=100, blank=False, null=False)
+    subtitle = models.CharField(max_length=32, blank=True, null=True)
+
     method = models.CharField(max_length=32, blank=False, null=False)
     gateway_code = models.CharField(max_length=255, blank=False, null=False)
-
-    subtitle = models.CharField(max_length=32, blank=True, null=True)
     gateway_code_level_1 = models.CharField(
         max_length=255, blank=True, null=True)
-    priority = models.IntegerField(max_length=255, blank=True, null=True)
+
+    priority = models.IntegerField(blank=True, null=True)
     offers = models.CharField(max_length=100, blank=True, null=True)
 
     # blank true => required
     order_id = models.CharField(max_length=100, null=False, blank=False)
+
+    pin = models.CharField(max_length=32, blank=True, null=True)
+    expiry_month = models.CharField(max_length=32, blank=True, null=True)
+    expiry_year = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -61,5 +70,34 @@ class PaymentMode(models.Model):
             )
             mode.gateway_code_level_1 = obj.token
             mode.subtitle = "{}/{}".format(obj.exp_month, obj.exp_year)
+            mode.expiry_month = obj.exp_month
+            mode.expiry_year = obj.exp_year
 
         return mode
+
+    def is_juspay_card(self, new_check=False):
+        """
+        check if the payment method is juspay card
+
+        params:
+            new_check: if set checks if its a new card using the token param
+
+        returns:
+            boolean
+        """
+        is_card = self.method == "juspay" and self.gateway_code == "CARD"
+
+        # if not a store card
+        if new_check:
+            is_card = is_card and self.gateway_code_level_1 is None
+
+        return is_card
+
+    def is_juspay_nb(self):
+        """
+        check if the payment method is juspay NB
+
+        return:
+            boolean True if nb otherwise false
+        """
+        return self.method == "juspay" and self.gateway_code == "NB"

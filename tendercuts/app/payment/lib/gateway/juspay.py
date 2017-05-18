@@ -7,6 +7,8 @@ import base64
 import hashlib
 import hmac
 import urllib
+import requests
+import json
 
 import juspay
 from app.core import models as core_models
@@ -115,14 +117,88 @@ class JusPayGateway(AbstractGateway):
             juspay.Transaction
         """
 
-        if payment_mode.gateway_code == "NB":
-            transaction = juspay.Payments.create_net_banking_payment(
-                order_id=payment_mode.order_id,
-                merchant_id=self.merchant_id,
-                payment_method_type=payment_mode.gateway_code,
-                payment_method=payment_mode.gateway_code_level_1,
-                redirect_after_payment=True,
-                format='json')
+        return JuspayTransaction(payment_mode).process()
 
+
+class JuspayTransaction:
+    """
+    A thin wrapper for the transaction API
+
+    """
+
+    def __init__(self, payment_mode):
+        self.payment_mode = payment_mode
+        self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
+        self.url = settings.PAYMENT['JUSPAY']['url']
+
+    def process_nb(self):
+        """
+        TRigger the NB call and process the order id inside the
+        PaymentMode
+        """
+        transaction = juspay.Payments.create_net_banking_payment(
+            order_id=self.payment_mode.order_id,
+            merchant_id=self.merchant_id,
+            payment_method_type=self.payment_mode.gateway_code,
+            payment_method=self.payment_mode.gateway_code_level_1,  # NB_HDFC
+            redirect_after_payment=True,
+            format='json')
 
         return transaction
+
+    def process_card(self, save_to_locker=True):
+        """
+        Create transaction for credit card
+
+        params:
+            save_to_locker (boolean): Saving to JP locker
+        """
+        transaction = juspay.Payments.create_card_payment(
+            order_id=self.payment_mode.order_id,
+            merchant_id=self.merchant_id,
+            payment_method_type=self.payment_mode.gateway_code,
+            card_token=self.payment_mode.gateway_code_level_1,
+            # '68d6b0c6-6e77-473f-a05c-b460ef983fd8'
+            redirect_after_payment=True,
+            format='json',
+            card_security_code=self.payment_mode.pin,
+            save_to_locker=save_to_locker)
+
+        return transaction
+
+    def tokenize_card(self):
+        """
+        For convenience we are triggering the tokenize request from the server
+        instead of the client.
+        """
+        data = {
+            "merchant_id": self.merchant_id,
+            "card_number": self.payment_mode.title,
+            "card_exp_year": self.payment_mode.expiry_year,
+            "card_exp_month": self.payment_mode.expiry_month,
+            "card_security_code": self.payment_mode.pin
+        }
+
+        response = requests.post(self.url, data=data)
+
+        # Return the temp token
+        return response.json()['token']
+
+    def process(self, save_to_locker=True):
+        """
+        Process call to process both card and NB
+
+        params:
+            save_to_locker (boolean): Saving to JP locker
+        """
+        if self.payment_mode.is_juspay_nb():
+            return self.process_nb()
+
+        # if its a new card first tokenize it and make it old
+        if self.payment_mode.is_juspay_card():
+
+            # if its  a new card tehn tokenize it first
+            if self.payment_mode.is_juspay_card(new_check=True):
+                self.payment_mode.gateway_code_level_1 = self.tokenize_card()
+
+            return self.process_card()
