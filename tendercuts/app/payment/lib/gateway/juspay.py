@@ -209,7 +209,7 @@ class JusPayGateway(AbstractGateway):
         self.juspay_order_create(order, jp_customer)
 
         return JuspayTransaction(
-            payment_mode, save_to_locker=save_to_locker).process()
+            payment_mode, jp_customer, save_to_locker=save_to_locker).process()
 
 
 class JuspayTransaction:
@@ -218,8 +218,9 @@ class JuspayTransaction:
 
     """
 
-    def __init__(self, payment_mode, save_to_locker=True):
+    def __init__(self, payment_mode, jp_customer, save_to_locker=True):
         self.payment_mode = payment_mode
+        self.jp_customer = jp_customer
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
         self.url = settings.PAYMENT['JUSPAY']['url']
         self.save_to_locker = save_to_locker
@@ -259,7 +260,7 @@ class JuspayTransaction:
 
         return transaction
 
-    def tokenize_card(self):
+    def tokenize_card_and_add(self):
         """
         For convenience we are triggering the tokenize request from the server
         instead of the client.
@@ -278,7 +279,15 @@ class JuspayTransaction:
         response = requests.post(self.url, data=data)
 
         # Return the temp token
-        return response.json()['token']
+        token = response.json()['token']
+
+        if self.save_to_locker:
+            juspay.Cards.create(merchant_id=self.merchant_id,
+                                customer_id=self.jp_customer.object_reference_id,
+                                customer_email=self.jp_customer.email_address,
+                                card_token=response.json()['token'])
+
+        return token
 
     def process(self):
         """

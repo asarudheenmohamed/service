@@ -73,7 +73,7 @@ class TestJustPayGateway:
         card = juspay_dummy_card1
         card.gateway_code_level_1 = None
 
-        transaction = JuspayTransaction(card)
+        transaction = JuspayTransaction(card, None, save_to_locker=False)
         token = transaction.tokenize_card()
 
         assert "ctkn" in token
