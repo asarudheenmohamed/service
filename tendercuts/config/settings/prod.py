@@ -59,6 +59,7 @@ PAYMENT = {
         "id": "12CC428E2EF843059C3EAC10AE14F06F",
         "secret": "7E93DB150C034DF79E5C21BB61D9D5EB",
         "url": "https://api.juspay.in/card/tokenize",
+        "return_url": "https://api.tendercuts.in/payment/juspay",
         "environment": "production"
     }
 }

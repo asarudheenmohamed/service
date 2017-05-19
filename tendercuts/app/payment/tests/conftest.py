@@ -19,3 +19,10 @@ def juspay_mock_order_id():
         return_url="http://staging.tendercuts.in:82/payment/juspay/")
 
     return order_id
+
+@pytest.fixture
+def juspay_mock_user():
+    """
+    Fixture to create a mock user.
+    """
+    return "juspay_18963"

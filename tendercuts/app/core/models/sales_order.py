@@ -473,7 +473,7 @@ class SalesFlatOrder(models.Model):
             else:
                 timetext = "00"
 
-            logger.debug("Formatting {}: {} to text").format(date_obj, timetext)
+            logger.debug("Formatting {}: {} to text".format(date_obj, timetext))
             try:
                 promised_time = dateutil.parser.parse(
                     "{} {}".format(date_obj, timetext))

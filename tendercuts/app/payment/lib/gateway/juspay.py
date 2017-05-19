@@ -6,17 +6,18 @@ from __future__ import absolute_import, unicode_literals
 import base64
 import hashlib
 import hmac
-import urllib
-import requests
 import json
+import logging
+import urllib
 
 import juspay
+import requests
 from app.core import models as core_models
 from app.core.lib.exceptions import OrderNotFound
 from django.conf import settings
 
-from .base import AbstractGateway
 from ... import models
+from .base import AbstractGateway
 
 
 class JusPayGateway(AbstractGateway):
@@ -31,14 +32,21 @@ class JusPayGateway(AbstractGateway):
         super(JusPayGateway, self).__init__()
         juspay.api_key = settings.PAYMENT['JUSPAY']['id']
         juspay.environment = settings.PAYMENT['JUSPAY']['environment']
+
+        self.return_url = settings.PAYMENT['JUSPAY']['return_url']
         self.secret = settings.PAYMENT['JUSPAY']['secret']
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
 
     def check_payment_status(self, order_id, vendor_id):
         """
+        @override
+
         params:
             order_id (str): Increment_id
             vendort_id (str): Not used
+
+        returns:
+            boolean: indicating if the payment was captured.
         """
         self.log.debug(
             "Checking order status for {} from JUSPAY".format(order_id))
@@ -107,17 +115,92 @@ class JusPayGateway(AbstractGateway):
 
         return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards]
 
-    def create_payment(self, payment_mode):
+    def juspay_order_create(self, order, customer):
         """
         params:
-            order_id (str) - order id that has been created in JUSPAY
+            order (SalesFlatOrder) - order intance
+            customer (juspay.Customer) - customer
+
+        returns:
+            juspay.Order
+        """
+        jp_order = juspay.Orders.create(
+            order_id=order.increment_id,
+            amount=order.grand_total,
+            currency='INR',
+            customer_id=customer.id,
+            customer_email=customer.email_address,
+            customer_phone=customer.mobile_number,
+            return_url=self.return_url)
+
+        return jp_order
+
+    def get_or_create_customer(self, user):
+        """"
+        params:
+            user (str or tuple): Can either be str reprsenting the user id
+                or a tuple representing (user_id, mail, phone, name)
+
+        returns:
+            juspay.User object
+        """
+        # conversion to tuple
+        if isinstance(user, str):
+            user = core_models.FlatCustomer.load_basic_info(user)
+
+        user_id = "{}_{}".format(self.MAGENTO_CODE, user[0]),
+        self.log.debug("Creating customer in JP with id: {}".format(user_id))
+
+        try:
+            cust = juspay.Customers.get(id=user_id)
+            self.log.debug(
+                "Already exist so fetched the customer from JP with id: {}".format(user_id))
+        except Exception:
+            # this is so wrong, but Jp has no excpetions in theri library
+            cust = juspay.Customers.create(
+                # neeed to be 8 chars
+                object_reference_id=user_id,
+                email_address=user[1],
+                mobile_number=user[2],
+                first_name=user[3],
+                last_name="")   # last name in mandatory
+            self.log.debug(
+                "Created a customer in JP with id: {}".format(user_id))
+
+        return cust
+
+    def start_transaction(self, payment_mode, save_to_locker=True):
+        """
+
+        Performs multiple steps
+
+        0. Fetch the mage order
+        1. fetch the customer/create the customer
+        2. Creates an order in JP
+        3. for that order creates a transaction using the payment mode
+
+        params:
             payment_mode(PaymentMode) - mode to use for payment
 
         returns:
             juspay.Transaction
         """
 
-        return JuspayTransaction(payment_mode).process()
+        order = core_models.SalesFlatOrder.objects.filter(
+            increment_id=payment_mode.order_id)
+
+        if not order:
+            raise OrderNotFound()
+
+        order = order[0]
+
+        jp_customer = self.get_or_create_customer(str(order.customer_id))
+
+        self.juspay_order_create(order, jp_customer)
+
+        return JuspayTransaction(
+            payment_mode, save_to_locker=save_to_locker).process()
+
 
 
 class JuspayTransaction:
@@ -126,10 +209,11 @@ class JuspayTransaction:
 
     """
 
-    def __init__(self, payment_mode):
+    def __init__(self, payment_mode, save_to_locker=True):
         self.payment_mode = payment_mode
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
         self.url = settings.PAYMENT['JUSPAY']['url']
+        self.save_to_locker = save_to_locker
 
     def process_nb(self):
         """
@@ -146,7 +230,7 @@ class JuspayTransaction:
 
         return transaction
 
-    def process_card(self, save_to_locker=True):
+    def process_card(self):
         """
         Create transaction for credit card
 
@@ -162,7 +246,7 @@ class JuspayTransaction:
             redirect_after_payment=True,
             format='json',
             card_security_code=self.payment_mode.pin,
-            save_to_locker=save_to_locker)
+            save_to_locker=self.save_to_locker)
 
         return transaction
 
@@ -170,6 +254,9 @@ class JuspayTransaction:
         """
         For convenience we are triggering the tokenize request from the server
         instead of the client.
+
+        returns:
+            string: A token representing card (no, expiry, )
         """
         data = {
             "merchant_id": self.merchant_id,
@@ -184,7 +271,7 @@ class JuspayTransaction:
         # Return the temp token
         return response.json()['token']
 
-    def process(self, save_to_locker=True):
+    def process(self):
         """
         Process call to process both card and NB
 
@@ -197,7 +284,7 @@ class JuspayTransaction:
         # if its a new card first tokenize it and make it old
         if self.payment_mode.is_juspay_card():
 
-            # if its  a new card tehn tokenize it first
+            # if its  a new card then tokenize it first
             if self.payment_mode.is_juspay_card(new_check=True):
                 self.payment_mode.gateway_code_level_1 = self.tokenize_card()
 

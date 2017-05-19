@@ -50,9 +50,38 @@ class FlatAddress():
 
 
 class FlatCustomer():
+    """
+    A dirty way of serilizing, ideally need to move DRF
+    """
 
+    # prefix used for customer in django tables.
     PREFIX = "u"
- 
+
+    @classmethod
+    def load_basic_info(cls, user_id):
+        """
+        Yet another convenience method, this one load the very basic info
+        of the customer such as ph numbver or mail
+
+        returns:
+            A tuple of (userid, email, phone, name)
+        """
+        query_set = CustomerEntityVarchar.objects                 \
+            .filter(attribute_id__in=[149, 5], entity_id=user_id) \
+            .order_by('-attribute_id')                             \
+            .values_list('entity', 'entity__email', 'value')
+
+        if not query_set:
+            raise CustomerNotFound
+
+        flattened_data = []
+        flattened_data.extend(query_set[0])
+        # merge the name attribute also
+        # first row second col
+        flattened_data.append(query_set[1][2])
+
+        return flattened_data
+
     @classmethod
     def is_user_exists(cls, username):
         """
@@ -119,7 +148,7 @@ class FlatCustomer():
                 "addresses__varchars__attribute",
                 "addresses__texts", "addresses__texts__attribute")
 
-        if (len(customers) == 0):
+        if not customers:
             raise CustomerNotFound
 
         return cls(customers[0])
@@ -131,9 +160,10 @@ class FlatCustomer():
 
     @property
     def dj_user_id(self):
-        return ("{}:{}".format(
-                self.PREFIX,
-                self.customer.entity_id))
+        """
+        Django user id of the Magento user
+        """
+        return ("{}:{}".format(self.PREFIX, self.customer.entity_id))
 
     def generate_token(self):
         """
@@ -173,7 +203,7 @@ class FlatCustomer():
             customer['reward_points'] = reward_pts_sum['amount'] or 0
         except Exception as e:
             customer['reward_points'] = 0
-        
+
         try:
             customer['store_credit'] = \
                 self.customer.store_credit.all()[0].amount
@@ -196,15 +226,15 @@ class FlatCustomer():
         computed_hash = hashlib.md5(salt + password)
 
         return computed_hash.hexdigest() == salted_hash
-    
+
     def reset_password(self, new_password, dry_run=False):
         password_entity = CustomerEntityVarchar.objects.filter(
-                entity_id=self.customer.entity_id,
-                attribute_id=12)
+            entity_id=self.customer.entity_id,
+            attribute_id=12)
 
         if len(password_entity) == 0:
             return
-        
+
         password_entity = password_entity[0]
         salt = uuid.uuid4().hex
 
@@ -215,6 +245,7 @@ class FlatCustomer():
 
         if not dry_run:
             password_entity.save()
+
 
 from django.conf import settings
 from django.db.models.signals import post_save

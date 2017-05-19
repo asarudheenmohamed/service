@@ -130,3 +130,32 @@ class TestCustomerPasswordReset:
 
         flat = cls.authenticate("mail@varun.xyz", "qwerty123")
         assert flat.customer.email == "mail@varun.xyz"
+
+
+class TestFlatCustomerClassMethods:
+    """
+    Test the class method of FlatCustomer
+    """
+
+    def test_basic_info(self, cls):
+        """
+        Asserts:
+            1. basic info is fetched
+            2. mail, ph and name
+
+        """
+        user_data = cls.load_basic_info(18963)
+        assert user_data is not None
+        assert user_data[0] == 18963
+        assert str(user_data[1]) == "mail@varun.xyz"
+        assert str(user_data[2]) == "9908765678"
+        assert "TEST" in str(user_data[3])
+
+    def test_basic_info_for_unknown(self, cls):
+        """
+        Asserts:
+            1. Raise exception for invliad customer
+        """
+        with pytest.raises(Exception) as exc:
+            _ = cls.load_basic_info(189631)
+            assert "CustomerNotFound" in str(exc.value)
