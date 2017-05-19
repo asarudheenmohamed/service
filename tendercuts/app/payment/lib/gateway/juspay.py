@@ -135,7 +135,8 @@ class JusPayGateway(AbstractGateway):
             order_id=order.increment_id,
             amount=order.grand_total,
             currency='INR',
-            customer_id=customer.id,
+            # not ID but object reference ID which is juspay_18963 ID
+            customer_id=customer.object_reference_id,
             customer_email=customer.email_address,
             customer_phone=customer.mobile_number,
             return_url=self.return_url,
