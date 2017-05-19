@@ -116,7 +116,7 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         ))
 
         gateway = gw.JusPayGateway(log=logger)
-        transaction = gateway.create_payment(payment_mode)
+        transaction = gateway.start_transaction(payment_mode)
 
         return Response({'url': transaction.payment.authentication.url})
 
