@@ -91,7 +91,6 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         else:
             user_id = user_id[1]
 
-
         return user_id
 
     def get_queryset(self):

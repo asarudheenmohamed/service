@@ -10,8 +10,9 @@ class PaymentModeSerializer(serializers.ModelSerializer):
         """
         """
         model = models.PaymentMode
-        fields = ('title', 'method', 'gateway_code', 'priority',
-                  'gateway_code_level_1', 'subtitle', 'offers', 'order_id')
+        fields = ('title', 'subtitle', 'method', 'gateway_code',
+                  'gateway_code_level_1', 'priority', 'offers', 'order_id',
+                  'pin', 'expiry_month', 'expiry_year')
 
     def create(self, validated_data):
         """
