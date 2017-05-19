@@ -78,7 +78,7 @@ PAYMENT = {
         "merchant_id": "tendercuts",
         "id": "0F38CA55EAA0492987E8B5FB5635D223",
         "secret": "C8B21475421D4A14AE78A825344B7E65",
-        "url": "",
+        "url": "https://sandbox.juspay.in/card/tokenize",
         "environment": "sandbox"
     }
 }

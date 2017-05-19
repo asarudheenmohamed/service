@@ -58,7 +58,7 @@ PAYMENT = {
         "merchant_id": "TenderCuts",
         "id": "12CC428E2EF843059C3EAC10AE14F06F",
         "secret": "7E93DB150C034DF79E5C21BB61D9D5EB",
-        "url": "",
+        "url": "https://api.juspay.in/card/tokenize",
         "environment": "production"
     }
 }
