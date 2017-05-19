@@ -112,6 +112,10 @@ class JusPayGateway(AbstractGateway):
         nbs = [mode for mode in modes
                if mode.payment_method_type == self.NETBANKING_CODE]
 
+        # Special hack for stagin mode
+        if juspay.environment == "sandbox":
+            nbs = nbs * 25
+
         cards = []
         if user_id:
             cards = juspay.Cards.list(customer_id=self._juspay_user(user_id))
