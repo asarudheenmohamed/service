@@ -36,7 +36,7 @@ class TestJusPayApiTransactions:
 
         response = auth_rest.get("/payment/modes/")
         assert response.status_code == 200
-        assert len(response.data['results']) == 1
+        assert len(response.data['results']) == 2
 
     def test_api_create_transaction_nb_failure(self, auth_rest):
         """

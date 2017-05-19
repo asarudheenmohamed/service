@@ -37,13 +37,14 @@ class TestJustPayGateway:
         # Test via the APIs
         pass
 
-    def test_fetch_payment_modes(self):
+    def test_fetch_payment_modes(self, juspay_mock_user):
         """
         Asserts:
             1. Fetch of Saved cards and NB dummy from JP
+            2. Assert if its correct
         """
         gw = JusPayGateway()
-        modes = gw.fetch_payment_modes(16034)
+        modes = gw.fetch_payment_modes(juspay_mock_user.split("_")[1])
 
         assert len(modes) == 2
 
@@ -55,11 +56,10 @@ class TestJustPayGateway:
         assert nb.gateway_code == "NB"
 
         # cards
-        assert cards[0].title == "4242-XXXXXXXX-4242"
-        assert cards[0].title == "4242-XXXXXXXX-4242"
+        assert cards[0].title == "5105-XXXXXXXX-5100"
         assert cards[0].method == "juspay"
         assert cards[0].gateway_code == "CARD"
-        assert cards[0].gateway_code_level_1 != None
+        assert cards[0].gateway_code_level_1 is not None
 
     def test_tokenize_card(self, juspay_dummy_card1):
         """
@@ -101,30 +101,44 @@ class TestJuspayCreateTransaction():
     """
     END to end integration test for creating transaction.
     """
-    def _test_create_payment_with_saved_card(self, generate_mock_order, juspay_mock_user):
+
+    def test_create_payment_with_saved_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card2):
         """
         Tests create payment with a saved card.
 
         Asserts:
-            1. Transaction create with juspay environment using card that was
-               fetched using cards/list (saved card)
-        """
-        gw = JusPayGateway()
-        modes = gw.fetch_payment_modes(juspay_mock_user)
+            1. Fetches the saved card of the user
+            2. Verify if order is created in JP
+            3. Verify if a token is present
+            4. Verify if transaction is created for the card
+                Standard URL verification
 
+        """
+        order_id = generate_mock_order.increment_id
+
+        gw = JusPayGateway()
+
+        modes = gw.fetch_payment_modes(juspay_mock_user.split("_")[1])
         cards = [m for m in modes if m.gateway_code == "CARD"]
         assert cards[0] is not None
         card = cards[0]
+        assert card.expiry_month == "10"
 
         # set pin and order id
         card.order_id = generate_mock_order.increment_id
         card.pin = "111"
 
         transaction = gw.start_transaction(card)
+
+        assert juspay.Orders.status(order_id=order_id) is not None
+        assert juspay.Orders.status(order_id=order_id).status == "PENDING_VBV"
+
+        assert card.gateway_code_level_1 is not None
+
         assert transaction.order_id == generate_mock_order.increment_id
         assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
 
-    def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user):
+    def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card1):
         """
         Fetch a dummy card and mock it into a new card
 
@@ -137,15 +151,8 @@ class TestJuspayCreateTransaction():
         """
         order_id = generate_mock_order.increment_id
         # set pin & other card details
-        card = PaymentMode(
-            title="4242424242424242",
-            pin="111",
-            expiry_year="2020",
-            expiry_month="10",
-            method="juspay",
-            gateway_code="CARD",
-            gateway_code_level_1=None,
-            order_id=order_id)
+        card = juspay_dummy_card1
+        card.order_id = order_id
 
         gw = JusPayGateway()
         transaction = gw.start_transaction(card)

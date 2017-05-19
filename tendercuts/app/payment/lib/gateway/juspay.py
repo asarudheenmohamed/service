@@ -38,7 +38,7 @@ class JusPayGateway(AbstractGateway):
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
 
     def _juspay_user(self, user_id):
-        return "{}_{}".format(self.MAGENTO_CODE , user_id)
+        return "{}_{}".format(self.MAGENTO_CODE, user_id)
 
     def check_payment_status(self, order_id, vendor_id):
         """
@@ -134,7 +134,9 @@ class JusPayGateway(AbstractGateway):
             customer_id=customer.id,
             customer_email=customer.email_address,
             customer_phone=customer.mobile_number,
-            return_url=self.return_url)
+            return_url=self.return_url,
+            # RZP needs a fucking description field
+            description=order.increment_id)
 
         return jp_order
 
@@ -166,7 +168,7 @@ class JusPayGateway(AbstractGateway):
                 email_address=user[1],
                 mobile_number=user[2],
                 first_name=user[3],
-                last_name="")   # last name in mandatory
+                last_name='')   # last name in mandatory
             self.log.debug(
                 "Created a customer in JP with id: {}".format(user_id))
 
@@ -203,7 +205,6 @@ class JusPayGateway(AbstractGateway):
 
         return JuspayTransaction(
             payment_mode, save_to_locker=save_to_locker).process()
-
 
 
 class JuspayTransaction:
