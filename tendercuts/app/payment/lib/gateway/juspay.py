@@ -37,6 +37,9 @@ class JusPayGateway(AbstractGateway):
         self.secret = settings.PAYMENT['JUSPAY']['secret']
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
 
+    def _juspay_user(self, user_id):
+        return "{}_{}".format(self.MAGENTO_CODE , user_id)
+
     def check_payment_status(self, order_id, vendor_id):
         """
         @override
@@ -111,7 +114,7 @@ class JusPayGateway(AbstractGateway):
 
         cards = []
         if user_id:
-            cards = juspay.Cards.list(customer_id=user_id)
+            cards = juspay.Cards.list(customer_id=self._juspay_user(user_id))
 
         return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards]
 
@@ -148,7 +151,7 @@ class JusPayGateway(AbstractGateway):
         if isinstance(user, str):
             user = core_models.FlatCustomer.load_basic_info(user)
 
-        user_id = "{}_{}".format(self.MAGENTO_CODE, user[0]),
+        user_id = self._juspay_user(user[0])
         self.log.debug("Creating customer in JP with id: {}".format(user_id))
 
         try:

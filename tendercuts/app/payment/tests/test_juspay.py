@@ -61,7 +61,7 @@ class TestJustPayGateway:
         assert cards[0].gateway_code == "CARD"
         assert cards[0].gateway_code_level_1 != None
 
-    def test_tokenize_card(self):
+    def test_tokenize_card(self, juspay_dummy_card1):
         """
         Fetch a dummy card model and change the values to a new cared and
         verify if a token is created
@@ -70,12 +70,7 @@ class TestJustPayGateway:
             1. Verify if a token is created and set as gateway level 1
         """
 
-        gw = JusPayGateway()
-        modes = gw.fetch_payment_modes(16034)
-        card = [m for m in modes if m.gateway_code == "CARD"][0]
-        # set pin
-        card.title = "4242424242424242"
-        card.pin = "111"
+        card = juspay_dummy_card1
         card.gateway_code_level_1 = None
 
         transaction = JuspayTransaction(card)

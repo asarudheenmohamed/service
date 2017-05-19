@@ -20,9 +20,23 @@ def juspay_mock_order_id():
 
     return order_id
 
+
 @pytest.fixture
 def juspay_mock_user():
     """
     Fixture to create a mock user.
     """
     return "juspay_18963"
+
+
+@pytest.fixture
+def juspay_dummy_card1():
+    from app.payment.models import PaymentMode
+    return PaymentMode(
+        title="4242424242424242",
+        pin="111",
+        expiry_year="2020",
+        expiry_month="10",
+        method="juspay",
+        gateway_code="CARD",
+        gateway_code_level_1=None)
