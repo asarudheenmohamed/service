@@ -260,10 +260,12 @@ class JuspayTransaction:
 
         return transaction
 
-    def tokenize_card_and_add(self):
+    def tokenize_card(self):
         """
         For convenience we are triggering the tokenize request from the server
         instead of the client.
+
+        Also adds the card to the lock if option is enabled
 
         returns:
             string: A token representing card (no, expiry, )
