@@ -181,7 +181,6 @@ class JusPayGateway(AbstractGateway):
 
     def start_transaction(self, payment_mode, save_to_locker=True):
         """
-
         Performs multiple steps
 
         0. Fetch the mage order
@@ -291,15 +290,52 @@ class JuspayTransaction:
 
         return token
 
+    def _convert_to_url(self, xact):
+        """
+        params:
+            xact: Justpay transaction
+        """
+
+        authentication = xact.payment.authentication
+
+        if authentication.method == "GET":
+            return authentication.url
+
+        url = '<html><head></head><body>'
+        url += '<form id="paymentForm" action="{}" method="POST">'.format(
+            authentication.url)
+
+        if authentication.params:
+            for key in authentication.params:
+                url += '<input type="hidden" name="{}" value="{}">'.format(
+                    key, authentication.params[key])
+
+        url += '</form>'
+
+        url += '<script type="text/javascript">'
+        url += 'document.getElementById("paymentForm").submit();'
+        url += '</script>'
+        url += '</body></html>'
+
+        page_content = 'data:text/html;base64,' + base64.b64encode(url)
+
+        return page_content
+
     def process(self):
         """
         Process call to process both card and NB
 
-        params:
-            save_to_locker (boolean): Saving to JP locker
+        returns:
+            A url/html content that can be loaded on the browser to initiate
+            the  payment
+
+        eg: data:text/html;base64 || url
         """
+
+        transaction = None
+
         if self.payment_mode.is_juspay_nb():
-            return self.process_nb()
+            transaction = self.process_nb()
 
         # if its a new card first tokenize it and make it old
         if self.payment_mode.is_juspay_card():
@@ -308,4 +344,6 @@ class JuspayTransaction:
             if self.payment_mode.is_juspay_card(new_check=True):
                 self.payment_mode.gateway_code_level_1 = self.tokenize_card()
 
-            return self.process_card()
+            transaction = self.process_card()
+
+        return self._convert_to_url(transaction)

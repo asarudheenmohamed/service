@@ -46,7 +46,7 @@ class TestJustPayGateway:
         gw = JusPayGateway()
         modes = gw.fetch_payment_modes(juspay_mock_user.split("_")[1])
 
-        assert len(modes) == 2
+        assert len(modes) == 27
 
         nb = [mode for mode in modes if mode.gateway_code == "NB"][0]
         cards = [mode for mode in modes if mode.gateway_code == "CARD"]
@@ -128,15 +128,14 @@ class TestJuspayCreateTransaction():
         card.order_id = generate_mock_order.increment_id
         card.pin = "111"
 
-        transaction = gw.start_transaction(card)
+        transaction_url = gw.start_transaction(card)
 
         assert juspay.Orders.status(order_id=order_id) is not None
         assert juspay.Orders.status(order_id=order_id).status == "PENDING_VBV"
 
         assert card.gateway_code_level_1 is not None
 
-        assert transaction.order_id == generate_mock_order.increment_id
-        assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
+        assert "https://sandbox.juspay.in/pay/" in transaction_url
 
     def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card1):
         """
@@ -155,7 +154,7 @@ class TestJuspayCreateTransaction():
         card.order_id = order_id
 
         gw = JusPayGateway()
-        transaction = gw.start_transaction(card)
+        transaction_url = gw.start_transaction(card)
 
         assert juspay.Customers.get(id=juspay_mock_user) is not None
 
@@ -164,8 +163,7 @@ class TestJuspayCreateTransaction():
 
         assert "ctkn" in card.gateway_code_level_1
 
-        assert transaction.order_id == generate_mock_order.increment_id
-        assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
+        assert "https://sandbox.juspay.in/pay/" in transaction_url
 
     def _test_create_payment_with_nb(self, generate_mock_order):
         """
