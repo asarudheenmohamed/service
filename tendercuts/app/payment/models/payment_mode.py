@@ -60,6 +60,11 @@ class PaymentMode(models.Model):
                 gateway_code=obj.payment_method_type,
                 priority=100)
             mode.gateway_code_level_1 = obj.payment_method
+            # NB, HDFC
+            comps = obj.payment_method.split("_")
+            mode.subtitle = ""
+            if len(comps) > 1:
+                mode.subtitle = comps[1]
 
         if isinstance(obj, juspay.Cards.Card):
             mode = cls(
