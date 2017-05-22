@@ -35,9 +35,12 @@ class PaymentMode(models.Model):
     # blank true => required
     order_id = models.CharField(max_length=100, null=False, blank=False)
 
+    # Card specifid
     pin = models.CharField(max_length=32, blank=True, null=True)
     expiry_month = models.CharField(max_length=32, blank=True, null=True)
     expiry_year = models.CharField(max_length=32, blank=True, null=True)
+    # MC/VISA
+    brand = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -66,6 +69,7 @@ class PaymentMode(models.Model):
             if len(comps) > 1:
                 mode.subtitle = comps[1]
 
+        # Brand
         if isinstance(obj, juspay.Cards.Card):
             mode = cls(
                 title=obj.number,
@@ -77,6 +81,7 @@ class PaymentMode(models.Model):
             mode.subtitle = "{}/{}".format(obj.exp_month, obj.exp_year)
             mode.expiry_month = obj.exp_month
             mode.expiry_year = obj.exp_year
+            mode.brand = obj.brand
 
         return mode
 
