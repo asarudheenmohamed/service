@@ -12,7 +12,7 @@ class PaymentModeSerializer(serializers.ModelSerializer):
         model = models.PaymentMode
         fields = ('title', 'subtitle', 'method', 'gateway_code',
                   'gateway_code_level_1', 'priority', 'offers', 'order_id',
-                  'pin', 'expiry_month', 'expiry_year')
+                  'pin', 'expiry_month', 'expiry_year', 'brand')
 
     def create(self, validated_data):
         """
