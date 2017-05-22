@@ -52,16 +52,25 @@ class PaymentMode(models.Model):
 
         obj - instance of Payment method or instance of cards
         """
+        TOP_NBS = ["NB_HDFC", "NB_ICICI", "NB_SBI", "NB_AXIS", "NB_KOTAK"]
 
         mode = None
 
         # Only net banking
         if isinstance(obj, juspay.Payments.PaymentMethod):
+
+            try:
+                priority = TOP_NBS.index(obj.payment_method)
+            except ValueError:
+                priority = 100
+
             mode = cls(
                 title=obj.description,
                 method="juspay",  # From settings
                 gateway_code=obj.payment_method_type,
-                priority=100)
+                priority=priority)
+
+            # eg: NB_HDFC
             mode.gateway_code_level_1 = obj.payment_method
             # NB, HDFC
             comps = obj.payment_method.split("_")
