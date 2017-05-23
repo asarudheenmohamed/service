@@ -1,3 +1,8 @@
+"""
+DEPRECATED: We are now using login directly using DB and SignUp request goes to
+service layer
+"""
+
 import pytest
 import uuid
 from random import randint
@@ -29,7 +34,7 @@ class _TestLogin:
         assert status['status'] is False
 
 
-class TestSignUp:
+class _TestSignUp:
     def test_endpoint(self, api):
         assert getattr(api.tendercuts_customer_apis, "signup", None)
 

@@ -15,4 +15,5 @@ urlpatterns = [
    url(r'signup', views.UserSignUpApi.as_view()),
    url(r'fetch', views.UserDataFetch.as_view()),
    url(r'exists', views.UserExistsApi.as_view()),
+   url(r'change_password', views.UserChangePassword.as_view()),
 ]
