@@ -230,7 +230,7 @@ class FlatCustomer():
     def reset_password(self, new_password, dry_run=False):
         password_entity = CustomerEntityVarchar.objects.filter(
             entity_id=self.customer.entity_id,
-            attribute_id=12)
+            attribute_id=12)  # password
 
         if len(password_entity) == 0:
             return
