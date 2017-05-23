@@ -45,7 +45,8 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
 
         If the customer is not available then thrown an error
         """
-        redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_db = redis.StrictRedis(host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
         phone = kwargs['mobile']
         # check if user exists
@@ -79,7 +80,8 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         2. Then go ahead and reset the password!
 
         """
-        redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_db = redis.StrictRedis(host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
         phone = self.request.data['mobile']
         otp = self.request.data['otp']
