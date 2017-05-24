@@ -73,7 +73,7 @@ class GetSimplGateway(AbstractGateway):
         data = {
             "transaction_token": vendor_id,
             "amount_in_paise": int(sale_order.grand_total * 100),
-            #"order_id": sale_order.increment_id,
+            "order_id": sale_order.increment_id,
             "shipping_amount_in_paise": int(sale_order.shipping_amount * 100),
             "discount_in_paise": int(sale_order.discount_amount * 100),
             "items": items,
