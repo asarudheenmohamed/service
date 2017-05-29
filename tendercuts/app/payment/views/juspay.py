@@ -12,7 +12,8 @@ from django.http import HttpResponseRedirect
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework import views, viewsets, mixins
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+
 from rest_framework.reverse import reverse
 
 
@@ -24,6 +25,8 @@ logger = logging.getLogger(__name__)
 
 
 @api_view(['GET'])
+@permission_classes([])
+@authentication_classes([])
 def juspay_done(request):
     """
     A NOOP callback to act as a end url of the juspay callback flow
