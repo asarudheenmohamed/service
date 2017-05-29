@@ -136,6 +136,7 @@ class TestJuspayCreateTransaction():
         assert card.gateway_code_level_1 is not None
 
         assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
+        assert 99 == transaction.amount
 
     def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card1):
         """
@@ -164,6 +165,7 @@ class TestJuspayCreateTransaction():
         assert "ctkn" in card.gateway_code_level_1
 
         assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
+        assert 99 == transaction.amount
 
     def _test_create_payment_with_nb(self, generate_mock_order):
         """

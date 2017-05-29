@@ -118,7 +118,16 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         gateway = gw.JusPayGateway(log=logger)
         transaction = gateway.start_transaction(payment_mode)
 
-        return Response(json.dumps(transaction))
+        data = {
+            "url": transaction.payment.authentication.url,
+            "method": transaction.payment.authentication.method,
+            "params": transaction.payment.authentication.params,
+            "amount": transaction.amount,
+            "txn_id": transaction.txn_id,
+            "order_id": transaction.order_id
+        }
+
+        return Response(data)
 
 
 
