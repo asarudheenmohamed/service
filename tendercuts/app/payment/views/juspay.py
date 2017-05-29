@@ -8,15 +8,27 @@ import urllib
 import json
 
 from django.conf import settings
+from django.http import HttpResponseRedirect
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework import views, viewsets, mixins
+from rest_framework.decorators import api_view
+from rest_framework.reverse import reverse
+
 
 from ..lib import gateway as gw
 from .. import serializer
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+@api_view(['GET'])
+def juspay_done(request):
+    """
+    A NOOP callback to act as a end url of the juspay callback flow
+    """
+    return Response("")
 
 
 class JusPayApprovalCallBack(views.APIView):
@@ -34,7 +46,10 @@ class JusPayApprovalCallBack(views.APIView):
 
     def get(self, request, **kwargs):
         """
-        GET request for verifying the transaction.
+        GET request for verifying the transactiono
+
+        The reponse is a redirection to the NOOP endpoint which acts as an
+        endpoint for the transaction.
         """
         params = request.query_params.dict()
         hash_code = urllib.quote_plus(params.pop("signature"))
@@ -56,7 +71,8 @@ class JusPayApprovalCallBack(views.APIView):
             increment_id, payment_status))
 
         if not is_charged:
-            return Response({"status": False})
+            return HttpResponseRedirect(reverse('juspay_done', request=request))
+            # Response({"status": False})
 
         try:
             logger.info(
@@ -64,12 +80,14 @@ class JusPayApprovalCallBack(views.APIView):
             status = gateway.update_order_status(increment_id)
             logger.info(
                 "confirmed payment for the order ID: {} with status {}".format(increment_id, status))
-            return Response({"status": True})
+
+            return HttpResponseRedirect(reverse('juspay_done', request=request))
         except Exception as e:
             exception = traceback.format_exc()
             logger.info("JP Payement verification for {} with error {}".format(
                 increment_id, str(exception)))
-            return Response({"status": False})
+
+            return HttpResponseRedirect(reverse('juspay_done', request=request))
 
 
 class PaymentMethodViewSet(mixins.ListModelMixin,
