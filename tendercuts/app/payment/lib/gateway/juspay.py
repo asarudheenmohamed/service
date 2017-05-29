@@ -292,6 +292,8 @@ class JuspayTransaction:
 
     def _convert_to_url(self, xact):
         """
+        DEPRECATED: SINCE we are using SAFEBROWSER we are removing this.
+
         params:
             xact: Justpay transaction
         """
@@ -326,8 +328,7 @@ class JuspayTransaction:
         Process call to process both card and NB
 
         returns:
-            A url/html content that can be loaded on the browser to initiate
-            the  payment
+            Juspay Transaction object.
 
         eg: data:text/html;base64 || url
         """
@@ -346,4 +347,5 @@ class JuspayTransaction:
 
             transaction = self.process_card()
 
-        return self._convert_to_url(transaction)
+        #return self._convert_to_url(transaction)
+        return transaction

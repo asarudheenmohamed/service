@@ -128,14 +128,14 @@ class TestJuspayCreateTransaction():
         card.order_id = generate_mock_order.increment_id
         card.pin = "111"
 
-        transaction_url = gw.start_transaction(card)
+        transaction = gw.start_transaction(card)
 
         assert juspay.Orders.status(order_id=order_id) is not None
         assert juspay.Orders.status(order_id=order_id).status == "PENDING_VBV"
 
         assert card.gateway_code_level_1 is not None
 
-        assert "https://sandbox.juspay.in/pay/" in transaction_url
+        assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
 
     def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card1):
         """
@@ -154,7 +154,7 @@ class TestJuspayCreateTransaction():
         card.order_id = order_id
 
         gw = JusPayGateway()
-        transaction_url = gw.start_transaction(card)
+        transaction = gw.start_transaction(card)
 
         assert juspay.Customers.get(id=juspay_mock_user) is not None
 
@@ -163,7 +163,7 @@ class TestJuspayCreateTransaction():
 
         assert "ctkn" in card.gateway_code_level_1
 
-        assert "https://sandbox.juspay.in/pay/" in transaction_url
+        assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
 
     def _test_create_payment_with_nb(self, generate_mock_order):
         """

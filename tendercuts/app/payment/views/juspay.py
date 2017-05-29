@@ -5,6 +5,7 @@ Just pay related API calls
 import logging
 import traceback
 import urllib
+import json
 
 from django.conf import settings
 from rest_framework import exceptions
@@ -115,9 +116,9 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         ))
 
         gateway = gw.JusPayGateway(log=logger)
-        transaction_url = gateway.start_transaction(payment_mode)
+        transaction = gateway.start_transaction(payment_mode)
 
-        return Response({'url': transaction_url})
+        return Response(json.dumps(transaction))
 
 
 
