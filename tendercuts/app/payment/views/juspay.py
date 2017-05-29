@@ -124,7 +124,10 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
             "params": transaction.payment.authentication.params,
             "amount": transaction.amount,
             "txn_id": transaction.txn_id,
-            "order_id": transaction.order_id
+            "order_id": transaction.order_id,
+            "customer_id": transaction.customer_id,
+            "customer_email": transaction.customer_email,
+            "customer_phone": transaction.customer_phone
         }
 
         return Response(data)

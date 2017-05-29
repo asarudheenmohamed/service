@@ -211,13 +211,17 @@ class JusPayGateway(AbstractGateway):
             payment_mode,
             jp_customer,
             save_to_locker=save_to_locker)
-        
+
         txn = txn_processor.process()
 
         # HACK this is directly sent out of the API layer, but a transaction
         # model without amount doesn't make sense so we tag along the grand total
-        # also
+        # also customer details
+        # TODO: Need to move it to model someday!!
         txn.amount = order.grand_total
+        txn.customer_id = jp_customer.object_reference_id,
+        txn.customer_email = jp_customer.email_address
+        txn.customer_phone = jp_customer.mobile_number
 
         return txn
 
