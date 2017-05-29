@@ -31,7 +31,7 @@ def juspay_done(request):
     """
     A NOOP callback to act as a end url of the juspay callback flow
     """
-    return Response("")
+    return Response()
 
 
 class JusPayApprovalCallBack(views.APIView):
