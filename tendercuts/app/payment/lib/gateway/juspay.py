@@ -207,8 +207,19 @@ class JusPayGateway(AbstractGateway):
 
         self.juspay_order_create(order, jp_customer)
 
-        return JuspayTransaction(
-            payment_mode, jp_customer, save_to_locker=save_to_locker).process()
+        txn_processor = JuspayTransaction(
+            payment_mode,
+            jp_customer,
+            save_to_locker=save_to_locker)
+        
+        txn = txn_processor.process()
+
+        # HACK this is directly sent out of the API layer, but a transaction
+        # model without amount doesn't make sense so we tag along the grand total
+        # also
+        txn.amount = order.grand_total
+
+        return txn
 
 
 class JuspayTransaction:
