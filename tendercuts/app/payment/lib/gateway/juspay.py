@@ -210,7 +210,7 @@ class JusPayGateway(AbstractGateway):
         txn_processor = JuspayTransaction(
             payment_mode,
             jp_customer,
-            save_to_locker=save_to_locker)
+            save_to_locker=payment_mode.persist)
 
         txn = txn_processor.process()
 

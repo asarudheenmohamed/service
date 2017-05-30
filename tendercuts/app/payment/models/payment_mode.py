@@ -41,6 +41,7 @@ class PaymentMode(models.Model):
     expiry_year = models.CharField(max_length=32, blank=True, null=True)
     # MC/VISA
     brand = models.CharField(max_length=32, blank=True, null=True)
+    persist = models.BooleanField(default=True)
 
     class Meta:
         managed = False
