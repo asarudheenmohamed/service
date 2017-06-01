@@ -6,6 +6,7 @@ from rest_framework.authtoken import views as rest_framework_views
 router = DefaultRouter()
 # only viewset have to be registered!!
 router.register(r'otp', views.OtpApiViewSet)
+router.register(r'reward', views.RewardPointsTransaction, base_name='reward')
 router.register(r'forgot_password_otp', views.OtpForgotPasswordApiViewSet)
 
 urlpatterns = [
@@ -15,5 +16,4 @@ urlpatterns = [
    url(r'fetch', views.UserDataFetch.as_view()),
    url(r'exists', views.UserExistsApi.as_view()),
    url(r'change_password', views.UserChangePassword.as_view()),
-   url(r'reward', views.RewardPointsTransection.as_view()),
 ]
