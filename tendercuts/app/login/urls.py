@@ -7,6 +7,7 @@ router = DefaultRouter()
 # only viewset have to be registered!!
 router.register(r'otp', views.OtpApiViewSet)
 router.register(r'reward', views.RewardPointsTransaction, base_name='reward')
+router.register(r'mcredit', views.CreditBalance, base_name='mcredit')
 router.register(r'forgot_password_otp', views.OtpForgotPasswordApiViewSet)
 
 urlpatterns = [

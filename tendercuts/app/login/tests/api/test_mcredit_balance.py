@@ -1,10 +1,10 @@
 import pytest
 
 
-class TestReward:
-    def test_rewardtransection(self, db, auth_rest):
+class TestMcredit:
+    def test_mcreditbalance(self, db, auth_rest):
         response = auth_rest.get(
-            "/user/reward/",
+            "/user/mcredit/",
             format='json')
         assert type(response) is not None
         assert response.status_code == 200

@@ -1,5 +1,5 @@
 """
-Endpoint for  user reward points transaction
+Endpoint for user Credit Balance transaction
 """
 import logging
 #Django Module
@@ -9,19 +9,19 @@ from rest_framework.views import APIView
 from rest_framework import generics, viewsets
 from django.http import HttpResponse, JsonResponse
 #Custom Module
-from app.core.models.customer.entity import MRewardsTransaction
-from app.login.views.serializers import RewardPointSerializer
+from app.core.models.customer.entity import MCreditBalance
+from app.login.views.serializers import McreditBalanceSerializer
 
 logger = logging.getLogger(__name__)
 # Get an instance of a logger
 
 
-class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
+class CreditBalance(viewsets.ReadOnlyModelViewSet):
     """
-    user/fetch : Gets the user Reward point transaction data
+    user/fetch : Gets the user user Credit Balance data
     """
-    serializer_class = RewardPointSerializer
-
+    serializer_class = McreditBalanceSerializer
+  
     def get_user_id(self):
         """
         Get the user id from the request
@@ -37,8 +37,8 @@ class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user_id = self.get_user_id()
-        queryset = MRewardsTransaction.objects.filter(
+        queryset = MCreditBalance.objects.filter(
             customer__entity_id=user_id)
-        logger.info(" Get Reward Points Transaction for the user {}".format(
+        logger.info(" Get Credit Balance for the user {}".format(
             user_id))
         return queryset
