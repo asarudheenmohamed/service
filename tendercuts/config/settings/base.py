@@ -112,6 +112,14 @@ LOGGING = {
             'maxBytes': 1024*1024*15, # 15MB
             'backupCount': 10,
             'formatter': 'verbose'
+        },
+        'invlogfile': {
+            'level': 'DEBUG',
+            'class':'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join("/var/log/django/inventory", 'inventory.log'),
+            'when': 'midnight', # 15MB
+            'interval': 1,
+            'formatter': 'verbose'
         }
     },
     'loggers': {
@@ -120,11 +128,16 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'app.inventory': {
+            'handlers': ['invlogfile',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         # Anything
         '': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
     }
 }
