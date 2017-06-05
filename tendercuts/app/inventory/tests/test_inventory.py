@@ -1,19 +1,32 @@
+"""
+Test endpoint "store"
+"""
+
+import base64
+import collections
+import json
+import uuid
+from random import randint
+
 import pytest
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound
-from random import randint
-import uuid
-from rest_framework.test import APIClient
 from requests.auth import HTTPBasicAuth
-import base64
 from rest_framework import HTTP_HEADER_ENCODING
-import collections
-import json
+from rest_framework.test import APIClient
 
 
-class TestApiLogin:
+class TestApiInventoryFetch(object):
+    """Test cases for inventory fetch."""
+
     def test_fetch_inventory(self, auth_rest):
-        """
+        """Test case to fetch the inventory.
+
+        params:
+            auth_rest (fixture): Auth rest endpoint
+
+        Asserts:
+            1. For a valid response.
         """
         response = auth_rest.get(
             "/inventory/store/",
@@ -24,7 +37,14 @@ class TestApiLogin:
         assert len(response.json()) > 20
 
     def test_fetch_inventory_product(self, auth_rest):
-        """
+        """Test case for fetching inventory with product filter.
+
+        params:
+            auth_rest (fixture): Auth rest endpoint
+
+        Asserts:
+            1. For a valid response.
+
         """
         data = {
             "store_id": 1,
@@ -36,6 +56,5 @@ class TestApiLogin:
             "/inventory/store/",
             data,
             format='json')
-        print(response)
 
         assert len(response.json()) == 2

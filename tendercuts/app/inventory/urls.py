@@ -7,4 +7,5 @@ from rest_framework.authtoken import views as rest_framework_views
 
 urlpatterns = [
    url(r'store', views.InventoryViewSet.as_view()),
+   url(r'^upload/(?P<filename>[^/]+)$', views.InventoryUploadView.as_view())
 ]

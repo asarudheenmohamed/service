@@ -1,25 +1,43 @@
-from . import models as models
+"""
+Api endpoint to fetch the inventory
+"""
 
-from rest_framework.views import APIView
-from rest_framework import viewsets, generics
-import json
 import datetime
-from rest_framework.response import Response
 import itertools
-from rest_framework import status
-from django.db.models import F
+import json
 
+from django.db.models import F
+from rest_framework import generics, status, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .. import models as models
 
 
 class InventoryViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
 
-    Enpoint to provide a list for sales orders
+    Enpoint to provide the inventory for Day D
     """
-    # queryset = models.CatalogProductFlat1.objects.all()
-    # serializer_class = serializers.CatalogProductFlat1Serializer
+
     def merge_lists(self, l1, l2, key):
+        """
+        Merges the two lists.
+
+        params:
+            l1 (list of dicts): Inventory data from which today's inv needs
+                to be fetched eg [{product : 1, qty: 4}]
+            l2 (CatalogProductFlat1) Product data containing scheduled inv.
+                eg [{product: 1, scheduledqty: 10}]
+            key (string): Attributed based in which the inventory should
+                be merged
+
+        returns:
+            a list for merged data
+            eg: [{product: 1, qty: 4, scheduledqty: 10}]
+
+        """
         merged = {}
         # list of dicts containning keys: product and qty|scheduledQty
         # join them on product IDs
@@ -39,13 +57,23 @@ class InventoryViewSet(APIView):
                 val['scheduledqty'] = 0
 
             values.append(val)
-        
+
         return values
 
     def get(self, request):
         """
         CatalogProductFlat1 contains global attributes such as sch delivery
         Aitoc contains per store inventory
+
+        Fetch today's inventory from aitoc table and scheduled from scheduled
+        tables
+
+        params:
+            request:
+                1. store_id int - specifies the store id
+                2. website_id - aitoc has this stupid thing of website id
+                3. product_id (optional, list) - filter only those ids
+
         """
         store_id = self.request.GET['store_id']
         website_id = self.request.GET['website_id']
@@ -67,10 +95,6 @@ class InventoryViewSet(APIView):
 
         today = today.filter(website_id=website_id).values('product', 'qty')
 
-
         inventory = self.merge_lists(today, future, "product")
 
         return Response(inventory)
-
-
-
