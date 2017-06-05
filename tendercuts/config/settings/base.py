@@ -137,7 +137,7 @@ LOGGING = {
         '': {
             'handlers': ['applogfile',],
             'level': 'DEBUG',
-            'propagate': False,
+            'propagate': True,
         },
     }
 }
