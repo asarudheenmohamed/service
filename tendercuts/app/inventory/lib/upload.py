@@ -84,6 +84,11 @@ class InventoryUploadController(object):
 
                 # update and save obj
                 inventory.qty = qty + closing
+                logger.info("INV: PID {} in store: {} with qty: {}".format(
+                    inventory.product.entity_id,
+                    store.name,
+                    qty + closing
+                ))
                 inventory.save()
             except KeyError:
                 logger.error("No inv found for {} for {}".format(
