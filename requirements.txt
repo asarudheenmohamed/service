@@ -26,3 +26,7 @@ juspay
 razorpay
 python-dateutil
 sendotp
+
+numpy
+pandas
+xlrd
