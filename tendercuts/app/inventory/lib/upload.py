@@ -53,7 +53,7 @@ class InventoryUploadController(object):
         self.inventory = self.inventory.set_index("PID")
 
         # Drop useless columns
-        ignore_cols = ["PRODUCT", "UNITS", "SKU WT", "Unnamed: 4"]
+        ignore_cols = ["PRODUCT", "UNITS", "SKU WT"]
         self.inventory.drop(ignore_cols, axis=1, inplace=True)
 
     def process(self):
