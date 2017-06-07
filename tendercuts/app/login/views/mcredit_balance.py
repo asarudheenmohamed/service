@@ -1,6 +1,4 @@
-"""
-Endpoint for user Credit Balance transaction
-"""
+"""Endpoint for user Credit Balance transaction."""
 import logging
 #Django Module
 from .. import serializers
@@ -17,15 +15,19 @@ logger = logging.getLogger(__name__)
 
 
 class CreditBalance(viewsets.ReadOnlyModelViewSet):
-    """
+    """Fetch user based Credit Balance.
+
     user/fetch : Gets the user user Credit Balance data
+
     """
     serializer_class = McreditBalanceSerializer
   
     def get_user_id(self):
-        """
-        Get the user id from the request
-        username contains u:18963 => 18963 is the magento IDS
+        """Get the user id from the request.
+
+        Returns:
+            username contains u:18963 => 18963 is the magento IDS
+
         """
         user = self.request.user
         user_id = user.username.split(":")
@@ -36,9 +38,11 @@ class CreditBalance(viewsets.ReadOnlyModelViewSet):
         return user_id
 
     def get_queryset(self):
+        """Get the MCreditBalance from the request."""
         user_id = self.get_user_id()
         queryset = MCreditBalance.objects.filter(
             customer__entity_id=user_id)
         logger.info(" Get Credit Balance for the user {}".format(
             user_id))
         return queryset
+

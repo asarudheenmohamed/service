@@ -1,8 +1,18 @@
-import pytest
-
-
+"""Test reward Point transection."""
 class TestReward:
-    def test_rewardtransection(self, db, auth_rest):
+    def test_rewardtransection(self, auth_rest):
+        """Get reard point transection in 18963.
+
+        pytest fixture:auth_rest
+            returns:
+                this is return a user id request
+
+        Tests:
+            Check response not equal to None
+            Check response status code in equal to 200
+            Check custermer id is equal to 18963
+
+        """
         response = auth_rest.get(
             "/user/reward/",
             format='json')

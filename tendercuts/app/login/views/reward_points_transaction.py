@@ -1,6 +1,4 @@
-"""
-Endpoint for  user reward points transaction
-"""
+"""Endpoint for  user reward points transaction."""
 import logging
 #Django Module
 from .. import serializers
@@ -17,15 +15,21 @@ logger = logging.getLogger(__name__)
 
 
 class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
-    """
-    user/fetch : Gets the user Reward point transaction data
+    """Endpoind for Fetch user based Reward point transaction data.
+
+    Returns:
+        user/fetch : Gets the user Reward point transaction data
+
     """
     serializer_class = RewardPointSerializer
 
     def get_user_id(self):
-        """
-        Get the user id from the request
-        username contains u:18963 => 18963 is the magento IDS
+        """Get User Id.
+
+        Returns:
+            Get the user id from the request
+            username contains u:18963 => 18963 is the magento IDS
+
         """
         user = self.request.user
         user_id = user.username.split(":")
@@ -36,9 +40,11 @@ class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
         return user_id
 
     def get_queryset(self):
+        """Endpoint fetch user reward point transection."""
         user_id = self.get_user_id()
         queryset = MRewardsTransaction.objects.filter(
             customer__entity_id=user_id)
         logger.info(" Get Reward Points Transaction for the user {}".format(
             user_id))
         return queryset
+
