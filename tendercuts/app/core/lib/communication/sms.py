@@ -87,10 +87,10 @@ class SMS():
 
         raises:
             Error in case of bad/invalid request
+
         """
         phnumber = "%s%s" % ("91", str(phnumber))
         if resend_type:
-            print 'asasasasa'
             self.otp.retry(phnumber, str(resend_type))
         else:
             self.otp.msg = message
