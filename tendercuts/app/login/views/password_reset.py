@@ -7,17 +7,13 @@ Endpoints to provide password reset
 import logging
 import random
 import string
-import traceback
 
-import app.core.lib.magento as magento
 import redis
 from app.core.lib.communication import SMS
-from django.http import Http404
-from rest_framework import exceptions, generics, mixins, viewsets
+from rest_framework import exceptions, viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .. import lib, models, serializers
+from .. import  models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -39,16 +35,20 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         """
         params:
             mobile (str): Phone number to generate an OTP
+            resend (str): Resend type sending otp type
 
         1. Generate OTP/ get existin OTP, which is valid for 15 mins
         2. send the code
+        3. resend OTP/ types are voice or text
 
         If the customer is not available then thrown an error
         """
-        #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(host="localhost", unix_socket_path='/var/run/redis/redis.sock')
+        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_db = redis.StrictRedis(
+            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
         phone = kwargs['mobile']
+        resend = self.request.GET.get('resend_type', None)
         # check if user exists
         try:
             customer = models.FlatCustomer.load_by_phone_mail(phone)
@@ -56,17 +56,16 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
             raise exceptions.PermissionDenied("User does not exits")
 
         otp = models.OtpList.redis_get(redis_db, phone)
-
         if otp is None:
             otp = models.OtpList(
                 mobile=phone,
                 otp=random.randint(1000, 9999))
             models.OtpList.redis_save(redis_db, otp)
-
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        SMS().send_otp(
+            phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
         logger.info("OTP sent")
 
         otp.otp = None
@@ -81,7 +80,8 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
 
         """
         #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(host="localhost", unix_socket_path='/var/run/redis/redis.sock')
+        redis_db = redis.StrictRedis(
+            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
         phone = self.request.data['mobile']
         otp = self.request.data['otp']

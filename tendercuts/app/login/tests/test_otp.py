@@ -35,6 +35,79 @@ class TestOtp:
         assert response.data['otp'] == otp
 
 
+class TestResendOtp:
+    """ Send OTP and Resend OTP.
+        params:
+          mobile(str): Phone number to send OTP
+          resend (str): OTP send types are text ot voice
+
+        1.check that response is not None
+        2.check that response mobile number is equal to sended mobile number
+
+    """
+    def test_otp(self, rest):
+        """Send Otp in customer mobile Number.
+
+        Params:
+           rest(pytest fixture): api client
+           mobile(int): customer mobile number
+
+        Returns:
+            rerurn in api client
+
+        Asserts:
+            check sent customer mobile number is equal to response mobile number
+
+        """
+        response = rest.get(
+            "/user/forgot_password_otp/9908765678/",
+            format='json')
+        assert type(response) is not None
+        assert response.data['mobile'] == "9908765678"
+
+    def test_otp_resend_text(self, rest):
+        """Resend Otp in text method customer mobile Number.
+
+        Params:
+           rest(pytest fixture): api client
+           mobile(int): customer mobile number
+           resend_type(str): type of sent otp  in text method or voice method
+
+        Returns:
+            rerurn in api client
+
+        Asserts:
+            check sent customer mobile number is equal to response mobile number
+
+        """
+        response = rest.get(
+            "/user/forgot_password_otp/9908765678/?resend_type=text",
+            format='json')
+        assert type(response) is not None
+        assert response.data['mobile'] == "9908765678"
+
+    def test_otp_resend_voice(self, rest):
+        """Resend Otp in text method customer mobile Number.
+
+        Params:
+           rest(pytest fixture): api client
+           mobile(int): customer mobile number
+           resend_type(str): type of sent otp  in text method or voice method
+
+        Returns:
+            rerurn api client
+
+        Asserts:
+            check sent customer mobile number is equal to response mobile number
+
+        """
+        response = rest.get(
+            "/user/forgot_password_otp/9908765678/?resend_type=voice",
+            format='json')
+        assert type(response) is not None
+        assert response.data['mobile'] == "9908765678"
+
+
 class TestPasswordRestOtp:
     def test_otp(self, rest):
 

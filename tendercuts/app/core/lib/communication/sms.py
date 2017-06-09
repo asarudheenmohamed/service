@@ -75,20 +75,27 @@ class SMS():
             verify=False,
             params=data)
 
-    def send_otp(self, phnumber, message, otp):
-        """
+    def send_otp(self, phnumber, message, otp, resend_type=None):
+        """ Send OTP and Resend OTP.
         Sends the OTP, new interface because of the stupid msg91's interface
 
         params:
             phnumber (int): Ph number to send
             OTP (str): OTP message
             message (str): message
+            resend_type (str): resend OTP type
 
         raises:
             Error in case of bad/invalid request
+
         """
-        self.otp.msg = message
-        otp = self.otp.send(
-            phnumber,
-            settings.SMS_GATEWAY["SENDER_ID"],
-            otp)
+        phnumber = "%s%s" % ("91", str(phnumber))
+        if resend_type:
+            self.otp.retry(phnumber, str(resend_type))
+        else:
+            self.otp.msg = message
+            otp = self.otp.send(
+                phnumber,
+                settings.SMS_GATEWAY["SENDER_ID"],
+                otp)
+            self.otp.verify(phnumber, otp)
