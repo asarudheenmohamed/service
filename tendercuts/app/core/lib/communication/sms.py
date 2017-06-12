@@ -90,12 +90,12 @@ class SMS():
 
         """
         phnumber = "%s%s" % ("91", str(phnumber))
-        if resend_type:
-            self.otp.retry(phnumber, str(resend_type))
-        else:
+        if resend_type is None:
             self.otp.msg = message
             otp = self.otp.send(
                 phnumber,
                 settings.SMS_GATEWAY["SENDER_ID"],
                 otp)
             self.otp.verify(phnumber, otp)
+        else:
+            self.otp.retry(phnumber, str(resend_type))
