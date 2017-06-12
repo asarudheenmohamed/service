@@ -52,8 +52,7 @@ class UserSignUpApi(APIView):
 
 
 class OtpApiViewSet(viewsets.GenericViewSet):
-    """
-    """
+    """OTP resend for Signup method."""
     authentication_classes = ()
     permission_classes = ()
 
@@ -62,9 +61,19 @@ class OtpApiViewSet(viewsets.GenericViewSet):
     lookup_field = "mobile"
 
     def retrieve(self, request, *args, **kwargs):
-        """
+        """OTP send for user mobile Number.
+
+        params:
+            mobile (str): New user mobile number
+            resend (str): OTP resend type for text ot voice method
+
+        1. Generate OTP
+        2. send the code
+        3. resend OTP/ types are voice or text
+
         """
         otp = None
+        resend = self.request.GET.get('resend_type', None)
         try:
             otp = self.get_object()
             logger.debug(
@@ -77,7 +86,7 @@ class OtpApiViewSet(viewsets.GenericViewSet):
                 "Generated a new OTP for the number {}".format(otp.mobile))
 
         msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
-        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
 
         serializer = self.get_serializer(otp)
         return Response(serializer.data)
