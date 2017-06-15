@@ -13,7 +13,7 @@ class RewardsPointdController:
         """Initialize amound value and expired date email sent value."""
         self.log = logging.getLogger()
         self.amount = 50
-        self.is_expired = 365
+        self.is_expired = 0
         self.email_sent = 1
 
     def add_transaction(self, new_user_obj, referer_obj):
