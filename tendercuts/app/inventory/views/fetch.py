@@ -21,6 +21,10 @@ class InventoryViewSet(APIView):
     Enpoint to provide the inventory for Day D
     """
 
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+
     def merge_lists(self, l1, l2, key):
         """
         Merges the two lists.
