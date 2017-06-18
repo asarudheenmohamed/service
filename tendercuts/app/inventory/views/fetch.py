@@ -20,7 +20,6 @@ class InventoryViewSet(APIView):
 
     Enpoint to provide the inventory for Day D
     """
-
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
     permission_classes = ()

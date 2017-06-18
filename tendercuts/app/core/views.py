@@ -28,7 +28,6 @@ class ProductViewSet(APIView):
 
     Enpoint to provide a list for sales orders
     """
-
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
     permission_classes = ()
