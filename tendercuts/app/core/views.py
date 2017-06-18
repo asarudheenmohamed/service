@@ -28,6 +28,10 @@ class ProductViewSet(APIView):
 
     Enpoint to provide a list for sales orders
     """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+
     # queryset = models.CatalogProductFlat1.objects.all()
     # serializer_class = serializers.CatalogProductFlat1Serializer
     def get(self, request):
