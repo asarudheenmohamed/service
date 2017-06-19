@@ -1,34 +1,41 @@
-"""Enpoint for the add New user reward amount."""
+"""Enpoint for the add New user reward amount status."""
 import logging
 from app.core.models.store import *
 from app.core.models.customer.entity import *
 from app.core.models.sales_order import *
-from ..lib import reward_points_controller as reward_points_controller
 
 
 class ReferFriendController:
     """EndPoint add transection amount for the user."""
 
-    def __init__(self):
+    def __init__(self, log=None):
         """Get logger name."""
-        self.log = logging.getLogger()
+        self.log = log or logging.getLogger()
 
-    def add_transaction(self, user_obj, referer_obj):
+    def add_transection(
+                        self,
+                        user_obj,
+                        user_basic_info,
+                        referer_obj,
+                        reward_point_obj):
         """Add Transection amount for new refered user.
-        
-        params:        
+
+        params:  
             user_id(str): request user id
             referer_obj(obj): referer user objects
 
         """
-        reward_obj = reward_points_controller.RewardsPointdController()
-        reward_point_obj = reward_obj.add_transaction(
-            user_obj, referer_obj)
         obj = MRewardsReferral(
-            customer=referer_obj['customer'], new_customer=user_obj['customer'],
-            email=user_obj['customer'].email, name=user_obj['_flat']['firstname'], status="visited",
+            customer=referer_obj.customer,
+            new_customer=user_obj.customer,
+            email=user_basic_info[1],
+            name=user_basic_info[2], status="visited",
             store=CoreStore.objects.get(store_id=1),
             last_transaction=reward_point_obj)
+
+        self.log.info("Creating Referral object for the new user  {}".format(
+                user_basic_info[0]))
         obj.save()
-        return {'status': 'Reward referral amount added '}
-       
+
+        return {'status': True, 'msg': 'Reward referral amount added '}
+

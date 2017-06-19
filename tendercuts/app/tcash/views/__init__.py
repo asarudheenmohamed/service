@@ -1,1 +1,1 @@
-from .reward_poinds import *
+from .reward_points import *

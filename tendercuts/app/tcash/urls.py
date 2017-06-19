@@ -10,5 +10,5 @@ router = DefaultRouter()
 
 urlpatterns = [
    url(r'', include(router.urls)),
-   url(r'referral', views.RewardPoindAmoundApi.as_view())
+   url(r'referral', views.RewardPointAmoundApi.as_view())
 ]
