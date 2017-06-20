@@ -1,19 +1,21 @@
 """Enpoint for the add new user reward amount status."""
-import logging
 import json
+import logging
+
+from app.core.lib.test.utils import *
+from app.core.models.customer.core import *
+from app.core.models.sales_order import *
+from app.core.models.store import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from ..lib import refer_friend_controller as refer_controller
-from app.core.models.store import *
-from app.core.models.sales_order import *
-from app.core.models.customer.core import *
 from ..lib import reward_points_controller as reward_points_controller
-from app.core.lib.test.utils import *
 
 logger = logging.getLogger(__name__)
 
 
-class RewardPointAmoundApi(APIView, GetUser):
+class RewardPointAmoundApi(APIView):
     """Enpoint Added amount for refered User."""
 
     def post(self, request, format=None):
@@ -43,7 +45,7 @@ class RewardPointAmoundApi(APIView, GetUser):
             reward_obj = reward_points_controller.RewardsPointdController(
                 log=logger)
             reward_point_obj = reward_obj.add_transection(
-            user_obj, referer_obj)
+                user_obj, referer_obj)
             controller = refer_controller.ReferFriendController(
                 log=logger)
             response_data = controller.add_transection(
