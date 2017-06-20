@@ -9,6 +9,6 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 
 urlpatterns = [
-   url(r'', include(router.urls)),
-   url(r'referral', views.RewardPointAmoundApi.as_view())
+    url(r'', include(router.urls)),
+    url(r'referral', views.RewardPointAmountApi.as_view())
 ]

@@ -39,6 +39,7 @@ MAGENTO = {
     "username": "admin",
     "password": "Tendercuts123!",
     "endpoint": "/v2_external/tendercuts-site/index.php/api/xmlrpc/",
+    "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "https"
 }
 

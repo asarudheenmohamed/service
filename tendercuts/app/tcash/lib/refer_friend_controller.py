@@ -1,8 +1,9 @@
-"""Enpoint for the add New user reward amount status."""
+"""Enpoint for the add new user reward amount status."""
 import logging
-from app.core.models.store import *
+
 from app.core.models.customer.entity import *
 from app.core.models.sales_order import *
+from app.core.models.store import *
 
 
 class ReferFriendController:
@@ -12,13 +13,12 @@ class ReferFriendController:
         """Get logger name."""
         self.log = log or logging.getLogger()
 
-    def add_transection(
-                        self,
+    def add_transaction(self,
                         user_obj,
                         user_basic_info,
                         referrer_obj,
                         reward_point_obj):
-        """Add Transaction amount for new refered user.
+        """Add Transaction amount for new referred user.
 
         params:  
             user_id(str): request user id
@@ -34,8 +34,7 @@ class ReferFriendController:
             last_transaction=reward_point_obj)
 
         self.log.info("Creating Referral object for the new user  {}".format(
-                user_basic_info[0]))
+            user_basic_info[0]))
         obj.save()
 
         return {'status': True, 'msg': 'Reward referral amount added '}
-

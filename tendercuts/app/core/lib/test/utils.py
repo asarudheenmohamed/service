@@ -47,7 +47,8 @@ class GenerateOrder(object):
         product = api.catalog_product.info(196)
         product['qty'] = 1
         api.cart_product.add(cart_id, [product], "7", "7")
-        lastname = 'Test User'if not customer['lastname'] else customer['lastname']
+        lastname = 'Test User'if not customer[
+            'lastname'] else customer['lastname']
         address = [{
             'mode': 'shipping',
             'firstname': customer['firstname'],

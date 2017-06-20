@@ -1,15 +1,19 @@
 """Test new referred user reward amount transaction."""
-import pytest
-import requests
 import json
 import uuid
 from random import randint
+import os
+
+import pytest
+import requests
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
-from app.core.lib.test.test_utils import *
-from app.core.lib.order_controller import OrderController
+
 from app.core.lib.magento import Connector
+from app.core.lib.order_controller import OrderController
+from app.core.lib.test.utils import *
 from app.core.models.customer.core import *
+from django.conf import settings
 
 
 @pytest.fixture(scope='session')
@@ -29,7 +33,21 @@ def test_user_reward(test_user):
 
     """
     user_reward_obj = FlatCustomer.load_by_id(test_user)
+
     return user_reward_obj.__dict__['_flat']['reward_points']
+
+
+@pytest.fixture(scope='session')
+def new_user_details(user):
+    """Return User reward amount.
+
+    Params:
+        test_user(pytest fixture): return in test user id
+
+    """
+    user_reward_obj = FlatCustomer.load_by_phone_mail(user['phno'])
+
+    return user_reward_obj
 
 
 @pytest.mark.django_db
@@ -54,8 +72,10 @@ class TestSignUp:
                 "email": user['email'],
                 "mobilenumber": user['phno'],
                 "password": user['password']}
+        baseurl = settings.MAGENTO['url'] + settings.MAGENTO['servicepoint']
+        url = os.path.join(baseurl + "index/createCustomer")
         response = requests.post(
-            "http://localhost/tendercuts-site/index.php/servicelayer/index/createCustomer", data=json.dumps(data))
+            url, data=json.dumps(data))
         assert response.json()['result'] == True
 
     def test_reward_amund_add_new_customer(self,
@@ -73,8 +93,6 @@ class TestSignUp:
 
         Asserts
             1.Verify if the login happens with email and phnumber
-            2.check reward amount added in new user
-            2.Check order plased customer id is equal to new user id
 
         """
         data = {"email": user['email'], "password": user['password']}
@@ -85,18 +103,45 @@ class TestSignUp:
         client.force_authenticate(user=users)
         referral_response = client.post(
             "/tcash/referral", {'user_id': test_user})
+
         assert referral_response.status_code == 200
         assert referral_response.json()['status'] == True
+
+    def test_check_new_user_reward_point(self, rest, user):
+        """Check reward point amount for new user.
+
+        Params:
+           rest(pytest fixture): api client
+           user(pytest fixture): return sign up user details
+
+        Asserts
+            1.check reward amount added in new user
+
+        """
         fetch_obj = rest.get(
             "/user/fetch/?phone={}&email={}" .format(
                 user['phno'], user['email']))
+
         assert fetch_obj.json()['attribute'][0]['value'] == 50
-        order_obj = GenerateOrder(
-            response.json()['entity_id']).order
-        assert response.json()['entity_id'] == order_obj.customer_id
+
+    def test_new_user_order_place(self, new_user_details):
+        """Order placed in new user.
+
+        Params:
+           new_user_details(pytest fixture): basic information of new user
+
+        Asserts
+            2.Check order placed customer id is equal to new user id
+
+        """
+        order_obj = GenerateOrder()
+        order_obj = order_obj.generate_order(
+            new_user_details.customer.entity_id)
         conn = Connector()
         controller = OrderController(conn, order_obj)
-        response_data = controller.complete()
+        controller.complete()
+
+        assert order_obj.customer_id == new_user_details.customer.entity_id
 
     def test_check_reward_amount(self, rest, test_user_reward, test_user):
         """Check Reward Point amount in test user.
@@ -114,5 +159,6 @@ class TestSignUp:
         user_basic_info = FlatCustomer.load_basic_info(test_user)
         fetch_obj = rest.get("/user/fetch/?phone={}&email={}" .format(
             user_basic_info[2], user_basic_info[1]))
-        assert fetch_obj.json()['attribute'][0]['value'] == test_user_reward+50
 
+        assert fetch_obj.json()['attribute'][0][
+            'value'] == test_user_reward + 50

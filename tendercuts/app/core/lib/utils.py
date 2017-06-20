@@ -1,7 +1,5 @@
 """Core Utilities."""
 
-import app.core.lib.magento as mage
-
 
 def get_user_id(request):
     """Initialize request user id.
