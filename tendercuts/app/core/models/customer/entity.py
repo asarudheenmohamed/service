@@ -162,3 +162,21 @@ class MRewardsTransaction(models.Model):
         managed = False
         db_table = 'm_rewards_transaction'
         app_label = "magento"
+
+class MRewardsReferral(models.Model):
+    referral_id = models.AutoField(primary_key=True)
+    customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING)
+    new_customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
+    email = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    store = models.ForeignKey('CoreStore', models.DO_NOTHING)
+    last_transaction = models.ForeignKey('MRewardsTransaction', models.DO_NOTHING, blank=True, null=True)
+    points_amount = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    quote_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'm_rewards_referral'
+        app_label = "magento"

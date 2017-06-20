@@ -22,8 +22,12 @@ class OrderController(object):
         Using the SOAP API here, as we need to triggers observers in magento for
         reward and credit.
         """
-        response_data = self.mage.api.tendercuts_apis.completeOrders([
-            {"increment_id": self.order.increment_id}])
+        invoice_id = self.mage.api.sales_order_invoice.create(
+            {'orderIncrementId': self.order.increment_id})
+        self.mage.api.sales_order_invoice.capture(
+            {'invoiceIncrementId ': invoice_id})
+        response_data = self.mage.api.sales_order_shipment.create(
+            {'orderIncrementId': self.order.increment_id})
 
         return response_data
 
