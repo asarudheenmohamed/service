@@ -6,7 +6,7 @@ from app.core.models.sales_order import *
 
 
 class ReferFriendController:
-    """EndPoint add transection amount for the user."""
+    """EndPoint add transaction amount for the user."""
 
     def __init__(self, log=None):
         """Get logger name."""
@@ -16,17 +16,17 @@ class ReferFriendController:
                         self,
                         user_obj,
                         user_basic_info,
-                        referer_obj,
+                        referrer_obj,
                         reward_point_obj):
-        """Add Transection amount for new refered user.
+        """Add Transaction amount for new refered user.
 
         params:  
             user_id(str): request user id
-            referer_obj(obj): referer user objects
+            referrer_obj(obj): referrer user objects
 
         """
         obj = MRewardsReferral(
-            customer=referer_obj.customer,
+            customer=referrer_obj.customer,
             new_customer=user_obj.customer,
             email=user_basic_info[1],
             name=user_basic_info[2], status="visited",

@@ -8,7 +8,7 @@ from app.core.models.store import *
 from app.core.models.sales_order import *
 from app.core.models.customer.core import *
 from ..lib import reward_points_controller as reward_points_controller
-from app.core.lib.test.test_utils_order_placed import *
+from app.core.lib.test.utils import *
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +33,13 @@ class RewardPointAmoundApi(APIView, GetUser):
         user_basic_info = FlatCustomer.load_basic_info(user_id)
         referer_obj = FlatCustomer.load_by_id(phone)
 
-        sales_flat_obj = SalesFlatOrder.objects.filter(
+        sales_flat_obj = SalesFlatOrder.objects.values_list('customer_id').filter(
             customer_id=user_basic_info[0])
         reward_obj = MRewardsReferral.objects.filter(
             new_customer__entity_id=user_basic_info[0])
 
         if not sales_flat_obj and not reward_obj:
+            print 'asar'
             reward_obj = reward_points_controller.RewardsPointdController(
                 log=logger)
             reward_point_obj = reward_obj.add_transection(

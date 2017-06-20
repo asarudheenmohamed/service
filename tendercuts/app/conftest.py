@@ -3,7 +3,7 @@ Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
 from rest_framework.test import APIClient
-from app.core.lib.test.test_utils_order_placed import *
+from app.core.lib.test.test_utils import *
 
 @pytest.fixture
 def rest():

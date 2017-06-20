@@ -6,7 +6,7 @@ import uuid
 from random import randint
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
-from app.core.lib.test.test_utils_order_placed import *
+from app.core.lib.test.test_utils import *
 from app.core.lib.order_controller import OrderController
 from app.core.lib.magento import Connector
 from app.core.models.customer.core import *
@@ -22,7 +22,7 @@ def user():
 
 @pytest.fixture(scope='session')
 def test_user_reward(test_user):
-    """Return User rewr amount.
+    """Return User reward amount.
 
     Params:
         test_user(pytest fixture): return in test user id
@@ -34,7 +34,7 @@ def test_user_reward(test_user):
 
 @pytest.mark.django_db
 class TestSignUp:
-    """Test New user create and add referal reward amount."""
+    """Test New user create and reward amount added refered user."""
 
     def test_login_create_success(self, rest, user):
         """Create new User.
