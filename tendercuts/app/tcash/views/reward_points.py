@@ -31,20 +31,20 @@ class RewardPointAmountApi(APIView):
 
         """
 
-        phone = self.request.data['user_id']
+        refered_user_id = self.request.data['user_id']
         user_id = get_user_id(request)
         user_obj = FlatCustomer.load_by_id(user_id)
         user_basic_info = FlatCustomer.load_basic_info(user_id)
-        referer_obj = FlatCustomer.load_by_id(phone)
+        referer_obj = FlatCustomer.load_by_id(refered_user_id)
 
         sales_flat_obj = SalesFlatOrder.objects.values_list(
-            'customer_id').filter(
-            customer_id=user_basic_info[0])
-        reward_obj = MRewardsReferral.objects.filter(
-            new_customer__entity_id=user_basic_info[0])
+            'customer_id').filter(customer_id=user_basic_info[0])
+        reward_obj = MRewardsReferral.objects.values_list(
+            'new_customer').filter(
+            new_customer__entity_id=user_id)
 
         if not sales_flat_obj and not reward_obj:
-            reward_obj = reward_points_controller.RewardsPointdController(
+            reward_obj = reward_points_controller.RewardsPointController(
                 log=logger)
             reward_point_obj = reward_obj.add_transaction(
                 user_obj, referer_obj)
@@ -57,7 +57,15 @@ class RewardPointAmountApi(APIView):
                 reward_point_obj)
             logger.info("Reward amount added for the user {}".format(
                 user_basic_info[0]))
+            response_data = {'status': True,
+                             'message': "50 Points has been credited to your TCuts Reward account"
+                             ".You can use it of further orders."}
+
         else:
-            response_data = {'status': False, 'msg': 'this user already exist'}
+            refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
+                                                                   0][0])
+            response_data = {'status': False,
+                             'message': 'Already  you have be referred'
+                             ' by your friend {}'.format(refered_user_basic_info[3])}
 
         return Response(response_data)

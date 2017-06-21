@@ -7,7 +7,7 @@ from app.core.models.sales_order import *
 from app.core.models.store import *
 
 
-class RewardsPointdController:
+class RewardsPointController:
     """EndPoint add transaction amount for the user."""
 
     def __init__(self, log=None):

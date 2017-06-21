@@ -37,4 +37,5 @@ class ReferFriendController:
             user_basic_info[0]))
         obj.save()
 
-        return {'status': True, 'msg': 'Reward referral amount added '}
+        return obj
+        # return {'status': True, 'msg': 'Reward referral amount added '}
