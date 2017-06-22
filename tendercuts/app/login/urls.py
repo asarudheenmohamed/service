@@ -11,10 +11,11 @@ router.register(r'mcredit', views.CreditBalance, base_name='mcredit')
 router.register(r'forgot_password_otp', views.OtpForgotPasswordApiViewSet)
 
 urlpatterns = [
-   url(r'', include(router.urls)),
-   url(r'login', views.UserLoginApi.as_view()),
-   url(r'signup', views.UserSignUpApi.as_view()),
-   url(r'fetch', views.UserDataFetch.as_view()),
-   url(r'exists', views.UserExistsApi.as_view()),
-   url(r'change_password', views.UserChangePassword.as_view()),
+    url(r'', include(router.urls)),
+    url(r'login', views.UserLoginApi.as_view()),
+    url(r'signup', views.UserSignUpApi.as_view()),
+    url(r'fetch', views.UserDataFetch.as_view()),
+    url(r'exists', views.UserExistsApi.as_view()),
+    url(r'change_password', views.UserChangePassword.as_view()),
+    url(r'edit_profile', views.EditPrifile.as_view()),
 ]
