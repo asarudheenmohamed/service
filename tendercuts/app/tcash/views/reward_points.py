@@ -38,9 +38,8 @@ class RewardPointAmountApi(APIView):
         referer_obj = FlatCustomer.load_by_id(refered_user_id)
 
         sales_flat_obj = SalesFlatOrder.objects.values_list(
-            'customer_id').filter(customer_id=user_basic_info[0])
-        reward_obj = MRewardsReferral.objects.values_list(
-            'new_customer').filter(
+            'customer_id').filter(customer_id=user_id)
+        reward_obj = MRewardsReferral.objects.filter(
             new_customer__entity_id=user_id)
 
         if not sales_flat_obj and not reward_obj:
@@ -56,14 +55,14 @@ class RewardPointAmountApi(APIView):
                 referer_obj,
                 reward_point_obj)
             logger.info("Reward amount added for the user {}".format(
-                user_basic_info[0]))
+                user_id))
             response_data = {'status': True,
                              'message': "50 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 
         else:
             refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
-                                                                   0][0])
+                                                                   0].customer.entity_id)
             response_data = {'status': False,
                              'message': 'Already  you have be referred'
                              ' by your friend {}'.format(refered_user_basic_info[3])}
