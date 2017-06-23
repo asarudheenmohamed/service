@@ -1,10 +1,12 @@
+import pytest
 """Test User Profile Changes."""
 
 
+@pytest.mark.django_db
 class TestUserProfileEdit:
     """Test user profile Edit."""
 
-    def test_username_reset(self, db, auth_rest):
+    def test_username_reset(self, auth_rest):
         """Username change in test user.
 
         Params:
@@ -19,13 +21,13 @@ class TestUserProfileEdit:
 
         """
         response = auth_rest.post(
-            "/user/edit_profile/", {'field_type': 'username',
-                                    'field_value': 'Testuser'},
+            "/user/edit_profile/", {'field_value': 'Testuser',
+                                    'code': 'firstname'},
             format='json')
         assert response.status_code == 200
         assert response.json()['status'] == True
 
-    def test_email_reset(self, db, auth_rest):
+    def test_email_reset(self, auth_rest):
         """Email change in test user.
 
         Params:
@@ -40,14 +42,14 @@ class TestUserProfileEdit:
 
         """
         response = auth_rest.post(
-            "/user/edit_profile/", {'field_type': 'email',
-                                    'field_value': 'varun@tendercuts123.com'},
+            "/user/edit_profile/", {'field_value': 'varun@tendercuts123.com',
+                                    'code': 'email'},
             format='json')
         # assert not isinstance(response, None)
         assert response.status_code == 200
         assert response.json()['status'] == True
 
-    def test_dob_reset(self, db, auth_rest):
+    def test_dob_reset(self, auth_rest):
         """Get reward point transection in 18963.
 
         Params:
@@ -62,14 +64,14 @@ class TestUserProfileEdit:
 
         """
         response = auth_rest.post(
-            "/user/edit_profile/", {'field_type': 'date of birth',
-                                    'field_value': '2017-06-19 00:00:00'},
+            "/user/edit_profile/", {'field_value': '2017-06-19 00:00:00',
+                                    'code': 'dob'},
             format='json')
         # assert not isinstance(response, None)
         assert response.status_code == 200
         assert response.json()['status'] == True
 
-    def test_password_reset(self, rest, db, auth_rest):
+    def test_password_reset(self, rest, auth_rest):
         """Get reward point transection in 18963.
 
         Params:
@@ -84,13 +86,13 @@ class TestUserProfileEdit:
 
         """
         response = auth_rest.post(
-            "/user/edit_profile/", {'field_type': 'password',
-                                    'field_value': 'test123'},
+            "/user/edit_profile/", {'field_value': 'test123',
+                                    'code': 'password_hash'},
             format='json')
         assert response.status_code == 200
         assert response.json()['status'] == True
 
-    def test_profile_changes(self, rest, db, auth_rest):
+    def test_profile_changes(self, rest, auth_rest):
         """Check test user profile changes.
 
         Params:

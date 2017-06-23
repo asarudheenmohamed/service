@@ -28,26 +28,16 @@ class EditPrifile(APIView):
 
         """
         user_id = get_user_id(request)
-        field = request.data["field_type"]
         value = request.data["field_value"]
-
-        if field == 'email':
+        code = request.data["code"]
+        if code == 'password_hash':
             user_obj = UserProfileEdit(user_id, logger)
-            user_obj.reset_email(value)
-
-        elif field == 'password':
-            user_obj = UserProfileEdit(user_id, logger)
-            user_obj.reset_password(value)
-
-        elif field == 'date of birth':
-            user_obj = UserProfileEdit(user_id, logger)
-            user_obj.reset_date_of_birth(value)
-
+            user_obj.reset_password(code, value)
         else:
             user_obj = UserProfileEdit(user_id, logger)
-            user_obj.reset_username(value)
+            user_obj.reset_userprofile(code, value)
 
         response = {"status": True,
-                    "message": "successfully reset your {}".format(field)}
+                    "message": "successfully reset your {}".format(code)}
 
         return Response(response)
