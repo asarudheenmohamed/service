@@ -1,7 +1,6 @@
-from django.conf import settings
-
 import requests
 import sendotp
+from django.conf import settings
 
 
 class OldSMS():
