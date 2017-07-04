@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 
 class RewardPointSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MRewardsTransaction
         fields = ("transaction_id", "customer", "amount",
@@ -10,6 +11,7 @@ class RewardPointSerializer(serializers.ModelSerializer):
 
 
 class McreditBalanceSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MCreditBalance
         fields = ("balance_id", "customer", "amount",

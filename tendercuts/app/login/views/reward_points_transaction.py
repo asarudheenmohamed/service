@@ -1,14 +1,17 @@
 """Endpoint for  user reward points transaction."""
 import logging
-#Django Module
-from .. import serializers
+
+from django.http import HttpResponse, JsonResponse
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import generics, viewsets
-from django.http import HttpResponse, JsonResponse
-#Custom Module
+
+# Custom Module
 from app.core.models.customer.entity import MRewardsTransaction
-from app.login.views.serializers import RewardPointSerializer
+from app.login.serializer.serializers import RewardPointSerializer
+
+# Django Module
+from .. import serializers
 
 logger = logging.getLogger(__name__)
 # Get an instance of a logger
@@ -47,4 +50,3 @@ class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
         logger.info(" Get Reward Points Transaction for the user {}".format(
             user_id))
         return queryset
-

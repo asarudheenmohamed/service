@@ -22,12 +22,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'pb#ie&)83+5_0-yo0@62@sx2kr0l=&j4u2q+%axw(@3=*#0^qk'
 
-ALLOWED_HOSTS = ["testserver", "localhost", "staging.tendercuts.in", "api.tendercuts.in"]
+ALLOWED_HOSTS = [
+    "testserver",
+    "localhost",
+    "staging.tendercuts.in",
+    "api.tendercuts.in"]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
 AUTHENTICATION_BACKENDS = (
-    # 'driver.auth.DriverAuthBackend', 
-    'django.contrib.auth.backends.ModelBackend', 
+    # 'driver.auth.DriverAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 DATABASE_ROUTERS = ['config.db.DBRouter']
 
@@ -56,7 +60,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'driver.auth.DriverAuthentication', 
+        # 'driver.auth.DriverAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # ...
     ),
@@ -106,18 +110,18 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'applogfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join("/var/log/django", 'tendercuts.log'),
-            'maxBytes': 1024*1024*15, # 15MB
+            'maxBytes': 1024 * 1024 * 15,  # 15MB
             'backupCount': 10,
             'formatter': 'verbose'
         },
         'invlogfile': {
             'level': 'DEBUG',
-            'class':'logging.handlers.TimedRotatingFileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join("/var/log/django/inventory", 'inventory.log'),
-            'when': 'midnight', # 15MB
+            'when': 'midnight',  # 15MB
             'interval': 1,
             'formatter': 'verbose'
         }
@@ -129,13 +133,13 @@ LOGGING = {
             'propagate': True,
         },
         'app.inventory': {
-            'handlers': ['invlogfile',],
+            'handlers': ['invlogfile', ],
             'level': 'DEBUG',
             'propagate': True,
         },
         # Anything
         '': {
-            'handlers': ['applogfile',],
+            'handlers': ['applogfile', ],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -209,9 +213,9 @@ STATIC_URL = '/static/'
 
 
 # application specific: Communication
-# Deprecated: 
+# Deprecated:
 OLD_SMS_GATEWAY = {
-    "KEY" : "A03daa52993fe5f1f3384925de5826b30",
+    "KEY": "A03daa52993fe5f1f3384925de5826b30",
     "SENDER_ID": "TENDER",
     "ENDPOINT": "http://alerts.synicsys.com/api/v4/"
 }
@@ -219,7 +223,8 @@ OLD_SMS_GATEWAY = {
 SMS_GATEWAY = {
     "KEY": "152377Awdd5u4YpFi5917274f",
     "SENDER_ID": "TENDER",
-    "ENDPOINT": "https://control.msg91.com/api/sendhttp.php"
+    "ENDPOINT": "https://control.msg91.com/api/sendhttp.php",
+    "RESENDPOINT": "http://api.msg91.com/api/retryotp.php"
 }
 
 MAIL_GATEWAY = {
