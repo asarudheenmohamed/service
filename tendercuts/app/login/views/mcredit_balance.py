@@ -1,14 +1,14 @@
 """Endpoint for user Credit Balance transaction."""
 import logging
-#Django Module
+# Django Module
 from .. import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets
 from django.http import HttpResponse, JsonResponse
-#Custom Module
+# Custom Module
 from app.core.models.customer.entity import MCreditBalance
-from app.login.views.serializers import McreditBalanceSerializer
+from app.login.serializer.serializers import McreditBalanceSerializer
 
 logger = logging.getLogger(__name__)
 # Get an instance of a logger
@@ -21,7 +21,7 @@ class CreditBalance(viewsets.ReadOnlyModelViewSet):
 
     """
     serializer_class = McreditBalanceSerializer
-  
+
     def get_user_id(self):
         """Get the user id from the request.
 
@@ -45,4 +45,3 @@ class CreditBalance(viewsets.ReadOnlyModelViewSet):
         logger.info(" Get Credit Balance for the user {}".format(
             user_id))
         return queryset
-

@@ -98,4 +98,12 @@ class SMS():
                 otp)
             self.otp.verify(phnumber, otp)
         else:
-            self.otp.retry(phnumber, str(resend_type))
+            data = {
+                "authkey": settings.SMS_GATEWAY["KEY"],
+                "mobile": phnumber,
+                "retrytype": str(resend_type),
+            }
+            requests.get(
+                settings.SMS_GATEWAY["RESENDPOINT"],
+                verify=False,
+                params=data)
