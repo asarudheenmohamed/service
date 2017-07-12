@@ -21,7 +21,7 @@ class OtpList(models.Model):
         app_label = "magento"
 
     @staticmethod
-    def redis_save(redis_conn, model, type_, prefix="OTP"):
+    def redis_save(redis_conn, model, type_=None, prefix="FORGOT_OTP"):
         """OTP stored in redis DB.
         Args:
          redis_conn:redis connection
@@ -30,14 +30,18 @@ class OtpList(models.Model):
 
         1.this otp expired on 30 min.
         """
+        if type_ is None:
+            name = "{}:{}".format(prefix, model.mobile)
+        else:
+            name = "{}:{}:{}".format(prefix, model.mobile, type_)
         redis_conn.setex(
-            name="{}:{}:{}".format(prefix, model.mobile, type_),
+            name=name,
             value=model.otp,
             time=30 * 60  # 30 mins!
         )
 
     @staticmethod
-    def redis_get(redis_conn, phone, type_, prefix="OTP"):
+    def redis_get(redis_conn, phone, type_=None, prefix="FORGOT_OTP"):
         """OTP fetch in redis DB.
         Args:
          redis_conn:redis connection
@@ -49,7 +53,11 @@ class OtpList(models.Model):
             return a OTP object
 
         """
-        otp = redis_conn.get("{}:{}:{}".format(prefix, phone, type_))
+        if type_ is None:
+            name = "{}:{}".format(prefix, phone)
+        else:
+            name = "{}:{}:{}".format(prefix, phone, type_)
+        otp = redis_conn.get(name)
         if otp is None:
             return otp
 

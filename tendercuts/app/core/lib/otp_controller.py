@@ -47,9 +47,9 @@ class Otpview:
          otp object for that user
 
         """
-        redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        # redis_db = redis.StrictRedis(
-        # host="localhost", unix_socket_path='/var/run/redis/redis.sock')
+        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_db = redis.StrictRedis(
+            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
         # check if user exists
         try:
@@ -57,10 +57,10 @@ class Otpview:
         except models.CustomerNotFound:
             raise exceptions.PermissionDenied("User does not exits")
 
-        otp = models.OtpList.redis_get(redis_db, phone, type_)
+        otp = models.OtpList.redis_get(redis_db, phone, type_, 'OTP')
         if otp is None:
             self.logger.debug(
                 "Generated a new OTP for the number {}".format(phone))
             otp = self.create_otp(phone)
-            models.OtpList.redis_save(redis_db, otp, type_)
+            models.OtpList.redis_save(redis_db, otp, type_, 'OTP')
         return otp
