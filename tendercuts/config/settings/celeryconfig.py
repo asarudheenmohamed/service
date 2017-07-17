@@ -17,3 +17,20 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT=['json']
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
+# Enables error emails.
+CELERY_SEND_TASK_ERROR_EMAILS = True
+# Name and email addresses of recipients
+ADMINS = (
+    ('Varun Prasad', 'varun@tendercuts.in'),
+    ('Asarudheen', 'asarudheen@tendercuts.in'),
+    ('Tech Ops', 'tech-ops@tendercuts.in')
+)
+
+# Email address used as sender (From field).
+SERVER_EMAIL = 'reports@tendercuts.in'
+
+# Mailserver configuration
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'reports@tendercuts.in'
+EMAIL_HOST_PASSWORD = 'D%6Byz6+no;Dhgv2'

@@ -1,3 +1,7 @@
+# enable the correct one for stagin/production
+export DJANGO_SETTINGS_MODULE=config.settings.staging
+export DJANGO_SETTINGS_MODULE=config.settings.prod
+
 # Absolute or relative path to the 'celery' command:
 CELERY_BIN="/usr/local/bin/celery"
 #CELERY_BIN="/virtualenvs/def/bin/celery"

@@ -1,3 +1,7 @@
+# enable the correct one for stagin/production
+export DJANGO_SETTINGS_MODULE=config.settings.staging
+export DJANGO_SETTINGS_MODULE=config.settings.prod
+
 # Names of nodes to start
 #   most people will only start one node:
 CELERYD_NODES="worker1"
