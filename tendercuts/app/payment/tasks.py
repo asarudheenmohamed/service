@@ -7,19 +7,20 @@ from config.celery import app
 from celery.utils.log import get_task_logger
 
 from app.core.lib import order_controller as controller
+from app.core.lib.celery import TenderCutsTask
 from app.core import models as core_models
 from app.payment import lib
 
 logger = get_task_logger(__name__)
 
 
-@app.task
+@app.task(base=TenderCutsTask)
 def check_payment_status():
     """Celery Task to set payment received flag.
 
     We look for orders in the last 30 mins
     """
-
+    raise ValueError()
     THRESHOLD = 30 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)
