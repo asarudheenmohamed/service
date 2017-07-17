@@ -19,6 +19,8 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 
 # Enables error emails.
 CELERY_SEND_TASK_ERROR_EMAILS = True
+
+EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # Name and email addresses of recipients
 ADMINS = (
