@@ -3,7 +3,7 @@ Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
 from rest_framework.test import APIClient
-from app.core.lib.test.test_utils import *
+from app.core.lib.test.utils import GenerateOrder
 
 @pytest.fixture
 def rest():
@@ -41,4 +41,4 @@ def serializer():
 
 @pytest.fixture(scope="session")
 def generate_mock_order(magento):
-    return GenerateOrder(18963).order
+    return GenerateOrder().generate_order(18963)

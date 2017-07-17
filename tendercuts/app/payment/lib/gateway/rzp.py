@@ -32,7 +32,7 @@ class RzpGateway(AbstractGateway):
     def magento_code(self):
         return "razorpay"
 
-    def check_payment_status(self, order_id, vendor_id):
+    def claim_payment(self, order_id, vendor_id):
         """
         params:
             order_id: increment_id

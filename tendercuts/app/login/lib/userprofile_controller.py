@@ -15,15 +15,36 @@ logger = logging.getLogger(__name__)
 class UserProfileEdit:
     """Change user profile details."""
 
+    customer_related_table = {"static": CustomerEntity,
+                              "varchar": CustomerEntityVarchar,
+                              "datetime": CustomerEntityDatetime,
+                              "int": CustomerEntityInt,
+                              "text": CustomerEntityText,
+                              "decimal": CustomerEntityDecimal}
+
     def __init__(self, user_id, log):
-        """Initialize user id."""
+        """Initialize user id.
+
+        Args:
+        user_id(int):customer entity id
+        log(obj):log file
+
+        """
         self.entity_id = user_id
         self.logger = log or logger
 
-    def reset_userprofile(self, attribute_code, new_user_name):
-        """Reset userprofile field like static,varchar,datetime,int,decimal."""
+    def reset_userprofile(self, attribute_code, new_value):
+        """Reset userprofile field like static,varchar,datetime,int,decimal.
+
+        Args:
+        attribute_code(str):attribute code for user edit field
+        new_value(str):user profile edit field value
+
+        Raise:
+         If the attribute_code is not available then thrown an error
+
+        """
         eav_obj = EavAttribute.objects.filter(attribute_code=attribute_code)
-        eav_obj = eav_obj[0]
         customer_related_table = {"static": CustomerEntity,
                                   "varchar": CustomerEntityVarchar,
                                   "datetime": CustomerEntityDatetime,
@@ -32,24 +53,36 @@ class UserProfileEdit:
                                   "decimal": CustomerEntityDecimal}
 
         cus_model = customer_related_table[str(eav_obj.backend_type)]
+        try:
+            eav_obj = eav_obj[0]
+        except IndexError:
+            raise ValueError('could not find %s' % (attribute_code))
+
         if eav_obj.backend_type == "static":
             user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id)
             user_obj = user_obj[0]
-            user_obj.email = new_user_name
-            user_obj.save()
+            user_obj.email = new_value
         else:
 	    user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id,
                 attribute_id=eav_obj.attribute_id)
             user_obj = user_obj[0]
-            user_obj.value = new_user_name
-            user_obj.save()
+            user_obj.value = new_value
+ 
+        user_obj.save()
+
         self.logger.info("successfully changed {} for {}".format(
             attribute_code, self.entity_id))
 
     def reset_password(self, attribute_code, new_password, dry_run=False):
-        """Reset user password field."""
+        """Reset user password field.
+
+        Args:
+        attribute_code(str):attribute code for user edit field
+        new_password(str):new password for the user
+
+        """
         eav_obj = EavAttribute.objects.filter(attribute_code=attribute_code)
         eav_obj = eav_obj[0]
         password_entity = CustomerEntityVarchar.objects.filter(

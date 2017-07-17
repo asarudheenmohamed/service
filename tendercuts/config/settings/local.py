@@ -1,4 +1,5 @@
 from .base import *
+from .celeryconfig import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -82,5 +83,17 @@ PAYMENT = {
         "url": "https://sandbox.juspay.in/card/tokenize",
         "return_url": "http://staging.tendercuts.in:82/payment/juspay",
         "environment": "sandbox"
+    },
+    "PAYU": {
+        "url": "https://info.payu.in/",
+        "merchant_id": "U6KiaG3M",
+        "secret": "xV0BSL"
+    },
+    "PAYTM": {
+        "url": "https://pguat.paytm.com",
+        "merchant_id": "Tender34302647116050",
+        "merchant_website": "olehcsweb",
+        "secret": "5JULNc!gvrfouxyL",
+        "environment": "Sandbox"
     }
 }

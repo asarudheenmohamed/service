@@ -21,28 +21,37 @@ class AbstractGateway(object):
     @abc.abstractproperty
     @property
     def magento_code(self):
-        """
-        Payment mehtod name in magento
+        """Payment mehtod name in magento."""
+        pass
+
+    @abc.abstractmethod
+    def claim_payment(self, order_id, vendor_id):
+        """Check the status of the order.
+
+        param:
+            order_id (str) increment_id
+            vendor_id (str) vendor specific Id
+
         """
         pass
 
     @abc.abstractmethod
-    def check_payment_status(self, order_id, vendor_id):
-        """
-        Check the status of the order
+    def check_payment_status(self, order_id):
+        """Check the status of the order in the PG.
+
         param:
             order_id (str) increment_id
-            vendor_id (str) vendor specific Id
+
         """
         pass
 
     def update_order_status(self, order_id):
-        """
-        Updates order
+        """Update order.
 
         params:
             order (SaleFlatOrder): order
             payment_success (bool): boolean, indicating sucess from GW
+
         """
         sale_order = core_models.SalesFlatOrder.objects.filter(
             increment_id=order_id)
@@ -56,14 +65,18 @@ class AbstractGateway(object):
         return sale_order[0].status
 
     def verify_transaction(self, order_id, vendor_id):
-        """
-        Check the status of the order and update the magento state
+        """Claim the transaction in the payment gateway.
+
+        If claimed successfully update the status on our end.
         param:
             order_id (str) increment_id
             vendor_id (str) vendor specific Id
+
         """
-        status = self.check_payment_status(order_id, vendor_id)
+        # Claim vendor side
+        status = self.claim_payment(order_id, vendor_id)
         if status:
+            # Claim on magento side
             self.update_order_status(order_id)
 
         return status

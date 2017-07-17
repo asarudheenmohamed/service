@@ -11,7 +11,7 @@ from celery.schedules import crontab
 
 import os, django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 # django.setup()
 
 app = Celery('tendercuts')
@@ -33,15 +33,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'every-minute': {
-        'task': 'app.payment.tasks.cancel_payu_orders',
-        'schedule': crontab(minute='*/5')
-    },
-    'every-1-mins-sfx-push': {
-        'task': 'app.driver.tasks.push_orders_to_shawdowfax',
-        'schedule': crontab(minute='*/1')
-    },
-    "every-1-mins-payment-check": {
-        "task": 'app.payment.tasks.print_failed_to_capture_payments',
+        'task': 'app.payment.tasks.check_payment_status',
         'schedule': crontab(minute='*/3')
     }
 }

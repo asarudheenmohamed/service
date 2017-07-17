@@ -62,5 +62,17 @@ PAYMENT = {
         "url": "https://api.juspay.in/card/tokenize",
         "return_url": "https://api.tendercuts.in/payment/juspay",
         "environment": "production"
+    },
+    "PAYU": {
+        "url": "https://info.payu.in/",
+        "merchant_id": "U6KiaG3M",
+        "secret": "xV0BSL"
+    },
+    "PAYTM": {
+        "url": "https://secure.paytm.in",
+        "merchant_id": "Tender34302647116050",
+        "merchant_website": "olehcsweb",
+        "secret": "5JULNc!gvrfouxyL",
+        "environment": "Production"
     }
 }

@@ -1,3 +1,5 @@
+"""Payu Gateway APIs."""
+
 from .base import AbstractGateway
 
 from app.payment import models as models
@@ -6,63 +8,59 @@ import hashlib
 import json
 import logging
 
+from django.conf import settings
+
 
 class Payu(AbstractGateway):
-    MERCHANT_ID = "U6KiaG3M"
-    KEY = "xV0BSL"
+    """Payu Gateway."""
+
+    SUCCESS = 'success'
+
+    def __init__(self, log=None):
+        """Constructor."""
+        super(Payu, self).__init__()
+
+        self.merchant_id = settings.PAYMENT['PAYU']['merchant_id']
+        self.secret = settings.PAYMENT['PAYU']['secret']
+        self.base_url = settings.PAYMENT['PAYU']["url"]
 
     @property
     def magento_code(self):
+        """Magento Code."""
         return "payubiz"
 
-    def filter_orders(self, orders, threshold=60 * 15):
-        # get only payu orders
-        orders = [order for order in orders
-                  if order.is_payu and order.time_elapsed().seconds > threshold]
+    def check_payment_status(self, order_id):
+        """Check the status of order in juspay gateway.
 
-        return orders
+        @override
+        params:
+            order_id (str) increment_id
 
-    def check_payment_status(self, orders, vendor_id):
+        """
         COMMAND = "verify_payment"
-
-        wsUrl = "https://info.payu.in/merchant/postservice?form=2"  # For live server
-        # if self.test:
-        #     wsUrl = "https://test.payu.in/merchant/postservice.php?form=2"
-
-        order_map = {order.increment_id: order
-                     for order in orders}
-        order_ids = list(order_map.keys())
+        wsUrl = "{}merchant/postservice?form=2".format(self.base_url)
 
         hash_val = hashlib.sha512("{}|{}|{}|{}".format(
-            self.KEY,
+            self.secret,
             COMMAND,
-            "|".join(order_ids),
-            self.MERCHANT_ID))
+            # "|".join(order_ids),
+            order_id,
+            self.merchant_id))
 
         data = {
-            'key': self.KEY,
+            'key': self.secret,
             'hash': hash_val.hexdigest(),
-            'var1': "|".join(order_ids),
+            'var1': order_id,
             'command': COMMAND}
 
         res = requests.post(wsUrl, data=data, timeout=30)
         res.raise_for_status()
 
-        self.log.info("Payu response: {}".format(
-            res.text))
-        payu_status = []
-        try:
-            response = res.json()
-            # response = [response] if type(response) is not list else response
-            for inc_id, status in response['transaction_details'].items():
-                model = models.PaymentStatusResponse.from_payu_status(
-                    order_map[inc_id],
-                    status)
-                payu_status.append(model)
+        self.log.info("Payu response: {}".format(res.text))
 
-        except ValueError as e:
-            self.log.exception(str(e))
-        except KeyError as e:
-            self.log.exception(str(e))
+        response = res.json()
+        # response = [response] if type(response) is not list else response
+        for inc_id, status in response['transaction_details'].items():
+            return status.get('status', False) == self.SUCCESS
 
-        return payu_status
+        return False

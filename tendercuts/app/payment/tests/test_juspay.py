@@ -24,7 +24,7 @@ class TestJustPayGateway:
         order_id = "100000001"
 
         gw = JusPayGateway()
-        status = gw.check_payment_status(order_id, None)
+        status = gw.claim_payment(order_id, None)
         assert status == True
 
     def test_verify(self):
@@ -77,6 +77,18 @@ class TestJustPayGateway:
         token = transaction.tokenize_card()
 
         assert "ctkn" in token
+
+    def test_order_status(self):
+        """Verify the get status API.
+
+        Asserts:
+            if the API is hit and we get a response.
+        """
+        # Hard-coded.
+        order_id = "400007745"
+
+        gw = JusPayGateway()
+        assert gw.check_payment_status(order_id) == True
 
 
 class TestJuspayCustomerCreate():
@@ -136,11 +148,10 @@ class TestJuspayCreateTransaction():
         assert card.gateway_code_level_1 is not None
 
         assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
-        assert 99 == transaction.amount
+        assert 198 == transaction.amount
 
     def test_create_payment_with_new_card(self, generate_mock_order, juspay_mock_user, juspay_dummy_card1):
-        """
-        Fetch a dummy card and mock it into a new card
+        """Fetch a dummy card and mock it into a new card.
 
         Asserts:
             1. Verify if user is created in JP
@@ -165,7 +176,7 @@ class TestJuspayCreateTransaction():
         assert "ctkn" in card.gateway_code_level_1
 
         assert "https://sandbox.juspay.in/pay/" in transaction.payment.authentication.url
-        assert 99 == transaction.amount
+        assert 198 == transaction.amount
 
     def _test_create_payment_with_nb(self, generate_mock_order):
         """
