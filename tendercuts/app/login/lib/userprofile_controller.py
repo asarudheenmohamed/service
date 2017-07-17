@@ -45,24 +45,31 @@ class UserProfileEdit:
 
         """
         eav_obj = EavAttribute.objects.filter(attribute_code=attribute_code)
+        customer_related_table = {"static": CustomerEntity,
+                                  "varchar": CustomerEntityVarchar,
+                                  "datetime": CustomerEntityDatetime,
+                                  "int": CustomerEntityInt,
+                                  "text": CustomerEntityText,
+                                  "decimal": CustomerEntityDecimal}
 
+        cus_model = customer_related_table[str(eav_obj.backend_type)]
         try:
             eav_obj = eav_obj[0]
         except IndexError:
             raise ValueError('could not find %s' % (attribute_code))
 
-        cus_model = self.customer_related_table[eav_obj.backend_type]
         if eav_obj.backend_type == "static":
             user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id)
             user_obj = user_obj[0]
             user_obj.email = new_value
         else:
-            user_obj = cus_model.objects.filter(
+	    user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id,
                 attribute_id=eav_obj.attribute_id)
             user_obj = user_obj[0]
             user_obj.value = new_value
+ 
         user_obj.save()
 
         self.logger.info("successfully changed {} for {}".format(
