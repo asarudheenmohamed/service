@@ -4,7 +4,7 @@ from random import randint
 import pytest
 from app.core import models as core_models
 from django.contrib.auth.models import User
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from rest_framework import exceptions
 
 import logging
@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-class TestApiLogin:
+class TestRzpPayment:
     """
     Test for payment verify endpoint
     """
@@ -74,8 +74,8 @@ class TestJusPayApi:
         """
         Asserts:
             if the api call is triggerd by the juspay
+            And redirect is triggered
         """
-
         response = rest.get(
             "/payment/juspay/",
             {"order_id": 67140,
@@ -83,7 +83,7 @@ class TestJusPayApi:
              "status_id": 26,
              "signature": "DQ1su1wVQ1D9tYAcPBcAMoG4yagt8+jVLk0Qf/4xg6Y=",
              "signature_algorithm": "HMAC-SHA256"})
-        assert response.data["status"] is False
+        assert type(response) is HttpResponseRedirect
 
     def test_verify_api_perms_denied(self, rest):
         """
@@ -125,7 +125,7 @@ class TestJusPayApi:
              "status_id": 26,
              "signature": "o/c7LZ3XRMpANoiA2rlDZS3ZT4+k2tOX+6YqsC+zuPk=",
              "signature_algorithm": "HMAC-SHA256"})
-        assert response.data["status"] is True
+        # assert response.data["status"] is True
         order = core_models.SalesFlatOrder.objects.filter(increment_id=order_id)[0]
         assert order.status == "scheduled_order"
         assert order.grid.status == "scheduled_order"

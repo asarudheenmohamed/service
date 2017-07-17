@@ -30,7 +30,7 @@ class GetSimplGateway(AbstractGateway):
     def magento_code(self):
         return "getsimpl"
 
-    def check_payment_status(self, order_id, vendor_id):
+    def claim_payment(self, order_id, vendor_id):
         """
         Here we need to use the transaction token given by simpl to claim
         the transaction

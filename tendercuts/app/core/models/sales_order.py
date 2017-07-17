@@ -407,6 +407,19 @@ class SalesFlatOrder(models.Model):
     customercredit_shipping_hidden_tax = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
 
+
+    # scheduled order related data
+    medium = models.IntegerField(blank=True, null=True)
+    os = models.IntegerField(blank=True, null=True)
+    scheduled_date = models.DateTimeField(blank=True, null=True)
+    scheduled_slot = models.IntegerField(blank=True, null=True)
+    deliverytype = models.IntegerField(blank=True, null=True)
+
+    splitted = models.IntegerField(blank=True, null=True)
+    splittedfrom = models.CharField(max_length=255, blank=True, null=True)
+    splittedto = models.CharField(max_length=255, blank=True, null=True)
+    payment_received = models.IntegerField(blank=True, null=True)
+
     store = models.ForeignKey(
         CoreStore, models.DO_NOTHING, blank=True, null=True)
     store_id = models.IntegerField()

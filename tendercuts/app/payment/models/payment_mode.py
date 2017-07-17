@@ -14,7 +14,7 @@ class PaymentMode(models.Model):
         method (str): Main payment mode name (juspay, simpl), should corerspond
             to magento
         gateway_code (str): Gateway specific name, such as "NB", CARDS etc
-        gateway_code_level_1 (str): More specific code of the GW vendor [TOKEN, NB CODE]etc
+        gateway_code_level_1 (str): More specific code of the GW vendor [TOKEN, NB CODE, CC Token] etc.
         priority(int): what should be the priority of these method
         order_id(str): Id of the order from magento
         pin (str): Can be a password/pin/cvv
@@ -107,7 +107,7 @@ class PaymentMode(models.Model):
         """
         is_card = self.method == "juspay" and self.gateway_code == "CARD"
 
-        # if not a store card
+        # if not a stored card
         if new_check:
             is_card = is_card and self.gateway_code_level_1 is None
 

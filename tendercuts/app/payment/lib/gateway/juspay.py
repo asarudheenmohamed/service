@@ -25,7 +25,6 @@ class JusPayGateway(AbstractGateway):
     JusPay integration
     """
     NETBANKING_CODE = "NB"
-    MAGENTO_CODE = "juspay"
     SUCCESS = "CHARGED"
 
     def __init__(self, log=None):
@@ -37,11 +36,16 @@ class JusPayGateway(AbstractGateway):
         self.secret = settings.PAYMENT['JUSPAY']['secret']
         self.merchant_id = settings.PAYMENT['JUSPAY']['merchant_id']
 
-    def _juspay_user(self, user_id):
-        return "{}_{}".format(self.MAGENTO_CODE, user_id)
+    @property
+    def magento_code(self):
+        return "juspay"
 
-    def check_payment_status(self, order_id, vendor_id):
-        """
+    def _juspay_user(self, user_id):
+        return "{}_{}".format(self.magento_code, user_id)
+
+    def claim_payment(self, order_id, vendor_id):
+        """Transaction is already claimed from callback, so we do local check.
+
         @override
 
         params:
@@ -50,6 +54,7 @@ class JusPayGateway(AbstractGateway):
 
         returns:
             boolean: indicating if the payment was captured.
+
         """
         self.log.debug(
             "Checking order status for {} from JUSPAY".format(order_id))
@@ -67,7 +72,8 @@ class JusPayGateway(AbstractGateway):
         return order.status == 'pending' or order.status == "scheduled_order"
 
     def verify_signature(self, params, hash_code, hash_algo):
-        """
+        """Verify the HASH signature.
+
         params:
             params: List of all params from the callback except signature and
                     algo
@@ -81,8 +87,8 @@ class JusPayGateway(AbstractGateway):
         #           and `signature_algorithm`
         # signature := "5ctBJ0vURSTS9awUhbTBXCpUeDEJG8X%252B6c%253D"
         # signature_algorithm := "HMAC-SHA256"
-        """
 
+        """
         # Sort the parms after encoding them
         encoded_sorted = []
         for i in sorted(params.keys()):
@@ -99,12 +105,14 @@ class JusPayGateway(AbstractGateway):
         return computed_hash == hash_code
 
     def fetch_payment_modes(self, user_id=None):
-        """
+        """Get all possible payment modes including user's saved card details.
+
         params:
             user_id: User id from whom saved cards should be specified
 
         returns:
             [PaymentMode]
+
         """
         modes = juspay.Payments.get_payment_methods(
             merchant_id=self.merchant_id)
@@ -123,13 +131,15 @@ class JusPayGateway(AbstractGateway):
         return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards]
 
     def juspay_order_create(self, order, customer):
-        """
+        """First create an order in Juspay.
+
         params:
             order (SalesFlatOrder) - order intance
             customer (juspay.Customer) - customer
 
         returns:
             juspay.Order
+ 
         """
         jp_order = juspay.Orders.create(
             order_id=order.increment_id,
@@ -146,13 +156,15 @@ class JusPayGateway(AbstractGateway):
         return jp_order
 
     def get_or_create_customer(self, user):
-        """"
+        """Check and create customer if not present.
+
         params:
             user (str or tuple): Can either be str reprsenting the user id
                 or a tuple representing (user_id, mail, phone, name)
 
         returns:
             juspay.User object
+
         """
         # conversion to tuple
         if isinstance(user, str):
@@ -180,8 +192,7 @@ class JusPayGateway(AbstractGateway):
         return cust
 
     def start_transaction(self, payment_mode, save_to_locker=True):
-        """
-        Performs multiple steps
+        """Start the transaction, Performs multiple steps.
 
         0. Fetch the mage order
         1. fetch the customer/create the customer
@@ -193,8 +204,8 @@ class JusPayGateway(AbstractGateway):
 
         returns:
             juspay.Transaction
-        """
 
+        """
         order = core_models.SalesFlatOrder.objects.filter(
             increment_id=payment_mode.order_id)
 
@@ -224,6 +235,18 @@ class JusPayGateway(AbstractGateway):
         txn.customer_phone = jp_customer.mobile_number
 
         return txn
+
+    def check_payment_status(self, order_id):
+        """Check the status of order in juspay gateway.
+
+        @override
+        params:
+            order_id (str) increment_id
+
+        """
+        juspay_order = juspay.Orders.status(order_id=order_id)
+        return juspay_order.status == self.SUCCESS if juspay_order else False
+
 
 
 class JuspayTransaction:

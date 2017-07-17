@@ -15,6 +15,6 @@ class TestRzpGateway:
 
         with pytest.raises(Exception) as excinfo:
             gw = RzpGateway()
-            status = gw.check_payment_status(order_id, vendor_id)
+            status = gw.claim_payment(order_id, vendor_id)
 
         assert "captured" in str(excinfo)

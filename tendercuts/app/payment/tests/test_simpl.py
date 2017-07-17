@@ -14,7 +14,7 @@ class TestSimplTransactionClaim:
         """
         gw = GetSimplGateway()
 
-        status = gw.check_payment_status(
+        status = gw.claim_payment(
             order_id="W700002925",
             #"100054118",
             vendor_id="8be510c41687284f3f70f2e75f92153f")

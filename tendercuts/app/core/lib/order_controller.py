@@ -65,3 +65,11 @@ class OrderController(object):
 
         self.order.save()
         self.order.grid.save()
+    
+    def update_payment_status(self):
+        """Update the payment_received flag.
+
+        Ideally this should be merged with payment_sucess eventually
+        """
+        self.order.payment_received = 1
+        self.order.save()
