@@ -31,7 +31,7 @@ class UserProfileEdit:
                                   "text": CustomerEntityText,
                                   "decimal": CustomerEntityDecimal}
 
-        cus_model = customer_related_table[eav_obj.backend_type]
+        cus_model = customer_related_table[str(eav_obj.backend_type)]
         if eav_obj.backend_type == "static":
             user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id)
@@ -39,13 +39,12 @@ class UserProfileEdit:
             user_obj.email = new_user_name
             user_obj.save()
         else:
-            user_obj = cus_model.objects.filter(
+	    user_obj = cus_model.objects.filter(
                 entity_id=self.entity_id,
                 attribute_id=eav_obj.attribute_id)
             user_obj = user_obj[0]
             user_obj.value = new_user_name
             user_obj.save()
-
         self.logger.info("successfully changed {} for {}".format(
             attribute_code, self.entity_id))
 

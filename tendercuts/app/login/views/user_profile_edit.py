@@ -38,6 +38,6 @@ class EditPrifile(APIView):
             user_obj.reset_userprofile(code, value)
 
         response = {"status": True,
-                    "message": "successfully reset your {}".format(code)}
+                    "message": "successfully reset your {}".format(code),"result":code}
 
         return Response(response)
