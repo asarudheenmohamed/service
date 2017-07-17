@@ -52,11 +52,11 @@ class UserProfileEdit:
                                   "text": CustomerEntityText,
                                   "decimal": CustomerEntityDecimal}
 
-        cus_model = customer_related_table[str(eav_obj.backend_type)]
         try:
             eav_obj = eav_obj[0]
         except IndexError:
             raise ValueError('could not find %s' % (attribute_code))
+        cus_model = customer_related_table[str(eav_obj.backend_type)]
 
         if eav_obj.backend_type == "static":
             user_obj = cus_model.objects.filter(
