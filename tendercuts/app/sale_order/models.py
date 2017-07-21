@@ -7,6 +7,7 @@ import collections
 
 
 class Delivery:
+
     @abc.abstractproperty
     def cost(self):
         pass
@@ -21,7 +22,7 @@ class Delivery:
 
 
 class ScheduledDelivery(Delivery):
-    DAYS = 3
+    DAYS = 2
     CUT_OFF = 3  # hours
     SLOTS = [
         (datetime.time(7, 0, 0), {"ddate_id": 52, "interval": "7:00 - 9:00"}),
@@ -75,6 +76,7 @@ class ScheduledDelivery(Delivery):
 
 
 class ExpressDelivery(Delivery):
+
     @property
     def cost(self):
         return 49
