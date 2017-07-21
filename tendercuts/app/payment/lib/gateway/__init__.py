@@ -9,9 +9,9 @@ def get_gateway_by_method(method):
     """Get the gateway class by the magento method name."""
     gateway = {
         "payubiz": Payu,
-        "paytm": PaytmGateway,
+        "paytm_cc": PaytmGateway,
         "juspay": JusPayGateway,
-        "simpl": GetSimplGateway
+        "getsimpl": GetSimplGateway
     }
 
     try:
