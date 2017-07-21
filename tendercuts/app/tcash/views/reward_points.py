@@ -11,6 +11,8 @@ from app.core.models.customer.core import *
 from app.core.models.sales_order import *
 from app.core.models.store import *
 
+from app.core.models.customer.entity import *
+
 from ..lib import refer_friend_controller as refer_controller
 from ..lib import reward_points_controller as reward_points_controller
 
@@ -40,8 +42,14 @@ class RewardPointAmountApi(APIView):
         sales_flat_obj = SalesFlatOrder.objects.values_list(
             'customer_id').filter(customer_id=user_id)
         reward_obj = MRewardsReferral.objects.filter(
-            new_customer__entity_id=user_id)
-
+            new_customer=CustomerEntity.objects.get(entity_id=user_id))
+        logger.info("sales flat obj {}".format(
+                sales_flat_obj))
+        try:
+         logger.info("reward obj {}".format(
+                reward_obj[0].new_customer.entity_id))
+        except:
+         pass
         if not sales_flat_obj and not reward_obj:
             reward_obj = reward_points_controller.RewardsPointController(
                 log=logger)
@@ -63,8 +71,11 @@ class RewardPointAmountApi(APIView):
         else:
             refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
                                                                    0].customer.entity_id)
+            message = 'Already  you have be referred by your friend {}'.format(
+                refered_user_basic_info[3])
             response_data = {'status': False,
-                             'message': 'Already  you have be referred'
-                             ' by your friend {}'.format(refered_user_basic_info[3])}
+                             'message': message}
+
+            logger.info(message)
 
         return Response(response_data)

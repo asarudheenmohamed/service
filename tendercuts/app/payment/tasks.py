@@ -20,13 +20,12 @@ def check_payment_status():
 
     We look for orders in the last 30 mins
     """
-    raise ValueError()
     THRESHOLD = 30 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)
 
     payment_pending_orders = core_models.SalesFlatOrder.objects           \
-        .filter(status='pending_payment', created_at__range=[start, end]) \
+        .filter(status='pending', created_at__range=[start, end]) \
         .prefetch_related('payment')
 
     for order in payment_pending_orders:
@@ -38,6 +37,10 @@ def check_payment_status():
             logger.error(
                 "Unable to find the payment method for {}").format(inc_id)
             continue
+
+        if method == "cashondelivery":
+             # ignore COD
+             continue
 
         logger.info("querying {} for the payment status of {}".format(
             method, inc_id)) 
