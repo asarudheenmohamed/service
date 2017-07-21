@@ -160,3 +160,24 @@ class CatalogCategoryFlatStore9(CatalogCategoryFlatStore):
         managed = False
         db_table = 'catalog_category_flat_store_9'
         app_label = "magento"
+
+
+class CatalogCategoryFlatStore10(CatalogCategoryFlatStore):
+    class Meta:
+        managed = False
+        db_table = 'catalog_category_flat_store_10'
+        app_label = "magento"
+
+
+class CatalogCategoryFlatStore11(CatalogCategoryFlatStore):
+    class Meta:
+        managed = False
+        db_table = 'catalog_category_flat_store_11'
+        app_label = "magento"
+
+
+class CatalogCategoryFlatStore12(CatalogCategoryFlatStore):
+    class Meta:
+        managed = False
+        db_table = 'catalog_category_flat_store_12'
+        app_label = "magento"
