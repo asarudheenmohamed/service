@@ -35,16 +35,23 @@ class RewardPointAmountApi(APIView):
 
         refered_user_id = self.request.data['user_id']
         user_id = get_user_id(request)
+
         user_obj = FlatCustomer.load_by_id(user_id)
         user_basic_info = FlatCustomer.load_basic_info(user_id)
+
         referer_obj = FlatCustomer.load_by_id(refered_user_id)
 
+        # Fetch existing order of the user
         sales_flat_obj = SalesFlatOrder.objects.values_list(
             'customer_id').filter(customer_id=user_id)
+
+        # Check if the new user id already refered by any other user.
+        # as we don't want multiple referrals.
         reward_obj = MRewardsReferral.objects.filter(
-            new_customer=CustomerEntity.objects.get(entity_id=user_id))
-        logger.info("sales flat obj {}".format(
-                sales_flat_obj))
+            new_customer__entity_id=user_id)
+
+        logger.info("sales flat obj {}".format( sales_flat_obj))
+
         try:
          logger.info("reward obj {}".format(
                 reward_obj[0].new_customer.entity_id))
