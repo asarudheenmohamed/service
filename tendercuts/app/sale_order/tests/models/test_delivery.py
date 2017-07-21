@@ -1,8 +1,10 @@
 from app.sale_order.models import ScheduledDelivery, ExpressDelivery
 from django.http import HttpResponseNotFound
 import datetime
+import pytest
 
 
+@pytest.mark.django_db
 class TestDeliveryModel:
     """
     Tests for model delivery
@@ -47,27 +49,30 @@ class TestDeliveryModel:
         dt_now = now.replace(hour=12)
         slots = delivery.available_slots(now=dt_now)
 
-        today = [s for s in slots if s['date'] == str(datetime.date.today())][0]
-        assert len(slots) == 3
+        today = [s for s in slots if s['date']
+                 == str(datetime.date.today())][0]
+        assert len(slots) == 2
         assert len(today['times']) == 2
 
         dt_now = now.replace(hour=5)
         slots = delivery.available_slots(now=dt_now)
-        today = [s for s in slots if s['date'] == str(datetime.date.today())][0]
-        assert len(slots) == 3
+        today = [s for s in slots if s['date']
+                 == str(datetime.date.today())][0]
+        assert len(slots) == 2
         assert len(today['times']) == 4
         # ["9:00 - 11:00", "11:00 - 13:00", "17:00 - 19:00", "19:00 - 21:00"]
 
         dt_now = now.replace(hour=19)
         slots = delivery.available_slots(now=dt_now)
-        assert len(slots) == 2
+        assert len(slots) == 1
 
 
+@pytest.mark.django_db
 class TestDeliveryRestApi:
 
     def test_endpoint_exists(self, auth_rest):
         response = auth_rest.get("/sale_order/delivery_slots/", format='json')
-        assert type(response) is not HttpResponseNotFound
+        assert not isinstance(response, HttpResponseNotFound)
 
     def test_endpoint(self, auth_rest):
         response = auth_rest.get("/sale_order/delivery_slots/", format='json')
