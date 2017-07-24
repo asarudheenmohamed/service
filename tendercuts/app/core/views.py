@@ -89,6 +89,22 @@ class ProductViewSet(APIView):
 
             response.append(data)
 
+        # what;s new will be in the beginning
+        sort_order = [17]
+
+        def sorter(x, y):
+            xindex = yindex = 99
+
+            try:
+                xindex = sort_order.index(x['category']['entity_id'])
+                yindex = sort_order.index(y['category']['entity_id'])
+            except ValueError:
+                pass
+
+            return cmp(xindex, yindex)
+
+        response.sort(sorter)
+
         return Response(response)
 
 
