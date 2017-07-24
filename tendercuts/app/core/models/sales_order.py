@@ -390,9 +390,7 @@ class SalesFlatOrder(models.Model):
     cordinates = models.CharField(max_length=20)
     trip_id = models.CharField(max_length=200)
     order_now = models.IntegerField()
-    deliverytype = models.IntegerField(blank=True, null=True)
-    scheduled_date = models.DateTimeField(blank=True, null=True)
-    scheduled_slot = models.IntegerField(blank=True, null=True)
+
     customercredit_discount = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
     base_customercredit_discount = models.DecimalField(
