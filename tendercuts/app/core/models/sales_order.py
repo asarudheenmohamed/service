@@ -390,6 +390,9 @@ class SalesFlatOrder(models.Model):
     cordinates = models.CharField(max_length=20)
     trip_id = models.CharField(max_length=200)
     order_now = models.IntegerField()
+    deliverytype = models.IntegerField(blank=True, null=True)
+    scheduled_date = models.DateTimeField(blank=True, null=True)
+    scheduled_slot = models.IntegerField(blank=True, null=True)
     customercredit_discount = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
     base_customercredit_discount = models.DecimalField(
@@ -406,7 +409,6 @@ class SalesFlatOrder(models.Model):
         max_digits=12, decimal_places=4, blank=True, null=True)
     customercredit_shipping_hidden_tax = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
-
 
     # scheduled order related data
     medium = models.IntegerField(blank=True, null=True)
@@ -470,23 +472,31 @@ class SalesFlatOrder(models.Model):
         """
         TODO needs optimization
         """
+        SLOTS = {52: "7:00 - 9:00",
+                 53: "9:00 - 11:00",
+                 54: "11:00 - 13:00",
+                 55: "17:00 - 19:00",
+                 56: "19:00 - 21:00"}
+
         promised_time = None
         tz = pytz.timezone('Asia/Kolkata')
 
-        if self.order_now == 1:
+        if self.deliverytype == 1:
             promised_time = self.created_at + datetime.timedelta(minutes=90)
             promised_time = promised_time.astimezone(tz)
-        elif getattr(self, 'schedule', None):
-            date_obj = self.schedule.ddate.ddate
-            timetext = self.schedule.ddate.dtimetext
-            timetext = timetext.split("-")
 
+        elif self.deliverytype == 2:
+            date_obj = self.scheduled_date
+            timetext = self.scheduled_slot
+            timetext = SLOTS[timetext].split("-")
             if len(timetext) == 2:
                 timetext = timetext[1]
             else:
                 timetext = "00"
 
-            logger.debug("Formatting {}: {} to text".format(date_obj, timetext))
+            logger.debug(
+                "Formatting {}: {} to text".format(
+                    date_obj, timetext))
             try:
                 promised_time = dateutil.parser.parse(
                     "{} {}".format(date_obj, timetext))
@@ -494,7 +504,8 @@ class SalesFlatOrder(models.Model):
                 logger.info("Conversion to date faile")
                 promised_time = None
 
-        return format(promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
+        return format(
+            promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
 
 
 class SalesFlatOrderItem(models.Model):
@@ -892,5 +903,3 @@ class MwddateStore(models.Model):
         managed = False
         db_table = 'mwddate_store'
         app_label = 'magento'
-
-

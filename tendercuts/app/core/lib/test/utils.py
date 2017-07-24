@@ -3,6 +3,9 @@
 Contains helper functions to place order.
 """
 
+from datetime import datetime
+
+import pytz
 from rest_framework.test import APIClient
 
 import app.core.lib.magento as mage
@@ -15,7 +18,7 @@ class GenerateOrder(object):
         """Initialize in generate mork order object."""
         pass
 
-    def generate_order(self, customer_id):
+    def generate_order(self, customer_id, scheduled_order=False):
         """Generate order base customer id.
 
         Params:
@@ -94,6 +97,15 @@ class GenerateOrder(object):
         order_id = api.cart.order(cart_id, "7", None)
 
         orders = SalesFlatOrder.objects.filter(increment_id=order_id)
+        if scheduled_order:
+            shedule_date = datetime.now()
+            order = orders[0]
+            order.order_now = 0
+            order.deliverytype = 2
+            order.scheduled_date = shedule_date.replace(
+                hour=0, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
+            order.scheduled_slot = 52
+            order.save()
         assert len(orders) == 1
 
         return orders[0]
