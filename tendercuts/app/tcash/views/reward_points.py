@@ -50,13 +50,6 @@ class RewardPointAmountApi(APIView):
         reward_obj = MRewardsReferral.objects.filter(
             new_customer__entity_id=user_id)
 
-        logger.info("sales flat obj {}".format( sales_flat_obj))
-
-        try:
-         logger.info("reward obj {}".format(
-                reward_obj[0].new_customer.entity_id))
-        except:
-         pass
         if not sales_flat_obj and not reward_obj:
             reward_obj = reward_points_controller.RewardsPointController(
                 log=logger)
@@ -71,7 +64,7 @@ class RewardPointAmountApi(APIView):
                 reward_point_obj)
             logger.info("Reward amount added for the user {}".format(
                 user_id))
-            response_data = {'status': True,
+            response_data = {'status': "true",
                              'message': "50 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 
@@ -80,7 +73,7 @@ class RewardPointAmountApi(APIView):
                                                                    0].customer.entity_id)
             message = 'Already  you have be referred by your friend {}'.format(
                 refered_user_basic_info[3])
-            response_data = {'status': False,
+            response_data = {'status': "false",
                              'message': message}
 
             logger.info(message)
