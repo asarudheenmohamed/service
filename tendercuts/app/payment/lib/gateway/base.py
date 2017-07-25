@@ -26,7 +26,7 @@ class AbstractGateway(object):
 
     @abc.abstractmethod
     def claim_payment(self, order_id, vendor_id):
-        """Check the status of the order.
+        """Check the status of the order and claim the payment.
 
         param:
             order_id (str) increment_id

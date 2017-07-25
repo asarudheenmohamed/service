@@ -48,24 +48,29 @@ class OrderController(object):
         return status
 
     def payment_success(self):
-        """
-        If payment in successful
+        """If payment in successful, update status.
 
         1. Update status as "pending" for express
         2. Update status as sch_order for scheduled
-        2. Grid also needs to be updated.
+        3. Update as pending for split order
+        4. Grid also needs to be updated.
         """
         # express delivery
-        if self.order.order_now == 1:
+        if self.order.deliverytype == 1:
             self.order.status = "pending"
             self.order.grid.status = "pending"
-        elif self.order.order_now == 0:
+        # sch
+        elif self.order.deliverytype == 2:
             self.order.status = "scheduled_order"
             self.order.grid.status = "scheduled_order"
+        # split
+        else:
+            self.order.status = "pending"
+            self.order.grid.status = "pending"
 
         self.order.save()
         self.order.grid.save()
-    
+
     def update_payment_status(self):
         """Update the payment_received flag.
 
