@@ -8,21 +8,17 @@ import random
 import string
 import traceback
 
-import app.core.lib.magento as magento
 import redis
-
-from app.core.lib.communication import SMS
 from django.http import Http404
-from rest_framework import exceptions
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework import viewsets
+from rest_framework import exceptions, generics, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .. import lib
-from .. import models
-from .. import serializers
+import app.core.lib.magento as magento
+from app.core.lib.communication import SMS
+from app.core.lib.user_controller import *
+
+from .. import lib, models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -108,12 +104,12 @@ class UserExistsApi(APIView):
         user_exists = False
         message = ""
 
-        if email and models.FlatCustomer.is_user_exists(email):
+        if email and CustomerSearchController.is_user_exists(email):
             message = "A user with the same email exists, try Forgot password?"
             user_exists = True
             logger.debug(
                 "user already exists for the email user {}".format(email))
-        elif phone and models.FlatCustomer.is_user_exists(phone):
+        elif phone and CustomerSearchController.is_user_exists(phone):
             message = "A user with the same phone number exists, try Forgot password?"
             user_exists = True
             logger.debug(

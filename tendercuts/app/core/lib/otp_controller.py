@@ -5,6 +5,7 @@ import logging
 import redis
 
 from app.login.lib.otp_controller import *
+from app.core.lib.user_controller import *
 
 from .. import lib, models
 
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 class Otpview:
     """Fetch the OTP from redis DB and create otp."""
 
-    def __init__(self, log):
+    def __init__(self, log=None):
         """Intialized the logger."""
         self.logger = log or logger
         pass
@@ -53,7 +54,7 @@ class Otpview:
 
         # check if user exists
         try:
-            customer = models.FlatCustomer.load_by_phone_mail(phone)
+            customer = CustomerSearchController.load_by_phone_mail(phone)
         except models.CustomerNotFound:
             raise exceptions.PermissionDenied("User does not exits")
 

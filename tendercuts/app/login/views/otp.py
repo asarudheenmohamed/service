@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 import app.core.lib.magento as magento
 from app.core.lib.communication import SMS
 from app.core.lib.otp_controller import *
+from app.core.lib.user_controller import *
 
 from .. import lib, models, serializers
 
@@ -45,7 +46,8 @@ class OtpApi(viewsets.GenericViewSet):
         """
         msg_content = {
             '1': "as your OTP to reset your password.",
-            '2': "as your signup OTP. OTP is confidential."}
+            '2': "as your signup OTP. OTP is confidential.",
+            '3': "as your login OTP. OTP is confidential."}
         phone = kwargs['mobile']
         resend = self.request.GET.get('resend_type', None)
         type_ = self.request.GET.get('type')
@@ -54,7 +56,11 @@ class OtpApi(viewsets.GenericViewSet):
         otp = otp_obj.get_object(phone, type_)
 
         msg = ("""Use {} {}.""").format(otp.otp, msg_content[str(type_)])
-        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
+        SMS().send_otp(
+            phnumber=otp.mobile,
+            message=msg,
+            otp=otp.otp,
+            resend_type=resend)
 
         logger.info("OTP sent")
         serializer = self.get_serializer(otp)
@@ -88,7 +94,7 @@ class OtpApi(viewsets.GenericViewSet):
             random_pass)
         SMS().send(phnumber=phone, message=msg)
 
-        customer = models.FlatCustomer.load_by_phone_mail(phone)
+        customer = CustomerSearchController.load_by_phone_mail(phone)
         customer.reset_password(random_pass, dry_run=dry_run)
 
         otp_object.otp = None

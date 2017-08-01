@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from app.core.lib.test.utils import *
+from app.core.lib.user_controller import *
 from app.core.lib.utils import get_user_id
 from app.core.models.customer.core import *
+from app.core.models.customer.entity import *
 from app.core.models.sales_order import *
 from app.core.models.store import *
 
@@ -35,11 +37,9 @@ class RewardPointAmountApi(APIView):
 
         refered_user_id = self.request.data['user_id']
         user_id = get_user_id(request)
-
-        user_obj = FlatCustomer.load_by_id(user_id)
-        user_basic_info = FlatCustomer.load_basic_info(user_id)
-
-        referer_obj = FlatCustomer.load_by_id(refered_user_id)
+        user_obj = CustomerController.load_by_id(user_id)
+        user_basic_info = CustomerSearchController.load_basic_info(user_id)
+        referer_obj = CustomerController.load_by_id(refered_user_id)
 
         # Fetch existing order of the user
         sales_flat_obj = SalesFlatOrder.objects.values_list(
@@ -48,7 +48,7 @@ class RewardPointAmountApi(APIView):
         # Check if the new user id already refered by any other user.
         # as we don't want multiple referrals.
         reward_obj = MRewardsReferral.objects.filter(
-            new_customer__entity_id=user_id)
+            new_customer=CustomerEntity.objects.get(entity_id=user_id))
 
         if not sales_flat_obj and not reward_obj:
             reward_obj = reward_points_controller.RewardsPointController(
@@ -69,6 +69,7 @@ class RewardPointAmountApi(APIView):
                              ".You can use it of further orders."}
 
         else:
+<<<<<<< HEAD
             refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
                                                                    0].customer.entity_id)
             message = 'Already  you have be referred by your friend {}'.format(
@@ -77,5 +78,12 @@ class RewardPointAmountApi(APIView):
                              'message': message}
 
             logger.info(message)
+=======
+            refered_user_basic_info = CustomerSearchController.load_basic_info(reward_obj[
+                0].customer.entity_id)
+            response_data = {'status': False,
+                             'message': 'Already  you have be referred'
+                             ' by your friend {}'.format(refered_user_basic_info[3])}
+>>>>>>> otp validations and otp mode login Flat customer code refactoring
 
         return Response(response_data)

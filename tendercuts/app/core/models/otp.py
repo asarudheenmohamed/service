@@ -41,6 +41,23 @@ class OtpList(models.Model):
         )
 
     @staticmethod
+    def redis_key_value_save(redis_conn, key, value):
+        """OTP key per value stored in redis DB.
+
+        Args:
+         redis_conn:redis connection
+         key:key of stored row
+         value:value of stored row
+
+        1.this key value expire on 15 min.
+        """
+        redis_conn.setex(
+            name=key,
+            value=value,
+            time=15 * 60  # 30 mins!
+        )
+
+    @staticmethod
     def redis_get(redis_conn, phone, type_=None, prefix="FORGOT_OTP"):
         """OTP fetch in redis DB.
         Args:
@@ -62,3 +79,18 @@ class OtpList(models.Model):
             return otp
 
         return OtpList(mobile=phone, otp=otp)
+
+    @staticmethod
+    def redis_key_based_get(redis_conn, phone):
+        """fetch key based value in redis DB.
+        Args:
+         redis_conn:redis connection
+         phone(int):user mobile number
+
+        Returns:
+            return a key object
+
+        """
+        obj = redis_conn.get(phone)
+
+        return obj
