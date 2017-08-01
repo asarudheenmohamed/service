@@ -18,13 +18,13 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from app.core.lib.user_controller import *
 
 from .. import lib
 from .. import models
 from .. import serializers
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
 
 
 class UserLoginApi(APIView):
@@ -49,28 +49,38 @@ class UserLoginApi(APIView):
         username = self.request.data.get(
             'email', None) or self.request.data['phone']
         password = self.request.data['password']
-
+        otp_mode = self.request.POST.get('otp_mode', None)
+        status = False
         user = None
+        user = CustomerController.authenticate_otp(
+            username, password, otp_mode)
         try:
-            user = models.FlatCustomer.authenticate(
-                username, password)
+            user = CustomerController.authenticate_otp(
+                username, password, otp_mode)
+            status = True
+            user.message = 'success'
             logger.debug("Logging successful for user {}".format(username))
-        except models.CustomerNotFound:
-            user = models.FlatCustomer(None)
+        except CustomerNotFound:
+            user = CustomerController(None)
             user.message = "User does not exists!"
             logger.warn("user {} not found".format(username))
-        except models.InvalidCredentials:
-            user = models.FlatCustomer(None)
+            return Response(user.message)
+        except InvalidCredentials:
+            user = CustomerController(None)
             user.message = "Invalid username/password"
             logger.warn(
                 "user {} tried to login with invalid details".format(username))
+            return Response(user.message)
+        except ValueError:
+            user = CustomerController(None)
+            user.message = "your otp is not verified"
+            return Response(user.message)
         except Exception as e:
-            user = models.FlatCustomer(None)
+            user = CustomerController(None)
             user.message = "Invalid username/password"
             exception = traceback.format_exc()
             logger.error("user {} tried to login caused and exception {}".format(
                 username,
                 exception))
-
         # Todo: Optimize and use flat
         return Response(user.deserialize())

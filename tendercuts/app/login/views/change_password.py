@@ -19,6 +19,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from app.core.lib.user_controller import *
 
 from . import lib
 from . import models
@@ -67,7 +68,7 @@ class UserChangePassword(APIView):
         if not user_id:
             raise exceptions.ValidationError("Invalid user")
 
-        user = models.FlatCustomer.load_by_id(user_id)
+        user = CustomerController.load_by_id(user_id)
 
         logger.info("Resetting password for the user {}".format(user_id))
         user.reset_password(new_password)

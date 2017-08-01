@@ -11,15 +11,19 @@ import logging
 import urllib
 
 import juspay
+import pytest
 import requests
+from django.conf import settings
+
 from app.core import models as core_models
 from app.core.lib.exceptions import OrderNotFound
-from django.conf import settings
+from app.core.lib.user_controller import *
 
 from ... import models
 from .base import AbstractGateway
 
 
+@pytest.mark.django_db
 class JusPayGateway(AbstractGateway):
     """
     JusPay integration
@@ -156,7 +160,7 @@ class JusPayGateway(AbstractGateway):
         """
         # conversion to tuple
         if isinstance(user, str):
-            user = core_models.FlatCustomer.load_basic_info(user)
+            user = CustomerSearchController.load_basic_info(user)
 
         user_id = self._juspay_user(user[0])
         self.log.debug("Creating customer in JP with id: {}".format(user_id))
@@ -226,6 +230,7 @@ class JusPayGateway(AbstractGateway):
         return txn
 
 
+@pytest.mark.django_db
 class JuspayTransaction:
     """
     A thin wrapper for the transaction API
@@ -362,5 +367,5 @@ class JuspayTransaction:
 
             transaction = self.process_card()
 
-        #return self._convert_to_url(transaction)
+        # return self._convert_to_url(transaction)
         return transaction

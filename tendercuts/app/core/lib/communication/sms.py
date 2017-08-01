@@ -95,8 +95,8 @@ class SMS():
                 phnumber,
                 settings.SMS_GATEWAY["SENDER_ID"],
                 otp)
-            self.otp.verify(phnumber, otp)
         else:
+            self.otp.verify(phnumber, otp)
             data = {
                 "authkey": settings.SMS_GATEWAY["KEY"],
                 "mobile": phnumber,

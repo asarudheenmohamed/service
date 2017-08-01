@@ -9,11 +9,13 @@ import random
 import string
 
 import redis
-from app.core.lib.communication import SMS
 from rest_framework import exceptions, viewsets
 from rest_framework.response import Response
 
-from .. import  models, serializers
+from app.core.lib.communication import SMS
+from app.core.lib.user_controller import *
+
+from .. import models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -51,7 +53,7 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         resend = self.request.GET.get('resend_type', None)
         # check if user exists
         try:
-            customer = models.FlatCustomer.load_by_phone_mail(phone)
+            customer = CustomerSearchController.load_by_phone_mail(phone)
         except models.CustomerNotFound:
             raise exceptions.PermissionDenied("User does not exits")
 
@@ -79,7 +81,7 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         2. Then go ahead and reset the password!
 
         """
-        #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
+        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
         redis_db = redis.StrictRedis(
             host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
@@ -100,7 +102,7 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
             random_pass)
         SMS().send(phnumber=phone, message=msg)
 
-        customer = models.FlatCustomer.load_by_phone_mail(phone)
+        customer = CustomerSearchController.load_by_phone_mail(phone)
         customer.reset_password(random_pass, dry_run=dry_run)
 
         otp_object.otp = None
