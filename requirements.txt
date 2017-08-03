@@ -33,3 +33,5 @@ xlrd
 
 #paytm
 pycrypto
+
+requests-toolbelt

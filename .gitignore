@@ -1,12 +1,10 @@
 node_modules/
-.cache/
-.ipynb_checkpoints/
-.swp
-__pycache__/
-*.pyc
-tendercuts/config/static
+**/.cache/
+**/.ipynb_checkpoints/
+**/.swp
+**/__pycache__/
+**/*.pyc
 
-dump.rdb
-celerybeat-schedule
-celerybeat-schedule.db
-tendercuts/npm-debug.log
+**/dump.rdb
+**/celerybeat-schedule
+**/celerybeat-schedule.db
