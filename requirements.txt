@@ -3,6 +3,7 @@
 # sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
 uwsgi
 django
+
 # Appcongi
 django_extensions
 djangorestframework
@@ -11,12 +12,13 @@ enum
 
 pytest
 pytest-django
+pytest-bdd
 googlemaps
 
 # sudo apt-get install libmysqlclient-dev
 MySQL-python
-python-magento
 
+python-magento
 celery
 redis
 requests
@@ -26,12 +28,17 @@ juspay
 razorpay
 python-dateutil
 sendotp
-
 numpy
 pandas
 xlrd
-
 #paytm
 pycrypto
-
 requests-toolbelt
+
+
+# Devlopment:
+flake8
+pep8
+pydocstyle
+pylint
+
