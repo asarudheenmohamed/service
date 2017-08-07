@@ -1,11 +1,16 @@
-"""Test reward Point transection."""
-class TestReward:
-    def test_rewardtransection(self, auth_rest):
+"""Test Mcredit Balance."""
+import pytest
+
+
+@pytest.mark.django_db
+class TestMcredit:
+
+    def test_mcreditbalance(self, auth_rest):
         """Get reward point transection in 18963.
 
         Params:
         auth_rest(pytest fixture):user requests
-        
+
         returns:
                 this is return a user id request
 
@@ -16,8 +21,8 @@ class TestReward:
 
         """
         response = auth_rest.get(
-            "/user/reward/",
+            "/user/mcredit/",
             format='json')
-        assert type(response) is not None
+        # assert not isinstance(response, None)
         assert response.status_code == 200
-        assert response.json()[0]['customer'] == 18963
+        assert response.json()['results'][0]['customer'] == 19801

@@ -1,6 +1,4 @@
-"""
-API endpoint for change password
-"""
+"""API endpoint for change password."""
 # Create your views here.magent
 # import the logging library
 import logging
@@ -30,15 +28,18 @@ logger = logging.getLogger(__name__)
 
 
 class UserChangePassword(APIView):
-    """
-    API view to change password. Ideally this should be part of user
-    fetch class, since we dont have a serializer yet we will have a different view
+    """API view to change password.
+
+    1.Ideally this should be part of user
+    2.fetch class, since we dont have a serializer yet we will have a different view
+
     """
 
     def get_user_id(self):
-        """
-        Get the user id from the request
+        """Get the user id from the request.
+
         username contains u:18963 => 18963 is the magento IDS
+
         """
         user = self.request.user
         user_id = user.username.split(":")
@@ -51,7 +52,8 @@ class UserChangePassword(APIView):
         return user_id
 
     def post(self, request, format=None):
-        """
+        """Reset password for request user.
+
         Args:
             request :
                 post data:
@@ -60,15 +62,15 @@ class UserChangePassword(APIView):
         Raises:
             exceptions.ValidationError: Raises an exception in
             case not valid user if found
-        """
 
+        """
         user_id = self.get_user_id()
         new_password = request.data["new_password"]
 
         if not user_id:
             raise exceptions.ValidationError("Invalid user")
 
-        user = CustomerController.load_by_id(user_id)
+        user = CustomerController.load_customer_obj(user_id)
 
         logger.info("Resetting password for the user {}".format(user_id))
         user.reset_password(new_password)

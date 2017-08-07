@@ -10,10 +10,6 @@ router.register(r'reward', views.RewardPointsTransaction, base_name='reward')
 router.register(r'mcredit', views.CreditBalance, base_name='mcredit')
 router.register(r'forgot_password_otp', views.OtpForgotPasswordApiViewSet)
 router.register(r'otp_view', views.OtpApi, base_name='otp_view')
-router.register(
-    r'otp_validation',
-    views.OtpValidation,
-    base_name='otp_validation')
 
 urlpatterns = [
     url(r'', include(router.urls)),
@@ -23,4 +19,7 @@ urlpatterns = [
     url(r'exists', views.UserExistsApi.as_view()),
     url(r'change_password', views.UserChangePassword.as_view()),
     url(r'edit_profile', views.EditPrifile.as_view()),
+    url(r'otp_validation/(?P<mobile>\d+)',
+        views.OtpValidation.as_view(),
+        name='otp_validation'),
 ]

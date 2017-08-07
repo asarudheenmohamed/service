@@ -1,11 +1,10 @@
 """Endpoint for the return OTP object."""
-import random
 import logging
+import random
 
-import redis
-
-from app.login.lib.otp_controller import *
+from app.core.lib.redis_controller import *
 from app.core.lib.user_controller import *
+from app.login.lib.otp_controller import *
 
 from .. import lib, models
 
@@ -18,7 +17,6 @@ class Otpview:
     def __init__(self, log=None):
         """Intialized the logger."""
         self.logger = log or logger
-        pass
 
     def create_otp(self, phone):
         """Create otp based on mobile number.
@@ -37,7 +35,7 @@ class Otpview:
         otp.save()
         return otp
 
-    def get_object(self, phone, type_):
+    def get_object(self, phone, otp_type):
         """Get otp object.
 
         Args:
@@ -48,20 +46,26 @@ class Otpview:
          otp object for that user
 
         """
-        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(
-            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
-
         # check if user exists
         try:
             customer = CustomerSearchController.load_by_phone_mail(phone)
         except models.CustomerNotFound:
             raise exceptions.PermissionDenied("User does not exits")
 
-        otp = models.OtpList.redis_get(redis_db, phone, type_, 'OTP')
+        otp = RedisController().redis_get(phone, otp_type)
         if otp is None:
             self.logger.debug(
                 "Generated a new OTP for the number {}".format(phone))
             otp = self.create_otp(phone)
-            models.OtpList.redis_save(redis_db, otp, type_, 'OTP')
+            RedisController().redis_save(otp, otp_type)
         return otp
+
+    def otp_verify(self, otp, customer_otp):
+        """Verify otp in redis db."""
+        if otp.otp == customer_otp:
+            RedisController().set(otp.mobile, 'verified')
+            status = True
+        else:
+            status = False
+
+        return status

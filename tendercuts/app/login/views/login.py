@@ -1,6 +1,4 @@
-"""
-Endpoint for  user login
-"""
+"""Endpoint for user login."""
 
 import logging
 import random
@@ -28,16 +26,14 @@ logger = logging.getLogger(__name__)
 
 
 class UserLoginApi(APIView):
-    """
-    Enpoint that uses magento API to mark an order as comple
+    """Enpoint that uses magento API to mark an order as comple."""
 
-    API: user/login/
-    """
     authentication_classes = ()
     permission_classes = ()
 
     def post(self, request, format=None):
-        """
+        """Authenticate the requestuser.
+
         params:
             phone/email (str) - Atleast one of the arguments should
                 be provided
@@ -45,40 +41,48 @@ class UserLoginApi(APIView):
 
         returns:
             A User object that is serialized
+
         """
         username = self.request.data.get(
             'email', None) or self.request.data['phone']
         password = self.request.data['password']
         otp_mode = self.request.POST.get('otp_mode', None)
-        status = False
         user = None
-        user = CustomerController.authenticate_otp(
-            username, password, otp_mode)
         try:
-            user = CustomerController.authenticate_otp(
+
+            user = CustomerController.authenticate(
                 username, password, otp_mode)
-            status = True
             user.message = 'success'
+
             logger.debug("Logging successful for user {}".format(username))
+
         except CustomerNotFound:
             user = CustomerController(None)
             user.message = "User does not exists!"
+
             logger.warn("user {} not found".format(username))
+
             return Response(user.message)
+
         except InvalidCredentials:
             user = CustomerController(None)
             user.message = "Invalid username/password"
+
             logger.warn(
                 "user {} tried to login with invalid details".format(username))
+
             return Response(user.message)
+
         except ValueError:
             user = CustomerController(None)
             user.message = "your otp is not verified"
             return Response(user.message)
+
         except Exception as e:
             user = CustomerController(None)
             user.message = "Invalid username/password"
             exception = traceback.format_exc()
+
             logger.error("user {} tried to login caused and exception {}".format(
                 username,
                 exception))

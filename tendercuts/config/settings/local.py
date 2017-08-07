@@ -63,6 +63,12 @@ MAGENTO = {
     "proto": "http"
 }
 
+REDIS = {
+    "host": "localhost",
+    "port": 6379,
+    "db": 0
+}
+
 
 PAYMENT = {
     "SIMPL": {

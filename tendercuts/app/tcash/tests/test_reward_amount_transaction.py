@@ -34,7 +34,7 @@ def test_user_reward(test_user):
         test_user(pytest fixture): return in test user id
 
     """
-    user_reward_obj = CustomerController.load_by_id(test_user)
+    user_reward_obj = CustomerController.load_customer_obj(test_user)
 
     return user_reward_obj.__dict__['_flat']['reward_points']
 
@@ -158,6 +158,7 @@ class TestSignUp:
 
         """
         user_basic_info = CustomerSearchController.load_basic_info(test_user)
+
         fetch_obj = auth_rest.get("/user/fetch/?phone={}&email={}" .format(
             user_basic_info[2], user_basic_info[1]))
 

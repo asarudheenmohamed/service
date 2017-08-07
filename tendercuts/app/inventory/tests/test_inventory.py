@@ -16,6 +16,7 @@ from rest_framework import HTTP_HEADER_ENCODING
 from rest_framework.test import APIClient
 
 
+@pytest.mark.django_db
 class TestApiInventoryFetch(object):
     """Test cases for inventory fetch."""
 

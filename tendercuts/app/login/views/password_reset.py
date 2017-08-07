@@ -1,6 +1,4 @@
-"""
-Endpoints to provide password reset
-"""
+"""Endpoints to provide password reset."""
 
 # Create your views here.magent
 # import the logging library
@@ -13,6 +11,7 @@ from rest_framework import exceptions, viewsets
 from rest_framework.response import Response
 
 from app.core.lib.communication import SMS
+from app.core.lib.otp_controller import *
 from app.core.lib.user_controller import *
 
 from .. import models, serializers
@@ -22,9 +21,10 @@ logger = logging.getLogger(__name__)
 
 
 class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
-    """
-    OTP for resetting password
+    """OTP for resetting password.
+
     TODO: EXTREMELY HACKY
+
     """
     authentication_classes = ()
     permission_classes = ()
@@ -34,7 +34,8 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
     lookup_field = "mobile"
 
     def retrieve(self, request, *args, **kwargs):
-        """
+        """Return the serializer data of otp object.
+
         params:
             mobile (str): Phone number to generate an OTP
             resend (str): Resend type sending otp type
@@ -44,25 +45,14 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         3. resend OTP/ types are voice or text
 
         If the customer is not available then thrown an error
-        """
-        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(
-            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
 
+        """
         phone = kwargs['mobile']
         resend = self.request.GET.get('resend_type', None)
         # check if user exists
-        try:
-            customer = CustomerSearchController.load_by_phone_mail(phone)
-        except models.CustomerNotFound:
-            raise exceptions.PermissionDenied("User does not exits")
+        otp_obj = Otpview(logger)
+        otp = otp_obj.get_object(phone, 'FORGOT')
 
-        otp = models.OtpList.redis_get(redis_db, phone)
-        if otp is None:
-            otp = models.OtpList(
-                mobile=phone,
-                otp=random.randint(1000, 9999))
-            models.OtpList.redis_save(redis_db, otp)
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
@@ -76,22 +66,20 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        """
-        1. Fetch the OTP from redis DB and validate the OTP
-        2. Then go ahead and reset the password!
+        """Fetch the OTP from redis DB and validate the OTP.
+
+        1.Then go ahead and reset the password!
 
         """
-        # redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(
-            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
-
         phone = self.request.data['mobile']
-        otp = self.request.data['otp']
+        customer_otp = self.request.data['otp']
         dry_run = self.request.data.get('dry_run', False)
 
-        otp_object = models.OtpList.redis_get(redis_db, phone)
+        otp_obj = Otpview(logger)
+        otp = otp_obj.get_object(phone, 'RESET_PASSWORD')
+        otp_validation = otp_obj.otp_verify(otp, customer_otp)
 
-        if otp_object is None or otp_object.otp != otp:
+        if not otp_validation:
             raise exceptions.ValidationError("Invalid OTP")
 
         random_pass = ''.join(
