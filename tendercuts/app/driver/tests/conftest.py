@@ -1,33 +1,27 @@
+"""Fixtures for driver module."""
+
 import pytest
-from rest_framework.test import APIClient
-from requests.auth import HTTPBasicAuth
-import base64
-from rest_framework import HTTP_HEADER_ENCODING
+
+from app.core.lib.test import generate_customer
+from app.core.models.customer import FlatCustomer
 
 
+@pytest.fixture(scope="session")
+def mock_user(request):
+    """Generate a mock customer.
 
-@pytest.fixture
-def rest():
-    return APIClient()
+    @override the fixture
 
+    Uses pytest caching.
 
-@pytest.fixture
-def username():
-    return "9908765678"
+    """
+    customer_id = request.config.cache.get("mock/driver", None)
 
+    if customer_id is None:
+        customer_data = generate_customer(group_id=6)
+        customer_id = customer_data['entity_id']
+        request.config.cache.set("mock/driver", customer_id)
 
-@pytest.fixture
-def password():
-    return "test"
+    customer = FlatCustomer.load_by_id(customer_id)
 
-
-@pytest.fixture
-def auth(username, password):
-    credentials = ('%s:%s' % (username, password))
-    base64_credentials = base64.b64encode(
-        credentials.encode(HTTP_HEADER_ENCODING)
-    ).decode(HTTP_HEADER_ENCODING)
-
-    auth = 'Basic %s' % base64_credentials
-
-    return auth
+    return customer

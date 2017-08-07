@@ -1,25 +1,80 @@
-import json
-import requests
+"""All driver controller related actions."""
 
-from .. import models
-from app.core import models as core_models
+from config.celery import app
+from config.messaging import ORDER_STATE
+
+from app.core.models import SalesFlatOrder
+
+from ..models import DriverOrder
+
 
 class DriverController(object):
-    """docstring for DriverController"""
+    """Driver controller."""
+
     def __init__(self, driver):
+        """Constructor."""
         super(DriverController, self).__init__()
         self.driver = driver
 
-    def _get_orders(self, status):
-        queryset = core_models.SalesFlatOrder.objects \
-            .filter(driver_id=self.driver.entity_id) \
-            .filter(status=status)
-            # .filter(updated_at=str(datetime.datetime.today()))
+    def assign_order(self, order):
+        """Assign the order to the driver.
 
-        return queryset
+        Also publishes the order status to the queue.
 
-    def get_completed_orders(self):
-        return self._get_orders("complete")
+        Params:
+            order: (SalesFlatOrder|str) Order obj or increment_id
 
-    def get_active_orders(self):
-        return self._get_orders("out_delivery")
+        Returns:
+            obj DriverOrder
+
+        """
+        if isinstance(order, SalesFlatOrder):
+            order = order.increment_id
+
+        driver_object = DriverOrder.objects.create(
+            increment_id=order,
+            driver_id=self.driver.customer.entity_id)
+
+        driver_object.save()
+
+        with app.producer_or_acquire() as producer:
+            producer.publish(
+                {"increment_id": order,
+                 "status": 'out_delivery'},
+                serializer='json',
+                exchange=ORDER_STATE,
+                declare=[ORDER_STATE]
+            )
+
+        return driver_object
+
+    def fetch_orders(self, status):
+        """Return all active orders.
+
+        Returns
+            [SalesFlatOrder]
+
+        """
+        order_ids = DriverOrder.objects.filter(
+            driver_id=self.driver.customer.entity_id) \
+            .values_list('increment_id', flat=True)
+
+        return SalesFlatOrder.objects.filter(
+            increment_id__in=list(order_ids),
+            status=status)
+
+    def complete_order(self, order_id):
+        """Publish the message to the Mage queues.
+
+        Params:
+            order_id (str): Increment ID
+
+        """
+        with app.producer_or_acquire() as producer:
+            producer.publish(
+                {"increment_id": order_id,
+                 "status": 'complete'},
+                serializer='json',
+                exchange=ORDER_STATE,
+                declare=[ORDER_STATE]
+            )

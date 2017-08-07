@@ -1,8 +1,8 @@
-import pytest
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound
 from random import randint
 import uuid
+from django.http.
 
 
 class TestApiLogin:
@@ -11,9 +11,7 @@ class TestApiLogin:
         assert type(response) is not HttpResponseNotFound
 
     def test_user_login(self, rest, mock_user):
-        """
-        DEPRECATED
-        """
+        """DEPRECATED."""
         response = rest.post(
             "/user/login/",
             {"email": mock_user.username,

@@ -124,6 +124,14 @@ LOGGING = {
             'when': 'midnight',  # 15MB
             'interval': 1,
             'formatter': 'verbose'
+        },
+        'driverlogfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join("/var/log/django/driver", 'driver.log'),
+            'when': 'midnight',  # 15MB
+            'interval': 1,
+            'formatter': 'verbose'
         }
     },
     'loggers': {
@@ -134,6 +142,11 @@ LOGGING = {
         },
         'app.inventory': {
             'handlers': ['invlogfile', ],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'app.driver': {
+            'handlers': ['driverlogfile', ],
             'level': 'DEBUG',
             'propagate': True,
         },

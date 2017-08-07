@@ -8,14 +8,15 @@ from celery.schedules import crontab
 # CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # ONLY IN PROD
-CELERY_BROKER_URL = 'redis+socket:///var/run/redis/redis.sock'
-CELERY_RESULT_BACKEND = 'redis+socket:///var/run/redis/redis.sock'
+# CELERY_BROKER_URL = 'redis+socket:///var/run/redis/redis.sock'
+# CELERY_RESULT_BACKEND = 'redis+socket:///var/run/redis/redis.sock'
 
-# CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-# CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
 
 
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT=['json']
 CELERY_TIMEZONE = 'Asia/Kolkata'
+

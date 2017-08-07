@@ -1,31 +1,34 @@
+"""Authentication for driver, only driver will be auth'd."""
+
 import rest_framework.authentication
 from rest_framework import exceptions
-from django.contrib.auth.models import User
-from .. import models as models
-import time
 
-class DriverAuthentication(rest_framework.authentication.BasicAuthentication):
+from app.core.lib.utils import get_mage_userid
+from app.core.models import FlatCustomer
+from app.driver.constants import DRIVER_GROUP
 
-    def authenticate_credentials(self, userid, password):
+
+class DriverAuthentication(rest_framework.authentication.TokenAuthentication):
+    """Driverauthication with group check."""
+
+    def authenticate_credentials(self, key):
+        """Override auth and check the customer group.
+
+        @override
+        Params:
+            key (str): The token Id
+
+        Returns:
+            user, token
+
         """
-        Authenticate the userid and password against username and password.
-        """
-        magento_user = models.DriverManagement.objects.filter(phone=userid)
-        if len(magento_user) != 1:
-            raise exceptions.AuthenticationFailed(('User inactive or deleted.'))
+        user, token = super(DriverAuthentication,
+                            self).authenticate_credentials(key)
 
-        magento_user = magento_user[0]
+        mage_id = get_mage_userid(user)
+        driver = FlatCustomer.load_by_id(mage_id)
 
-        # present in DB validate the password
-        if password != magento_user.password:
-            raise exceptions.AuthenticationFailed(('Invalid username/password.'))
+        if driver.customer.group_id != DRIVER_GROUP:
+            raise exceptions.AuthenticationFailed('Invalid token')
 
-        try:
-            user = User.objects.get(username=magento_user.phone)
-        except User.DoesNotExist as e:
-            user = User.objects.create_user(
-                        username=magento_user.phone,
-                        password=magento_user.password)
-
-        return (user, None)
-
+        return user, token
