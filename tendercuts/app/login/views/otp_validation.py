@@ -37,7 +37,7 @@ class OtpValidation(APIView):
             Otp validation status
 
         """
-        type_ = self.request.GET.get('type')
+        type_ = self.request.GET.get('otp_type')
         customer_otp = self.request.GET.get('otp')
         phone = kwargs['mobile']
 
