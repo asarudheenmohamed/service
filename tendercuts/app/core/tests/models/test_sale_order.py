@@ -1,6 +1,8 @@
 from app.core.models.sales_order import SalesFlatOrder
+import pytest
 
 
+@pytest.mark.django_db
 def test_orders(auth_rest):
     order_id = 76106
     orders = SalesFlatOrder.objects.filter(entity_id=order_id)

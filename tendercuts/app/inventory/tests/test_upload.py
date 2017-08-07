@@ -4,8 +4,10 @@ Test cases for inventory upload endpoint
 import requests_toolbelt
 import StringIO
 import os
+import pytest
 
 
+@pytest.mark.django_db
 class TestInventoryUpload(object):
     """Test cases for Inventory upload.
 

@@ -8,12 +8,13 @@ import redis
 from rest_framework import viewsets, generics, mixins
 
 
+@pytest.mark.django_db
 class TestChangePassword:
+
     def test_change_password(self, auth_rest):
         response = auth_rest.post(
             "/user/change_password/",
             data={"new_password": "qwerty123"},
             format='json')
-        assert type(response) is not None
+        # assert not isinstance(response, None)
         assert response.data['status'] is True
-

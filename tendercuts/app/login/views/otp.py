@@ -45,17 +45,17 @@ class OtpApi(viewsets.GenericViewSet):
 
         """
         msg_content = {
-            '1': "as your OTP to reset your password.",
-            '2': "as your signup OTP. OTP is confidential.",
-            '3': "as your login OTP. OTP is confidential."}
+            'FORGOT': "as your OTP to reset your password.",
+            'SIGNUP': "as your signup OTP. OTP is confidential.",
+            'LOGIN': "as your login OTP. OTP is confidential."}
         phone = kwargs['mobile']
         resend = self.request.GET.get('resend_type', None)
-        type_ = self.request.GET.get('type')
+        otp_type = self.request.GET.get('otp_type')
 
         otp_obj = Otpview(logger)
-        otp = otp_obj.get_object(phone, type_)
+        otp = otp_obj.get_object(phone, otp_type)
 
-        msg = ("""Use {} {}.""").format(otp.otp, msg_content[str(type_)])
+        msg = ("""Use {} {}.""").format(otp.otp, msg_content[str(otp_type)])
         SMS().send_otp(
             phnumber=otp.mobile,
             message=msg,
@@ -63,6 +63,7 @@ class OtpApi(viewsets.GenericViewSet):
             resend_type=resend)
 
         logger.info("OTP sent")
+        otp.otp = None
         serializer = self.get_serializer(otp)
 
         return Response(serializer.data)
@@ -70,21 +71,16 @@ class OtpApi(viewsets.GenericViewSet):
     def create(self, request, *args, **kwargs):
         """Fetch the OTP from redis DB and validate the OTP.
 
-         1.Then go ahead and reset the password!
+        1.Then go ahead and reset the password!
 
         """
-        #redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-        redis_db = redis.StrictRedis(
-            host="localhost", unix_socket_path='/var/run/redis/redis.sock')
-
         phone = self.request.data['mobile']
         otp = self.request.data['otp']
         dry_run = self.request.data.get('dry_run', False)
 
-        otp_object = models.OtpList.redis_get(redis_db, phone)
-
-        if otp_object is None or otp_object.otp != otp:
-            raise exceptions.ValidationError("Invalid OTP")
+        otp_obj = Otpview(logger)
+        otp = otp_obj.get_object(phone, 'RESET_PASSWORD')
+        otp_validation = otp_obj.otp_verify(otp, customer_otp)
 
         random_pass = ''.join(
             [random.choice(string.ascii_lowercase) for n in xrange(5)])

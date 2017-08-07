@@ -37,9 +37,9 @@ class RewardPointAmountApi(APIView):
 
         refered_user_id = self.request.data['user_id']
         user_id = get_user_id(request)
-        user_obj = CustomerController.load_by_id(user_id)
+        user_obj = CustomerController.load_customer_obj(user_id)
         user_basic_info = CustomerSearchController.load_basic_info(user_id)
-        referer_obj = CustomerController.load_by_id(refered_user_id)
+        referer_obj = CustomerController.load_customer_obj(refered_user_id)
 
         # Fetch existing order of the user
         sales_flat_obj = SalesFlatOrder.objects.values_list(
