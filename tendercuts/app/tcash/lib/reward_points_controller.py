@@ -32,8 +32,8 @@ class RewardsPointController:
             customer=new_user_obj.customer, amount=self.amount,
             is_expired=self.is_expired,
             is_expiration_email_sent=self.email_sent,
-            comment='{} refer to this customer' .format(
-                referrer_obj.customer.entity_id))
+            comment='Gifted from {}' .format(
+                referrer_obj._flat['firstname']))
         self.log.info("Add reward point amount for the new user  {}".format(
             new_user_obj.customer.entity_id))
         reward_point_obj.save()
