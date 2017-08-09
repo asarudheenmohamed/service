@@ -62,7 +62,7 @@ def test_otp_verify_false(otp_type):
     otp_obj = OtpController()
     otp = otp_obj.get_otp(9908765678, otp_type)
     otp_validation = otp_obj.otp_verify(otp, 4343)
-    assert otp_validation == False
+    assert otp_validation is False
 
 
 @pytest.mark.parametrize("otp_type", [
@@ -84,4 +84,4 @@ def test_otp_verify_true(otp_type):
     otp_obj = OtpController()
     otp = otp_obj.get_otp(9908765678, otp_type)
     otp_validation = otp_obj.otp_verify(otp, otp.otp)
-    assert otp_validation == True
+    assert otp_validation is True

@@ -48,7 +48,7 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         resend = self.request.GET.get('resend_type', None)
         # check if user exists
         otp_obj = OtpController(logger)
-        otp = otp_obj.get_otp(phone, otp_obj.F0RGOT)
+        otp = otp_obj.get_otp(phone, otp_obj.FORGOT)
 
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
