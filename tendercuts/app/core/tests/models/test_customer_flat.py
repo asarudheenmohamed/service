@@ -1,28 +1,30 @@
 """Test cases for generating flat customer."""
 
 import pytest
-from app.core.models.customer import *
-from app.core.lib.user_controller import *
 
+# from app.core.models.customer.core import FlatCustomer,CustomerNotFound, InvalidCredentials
+from app.core.lib.user_controller import (CustomerController,
+                                          CustomerSearchController)
+from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 
 @pytest.fixture
 def cls():
-    """A fixture wrapper for the class."""
+    """As s fixture wrapper for the class."""
     return CustomerSearchController
 
 
 @pytest.fixture
 def clsobj():
-    """A fixture wrapper for the class."""
+    """As a fixture wrapper for the class."""
     return CustomerController
 
 
 @pytest.mark.django_db
-class TestCustomerControllerFetch:
+class TestCustomerControllerFetch(object):
     """Companion for CustomerController."""
 
     def _verify_user(self, user):
-        """A simple unifed class for verify user."""
+        """As a simple unifed class for verify user."""
         user = user._flat
         # assert isinstance(user, CustomerEntity)
         assert user['email'] == "mail@varun.xyz"
@@ -31,7 +33,7 @@ class TestCustomerControllerFetch:
         # assert user.is_valid is True
 
     def test_instance(self, cls):
-        """A obj class validation.
+        """As a obj class validation.
 
         Asserts:
          Instance is valid
@@ -39,14 +41,14 @@ class TestCustomerControllerFetch:
         """
         assert cls is not None
 
-    def test_customer_fetch(self, clsobj):
+    def test_customer_fetch(self, cls):
         """Test Fetch customer data based on customer id.
 
         Asserts:
          load by customer is valid
 
         """
-        user = clsobj.load_customer_obj(18963)
+        user = cls.load_by_id(18963)
         self._verify_user(user)
 
     def test_customer_fetch_by_phone(self, cls):
@@ -77,10 +79,10 @@ class TestCustomerControllerFetch:
 
         """
         with pytest.raises(CustomerNotFound):
-            user = cls.load_by_phone_mail("il@varun.xyz")
+            cls.load_by_phone_mail("il@varun.xyz")
 
         with pytest.raises(CustomerNotFound):
-            user = clsobj.load_customer_obj(99999999)
+            cls.load_by_id(99999999)
 
 
 @pytest.mark.django_db
@@ -99,7 +101,7 @@ class TestCustomerControllerAuth:
 
         """
         with pytest.raises(InvalidCredentials):
-            user_controller = clsobj.authenticate(
+            clsobj.authenticate(
                 "mail@varun.xyz", "qwerty", None)
 
     def test_invalid_username(self, clsobj):
@@ -110,7 +112,7 @@ class TestCustomerControllerAuth:
 
         """
         with pytest.raises(CustomerNotFound):
-            user_controller = clsobj.authenticate(
+            clsobj.authenticate(
                 "mail@varun.xy", "qwerty123", None)
 
     def test_valid_username(self, clsobj):
@@ -129,7 +131,7 @@ class TestCustomerControllerAuth:
 class TestCustomerPasswordReset:
     """Password reset test case."""
 
-    def test_customer_password_change(self, clsobj):
+    def test_customer_password_change(self, cls, clsobj):
         """Test customer password changes functionality.
 
         Asserts:
@@ -139,18 +141,19 @@ class TestCustomerPasswordReset:
             4. Reset the pass bas
 
         """
-        user = clsobj.load_customer_obj(18963)
-        user.reset_password("qwerty123123")
+        user = cls.load_by_id(18963)
+        cus_obj = CustomerController(user.customer)
+        cus_obj.reset_password("qwerty123123")
 
         with pytest.raises(CustomerNotFound):
-            user_controller = clsobj.authenticate(
+            clsobj.authenticate(
                 "mail@varun.xy", "qwerty123123", None)
 
         flat = clsobj.authenticate(
             "mail@varun.xyz", "qwerty123123", None)
         assert flat.customer.email == "mail@varun.xyz"
 
-        user.reset_password("qwerty123")
+        cus_obj.reset_password("qwerty123")
 
         flat = clsobj.authenticate(
             "mail@varun.xyz", "qwerty123", None)
@@ -174,7 +177,7 @@ class TestFlatCustomerClassMethods:
         assert user_data[0] == 18963
         assert str(user_data[1]) == "mail@varun.xyz"
         assert str(user_data[2]) == "9908765678"
-        assert "TEST" in str(user_data[3])
+        assert "TEST" in user_data[3]
 
     def test_basic_info_for_unknown(self, cls):
         """Test invalid basic informaion Exception.
@@ -184,5 +187,5 @@ class TestFlatCustomerClassMethods:
 
         """
         with pytest.raises(Exception) as exc:
-            _ = cls.load_basic_info(189631)
+            cls.load_basic_info(189631)
             assert "CustomerNotFound" in str(exc.value)

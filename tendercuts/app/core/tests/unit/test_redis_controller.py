@@ -18,7 +18,7 @@ class TestRdisController:
 
         """
         redis_obj = RedisController()
-        otp = Otpview().create_otp(9908765678)
+        otp = OtpController().create_otp(9908765678)
         obj = redis_obj.redis_save(otp, 'FORGOT')
         assert obj == True
 

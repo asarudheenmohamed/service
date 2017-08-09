@@ -1,17 +1,13 @@
 """Enpoint for the add new user reward amount status."""
-import json
 import logging
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.core.lib.test.utils import *
-from app.core.lib.user_controller import *
+from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
-from app.core.models.customer.core import *
-from app.core.models.customer.entity import *
-from app.core.models.sales_order import *
-from app.core.models.store import *
+from app.core.models.customer.entity import CustomerEntity, MRewardsReferral
+from app.core.models.sales_order import SalesFlatOrder
 
 from app.core.models.customer.entity import *
 
@@ -37,9 +33,9 @@ class RewardPointAmountApi(APIView):
 
         refered_user_id = self.request.data['user_id']
         user_id = get_user_id(request)
-        user_obj = CustomerController.load_customer_obj(user_id)
+        user_obj = CustomerSearchController.load_by_id(user_id)
         user_basic_info = CustomerSearchController.load_basic_info(user_id)
-        referer_obj = CustomerController.load_customer_obj(refered_user_id)
+        referer_obj = CustomerSearchController.load_by_id(refered_user_id)
 
         # Fetch existing order of the user
         sales_flat_obj = SalesFlatOrder.objects.values_list(

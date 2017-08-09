@@ -1,11 +1,8 @@
+"""Test all Otp methods."""
 import pytest
-from django.contrib.auth.models import User
-from django.http import HttpResponseNotFound
-from random import randint
-from rest_framework.test import APIClient
-import uuid
 import redis
-from rest_framework import viewsets, generics, mixins
+from rest_framework.test import APIClient
+from django.conf import settings
 
 
 @pytest.fixture
@@ -17,13 +14,23 @@ def auth_rest():
     return client
 
 
+@pytest.mark.django_db
 class TestOtp:
+    """Send Otp.
+
+    Asserts:
+     Check Response mobile number is equals to test mobile number
+
+    """
+
     def test_otp(self, rest):
+        """Test Otp send customer mobile number."""
         response = rest.get("/user/otp/9908765678/", format='json')
         assert type(response) is not None
         assert response.data['mobile'] == "9908765678"
 
     def test_same_otp(self, rest):
+        """Test same Otp send Ofter 15 mins."""
         response = rest.get("/user/otp/9908765678/", format='json')
 
         assert type(response) is not None
@@ -35,6 +42,7 @@ class TestOtp:
         assert response.data['otp'] == otp
 
 
+@pytest.mark.django_db
 class TestResendOtp:
     """ Send OTP and Resend OTP.
         params:
@@ -45,6 +53,7 @@ class TestResendOtp:
         2.check that response mobile number is equal to sended mobile number
 
     """
+
     def test_otp(self, rest):
         """Send Otp in customer mobile Number.
 
@@ -77,7 +86,7 @@ class TestResendOtp:
             rerurn in api client
 
         Asserts:
-            check sent customer mobile number is equal to response mobile number
+check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -98,7 +107,7 @@ class TestResendOtp:
             rerurn api client
 
         Asserts:
-            check sent customer mobile number is equal to response mobile number
+check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -108,6 +117,7 @@ class TestResendOtp:
         assert response.data['mobile'] == "9908765678"
 
 
+@pytest.mark.django_db
 class TestResendOtpSignUp:
     """ Send OTP and Resend OTP Signup user.
         params:
@@ -118,6 +128,7 @@ class TestResendOtpSignUp:
         2.check that response mobile number is equal to sended mobile number
 
     """
+
     def test_otp(self, rest):
         """Send Otp in SignUp customer mobile Number.
 
@@ -129,7 +140,7 @@ class TestResendOtpSignUp:
             rerurn in api client
 
         Asserts:
-            check sent customer mobile number is equal to response mobile number
+check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -150,7 +161,7 @@ class TestResendOtpSignUp:
             rerurn in api client
 
         Asserts:
-            check sent customer mobile number is equal to response mobile number
+check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -180,15 +191,25 @@ class TestResendOtpSignUp:
         assert type(response) is not None
         assert response.data['mobile'] == "9908765678"
 
-class TestPasswordRestOtp:
-    def test_otp(self, rest):
 
+@pytest.mark.django_db
+class TestOtpMethods:
+    """Test Otp all methods."""
+
+    def test_otp(self, rest):
+        """Test Forgot method Password Otp.
+
+        Asserts:
+         Check response mobile number is equals to test mobile number.
+         Check otp.
+
+        """
         response = rest.get(
             "/user/forgot_password_otp/9908765678/", format='json')
         assert type(response) is not None
         assert response.data['mobile'] == "9908765678"
 
-        redis_conn = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_conn = redis.StrictRedis(**settings.REDIS)
         otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9908765678"))
 
         response = rest.get(
@@ -198,17 +219,28 @@ class TestPasswordRestOtp:
         assert otp == otp1
 
     def test_raise_error(self, rest):
+        """Send otp from Test unknown customer mobile number.
+
+        Raises:
+            customer Not found.
+        """
         with pytest.raises(Exception):
-            response = rest.get(
+            rest.get(
                 "/user/forgot_password_otp/9908765678111/", format='json')
 
     def test_otp_password_reset(self, rest):
+        """Test Otp Password reset.
+
+        Asserts:
+         Check response mobile number is equals to test mobile number.
+
+        """
         response = rest.get(
             "/user/forgot_password_otp/9908765678/", format='json')
         assert type(response) is not None
-        assert response.data['mobile'] == "9908765678"
+        assert response.data['mobile'] == 9908765678
 
-        redis_conn = redis.StrictRedis(host="localhost", port=6379, db=0)
+        redis_conn = redis.StrictRedis(**settings.REDIS)
         otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9908765678"))
 
         data = {"mobile": "9908765678", "otp": otp, "dry_run": True}
@@ -217,9 +249,12 @@ class TestPasswordRestOtp:
         assert response.data['mobile'] == "9908765678"
 
 
+@pytest.mark.django_db
 class TestUserFetch:
-    def test_user_fetch(self, auth_rest):
+    """Test user fetching data."""
 
+    def test_user_fetch(self, auth_rest):
+        """Test Fetch from user data."""
         response = auth_rest.get(
             "/user/fetch/?phone=9908765678", format='json')
         print(response)
@@ -227,31 +262,59 @@ class TestUserFetch:
         assert len(response.data['attribute']) == 3
 
 
+@pytest.mark.django_db
 class TestUserExists:
-    def test_user_exists_phone(self, rest):
+    """Test user Exist method."""
 
+    def test_user_exists_phone(self, rest):
+        """Test Existing Customer.
+
+        Asserts:
+            Check response equals to True
+        """
         response = rest.get("/user/exists/?phone=9908765678", format='json')
         assert type(response) is not None
         assert response.data['result'] == True
 
     def test_user_exists_email(self, rest):
+         """Test Existing email.
 
+        Asserts:
+            Check response equals to True
+        """
         response = rest.get(
-            "/user/exists/?email=mail@varun.xyz", format='json')
+            "/user/exists/?email=varun@tendercuts123.com", format='json')
         assert type(response) is not None
         assert response.data['result'] == True
 
     def test_user_exists_invalid(self, rest):
+         """Test Customer Exist Invalid.
+        
+        Asserts:
+            Check response equals to True
+        """
         response = rest.get("/user/exists/", format='json')
         assert type(response) is not None
         assert response.data['result'] == True
 
     def test_user_exists_valid_phone(self, rest):
+         """Test customer valid mobile number.
+        
+        Asserts:
+            Check response equals to False
+        
+        """
         response = rest.get("/user/exists/?phone=90909090", format='json')
         assert type(response) is not None
         assert response.data['result'] == False
 
     def test_user_exists_valid_email(self, rest):
+         """Test  customer valid email.
+        
+        Asserts:
+            Check response equals to False
+        
+        """
         response = rest.get(
             "/user/exists/?email=90909090@xoxo.com", format='json')
         assert type(response) is not None

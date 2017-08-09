@@ -1,47 +1,30 @@
-from app.core.models.entity import *
-import itertools
-import sys
+"""End point for the controll in user details."""
 import hashlib
 import uuid
-import redis
-from django.db.models import Sum
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
 
 from django.db.models import Q
-from app.core.models.customer.core import *
 
-from .. import models
+from app.core.lib.redis_controller import RedisController
+from app.core.models.customer import (CustomerEntity, FlatCustomer,
+                                             CustomerEntityVarchar)
+from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 
-
-class AuthenticationException(Exception):
-    pass
-
-
-class CustomerNotFound(AuthenticationException):
-    pass
-
-
-class InvalidCredentials(AuthenticationException):
-    pass
-
-
-class CustomerSearchController:
-    """
-    A dirty way of serilizing, ideally need to move DRF
-    """
-
-    # prefix used for customer in django tables.
-    PREFIX = "u"
+class CustomerSearchController(object):
+    """Static method to find the customer data."""
 
     @classmethod
     def load_basic_info(cls, user_id):
-        """
-        Yet another convenience method, this one load the very basic info
-        of the customer such as ph numbver or mail
+        """Yet another convenience method.
 
-        returns:
+        this one load the very basic info
+        of the customer such as ph numbver or mail.
+
+        Args:
+         user_id(int):user id
+
+        Returns:
             A tuple of (userid, email, phone, name)
+
         """
         query_set = CustomerEntityVarchar.objects                 \
             .filter(attribute_id__in=[149, 5], entity_id=user_id) \
@@ -61,9 +44,7 @@ class CustomerSearchController:
 
     @classmethod
     def is_user_exists(cls, username):
-        """
-        TODO: NEEDS to be rewritten
-        """
+        """Check user exist."""
         query_set = CustomerEntityVarchar.objects.filter(
             Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
 
@@ -74,9 +55,9 @@ class CustomerSearchController:
 
     @classmethod
     def load_by_phone_mail(cls, username):
-        """Load the customer object by email or phone number. Wrapper on top
-        of by id.
+        """Load the customer object by email or phone number.
 
+        Wrapper on top of by id.
         Args:
             username (str): Email/PH
 
@@ -85,54 +66,17 @@ class CustomerSearchController:
 
         Raises:
             CustomerNotFound: If no customer is found
-        """
 
+        """
         query_set = CustomerEntityVarchar.objects.filter(
             Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
-
         if len(query_set) == 0:
+
             raise CustomerNotFound()
 
         customer = query_set[0]
 
-        return CustomerController.load_by_id(customer.entity_id)
-
-
-class CustomerController:
-
-    def __init__(self, customer):
-        # a = models.FlatCustomer(customer)
-        self.customer = customer
-        self.message = None
-        self._flat = self.deserialize()
-
-    @classmethod
-    def authenticate_otp(cls, username, password, otp_mode):
-        """Authenticates the user otp via and password
-
-        Args:
-            username (str): username
-            password (str): password
-            otp_mode(bol):otp via login or not
-
-        Returns:
-            User
-        """
-        user = CustomerSearchController.load_by_phone_mail(username)
-
-        if otp_mode:
-            redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
-            a = models.OtpList.redis_key_based_get(
-                redis_db, username)
-
-            if a not in ['verified']:
-                raise ValueError
-
-        else:
-            if not user.validate_password(password):
-                raise InvalidCredentials
-
-        return user
+        return cls.load_by_id(customer.entity_id)
 
     @classmethod
     def load_by_id(cls, customer_id):
@@ -143,6 +87,7 @@ class CustomerController:
 
         Returns:
             user object
+
         """
         customers = CustomerEntity.objects.filter(entity_id=customer_id) \
             .prefetch_related(
@@ -154,10 +99,46 @@ class CustomerController:
 
         if not customers:
             raise CustomerNotFound
+        obj = FlatCustomer(customers[0])
 
-        return cls(customers[0])
+        return obj
 
-    def validate_password(self, password):
+
+class CustomerController(object):
+    """Customer credentials controller."""
+
+    def __init__(self, customer):
+        """Initialize the customer object."""
+        self.customer = customer
+
+    @classmethod
+    def authenticate(cls, username, password, otp_mode):
+        """Authenticate the user otp via and password.
+
+        Args:
+            username (str): username
+            password (str): password
+            otp_mode(bol):otp via login or not
+
+        Returns:
+            User
+
+        """
+        user = CustomerSearchController.load_by_phone_mail(username)
+        if otp_mode:
+            redis_value = RedisController().get_key(username)
+            if redis_value not in ['verified']:
+                raise ValueError
+
+        else:
+            user = FlatCustomer(user.customer)
+
+            if not CustomerController(user.customer).validate_password(
+                    user.password_hash(), password):
+                raise InvalidCredentials
+        return user
+
+    def validate_password(self, password_hash, password):
         """Validate user password.
 
         Args:
@@ -167,10 +148,9 @@ class CustomerController:
             True or false
 
         """
-        password_hash = self._flat['password_hash']
+        password_hash = password_hash
 
         salts = password_hash.split(":")
-
         if len(salts) == 1:
             return self.user.password == hashlib.md5(password).hexdigest()
 
@@ -203,8 +183,3 @@ class CustomerController:
 
         if not dry_run:
             password_entity.save()
-
-    def deserialize(self):
-        """Deserialize obj in user"""
-        obj = models.FlatCustomer(self.customer)
-        return obj.deserialize()
