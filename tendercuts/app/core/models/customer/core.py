@@ -34,15 +34,20 @@ class FlatAddress(object):
 
 
 class FlatCustomer(object):
-    """A dirty way of serilizing, ideally need to move DRF."""
+    """Since django has a stupid EAV architecture, we flattern it out."""
 
     # prefix used for customer in django tables.
     PREFIX = "u"
 
     def __init__(self, customer):
-        """Initialize the customer object and deserialize."""
+        """Initialize the customer object and deserialize.
+
+        Params:
+            customer (CustomerEntity) - django model
+        """
         self.customer = customer
         self.message = None
+        # serialize it immediately.
         self._flat = self.deserialize()
 
     @property
@@ -50,8 +55,9 @@ class FlatCustomer(object):
         """Django user id of the Magento user."""
         return ("{}:{}".format(self.PREFIX, self.customer.entity_id))
 
+    @property
     def password_hash(self):
-        """return a password hash by user."""
+        """Return a password hash of user."""
         return self._flat['password_hash']
 
     def generate_token(self):

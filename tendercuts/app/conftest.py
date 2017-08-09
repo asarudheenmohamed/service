@@ -49,6 +49,8 @@ def generate_mock_order(request, magento):
     Uses pytest caching
 
     """
+    from app.core.lib.test.utils import GenerateOrder
+    from app.core.models import SalesFlatOrder
     order_id = request.config.cache.get("mock/order", None)
 
     if order_id is None:
@@ -68,6 +70,7 @@ def mock_user(request):
 
     """
     from app.core.lib.test import generate_customer
+    from app.core.lib.user_controller import CustomerSearchController
     from app.core.models.customer import FlatCustomer
 
     customer_id = request.config.cache.get("mock/customer", None)
@@ -77,12 +80,6 @@ def mock_user(request):
         customer_id = customer_data['entity_id']
         request.config.cache.set("mock/customer", customer_id)
 
-    customer = FlatCustomer.load_by_id(customer_id)
+    customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer
-
-
-@pytest.fixture(scope="session")
-def generate_mock_order(magento):
-    from app.core.lib.test.utils import GenerateOrder
-    return GenerateOrder(18963).order

@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from app.core import models
+from app.core.lib.user_controller import CustomerController
 from app.driver.constants import DRIVER_GROUP
 
 # Get an instance of a logger
@@ -43,8 +44,7 @@ class DriverLoginApi(APIView):
 
         user = None
         try:
-            user = models.FlatCustomer.authenticate(
-                username, password)
+            user = CustomerController.authenticate(username, password)
 
             # Hack: Refactor code after azhars revamp
             if user.customer.group_id != DRIVER_GROUP:

@@ -63,24 +63,10 @@ class RewardPointAmountApi(APIView):
                              ".You can use it of further orders."}
 
         else:
-<<<<<<< HEAD
-<<<<<<< HEAD
-            refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
-                                                                   0].customer.entity_id)
-            message = 'Already  you have be referred by your friend {}'.format(
-                refered_user_basic_info[3])
-            response_data = {'status': "false",
-                             'message': message}
-
-            logger.info(message)
-=======
-=======
->>>>>>> 23b269a25e586b2798b4e23655954ea6ccda09f5
             refered_user_basic_info = CustomerSearchController.load_basic_info(reward_obj[
                 0].customer.entity_id)
             response_data = {'status': False,
                              'message': 'Already  you have be referred'
                              ' by your friend {}'.format(refered_user_basic_info[3])}
->>>>>>> otp validations and otp mode login Flat customer code refactoring
 
         return Response(response_data)

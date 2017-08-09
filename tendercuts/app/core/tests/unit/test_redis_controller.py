@@ -1,9 +1,8 @@
 """End Point for the test redis controller."""
 import pytest
-from bunch import bunchify
 
-from app.core.lib.otp_controller import *
-from app.core.lib.redis_controller import *
+from app.core.lib.otp_controller import OtpController
+from app.core.lib.redis_controller import RedisController
 
 
 @pytest.mark.django_db

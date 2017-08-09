@@ -3,7 +3,7 @@
 import pytest
 
 from app.core.lib.test import generate_customer
-from app.core.models.customer import FlatCustomer
+from app.core.lib.user_controller import CustomerSearchController
 
 
 @pytest.fixture(scope="session")
@@ -22,6 +22,6 @@ def mock_user(request):
         customer_id = customer_data['entity_id']
         request.config.cache.set("mock/driver", customer_id)
 
-    customer = FlatCustomer.load_by_id(customer_id)
+    customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer

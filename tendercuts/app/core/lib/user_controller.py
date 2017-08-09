@@ -6,8 +6,9 @@ from django.db.models import Q
 
 from app.core.lib.redis_controller import RedisController
 from app.core.models.customer import (CustomerEntity, FlatCustomer,
-                                             CustomerEntityVarchar)
+                                      CustomerEntityVarchar)
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
+
 
 class CustomerSearchController(object):
     """Static method to find the customer data."""
@@ -99,6 +100,7 @@ class CustomerSearchController(object):
 
         if not customers:
             raise CustomerNotFound
+
         obj = FlatCustomer(customers[0])
 
         return obj
@@ -108,62 +110,70 @@ class CustomerController(object):
     """Customer credentials controller."""
 
     def __init__(self, customer):
-        """Initialize the customer object."""
+        """Initialize the customer object.
+
+        Params:
+            customer(FlatCustomer) - Customer obj to wrap
+        """
         self.customer = customer
 
     @classmethod
-    def authenticate(cls, username, password, otp_mode):
-        """Authenticate the user otp via and password.
+    def authenticate(cls, username, password, otp_mode=False):
+        """Authenticate the user in 2 modes - otp & user/pass.
+
+        If otp_mode is specified
+            username will be mobile number
+            password will be empty
+            We verify the user based on the verified key in redis.
 
         Args:
             username (str): username
-            password (str): password
-            otp_mode(bol):otp via login or not
+            password (str|None): password
+            otp_mode(bool): default to False, otp via login or not
 
         Returns:
             User
 
         """
         user = CustomerSearchController.load_by_phone_mail(username)
+
         if otp_mode:
             redis_value = RedisController().get_key(username)
+
             if redis_value not in ['verified']:
-                raise ValueError
+                raise InvalidCredentials
 
         else:
-            user = FlatCustomer(user.customer)
-
-            if not CustomerController(user.customer).validate_password(
-                    user.password_hash(), password):
+            if not cls(user).validate_password(password):
                 raise InvalidCredentials
+
         return user
 
-    def validate_password(self, password_hash, password):
+    def validate_password(self, input_password):
         """Validate user password.
 
-        Args:
-         password:user pasword
+        Params:
+            input_password (str): Password entered by user.
 
         Returns:
             True or false
 
         """
-        password_hash = password_hash
+        salts = self.customer.password_hash.split(":")
 
-        salts = password_hash.split(":")
         if len(salts) == 1:
-            return self.user.password == hashlib.md5(password).hexdigest()
+            return self.customer.password_hash == hashlib.md5(input_password).hexdigest()
 
         salted_hash, salt = salts
-        computed_hash = hashlib.md5(salt + password)
+        computed_hash = hashlib.md5(salt + input_password)
 
         return computed_hash.hexdigest() == salted_hash
 
     def reset_password(self, new_password, dry_run=False):
         """Reset user password.
 
-        Args:
-         new_passwrd:use new password
+        Params:
+            new_password(str): New password.
 
         """
         password_entity = CustomerEntityVarchar.objects.filter(

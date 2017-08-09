@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from app.core import serializers
 from app.core.lib.utils import get_user_id
-from app.core.models import FlatCustomer
+from app.core.lib.user_controller import CustomerSearchController
 from app.driver.lib.driver_controller import DriverController
 
 from ..auth import DriverAuthentication
@@ -26,8 +26,9 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
     authentication_classes = (DriverAuthentication,)
 
     def get_driver(self):
+        """Extract DriverId from request."""
         user_id = get_user_id(self.request)
-        driver = FlatCustomer.load_by_id(user_id)
+        driver = CustomerSearchController.load_by_id(user_id)
 
         return driver
 
@@ -81,7 +82,7 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         """Return a query set containing all sale order of the driver."""
         user_id = get_user_id(self.request)
-        driver = FlatCustomer.load_by_id(user_id)
+        driver = CustomerSearchController.load_by_id(user_id)
         status = self.request.query_params['status']
 
         return DriverController(driver).fetch_orders(status)
