@@ -1,20 +1,8 @@
 """This module is deprecated."""
 import logging
-import random
-import string
-import traceback
-
-import redis
-from django.http import Http404
-from rest_framework import exceptions, generics, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .. import lib, models
-import app.core.lib.magento as magento
-from app.core.lib.communication import SMS
-from app.core.lib.otp_controller import *
-
-from .. import lib, models, serializers
+from app.core.lib.otp_controller import OtpController
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -41,17 +29,17 @@ class OtpValidation(APIView):
         customer_otp = self.request.GET.get('otp')
         phone = kwargs['mobile']
 
-        otp_obj = Otpview(logger)
+        otp_obj = OtpController(logger)
         # get otp object
-        otp = otp_obj.get_object(phone, type_)
+        otp = otp_obj.get_otp(phone, type_)
         # verify the otp
-        otp_validation = otp_obj.otp_verify(otp, customer_otp)
+        is_verified = otp_obj.otp_verify(otp, customer_otp)
 
-        if otp_validation == True:
+        if is_verified == True:
             message = 'succesfuly verified'
         else:
             message = 'Your OTP is Invalid'
 
         return Response(
-            {'status': otp_validation,
+            {'status': is_verified,
              'message': message})

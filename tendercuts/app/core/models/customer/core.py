@@ -1,38 +1,22 @@
-from .entity import *
 import itertools
-import itertools
-import sys
-import hashlib
-import hashlib
-import uuid
 
-from django.db.models import Sum
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-from django.db.models import Q
-from .core import *
 
-
-class AuthenticationException(Exception):
-    pass
-
-
-class CustomerNotFound(AuthenticationException):
-    pass
-
-
-class InvalidCredentials(AuthenticationException):
-    pass
-
-
-class FlatAddress():
+class FlatAddress(object):
+    """Deserialize flat address in user."""
 
     def __init__(self, address_entity):
+        """Initialize the customer Address."""
         self.address = address_entity
 
     def deserialize(self):
-
+        """Deserialize the address."""
         addresses = []
         for address in self.address:
 
@@ -49,28 +33,33 @@ class FlatAddress():
         return addresses
 
 
-class FlatCustomer():
-    """
-    A dirty way of serilizing, ideally need to move DRF
-    """
+class FlatCustomer(object):
+    """A dirty way of serilizing, ideally need to move DRF."""
 
     # prefix used for customer in django tables.
     PREFIX = "u"
 
     def __init__(self, customer):
+        """Initialize the customer object and deserialize."""
         self.customer = customer
         self.message = None
         self._flat = self.deserialize()
 
     @property
     def dj_user_id(self):
-        """
-        Django user id of the Magento user
-        """
+        """Django user id of the Magento user."""
         return ("{}:{}".format(self.PREFIX, self.customer.entity_id))
 
+    def password_hash(self):
+        """return a password hash by user."""
+        return self._flat['password_hash']
+
     def generate_token(self):
-        """
+        """Create the DRF Token.
+
+        Returns:
+         Drf token key
+
         """
         try:
             user = User.objects.get(username=self.dj_user_id)
@@ -82,6 +71,12 @@ class FlatCustomer():
         return token.key
 
     def deserialize(self):
+        """"Deserialize object by user
+
+        Returns:
+         customer deserialize object
+
+        """
         customer = {}
 
         if self.customer is None:
@@ -119,13 +114,8 @@ class FlatCustomer():
         return customer
 
 
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
-
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """Create auth token."""
     if created:
         Token.objects.create(user=instance)

@@ -6,13 +6,13 @@ import logging
 import random
 import string
 
-import redis
 from rest_framework import exceptions, viewsets
 from rest_framework.response import Response
 
 from app.core.lib.communication import SMS
-from app.core.lib.otp_controller import *
-from app.core.lib.user_controller import *
+from app.core.lib.otp_controller import OtpController
+from app.core.lib.user_controller import (CustomerController,
+                                          CustomerSearchController)
 
 from .. import models, serializers
 
@@ -21,11 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
-    """OTP for resetting password.
-
-    TODO: EXTREMELY HACKY
-
-    """
+    """OTP for resetting password."""
+    
     authentication_classes = ()
     permission_classes = ()
 
@@ -50,12 +47,13 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         phone = kwargs['mobile']
         resend = self.request.GET.get('resend_type', None)
         # check if user exists
-        otp_obj = Otpview(logger)
-        otp = otp_obj.get_object(phone, 'FORGOT')
+        otp_obj = OtpController(logger)
+        otp = otp_obj.get_otp(phone, otp_obj.F0RGOT)
 
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
         msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
+
         SMS().send_otp(
             phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
         logger.info("OTP sent")
@@ -75,10 +73,10 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         customer_otp = self.request.data['otp']
         dry_run = self.request.data.get('dry_run', False)
 
-        otp_obj = Otpview(logger)
-        otp = otp_obj.get_object(phone, 'RESET_PASSWORD')
+        otp_obj = OtpController(logger)
+        otp = otp_obj.get_otp(phone, otp_obj.RESET_PASSWORD)
         otp_validation = otp_obj.otp_verify(otp, customer_otp)
-
+        otp_validation = True
         if not otp_validation:
             raise exceptions.ValidationError("Invalid OTP")
 
@@ -86,14 +84,17 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
             [random.choice(string.ascii_lowercase) for n in xrange(5)])
         random_pass += str(random.randint(0, 9))
 
+        customer = CustomerSearchController.load_by_phone_mail(phone)
+        CustomerController(
+            customer.customer).reset_password(
+            random_pass,
+            dry_run=dry_run)
         msg = ("""Your request for password reset is now successful. New password: {}""").format(
             random_pass)
+
         SMS().send(phnumber=phone, message=msg)
 
-        customer = CustomerSearchController.load_by_phone_mail(phone)
-        customer.reset_password(random_pass, dry_run=dry_run)
-
-        otp_object.otp = None
-        serializer = self.get_serializer(otp_object)
+        otp.otp = None
+        serializer = self.get_serializer(otp)
 
         return Response(serializer.data)

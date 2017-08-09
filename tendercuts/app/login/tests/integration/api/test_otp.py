@@ -1,7 +1,7 @@
 """Test Otp send signup and forgot password."""
 import pytest
 
-from app.core.lib.otp_controller import *
+from app.core.lib.otp_controller import OtpController
 
 
 @pytest.mark.django_db
@@ -36,13 +36,14 @@ class TestOtp:
         assert response.data['mobile'] == '9908765678'
 
     def test_otp_signup(self, rest):
-        """Test otp for signup methodotp_type
+        """Test otp for signup methodotp_type.
+
         Args:
          auth_rest(pytest fixture):user requests
          otp_type(SIGNUP):user signup method otp
 
         Asserts:
-            Check response mobile is equal to test mobile number
+            Check response mobilget_otpe is equal to test mobile number
             Check response text method otp is equal to voice method otp
 
         """
@@ -56,30 +57,21 @@ class TestOtp:
             format='json')
         response = rest.get(
             "/user/otp_view/9908765678/?resend_type=voice&otp_type=SIGNUP",
-            format='json')import pytest
-from django.contrib.auth.models import User
-from django.http import HttpResponseNotFound
-from random import randint
-from rest_framework.test import APIClient
-import uuid
-import redis
-from rest_framework import viewsets, generics, mixins
+            format='json')
 
 
 @pytest.mark.django_db
-class TestChangePassword:
+class TestOtpValidation:
+    """Test Otp validation."""
 
     def test_change_password(self, auth_rest):
+        """Test Change password method."""
         response = auth_rest.post(
             "/user/change_password/",
             data={"new_password": "qwerty123"},
             format='json')
         # assert not isinstance(response, None)
         assert response.data['status'] is True
-
-        otp1 = response.data['otp']
-        assert otp == otp1
-        assert response.data['mobile'] == '9908765678'
 
     def test_otp_verified_validation(self, rest):
         """Test otp veried validation.
@@ -98,10 +90,10 @@ class TestChangePassword:
             "/user/otp_view/9908765678/?otp_type=LOGIN",
             format='json')
         assert response.data['mobile'] == "9908765678"
-        otp_obj = Otpview()
-        otp = otp_obj.get_object(9908765678, 'LOGIN')
+        otp_obj = OtpController()
+        otp = otp_obj.get_otp(9908765678, otp_obj.LOGIN)
         response = rest.get(
-            "/user/otp_validation/9908765678/?type=LOGIN&otp={}".format(
+            "/user/otp_validation/9908765678/?otp_type=LOGIN&otp={}".format(
                 otp.otp),
             format='json')
         assert response.data['status'] == True
@@ -127,7 +119,8 @@ class TestChangePassword:
         assert response.data['message'] == 'Your OTP is Invalid'
 
     def test_otp_mode_login(self, rest, mock_user):
-        """Test login OTP mode
+        """Test login OTP mode.
+
         Args:
          rest(pytest fixture):user requests
          otp_mode(bol):user if otp via login otp mode is true otherwise False

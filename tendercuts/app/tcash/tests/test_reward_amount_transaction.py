@@ -11,9 +11,8 @@ from rest_framework.test import APIClient
 
 from app.core.lib.magento import Connector
 from app.core.lib.order_controller import OrderController
-from app.core.lib.test.utils import *
-from app.core.models.customer.core import *
-from app.core.lib.user_controller import *
+from app.core.lib.test.utils import GenerateOrder
+from app.core.lib.user_controller import CustomerSearchController
 
 from django.conf import settings
 
@@ -34,7 +33,7 @@ def test_user_reward(test_user):
         test_user(pytest fixture): return in test user id
 
     """
-    user_reward_obj = CustomerController.load_customer_obj(test_user)
+    user_reward_obj = CustomerSearchController.load_by_id(test_user)
 
     return user_reward_obj.__dict__['_flat']['reward_points']
 
