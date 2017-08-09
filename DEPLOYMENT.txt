@@ -59,7 +59,6 @@ Part - 3 Nginx server
  Part -4 : Celery
  Activate: source Env/tendercuts/bin/activate
 
- Part 5: Celery deployment (check for usage)
  1. Config files
     >sudo cp celery/default/celeryd /etc/default/celeryd
     >sudo cp celery/default/celerybeat /etc/default/celerybeat
@@ -77,8 +76,9 @@ Part - 3 Nginx server
  
  6. /etc/init.d/celerybeatd start
 
-Part-5: Deploying flower
-6. flower -A config --port=5555
+ 7. flower -A config --port=5555
+
+Part - 5: Rabbit mq deployment
 
 
 

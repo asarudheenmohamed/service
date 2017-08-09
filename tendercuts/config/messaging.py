@@ -4,6 +4,6 @@ from kombu import Exchange
 
 # OrderStatus
 ORDER_STATE = Exchange(
-    name='tendercuts.exchange.order.state',
+    name='tendercuts.exchange.order.update',
     type='fanout',
     durable=True)

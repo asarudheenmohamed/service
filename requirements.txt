@@ -13,6 +13,7 @@ enum
 pytest
 pytest-django
 pytest-bdd
+pytest-xdist
 googlemaps
 
 # sudo apt-get install libmysqlclient-dev
