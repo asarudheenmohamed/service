@@ -10,24 +10,21 @@ import random
 import string
 import traceback
 
-import app.core.lib.magento as magento
 import redis
-
-from app.core.lib.communication import SMS
 from django.http import Http404
-from rest_framework import exceptions
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework import viewsets
+from rest_framework import exceptions, generics, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import lib
-from . import models
-from . import serializers
+import app.core.lib.magento as magento
+from app.core.lib.communication import SMS
+from app.core.lib.user_controller import *
+
+from . import lib, models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
 
 class UserDataFetch(APIView):
     """
@@ -55,7 +52,7 @@ class UserDataFetch(APIView):
         attributes = []
 
         try:
-            user = models.FlatCustomer.load_by_phone_mail(username)
+            user = CustomerSearchController.load_by_phone_mail(username)
             logger.debug("Fetched user data {} for {} successfully".format(
                 username, user.__dict__))
 

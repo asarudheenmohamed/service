@@ -4,10 +4,6 @@ Contains commons fixtures that needs to be shared accorss app
 import pytest
 from rest_framework.test import APIClient
 
-from app.core.lib.test.utils import GenerateOrder
-from app.core.models import SalesFlatOrder
-
-
 @pytest.fixture
 def rest():
     """Get API client to create requests."""
@@ -84,3 +80,9 @@ def mock_user(request):
     customer = FlatCustomer.load_by_id(customer_id)
 
     return customer
+
+
+@pytest.fixture(scope="session")
+def generate_mock_order(magento):
+    from app.core.lib.test.utils import GenerateOrder
+    return GenerateOrder(18963).order

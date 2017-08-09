@@ -11,8 +11,9 @@ from rest_framework.test import APIClient
 
 from app.core.lib.magento import Connector
 from app.core.lib.order_controller import OrderController
-from app.core.lib.test.utils import *
-from app.core.models.customer.core import *
+from app.core.lib.test.utils import GenerateOrder
+from app.core.lib.user_controller import CustomerSearchController
+
 from django.conf import settings
 
 
@@ -32,7 +33,7 @@ def test_user_reward(test_user):
         test_user(pytest fixture): return in test user id
 
     """
-    user_reward_obj = FlatCustomer.load_by_id(test_user)
+    user_reward_obj = CustomerSearchController.load_by_id(test_user)
 
     return user_reward_obj.__dict__['_flat']['reward_points']
 
@@ -45,7 +46,7 @@ def new_user_details(user):
         test_user(pytest fixture): return in test user id
 
     """
-    user_reward_obj = FlatCustomer.load_by_phone_mail(user['phno'])
+    user_reward_obj = CustomerSearchController.load_by_phone_mail(user['phno'])
 
     return user_reward_obj
 
@@ -73,7 +74,7 @@ class TestSignUp:
                 "mobilenumber": user['phno'],
                 "password": user['password']}
         baseurl = settings.MAGENTO['url'] + settings.MAGENTO['servicepoint']
-        url = os.path.join(baseurl + "index/createCustomer")
+        url = os.path.join("http://" + baseurl + "index/createCustomer")
         response = requests.post(
             url, data=json.dumps(data))
         assert response.json()['result'] == True
@@ -107,7 +108,7 @@ class TestSignUp:
         assert referral_response.status_code == 200
         assert referral_response.json()['status'] == True
 
-    def test_check_new_user_reward_point(self, rest, user):
+    def test_check_new_user_reward_point(self, auth_rest, user):
         """Check reward point amount for new user.
 
         Params:
@@ -118,10 +119,9 @@ class TestSignUp:
             1.check reward amount added in new user
 
         """
-        fetch_obj = rest.get(
+        fetch_obj = auth_rest.get(
             "/user/fetch/?phone={}&email={}" .format(
                 user['phno'], user['email']))
-
         assert fetch_obj.json()['attribute'][0]['value'] == 50
 
     def test_new_user_order_place(self, new_user_details):
@@ -143,7 +143,7 @@ class TestSignUp:
 
         assert order_obj.customer_id == new_user_details.customer.entity_id
 
-    def test_check_reward_amount(self, rest, test_user_reward, test_user):
+    def test_check_reward_amount(self, auth_rest, test_user_reward, test_user):
         """Check Reward Point amount in test user.
 
         Params:
@@ -156,8 +156,9 @@ class TestSignUp:
            the first order of refered user
 
         """
-        user_basic_info = FlatCustomer.load_basic_info(test_user)
-        fetch_obj = rest.get("/user/fetch/?phone={}&email={}" .format(
+        user_basic_info = CustomerSearchController.load_basic_info(test_user)
+
+        fetch_obj = auth_rest.get("/user/fetch/?phone={}&email={}" .format(
             user_basic_info[2], user_basic_info[1]))
 
         assert fetch_obj.json()['attribute'][0][

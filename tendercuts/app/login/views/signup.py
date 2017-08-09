@@ -1,41 +1,29 @@
-"""
-This module is deprecated
-"""
+"""This module is deprecated."""
 # Create your views here.magent
 # import the logging library
 import logging
 import random
-import string
-import traceback
-
-import app.core.lib.magento as magento
-import redis
-
-from app.core.lib.communication import SMS
 from django.http import Http404
-from rest_framework import exceptions
-from rest_framework import generics
-from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .. import lib
-from .. import models
-from .. import serializers
+import app.core.lib.magento as magento
+from app.core.lib.communication import SMS
+from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.otp_controller import OtpController
+
+from .. import models, serializers
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
 class UserSignUpApi(APIView):
-    """
-    Enpoint that uses magento API to mark an order as comple
-    """
+    """Enpoint that uses magento API to mark an order as comple."""
 
     def post(self, request, format=None):
-        """
-        """
+        """User data for Signup method."""
         email = self.request.data['email']
         phone = self.request.data['phone']
         password = self.request.data['password']
@@ -53,6 +41,7 @@ class UserSignUpApi(APIView):
 
 class OtpApiViewSet(viewsets.GenericViewSet):
     """OTP resend for Signup method."""
+
     authentication_classes = ()
     permission_classes = ()
 
@@ -74,13 +63,15 @@ class OtpApiViewSet(viewsets.GenericViewSet):
         """
         otp = None
         resend = self.request.GET.get('resend_type', None)
+        mobile = kwargs['mobile']
         try:
-            otp = self.get_object()
+            otp = OtpController()
+            otp = otp.get_otp(mobile, otp.SIGNUP)
             logger.debug(
                 "Got an existing OTP for the number {}".format(otp.mobile))
         except Http404:
             otp = models.OtpList(
-                mobile=kwargs['mobile'], otp=random.randint(1000, 9999))
+                mobile, otp=random.randint(1000, 9999))
             otp.save()
             logger.debug(
                 "Generated a new OTP for the number {}".format(otp.mobile))
@@ -93,14 +84,13 @@ class OtpApiViewSet(viewsets.GenericViewSet):
 
 
 class UserExistsApi(APIView):
-    """
-    Enpoint that uses magento API to mark an order as comple
-    """
+    """Enpoint that uses magento API to mark an order as comple."""
+
     authentication_classes = ()
     permission_classes = ()
 
     def get(self, request, format=None):
-        """
+        """EndPoint that user exist details.
         """
         email = self.request.GET.get('email', None)
         phone = self.request.GET.get('phone', None)
@@ -108,12 +98,12 @@ class UserExistsApi(APIView):
         user_exists = False
         message = ""
 
-        if email and models.FlatCustomer.is_user_exists(email):
+        if email and CustomerSearchController.is_user_exists(email):
             message = "A user with the same email exists, try Forgot password?"
             user_exists = True
             logger.debug(
                 "user already exists for the email user {}".format(email))
-        elif phone and models.FlatCustomer.is_user_exists(phone):
+        elif phone and CustomerSearchController.is_user_exists(phone):
             message = "A user with the same phone number exists, try Forgot password?"
             user_exists = True
             logger.debug(

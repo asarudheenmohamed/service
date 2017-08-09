@@ -5,6 +5,7 @@ import base64
 from rest_framework import HTTP_HEADER_ENCODING
 import collections
 
+
 @pytest.fixture
 def mock_user():
     MockUser = collections.namedtuple(
@@ -13,9 +14,8 @@ def mock_user():
         verbose=True)
 
     return MockUser(
-        username="mail@varun.xyz",
-        fullname="Varun Prasad",
-        email="mail@varun.xyz",
+        username="Testuser",
+        fullname="Testuser",
+        email="varun@tendercuts123.com",
         phone="9908765678",
         password="qwerty123")
-

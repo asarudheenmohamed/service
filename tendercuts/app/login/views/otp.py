@@ -1,12 +1,9 @@
-"""Endpoints to provide password reset."""
-
-# Create your views here.magent
-# import the logging library
+"""This module is deprecated."""
 import logging
 import random
 import string
 
-from rest_framework import exceptions, viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 from app.core.lib.communication import SMS
@@ -20,9 +17,9 @@ from .. import models, serializers
 logger = logging.getLogger(__name__)
 
 
-class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
-    """OTP for resetting password."""
-    
+class OtpApi(viewsets.GenericViewSet):
+    """OTP resend for Signup method."""
+
     authentication_classes = ()
     permission_classes = ()
 
@@ -31,33 +28,37 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
     lookup_field = "mobile"
 
     def retrieve(self, request, *args, **kwargs):
-        """Return the serializer data of otp object.
+        """OTP send for user mobile CustomerControllerNumber.
 
         params:
-            mobile (str): Phone number to generate an OTP
-            resend (str): Resend type sending otp type
+            mobile (str): New user mobile number
+            resend (str): OTP resend type for text ot voice method
+            type(int):otp types are forgot otp or signup otp
 
-        1. Generate OTP/ get existin OTP, which is valid for 15 mins
-        2. send the code
+        1. Generate OTP
+        2. send the otp code
         3. resend OTP/ types are voice or text
 
-        If the customer is not available then thrown an error
-
         """
+        msg_content = {
+            'FORGOT': "as your OTP to reset your password.",
+            'SIGNUP': "as your signup OTP. OTP is confidential.",
+            'LOGIN': "as your login OTP. OTP is confidential."}
         phone = kwargs['mobile']
         resend = self.request.GET.get('resend_type', None)
-        # check if user exists
+        otp_type = self.request.GET.get('otp_type')
+
         otp_obj = OtpController(logger)
-        otp = otp_obj.get_otp(phone, otp_obj.FORGOT)
+        otp = otp_obj.get_otp(phone, otp_type)
 
-        logger.info("Generating OTP for {} with code: {}".format(
-            otp.mobile, otp.otp))
-        msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-
+        msg = ("""Use {} {}.""").format(otp.otp, msg_content[str(otp_type)])
         SMS().send_otp(
-            phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
-        logger.info("OTP sent")
+            phnumber=otp.mobile,
+            message=msg,
+            otp=otp.otp,
+            resend_type=resend)
 
+        logger.info("OTP sent")
         otp.otp = None
         serializer = self.get_serializer(otp)
 
@@ -74,27 +75,26 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         dry_run = self.request.data.get('dry_run', False)
 
         otp_obj = OtpController(logger)
-        otp = otp_obj.get_otp(phone, otp_obj.RESET_PASSWORD)
-        otp_validation = otp_obj.otp_verify(otp, customer_otp)
-        otp_validation = True
-        if not otp_validation:
-            raise exceptions.ValidationError("Invalid OTP")
+        otp_object = otp_obj.get_otp(phone, otp_obj.RESET_PASSWORD)
+        otp_validation = otp_obj.otp_verify(otp_object, customer_otp)
 
+        if not otp_validation:
+            return Response('Your otp is Invalid.')
         random_pass = ''.join(
             [random.choice(string.ascii_lowercase) for n in xrange(5)])
         random_pass += str(random.randint(0, 9))
+
+        msg = ("""Your request for password reset is now successful. New password: {}""").format(
+            random_pass)
+        SMS().send(phnumber=phone, message=msg)
 
         customer = CustomerSearchController.load_by_phone_mail(phone)
         CustomerController(
             customer.customer).reset_password(
             random_pass,
             dry_run=dry_run)
-        msg = ("""Your request for password reset is now successful. New password: {}""").format(
-            random_pass)
 
-        SMS().send(phnumber=phone, message=msg)
-
-        otp.otp = None
-        serializer = self.get_serializer(otp)
+        otp_object.otp = None
+        serializer = self.get_serializer(otp_object)
 
         return Response(serializer.data)
