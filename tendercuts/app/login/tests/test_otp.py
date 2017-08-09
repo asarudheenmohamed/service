@@ -86,7 +86,7 @@ class TestResendOtp:
             rerurn in api client
 
         Asserts:
-check sent customer mobile number is equal to response mobile number
+            check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -107,7 +107,7 @@ check sent customer mobile number is equal to response mobile number
             rerurn api client
 
         Asserts:
-check sent customer mobile number is equal to response mobile number
+            check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -140,7 +140,7 @@ class TestResendOtpSignUp:
             rerurn in api client
 
         Asserts:
-check sent customer mobile number is equal to response mobile number
+            check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -161,7 +161,7 @@ check sent customer mobile number is equal to response mobile number
             rerurn in api client
 
         Asserts:
-check sent customer mobile number is equal to response mobile number
+            check sent customer mobile number is equal to response mobile number
 
         """
         response = rest.get(
@@ -238,7 +238,7 @@ class TestOtpMethods:
         response = rest.get(
             "/user/forgot_password_otp/9908765678/", format='json')
         assert type(response) is not None
-        assert response.data['mobile'] == 9908765678
+        assert response.data['mobile'] == "9908765678"
 
         redis_conn = redis.StrictRedis(**settings.REDIS)
         otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9908765678"))
@@ -274,10 +274,10 @@ class TestUserExists:
         """
         response = rest.get("/user/exists/?phone=9908765678", format='json')
         assert type(response) is not None
-        assert response.data['result'] == True
+        assert response.data['result'] is True
 
     def test_user_exists_email(self, rest):
-         """Test Existing email.
+        """Test Existing email.
 
         Asserts:
             Check response equals to True
@@ -285,37 +285,37 @@ class TestUserExists:
         response = rest.get(
             "/user/exists/?email=varun@tendercuts123.com", format='json')
         assert type(response) is not None
-        assert response.data['result'] == True
+        assert response.data['result'] is True
 
     def test_user_exists_invalid(self, rest):
-         """Test Customer Exist Invalid.
-        
+        """Test Customer Exist Invalid.
+
         Asserts:
             Check response equals to True
         """
         response = rest.get("/user/exists/", format='json')
         assert type(response) is not None
-        assert response.data['result'] == True
+        assert response.data['result'] is True
 
     def test_user_exists_valid_phone(self, rest):
-         """Test customer valid mobile number.
-        
+        """Test customer valid mobile number.
+
         Asserts:
             Check response equals to False
-        
+
         """
         response = rest.get("/user/exists/?phone=90909090", format='json')
         assert type(response) is not None
-        assert response.data['result'] == False
+        assert response.data['result'] is False
 
     def test_user_exists_valid_email(self, rest):
-         """Test  customer valid email.
-        
+        """Test  customer valid email.
+
         Asserts:
             Check response equals to False
-        
+
         """
         response = rest.get(
             "/user/exists/?email=90909090@xoxo.com", format='json')
         assert type(response) is not None
-        assert response.data['result'] == False
+        assert response.data['result'] is False
