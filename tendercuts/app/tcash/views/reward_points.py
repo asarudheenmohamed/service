@@ -9,8 +9,6 @@ from app.core.lib.utils import get_user_id
 from app.core.models.customer.entity import CustomerEntity, MRewardsReferral
 from app.core.models.sales_order import SalesFlatOrder
 
-from app.core.models.customer.entity import *
-
 from ..lib import refer_friend_controller as refer_controller
 from ..lib import reward_points_controller as reward_points_controller
 
@@ -66,6 +64,7 @@ class RewardPointAmountApi(APIView):
 
         else:
 <<<<<<< HEAD
+<<<<<<< HEAD
             refered_user_basic_info = FlatCustomer.load_basic_info(reward_obj[
                                                                    0].customer.entity_id)
             message = 'Already  you have be referred by your friend {}'.format(
@@ -75,6 +74,8 @@ class RewardPointAmountApi(APIView):
 
             logger.info(message)
 =======
+=======
+>>>>>>> 23b269a25e586b2798b4e23655954ea6ccda09f5
             refered_user_basic_info = CustomerSearchController.load_basic_info(reward_obj[
                 0].customer.entity_id)
             response_data = {'status': False,
