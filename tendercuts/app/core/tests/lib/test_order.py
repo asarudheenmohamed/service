@@ -52,5 +52,5 @@ class TestOrderController:
         ord_ctrl.payment_success()
 
         order = SalesFlatOrder.objects.filter(entity_id=1)[0]
-        assert order.status == "scheduled_order"
-        assert order.grid.status == "scheduled_order"
+        assert order.status == "pending"
+        assert order.grid.status == "pending"

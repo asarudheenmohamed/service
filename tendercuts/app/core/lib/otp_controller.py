@@ -4,6 +4,7 @@ import random
 
 from rest_framework import exceptions
 
+from app.core.lib.exceptions import CustomerNotFound
 from app.core.lib.user_controller import (CustomerSearchController,
                                           RedisController)
 
@@ -25,21 +26,24 @@ class OtpController(object):
         self.logger = log or logger
         self.redis = RedisController()
 
-    def create_otp(self, phone):
+    def _generate_redis_key(self, phone, otp_type):
+        """Generate the save key."""
+        return "{}:{}".format(otp_type, phone)
+
+    def _create_otp(self, phone, otp_type):
         """Create otp based on mobile number.
 
-        Args:
-         phone(int):user mobile number
+        Params:
+            phone(int): user mobile number
 
         Returns:
-            new otp object
+            A new OTP value (int)
 
         """
-        otp = models.OtpList(
-            mobile=phone,
-            otp=random.randint(1000, 9999))
-        otp.save()
+        key = self._generate_redis_key(phone, otp_type)
+        otp = random.randint(1000, 9999)
 
+        self.redis.set_key(key, otp)
         self.logger.info(
             "Generated a new OTP for the number {}".format(phone))
 
@@ -50,7 +54,7 @@ class OtpController(object):
 
         Args:
          phone(int): User mobile number.
-         otp_type(int): Otp sent types are forgot or signup or login.
+         otp_type(str): Otp sent types are forgot or signup or login.
 
         Returns:
          otp object for that user
@@ -59,30 +63,27 @@ class OtpController(object):
         # check if user exists
         try:
             CustomerSearchController.load_by_phone_mail(phone)
-        except models.CustomerNotFound:
-            raise exceptions.PermissionDenied("User does not exits")
+        except CustomerNotFound:
+            raise exceptions.PermissionDenied("User does not exists")
 
-        key = "{}:{}".format(otp_type, phone)
+        key = self._generate_redis_key(phone, otp_type)
         otp = self.redis.get_key(key)
 
+        # Create a new one
         if otp is None:
             self.logger.debug(
                 "Generated a new OTP for the number {}".format(phone))
-            otp = self.create_otp(phone)
-            key = "{}:{}".format(otp_type, otp.mobile)
-            self.redis.set_key(key, otp.otp)
+            otp = self._create_otp(phone, otp_type)
 
-        else:
-            otp = models.OtpList(mobile=phone, otp=otp)
+        otp = models.OtpList(mobile=phone, otp=otp)
 
         return otp
 
     def otp_verify(self, otp, customer_otp):
         """Verify otp in redis db."""
-        if otp.otp == customer_otp:
+        status = (otp.otp == customer_otp)
+
+        if status:
             self.redis.set_key(otp.mobile, 'verified')
-            status = True
-        else:
-            status = False
 
         return status

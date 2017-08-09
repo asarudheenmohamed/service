@@ -25,7 +25,7 @@ class TestJustPayGateway:
 
         gw = JusPayGateway()
         status = gw.claim_payment(order_id, None)
-        assert status == True
+        assert status is True
 
     def test_verify(self):
         """
@@ -91,12 +91,13 @@ class TestJustPayGateway:
         assert gw.check_payment_status(order_id) == True
 
 
+@pytest.mark.django_db
 class TestJuspayCustomerCreate():
     """
     Test juspy user create
     """
 
-    def test_customer_create(self):
+    def test_customer_create(self, mock_user):
         """
         Test juspy customer create
          Asserts:
@@ -104,11 +105,12 @@ class TestJuspayCustomerCreate():
             2. phone & mail
         """
         juspay_gw = JusPayGateway()
-        cust = juspay_gw.get_or_create_customer("18963")
+        cust = juspay_gw.get_or_create_customer(str(mock_user.entity_id))
 
-        assert cust.object_reference_id == "juspay_18963"
+        assert cust.object_reference_id == "juspay_{}".format(mock_user.entity_id)
 
 
+@pytest.mark.django_db
 class TestJuspayCreateTransaction():
     """
     END to end integration test for creating transaction.

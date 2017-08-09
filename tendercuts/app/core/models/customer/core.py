@@ -56,9 +56,29 @@ class FlatCustomer(object):
         return ("{}:{}".format(self.PREFIX, self.customer.entity_id))
 
     @property
+    def entity_id(self):
+        """Magento user ID."""
+        return self.customer.entity_id
+
+    @property
     def password_hash(self):
         """Return a password hash of user."""
         return self._flat['password_hash']
+
+    @property
+    def email(self):
+        """Email of the user."""
+        return self._flat['email']
+
+    @property
+    def mobilenumber(self):
+        """Phone of the user."""
+        return self._flat['mobilenumber']
+
+    @property
+    def firstname(self):
+        """Name of the user."""
+        return self._flat['firstname']
 
     def generate_token(self):
         """Create the DRF Token.

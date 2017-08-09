@@ -25,7 +25,9 @@ def pytest_configure():
     # settings.configure()
 
 
-@pytest.yield_fixture(scope='session')
+# we are not planning to do any setup, so mocking it out completely for
+# now.
+@pytest.yield_fixture
 def django_db_setup():
     yield
 

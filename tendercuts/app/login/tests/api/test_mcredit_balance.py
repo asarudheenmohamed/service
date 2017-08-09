@@ -5,8 +5,8 @@ import pytest
 @pytest.mark.django_db
 class TestMcredit:
 
-    def test_mcreditbalance(self, auth_rest):
-        """Get reward point transection in 18963.
+    def test_creditbalance_api(self, auth_rest):
+        """Get reward point transaction.
 
         Params:
         auth_rest(pytest fixture):user requests
@@ -23,6 +23,6 @@ class TestMcredit:
         response = auth_rest.get(
             "/user/mcredit/",
             format='json')
-        # assert not isinstance(response, None)
+
         assert response.status_code == 200
-        assert response.json()['results'][0]['customer'] == 19801
+        # assert response.json()['results'][0]['customer'] == 19801

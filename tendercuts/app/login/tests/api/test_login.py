@@ -1,10 +1,7 @@
-import uuid
-from random import randint
+"""Login Endpoint."""
 
 import pytest
-from django.contrib.auth.models import User
-from django.http import HttpResponseNotFound
-
+from django.http import HttpResponseNotFound 
 
 @pytest.mark.django_db
 class TestApiLogin:
@@ -14,12 +11,12 @@ class TestApiLogin:
         assert not isinstance(response, HttpResponseNotFound)
 
     def test_user_login(self, rest, mock_user):
-        """DEPRECATED."""
+        """Login endpoint."""
         response = rest.post(
             "/user/login/",
             {"email": mock_user.email,
-             "password": mock_user.password})
+             "password": "12345678"
+             })
 
-        print(response.data)
         assert response.data['reward_points'] >= 0
         assert response.data['email'] == mock_user.email

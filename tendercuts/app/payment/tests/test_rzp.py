@@ -2,6 +2,7 @@ import pytest
 from app.payment.lib.gateway import RzpGateway
 
 
+@pytest.mark.django_db
 class TestRzpGateway:
     def test_payment_status(self):
         """

@@ -5,15 +5,19 @@ from app.core.lib.otp_controller import OtpController
 
 
 @pytest.mark.django_db
-class TestOtp:
+class TestOtpGenerateApi:
     """Test otp for forgot and signup method."""
 
-    def test_otp_forgot(self, rest):
+    @pytest.mark.parametrize("phone,otp_type", (
+        ["9080804360", "FORGOT"],
+        ["9080804360", "SIGNUP"],
+    ))
+    def test_otp_forgot(self, rest, phone, otp_type):
         """Test otp for forgot method.
 
         Args:
-         auth_rest(pytest fixture):user requests
-         otp_type(FORGOT):user forgot method otp
+         auth_rest(pytest fixture): user requests
+         otp_type(FORGOT): user forgot method otp
 
         Asserts:
             Check response mobile is equal to test mobile number
@@ -21,47 +25,27 @@ class TestOtp:
 
         """
         response = rest.get(
-            "/user/otp_view/9908765678/?otp_type=FORGOT",
+            "/user/otp_view/{}/?otp_type={}".format(phone, otp_type),
             format='json')
-        assert response.data['mobile'] == "9908765678"
+
+        assert response.data['mobile'] == phone
         otp = response.data['otp']
+
         response = rest.get(
-            "/user/otp_view/9908765678/?resend_type=text&otp_type=FORGOT",
+            "/user/otp_view/{}/?resend_type=text&otp_type={}".format(phone, otp_type),
             format='json')
-        response = rest.get(
-            "/user/otp_view/9908765678/?resend_type=voice&otp_type=FORGOT",
-            format='json')
+
         otp1 = response.data['otp']
         assert otp == otp1
-        assert response.data['mobile'] == '9908765678'
+        assert response.data['mobile'] == phone
 
-    def test_otp_signup(self, rest):
-        """Test otp for signup methodotp_type.
-
-        Args:
-         auth_rest(pytest fixture):user requests
-         otp_type(SIGNUP):user signup method otp
-
-        Asserts:
-            Check response mobilget_otpe is equal to test mobile number
-            Check response text method otp is equal to voice method otp
-
-        """
-        response = rest.get(
-            "/user/otp_view/9908765678/?otp_type=SIGNUP",
-            format='json')
-        assert response.data['mobile'] == "9908765678"
-        otp = response.data['otp']
-        response = rest.get(
-            "/user/otp_view/9908765678/?resend_type=text&otp_type=SIGNUP",
-            format='json')
-        response = rest.get(
-            "/user/otp_view/9908765678/?resend_type=voice&otp_type=SIGNUP",
-            format='json')
+        # response = rest.get(
+        #     "/user/otp_view/9908765678/?resend_type=voice&otp_type=FORGOT",
+        #     format='json')
 
 
 @pytest.mark.django_db
-class TestOtpValidation:
+class TestForgotPassword:
     """Test Otp validation."""
 
     def test_change_password(self, auth_rest):
@@ -72,6 +56,11 @@ class TestOtpValidation:
             format='json')
         # assert not isinstance(response, None)
         assert response.data['status'] is True
+
+
+@pytest.mark.django_db
+class TestOtpValidation:
+    """Test Otp validation."""
 
     def test_otp_verified_validation(self, rest):
         """Test otp veried validation.
@@ -133,9 +122,8 @@ class TestOtpValidation:
         """
         response = rest.post(
             "/user/login/",
-            {"email": mock_user.phone,
-             "password": mock_user.password, "otp_mode": True})
+            {"email": mock_user.mobilenumber,
+             "password": "12345678", "otp_mode": True})
 
-        print(response.data)
-        assert response.data['reward_points'] == 202
-        assert response.data['email'] == mock_user.email
+        print (response)
+        assert response.json()['email'] == mock_user.email

@@ -11,3 +11,9 @@ def mock_df():
     inventory = pd.read_excel(path, skiprows=[0, 1, 2, 3])
 
     return inventory
+
+
+@pytest.fixture
+def file_path():
+    """File path of the test excel."""
+    return os.path.join(os.path.dirname(__file__), "test.xlsx")

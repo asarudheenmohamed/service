@@ -2,18 +2,7 @@
 Test endpoint "store"
 """
 
-import base64
-import collections
-import json
-import uuid
-from random import randint
-
 import pytest
-from django.contrib.auth.models import User
-from django.http import HttpResponseNotFound
-from requests.auth import HTTPBasicAuth
-from rest_framework import HTTP_HEADER_ENCODING
-from rest_framework.test import APIClient
 
 
 @pytest.mark.django_db

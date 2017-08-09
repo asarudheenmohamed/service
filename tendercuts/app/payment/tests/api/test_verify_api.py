@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger().setLevel(logging.DEBUG)
 
 
+@pytest.mark.django_db
 class TestRzpPayment:
     """
     Test for payment verify endpoint

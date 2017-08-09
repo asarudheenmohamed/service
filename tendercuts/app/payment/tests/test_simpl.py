@@ -1,9 +1,10 @@
-"""
-TEst for simple gw
-"""
+"""TEst for simple gw"""
+import pytest
+
 from app.payment.lib.gateway import GetSimplGateway
 
 
+@pytest.mark.django_db
 class TestSimplTransactionClaim:
     """
     Test simple GW

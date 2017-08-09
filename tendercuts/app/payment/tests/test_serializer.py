@@ -1,11 +1,12 @@
-"""
-Verify transaction from juspay
-"""
+"""Verify transaction from juspay."""
 
+import pytest
 from app.payment.lib.gateway import JusPayGateway
 from app.payment.serializer import PaymentModeSerializer
 
 
+
+@pytest.mark.django_db
 class TestSerializer:
     """
     Dummy test for serilaizer

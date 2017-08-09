@@ -14,6 +14,8 @@ def rest():
 def auth_rest(mock_user):
     """Auth'd Api client to create requests."""
     from django.contrib.auth.models import User
+    # A bloody hack to ensure that the user is created in DJ.
+    mock_user.generate_token()
     user = User.objects.get(username=mock_user.dj_user_id)
     client = APIClient()
     client.force_authenticate(user=user)
