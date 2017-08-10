@@ -45,7 +45,7 @@ def serializer():
 
 
 @pytest.fixture(scope="module")
-def generate_mock_order(request, magento):
+def generate_mock_order(request, mock_user):
     """Generates a mock order.
 
     Uses pytest caching
@@ -56,7 +56,7 @@ def generate_mock_order(request, magento):
     order_id = request.config.cache.get("mock/order", None)
 
     if order_id is None:
-        order = GenerateOrder().generate_order(18963)
+        order = GenerateOrder().generate_order(mock_user.entity_id)
         request.config.cache.set("mock/order", order.increment_id)
     else:
         order = SalesFlatOrder.objects.filter(increment_id=order_id).first()
@@ -85,3 +85,8 @@ def mock_user(request):
     customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer
+
+@pytest.fixture
+def cache():
+    """A cache to store data for bdd test cases"""
+    return {}

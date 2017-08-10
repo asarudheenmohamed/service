@@ -25,9 +25,8 @@ from .base import AbstractGateway
 
 @pytest.mark.django_db
 class JusPayGateway(AbstractGateway):
-    """
-    JusPay integration
-    """
+    """JusPay integration."""
+
     NETBANKING_CODE = "NB"
     SUCCESS = "CHARGED"
 

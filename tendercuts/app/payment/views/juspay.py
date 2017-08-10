@@ -152,6 +152,3 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         }
 
         return Response(data)
-
-
-

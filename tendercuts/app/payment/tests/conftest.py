@@ -4,29 +4,23 @@ import uuid
 
 
 @pytest.fixture
-def juspay_mock_order_id():
-    """
-    Fixture to create a mock order in JP gateway
-    """
+def juspay_mock_order(generate_mock_order):
+    """Fixture to create a mock order in JP gateway."""
     # create a dummy order
-    order_id = str(uuid.uuid4())
-    amount = 99
+    order_id = generate_mock_order.increment_id
+
+    # init the env
+    from django.conf import settings
+    juspay.api_key = settings.PAYMENT['JUSPAY']['id']
+    juspay.environment = settings.PAYMENT['JUSPAY']['environment']
 
     # mock
     _ = juspay.Orders.create(
         order_id=order_id,
-        amount=amount,
+        amount=int(generate_mock_order.grand_total),
         return_url="http://staging.tendercuts.in:82/payment/juspay/")
 
-    return order_id
-
-
-@pytest.fixture
-def juspay_mock_user():
-    """
-    Fixture to create a mock user.
-    """
-    return "juspay_18963"
+    return generate_mock_order
 
 
 @pytest.fixture
@@ -41,8 +35,8 @@ def juspay_dummy_card1():
         expiry_year="2020",
         expiry_month="10",
         method="juspay",
-        gateway_code="CARD",
-        gateway_code_level_1=None)
+        gateway_code="CARD")
+
 
 @pytest.fixture
 def juspay_dummy_card2():
@@ -56,5 +50,4 @@ def juspay_dummy_card2():
         expiry_year="2020",
         expiry_month="10",
         method="juspay",
-        gateway_code="CARD",
-        gateway_code_level_1=None)
+        gateway_code="CARD")
