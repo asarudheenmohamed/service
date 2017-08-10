@@ -12,7 +12,7 @@ class TestOtpGenerateApi:
         ["9080804360", "FORGOT"],
         ["9080804360", "SIGNUP"],
     ))
-    def test_otp_forgot(self, rest, phone, otp_type):
+    def test_otp_forgot(self, auth_rest, phone, otp_type):
         """Test otp for forgot method.
 
         Args:
@@ -24,71 +24,31 @@ class TestOtpGenerateApi:
             Check response text method otp is equal to voice method otp
 
         """
-        response = rest.get(
+        response = auth_rest.get(
             "/user/otp_view/{}/?otp_type={}".format(phone, otp_type),
             format='json')
-
         assert response.data['mobile'] == phone
-        otp = response.data['otp']
-
-        response = rest.get(
-            "/user/otp_view/{}/?resend_type=text&otp_type={}".format(phone, otp_type),
+        response = auth_rest.get(
+            "/user/otp_view/{}/?resend_type=text&otp_type={}".format(
+                phone, otp_type),
             format='json')
-
-        otp1 = response.data['otp']
-        assert otp == otp1
         assert response.data['mobile'] == phone
 
-        # response = rest.get(
-        #     "/user/otp_view/9908765678/?resend_type=voice&otp_type=FORGOT",
-        #     format='json')
-
-
-@pytest.mark.django_db
-class TestForgotPassword:
-    """Test Otp validation."""
-
-    def test_change_password(self, auth_rest):
-        """Test Change password method."""
-        response = auth_rest.post(
-            "/user/change_password/",
-            data={"new_password": "qwerty123"},
+        response = auth_rest.get(
+            "/user/otp_view/{}/?resend_type=voice&otp_type={}".format(
+                phone, otp_type),
             format='json')
-        # assert not isinstance(response, None)
-        assert response.data['status'] is True
 
 
 @pytest.mark.django_db
 class TestOtpValidation:
     """Test Otp validation."""
-
-    def test_otp_verified_validation(self, rest):
-        """Test otp veried validation.
-
-        Args:
-         rest(pytest fixture):user requests
-         otp_type(LOGIN):user login method otp
-
-        Asserts:
-            Check response mobile is equal to test mobile number
-            Check response status is equal to True
-            Check response message is equal to 'succesfuly verified'
-
-        """
-        response = rest.get(
-            "/user/otp_view/9908765678/?otp_type=LOGIN",
-            format='json')
-        assert response.data['mobile'] == "9908765678"
-        otp_obj = OtpController()
-        otp = otp_obj.get_otp(9908765678, otp_obj.LOGIN)
-        response = rest.get(
-            "/user/otp_validation/9908765678/?otp_type=LOGIN&otp={}".format(
-                otp.otp),
-            format='json')
-        assert response.data['status'] == True
-        assert response.data['message'] == 'succesfuly verified'
-
-    def test_otp_invalid_validation(self, rest):
+    @pytest.mark.parametrize("phone,otp_type,otp", (
+        ["9080804360", "FORGOT", '1234'],
+        ["9080804360", "SIGNUP", '1234'],
+        ["9080804360", "LOGIN", '1234']
+    ))
+    def test_otp_invalid_validation(self, auth_rest, phone, otp_type, otp):
         """Test otp for invalid otp.
 
         Args:
@@ -101,29 +61,9 @@ class TestOtpValidation:
             Check response message is equal to 'Invalid your OTP'
 
         """
-        response = rest.get(
-            "/user/otp_validation/9908765678/?otp_type=LOGIN&otp=1234",
+        response = auth_rest.get(
+            "/user/otp_validation/{}/?otp_type={}&otp={}".format(
+                phone, otp_type, otp),
             format='json')
         assert response.data['status'] == False
         assert response.data['message'] == 'Your OTP is Invalid'
-
-    def test_otp_mode_login(self, rest, mock_user):
-        """Test login OTP mode.
-
-        Args:
-         rest(pytest fixture):user requests
-         otp_mode(bol):user if otp via login otp mode is true otherwise False
-
-        Asserts:
-            Check response mobile is equal to test mobile number
-            Check response text method otp is equal to voice method otp
-            Check response message is equal to 'Invalid your OTP'
-
-        """
-        response = rest.post(
-            "/user/login/",
-            {"email": mock_user.mobilenumber,
-             "password": "12345678", "otp_mode": True})
-
-        print (response)
-        assert response.json()['email'] == mock_user.email

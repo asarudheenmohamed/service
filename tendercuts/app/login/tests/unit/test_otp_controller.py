@@ -26,22 +26,6 @@ def test_otpobj(otp_type):
     assert otp.mobile == 9908765678
 
 
-@pytest.mark.django_db
-def test_otp_create():
-    """Test Otp creation.
-
-    Args:
-      otp_type(params):otp types
-
-    Asserts:
-      Check otp object mobile number is equal to test mobile number
-
-    """
-    otp_obj = OtpController()
-    otp = otp_obj.create_otp(9908765678)
-    assert otp.mobile == 9908765678
-
-
 @pytest.mark.parametrize("otp_type", [
     "FORGOT",
     "SIGNUP",

@@ -4,9 +4,9 @@ import random
 
 from rest_framework import exceptions
 
-from app.core.lib.exceptions import CustomerNotFound
-from app.core.lib.user_controller import (CustomerSearchController,
-                                          RedisController)
+from app.core.lib.user_controller import CustomerSearchController
+
+from app.core.lib.redis_controller import RedisController
 
 from .. import models
 
