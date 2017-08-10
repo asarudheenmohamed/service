@@ -26,14 +26,15 @@ def user():
 
 
 @pytest.fixture(scope='session')
-def test_user_reward(test_user):
+def test_user_reward(mock_user):
     """Return User reward amount.
 
     Params:
         test_user(pytest fixture): return in test user id
 
     """
-    user_reward_obj = CustomerSearchController.load_by_id(test_user)
+    user_reward_obj = CustomerSearchController.load_by_id(
+        mock_user.customer.entity_id)
 
     return user_reward_obj.__dict__['_flat']['reward_points']
 
@@ -43,7 +44,7 @@ def new_user_details(user):
     """Return User reward amount.
 
     Params:
-        test_user(pytest fixture): return in test user id
+        user(pytest fixture): return in the new user
 
     """
     user_reward_obj = CustomerSearchController.load_by_phone_mail(user['phno'])
@@ -55,11 +56,10 @@ def new_user_details(user):
 class TestSignUp:
     """Test New user create and reward amount added refered user."""
 
-    def test_login_create_success(self, rest, user):
+    def test_login_create_success(self, user):
         """Create new User.
 
         Params:
-           rest(pytest fixture): api client
            user(pytest fixture): return sign up user details
 
         1. Create  a new User
@@ -80,14 +80,14 @@ class TestSignUp:
         assert response.json()['result'] == True
 
     def test_reward_amund_add_new_customer(self,
-                                           rest,
+                                           auth_rest,
                                            user,
-                                           test_user,
+                                           mock_user,
                                            test_user_reward):
         """Reward Point amount add New customer and order placed.
 
         Params:
-           rest(pytest fixture): api client
+           auth_rest(pytest fixture): api client
            user(pytest fixture): return sign up user details
            test_user(pytest fixture): return in test user id
            test_user_reward: test user reward amount
@@ -97,13 +97,13 @@ class TestSignUp:
 
         """
         data = {"email": user['email'], "password": user['password']}
-        response = rest.post("/user/login", data=data)
+        response = auth_rest.post("/user/login", data=data)
         users = User.objects.get(
             username=("{}:{}".format('u', response.json()['entity_id'])))
         client = APIClient()
         client.force_authenticate(user=users)
         referral_response = client.post(
-            "/tcash/referral", {'user_id': test_user})
+            "/tcash/referral", {'user_id': mock_user.customer.entity_id})
 
         assert referral_response.status_code == 200
         assert referral_response.json()['status'] == True
@@ -143,7 +143,7 @@ class TestSignUp:
 
         assert order_obj.customer_id == new_user_details.customer.entity_id
 
-    def test_check_reward_amount(self, auth_rest, test_user_reward, test_user):
+    def test_check_reward_amount(self, auth_rest, test_user_reward, mock_user):
         """Check Reward Point amount in test user.
 
         Params:
@@ -156,7 +156,8 @@ class TestSignUp:
            the first order of refered user
 
         """
-        user_basic_info = CustomerSearchController.load_basic_info(test_user)
+        user_basic_info = CustomerSearchController.load_basic_info(
+            mock_user.customer.entity_id)
 
         fetch_obj = auth_rest.get("/user/fetch/?phone={}&email={}" .format(
             user_basic_info[2], user_basic_info[1]))

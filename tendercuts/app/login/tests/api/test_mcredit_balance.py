@@ -5,7 +5,7 @@ import pytest
 @pytest.mark.django_db
 class TestMcredit:
 
-    def test_creditbalance_api(self, auth_rest):
+    def test_creditbalance_api(self, auth_rest, mock_user):
         """Get reward point transaction.
 
         Params:
@@ -25,4 +25,5 @@ class TestMcredit:
             format='json')
 
         assert response.status_code == 200
-        # assert response.json()['results'][0]['customer'] == 19801
+        assert response.json()['results'][0][
+            'customer'] == mock_user.customer.entity_id
