@@ -52,6 +52,7 @@ def new_user_details(user):
     return user_reward_obj
 
 
+@pytest.mark.incremental
 @pytest.mark.django_db
 class TestSignUp:
     """Test New user create and reward amount added refered user."""
