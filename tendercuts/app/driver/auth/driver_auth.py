@@ -4,8 +4,8 @@ import rest_framework.authentication
 from rest_framework import exceptions
 
 from app.core.lib.utils import get_mage_userid
-from app.core.models import FlatCustomer
 from app.driver.constants import DRIVER_GROUP
+from app.core.lib.user_controller import CustomerSearchController
 
 
 class DriverAuthentication(rest_framework.authentication.TokenAuthentication):
@@ -26,7 +26,7 @@ class DriverAuthentication(rest_framework.authentication.TokenAuthentication):
                             self).authenticate_credentials(key)
 
         mage_id = get_mage_userid(user)
-        driver = FlatCustomer.load_by_id(mage_id)
+        driver = CustomerSearchController.load_by_id(mage_id)
 
         if driver.customer.group_id != DRIVER_GROUP:
             raise exceptions.AuthenticationFailed('Invalid token')
