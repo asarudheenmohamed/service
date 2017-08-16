@@ -32,8 +32,6 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
                 .prefetch_related("items")                  \
                 .prefetch_related("payment")                \
                 .prefetch_related("shipping_address")       \
-                .prefetch_related("schedule")               \
-                .prefetch_related("schedule__ddate")        \
                 [:10]
 
         except KeyError:

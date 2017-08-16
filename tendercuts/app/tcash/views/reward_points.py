@@ -64,7 +64,7 @@ class RewardPointAmountApi(APIView):
                 reward_point_obj)
             logger.info("Reward amount added for the user {}".format(
                 user_id))
-            response_data = {'status': "true",
+            response_data = {'status': True,
                              'message': "50 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 
@@ -73,7 +73,7 @@ class RewardPointAmountApi(APIView):
                                                                    0].customer.entity_id)
             message = 'Already  you have be referred by your friend {}'.format(
                 refered_user_basic_info[3])
-            response_data = {'status': "false",
+            response_data = {'status': False,
                              'message': message}
 
             logger.info(message)
