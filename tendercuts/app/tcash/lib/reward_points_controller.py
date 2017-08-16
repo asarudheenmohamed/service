@@ -1,6 +1,7 @@
 """Enpoint for the add New user reward amount."""
 
 import logging
+import datetime
 
 from app.core.models.customer.entity import MRewardsTransaction
 
@@ -29,8 +30,9 @@ class RewardsPointController:
         reward_point_obj = MRewardsTransaction(
             customer=new_user_obj.customer, amount=self.amount,
             is_expired=self.is_expired,
+            created_at=datetime.datetime.now(),
             is_expiration_email_sent=self.email_sent,
-            comment='Gifted from {}' .format(
+            comment='Gift from your friend {}' .format(
                 referrer_obj._flat['firstname']))
         self.log.info("Add reward point amount for the new user  {}".format(
             new_user_obj.customer.entity_id))

@@ -418,7 +418,7 @@ class SalesFlatOrder(models.Model):
     splitted = models.IntegerField(blank=True, null=True)
     splittedfrom = models.CharField(max_length=255, blank=True, null=True)
     splittedto = models.CharField(max_length=255, blank=True, null=True)
-    payment_received = models.IntegerField(blank=True, null=True)
+    payment_recieved = models.IntegerField(blank=True, null=True)
 
     store = models.ForeignKey(
         CoreStore, models.DO_NOTHING, blank=True, null=True)

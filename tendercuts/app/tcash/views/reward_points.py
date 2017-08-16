@@ -58,7 +58,7 @@ class RewardPointAmountApi(APIView):
                 reward_point_obj)
             logger.info("Reward amount added for the user {}".format(
                 user_id))
-            response_data = {'status': "true",
+            response_data = {'status': True,
                              'message': "50 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 

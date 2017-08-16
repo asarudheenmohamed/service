@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42829d0c-cf67-46cd-9e4b-b964aacba87d" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/tendercuts/app/core/tests/unit/test_otp_controller.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/conftest.py" afterPath="$PROJECT_DIR$/tendercuts/app/conftest.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/core/lib/test/customer.py" afterPath="$PROJECT_DIR$/tendercuts/app/core/lib/test/customer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/core/models/sales_order.py" afterPath="$PROJECT_DIR$/tendercuts/app/core/models/sales_order.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/sale_order/views.py" afterPath="$PROJECT_DIR$/tendercuts/app/sale_order/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/tcash/lib/reward_points_controller.py" afterPath="$PROJECT_DIR$/tendercuts/app/tcash/lib/reward_points_controller.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/tcash/tests/integration/refer_friend.feature" afterPath="$PROJECT_DIR$/tendercuts/app/tcash/tests/integration/refer_friend.feature" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tendercuts/app/tcash/views/reward_points.py" afterPath="$PROJECT_DIR$/tendercuts/app/tcash/views/reward_points.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -69,7 +68,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="signup.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="signup.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tendercuts/app/login/views/signup.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="38">
@@ -77,6 +76,26 @@
               <folding>
                 <element signature="e#94#108#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="reward_points_controller.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tendercuts/app/tcash/lib/reward_points_controller.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="25" column="15" lean-forward="false" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="reward_points.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tendercuts/app/tcash/views/reward_points.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="518">
+              <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -90,6 +109,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/tendercuts/app/conftest.py" />
+        <option value="$PROJECT_DIR$/tendercuts/app/login/views/signup.py" />
+        <option value="$PROJECT_DIR$/tendercuts/app/tcash/lib/reward_points_controller.py" />
+        <option value="$PROJECT_DIR$/tendercuts/app/tcash/views/reward_points.py" />
       </list>
     </option>
   </component>
@@ -111,7 +133,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="22" />
     <option name="width" value="1440" />
     <option name="height" value="874" />
@@ -220,13 +242,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="874" extended-state="1" />
+    <frame x="0" y="22" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1359375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32917705" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26911315" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31160897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -349,6 +371,22 @@
           <folding>
             <element signature="e#94#108#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tendercuts/app/tcash/lib/reward_points_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="25" column="15" lean-forward="false" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tendercuts/app/tcash/views/reward_points.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
