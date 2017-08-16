@@ -3,6 +3,9 @@
 import random
 import uuid
 
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
+
 from app.core.lib import magento
 
 
@@ -33,3 +36,13 @@ def generate_customer(
     return data
 
 
+def auth_client(customer):
+    """For the given customer create a auth_client"""
+    # A bloody hack to ensure that the user is created in DJ.
+    customer.generate_token()
+
+    user = User.objects.get(username=customer.dj_user_id)
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    return client

@@ -4,6 +4,7 @@ Contains commons fixtures that needs to be shared accorss app
 import pytest
 from rest_framework.test import APIClient
 
+
 @pytest.fixture
 def rest():
     """Get API client to create requests."""

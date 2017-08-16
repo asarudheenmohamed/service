@@ -2,9 +2,7 @@
 
 import logging
 
-from app.core.models.customer.entity import *
-from app.core.models.sales_order import *
-from app.core.models.store import *
+from app.core.models.customer.entity import MRewardsTransaction
 
 
 class RewardsPointController:
