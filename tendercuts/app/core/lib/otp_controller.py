@@ -61,10 +61,11 @@ class OtpController(object):
 
         """
         # check if user exists
-        try:
-            CustomerSearchController.load_by_phone_mail(phone)
-        except CustomerNotFound:
-            raise exceptions.PermissionDenied("User does not exists")
+        if otp_type != OtpController.SIGNUP:
+            try:
+               CustomerSearchController.load_by_phone_mail(phone)
+            except CustomerNotFound:
+               raise exceptions.PermissionDenied("User does not exists")
 
         key = self._generate_redis_key(phone, otp_type)
         otp = self.redis.get_key(key)

@@ -45,11 +45,11 @@ class UserLoginApi(APIView):
         """
         username = self.request.data.get(
             'email', None) or self.request.data['phone']
-        password = self.request.data['password']
-        otp_mode = self.request.POST.get('otp_mode', None)
+        password = self.request.data.get('password',False)
+        otp_mode = self.request.data.get('otp_mode',False)
         user = None
         try:
-
+            logger.info("the user authenticate by {} ".format(otp_mode))
             user = CustomerController.authenticate(
                 username, password, otp_mode)
             user.message = 'success'
