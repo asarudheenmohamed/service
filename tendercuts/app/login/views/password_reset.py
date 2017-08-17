@@ -74,9 +74,8 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         dry_run = self.request.data.get('dry_run', False)
 
         otp_obj = OtpController(logger)
-        otp = otp_obj.get_otp(phone, otp_obj.RESET_PASSWORD)
+        otp = otp_obj.get_otp(phone, otp_obj.FORGOT)
         otp_validation = otp_obj.otp_verify(otp, customer_otp)
-        otp_validation = True
         if not otp_validation:
             raise exceptions.ValidationError("Invalid OTP")
 
