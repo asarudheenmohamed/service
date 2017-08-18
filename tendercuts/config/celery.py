@@ -7,7 +7,8 @@ from __future__ import absolute_import
 
 from celery import Celery
 from celery.schedules import crontab
-#from . import celeryconfig
+from kombu import  Queue
+from django.conf import  settings
 
 import os, django
 
@@ -15,10 +16,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 # django.setup()
 
 app = Celery('tendercuts')
-#app = Celery('tendercuts',
-#             broker='redis://localhost',
-#             backend='redis://localhost')
-
 
 # Using a string here means the worker don't have to serialize
 # the configuration object to child processes.
@@ -37,6 +34,11 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute='*/3')
     }
 }
+
+queues = [Queue('default', routing_key='task.#')]
+queues.extend(settings.CELERY_QUEUES.values())
+
+app.conf.task_queues = tuple(queues)
 
 if __name__ == '__main__':
     app.start()
