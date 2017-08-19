@@ -25,7 +25,7 @@ DATABASES = {
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v2_external',
+        'NAME': 'v3_1',
         'USER': 'root',
         'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
