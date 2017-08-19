@@ -16,6 +16,7 @@ from rest_framework import HTTP_HEADER_ENCODING
 from rest_framework.test import APIClient
 
 
+@pytest.mark.django_db
 class TestApiInventoryFetch(object):
     """Test cases for inventory fetch."""
 
@@ -34,7 +35,7 @@ class TestApiInventoryFetch(object):
              "website_id": 2},
             format='json')
 
-        assert len(response.json()) > 20
+        assert len(response.json()) >= 4
 
     def test_fetch_inventory_product(self, auth_rest):
         """Test case for fetching inventory with product filter.
@@ -49,7 +50,7 @@ class TestApiInventoryFetch(object):
         data = {
             "store_id": 1,
             "website_id": 2,
-            "product_ids": ",".join(["193", "194"])
+            "product_ids": ",".join(["195", "199"])
         }
 
         response = auth_rest.get(

@@ -21,6 +21,7 @@ def controller(mock_df):
     return InventoryUploadController(mock_df)
 
 
+@pytest.mark.django_db
 class TestInventoryUploadController(object):
     """Test cases for Inventory upload controller."""
 
