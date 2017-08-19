@@ -11,6 +11,8 @@ from django.db import models
 from .product import CatalogProductEntity
 
 
+
+# Old inventory model
 class AitocCataloginventoryStockItem(models.Model):
     item_id = models.AutoField(primary_key=True)
     website_id = models.IntegerField()
@@ -45,3 +47,17 @@ class AitocCataloginventoryStockItem(models.Model):
         db_table = 'aitoc_cataloginventory_stock_item'
         unique_together = (('product', 'stock', 'website_id'),)
         app_label = "magento"
+
+
+class GraminventoryLatest(models.Model):
+    product_id = models.AutoField(primary_key=True)
+    qty = models.FloatField(blank=True, null=True)
+    scheduledqty = models.FloatField(blank=True, null=True)
+    parent = models.CharField(max_length=255, blank=True, null=True)
+    store_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'graminventory_latest'
+        app_label = "magento"
+        unique_together = (('product_id', 'store_id'),)

@@ -34,6 +34,7 @@ tables = ["m_rewards_transaction"]
 tables = ["sales_flat_order_grid"]
 tables = ["mwddate", "mwddate_store"]
 tables = ["sales_flat_order"]
+tables = ["graminventory_latest"]
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
