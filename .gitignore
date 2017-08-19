@@ -8,3 +8,10 @@ node_modules/
 **/dump.rdb
 **/celerybeat-schedule
 **/celerybeat-schedule.db
+
+**/.idea
+dump.rdb
+celerybeat-schedule
+celerybeat-schedule.db
+tendercuts/npm-debug.log
+

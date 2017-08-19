@@ -1,6 +1,9 @@
 from .base import *
 from .celeryconfig import *
 
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,7 +42,7 @@ MAGENTO = {
     "port": 443,
     "username": "admin",
     "password": "Tendercuts123!",
-    "endpoint": "/v2_external/tendercuts-site/index.php/api/xmlrpc/",
+    "endpoint": "/v3/website/index.php/api/xmlrpc/",
     "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "https"
 }

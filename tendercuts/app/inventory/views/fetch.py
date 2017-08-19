@@ -12,9 +12,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .. import models as models
+from app.core.models import  inventory
 
 
-class InventoryViewSet(APIView):
+class OldInventoryViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
 
@@ -101,3 +102,48 @@ class InventoryViewSet(APIView):
         inventory = self.merge_lists(today, future, "product")
 
         return Response(inventory)
+
+
+class InventoryViewSet(APIView):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+
+    Enpoint to provide the inventory for Day D
+    """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+
+    def get(self, request):
+        """
+        CatalogProductFlat1 contains global attributes such as sch delivery
+        Aitoc contains per store inventory
+
+        Fetch today's inventory from aitoc table and scheduled from scheduled
+        tables
+
+        params:
+            request:
+                1. store_id int - specifies the store id
+                2. website_id - aitoc has this stupid thing of website id
+                3. product_id (optional, list) - filter only those ids
+
+        """
+        store_id = self.request.GET['store_id']
+        product_ids = self.request.GET.get("product_ids", [])
+
+        if product_ids:
+            product_ids = product_ids.split(",")
+            products = inventory.GraminventoryLatest.objects.filter(
+                product_id__in=product_ids,
+                store_id=store_id
+            )
+        else:
+            products = inventory.GraminventoryLatest.objects.filter(store_id=store_id)
+
+
+        products = [
+            {"product": inv.product_id, "qty": inv.qty, "scheduledqty": inv.scheduledqty}
+            for inv in products]
+
+        return Response(products)
