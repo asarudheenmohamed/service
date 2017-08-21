@@ -5,17 +5,10 @@ node_modules/
 **/__pycache__/
 **/*.pyc
 
+**/dump.rdb
+**/celerybeat-schedule
+**/celerybeat-schedule.db
 
-
-
-
-
-
-
-dump.rdb
-celerybeat-schedule
-celerybeat-schedule.db
+**/.idea
 tendercuts/npm-debug.log
-
-.idea
 
