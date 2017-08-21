@@ -2,7 +2,7 @@
 
 import logging
 
-from rest_framework import renderers, status, viewsets
+from rest_framework import renderers, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
@@ -35,27 +35,28 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         return driver
 
     def create(self, request, *args, **kwargs):
-        """Driver assignment and unassignment endpoint.
+        """Driver assignment  endpoint.
 
         Input:
             order_id
-            unassign_order_id
 
         returns:
             Response({status: bool, message: str})
 
         """
-        order_id = self.request.data.get('order_id', False)
-        unassign_order_id = self.request.data.get('unassign_order_id', False)
+        order_id = self.request.data['order_id']
         driver = self.get_driver()
         controller = DriverController(driver)
 
-        if unassign_order_id:
-            controller.unassign_order(unassign_order_id)
-        else:
+        try:
             controller.assign_order(order_id)
+            status = True
+            message = "Order Assigned successfully"
+        except ValueError as e:
+            status = False
+            message = str(e)
 
-        return Response({'status': True}, status=status.HTTP_201_CREATED)
+        return Response({'status': status, "message": message})
 
     @list_route(methods=['post'], renderer_classes=[renderers.JSONRenderer])
     def complete(self, request, *args, **kwargs):

@@ -46,10 +46,10 @@ class DriverController(object):
         obj = self.get_order_obj(order)
 
         if self.driver.customer.store_id != obj.store_id:
-            raise ValueError('Store mismatched')
+            raise ValueError('Store mismatch')
 
         elif DriverOrder.objects.filter(increment_id=order):
-            raise ValueError('This order already assigned')
+            raise ValueError('This order is already assigned')
 
         else:
 

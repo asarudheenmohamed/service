@@ -1,0 +1,54 @@
+"""Endpoint for  driver assignment."""
+
+import logging
+
+from rest_framework import renderers, status, viewsets
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
+
+from app.core import serializers
+from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.utils import get_user_id
+from app.driver.lib.driver_controller import DriverController
+
+from ..auth import DriverAuthentication
+
+
+class UnassignOrdersViewSet(viewsets.GenericViewSet):
+    """Enpoint that assigns driver to order.
+
+    EndPoint:
+        API: driver/unassign/
+
+    """
+    authentication_classes = (DriverAuthentication,)
+
+    def get_driver(self):
+        """Extract DriverId from request."""
+        user_id = get_user_id(self.request)
+        driver = CustomerSearchController.load_by_id(user_id)
+
+        return driver
+
+    def create(self, request, *args, **kwargs):
+        """Driver unassignment endpoint.
+
+        Input:
+            order_id
+
+        returns:
+            Response({status: bool, message: str})
+
+        """
+        unassign_order_id = self.request.data['order_id']
+        driver = self.get_driver()
+        controller = DriverController(driver)
+        try:
+            controller.unassign_order(unassign_order_id)
+            status = True
+            message = 'Order UnAssigned successfully'
+        except ValueError as e:
+            status = False
+            message = str(e)
+
+        return Response({'status': status, 'message': message})
