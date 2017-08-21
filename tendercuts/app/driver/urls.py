@@ -12,9 +12,17 @@ router.register(
     views.DriverOrdersViewSet,
     base_name='DriverOrderViewSet')
 router.register(
+    r'unassign',
+    views.UnassignOrdersViewSet,
+    base_name='UnassignOrderViewSet')
+router.register(
     r'orders',
     views.OrderFetchViewSet,
     base_name='DriverOrderViewSet')
+router.register(
+    r'fetch_related_order',
+    views.FetchRelatedOrder,
+    base_name='FetchRelatedViewSet')
 
 urlpatterns = [
     url(r'', include(router.urls)),
