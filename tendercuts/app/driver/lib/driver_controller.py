@@ -1,9 +1,8 @@
 """All driver controller related actions."""
 
+from app.core.models import SalesFlatOrder
 from config.celery import app
 from config.messaging import ORDER_STATE
-
-from app.core.models import SalesFlatOrder
 
 from ..models import DriverOrder
 
@@ -71,7 +70,7 @@ class DriverController(object):
             return driver_object
 
     def unassign_order(self, order):
-        """UnAssign the order to the driver.
+        """Unassign the order to the driver.
 
         Also publishes the order status to the queue.
 
@@ -107,6 +106,25 @@ class DriverController(object):
         return SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
             status=status)
+
+    def fetch_related_orders(self, order_end_id, store_id):
+        """Return Sales Order objects.
+
+        Params:
+         order_end_id(str): order last 4 digit number
+         store id(str): store id
+
+        Returns:
+            [SalesFlatOrder]
+
+        """
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id__endswith=order_end_id,
+            store_id=store_id,
+            status='Processing')
+
+        return order_obj
 
     def complete_order(self, order_id):
         """Publish the message to the Mage queues.
