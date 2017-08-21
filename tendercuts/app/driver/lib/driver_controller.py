@@ -16,6 +16,19 @@ class DriverController(object):
         super(DriverController, self).__init__()
         self.driver = driver
 
+    def get_order_obj(self, order):
+        """Get order object based on order id.
+
+        Params:
+            order: (str) increment_id
+
+        """
+        order_obj = SalesFlatOrder.objects.filter(increment_id=order)
+        if not order_obj:
+            raise ValueError('Order object Does not exist')
+
+        return order_obj[0]
+
     def assign_order(self, order):
         """Assign the order to the driver.
 
@@ -31,22 +44,54 @@ class DriverController(object):
         if isinstance(order, SalesFlatOrder):
             order = order.increment_id
 
-        driver_object = DriverOrder.objects.create(
-            increment_id=order,
-            driver_id=self.driver.customer.entity_id)
+        obj = self.get_order_obj(order)
 
-        driver_object.save()
+        if self.driver.customer.store_id != obj.store_id:
+            raise ValueError('Store mismatched')
+
+        elif DriverOrder.objects.filter(increment_id=order):
+            raise ValueError('This order already assigned')
+
+        else:
+
+            driver_object = DriverOrder.objects.create(
+                increment_id=order,
+                driver_id=self.driver.customer.entity_id)
+
+            with app.producer_or_acquire() as producer:
+                producer.publish(
+                    {"increment_id": order,
+                     "status": 'out_delivery'},
+                    serializer='json',
+                    exchange=ORDER_STATE,
+                    declare=[ORDER_STATE]
+                )
+            driver_object.save()
+
+            return driver_object
+
+    def unassign_order(self, order):
+        """UnAssign the order to the driver.
+
+        Also publishes the order status to the queue.
+
+        Params:
+            order(str): increment_id
+
+        """
+        obj = self.get_order_obj(order)
+
+        driver_assigned_obj = DriverOrder.objects.filter(increment_id=order)
+        driver_assigned_obj.delete()
 
         with app.producer_or_acquire() as producer:
             producer.publish(
                 {"increment_id": order,
-                 "status": 'out_delivery'},
+                 "status": 'processing'},
                 serializer='json',
                 exchange=ORDER_STATE,
                 declare=[ORDER_STATE]
             )
-
-        return driver_object
 
     def fetch_orders(self, status):
         """Return all active orders.

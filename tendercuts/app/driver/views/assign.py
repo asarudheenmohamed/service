@@ -7,8 +7,8 @@ from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from app.core import serializers
-from app.core.lib.utils import get_user_id
 from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.utils import get_user_id
 from app.driver.lib.driver_controller import DriverController
 
 from ..auth import DriverAuthentication
@@ -20,8 +20,10 @@ logger = logging.getLogger(__name__)
 class DriverOrdersViewSet(viewsets.GenericViewSet):
     """Enpoint that assigns driver to order.
 
-    API: driver/assign/
-    API: driver/assign/complete
+    EndPoint:
+        API: driver/assign/
+        API: driver/assign/complete
+
     """
     authentication_classes = (DriverAuthentication,)
 
@@ -33,19 +35,25 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         return driver
 
     def create(self, request, *args, **kwargs):
-        """Driver assignment endpoint.
+        """Driver assignment and unassignment endpoint.
 
         Input:
             order_id
+            unassign_order_id
 
         returns:
             Response({status: bool, message: str})
-        """
-        order_id = self.request.data['order_id']
 
+        """
+        order_id = self.request.data.get('order_id', False)
+        unassign_order_id = self.request.data.get('unassign_order_id', False)
         driver = self.get_driver()
         controller = DriverController(driver)
-        controller.assign_order(order_id)
+
+        if unassign_order_id:
+            controller.unassign_order(unassign_order_id)
+        else:
+            controller.assign_order(order_id)
 
         return Response({'status': True}, status=status.HTTP_201_CREATED)
 

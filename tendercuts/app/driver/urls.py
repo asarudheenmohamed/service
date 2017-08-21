@@ -15,6 +15,10 @@ router.register(
     r'orders',
     views.OrderFetchViewSet,
     base_name='DriverOrderViewSet')
+router.register(
+    r'fetch_related_order',
+    views.FetchRelatedOrder,
+    base_name='DriverOrderViewSet')
 
 urlpatterns = [
     url(r'', include(router.urls)),
