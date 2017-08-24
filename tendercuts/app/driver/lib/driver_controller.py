@@ -1,11 +1,13 @@
 """All driver controller related actions."""
+import logging
 
 from app.core.models import SalesFlatOrder
 from config.celery import app
 from config.messaging import ORDER_STATE
 
-
 from ..models import DriverOrder
+
+logger = logging.getLogger(__name__)
 
 
 class DriverController(object):
@@ -67,6 +69,9 @@ class DriverController(object):
                 )
 
             driver_object.save()
+            logger.info(
+                '{} this order assign to the driver {}'.format(
+                    order, self.driver.customer.entity_id))
 
             return driver_object
 
@@ -83,6 +88,11 @@ class DriverController(object):
 
         driver_assigned_obj = DriverOrder.objects.filter(increment_id=order)
         driver_assigned_obj.delete()
+
+        logger.info(
+            'The Driver {} Unassign to this order {}'.format(
+                self.driver.customer.entity_id,
+                order))
 
         with app.producer_or_acquire() as producer:
             producer.publish(
@@ -104,6 +114,10 @@ class DriverController(object):
             driver_id=self.driver.customer.entity_id) \
             .values_list('increment_id', flat=True)
 
+        logger.info(
+            'Fetch that {} Driver assigning {} state orders'.format(
+                self.driver.customer.entity_id, status))
+
         return SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
             status=status)
@@ -119,6 +133,9 @@ class DriverController(object):
             [SalesFlatOrder]
 
         """
+        logger.info(
+            'Fetch related order for that order last id {} and store id {}'.format(
+                order_end_id, store_id))
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__endswith=order_end_id,
@@ -133,6 +150,7 @@ class DriverController(object):
             order_id (str): Increment ID
 
         """
+        logger.info("Complete this order {}".format(order_id))
         with app.producer_or_acquire() as producer:
             producer.publish(
                 {"increment_id": order_id,

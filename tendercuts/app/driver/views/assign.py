@@ -53,6 +53,9 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
             controller.assign_order(order_id, store_id)
             status = True
             message = "Order Assigned successfully"
+            logger.info(
+                '{} this order assigned successfully'.format(
+                    order_id))
         except ValueError as e:
             status = False
             message = str(e)
@@ -76,6 +79,8 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         controller = DriverController(driver)
         controller.complete_order(order_id)
 
+        logger.info("{} this order completed successfully".format(order_id))
+
         return Response({'status': True}, status=status.HTTP_201_CREATED)
 
 
@@ -94,5 +99,8 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)
         status = self.request.query_params['status']
+
+        logger.info(
+            'Fetch {} state orders'.format(status))
 
         return DriverController(driver).fetch_orders(status)

@@ -34,6 +34,9 @@ class FetchRelatedOrder(viewsets.ReadOnlyModelViewSet):
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)
 
+        logger.info(
+            'Fetch related order for that order last id {}'.format(order_end_id))
+
         controller = DriverController(driver)
         order_obj = controller.fetch_related_orders(order_end_id, store_id)
 

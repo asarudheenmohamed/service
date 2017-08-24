@@ -13,6 +13,8 @@ from app.driver.lib.driver_controller import DriverController
 
 from ..auth import DriverAuthentication
 
+logger = logging.getLogger(__name__)
+
 
 class UnassignOrdersViewSet(viewsets.GenericViewSet):
     """Enpoint that assigns driver to order.
@@ -47,7 +49,15 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
             controller.unassign_order(unassign_order_id)
             status = True
             message = 'Order UnAssigned successfully'
+
+            logger.info(
+                '{} this order UnAssigned successfully'.format(
+                    unassign_order_id))
+
         except ValueError as e:
+            logger.info(
+                'The Driver unable to unassign this order {}. details for {}'.format(
+                    unassign_order_id, str(e)))
             status = False
             message = str(e)
 
