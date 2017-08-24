@@ -1,5 +1,6 @@
 """Test User Profile Changes."""
 import pytest
+import random
 
 
 @pytest.mark.django_db
@@ -7,8 +8,7 @@ class TestUserProfileEdit:
     """Test user profile Edit."""
     @pytest.mark.parametrize("field_value,code", (
         ["Testuser", "firstname"],
-        ["testuser@gmail.com", "email"],
-        ["2017-06-19 00:00:00", "dob"],
+        ["testuser{}@gmail.com".format(random.randint(1000, 9999)), "email"],
         ["test123", "password_hash"],
         ["Testuser", "firstname"],
     ))

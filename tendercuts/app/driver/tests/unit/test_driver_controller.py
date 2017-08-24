@@ -5,6 +5,7 @@ import time
 
 from app.driver.lib.driver_controller import DriverController
 from app.driver.models import DriverOrder
+from app.core.models import SalesFlatOrder
 
 
 @pytest.mark.django_db
@@ -19,7 +20,9 @@ class TestDriverController:
 
         """
         controller = DriverController(mock_user)
-        driver_order = controller.assign_order(generate_mock_order)
+        driver_order = controller.assign_order(
+            generate_mock_order.increment_id,
+            generate_mock_order.store_id)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
@@ -44,7 +47,38 @@ class TestDriverController:
         orders = controller.fetch_orders(status)
 
         assert len(orders) == 1
-    
+
+    def test_fetch_related_order(
+            self, auth_rest, mock_user, generate_mock_order):
+        """Generate mock order and Fetch relevent orders based on mock order id.
+
+        Params:
+            auth_rest(pytest fixture): user requests
+            generate_mock_order(obj): mock order object
+
+        Asserts:
+            Check response not equal to None
+            Check response increment id is equal to mock order id.
+
+        """
+        # change generate order status pending to processing
+        obj = SalesFlatOrder.objects.filter(
+            increment_id=generate_mock_order.increment_id)
+        obj = obj[0]
+        obj.status = 'Processing'
+        obj.save()
+
+        increment_id = str(generate_mock_order.increment_id)
+        inc_id = list(increment_id)
+        increment = increment_id.split(inc_id[3])
+
+        controller = DriverController(mock_user)
+        orders = controller.fetch_related_orders(
+            increment[-1], generate_mock_order.store_id)
+
+        assert (orders) is not None
+        assert orders[0].increment_id == generate_mock_order.increment_id
+
     def test_complete_order(self, mock_user, generate_mock_order):
         """complete the order.
 

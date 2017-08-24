@@ -2,7 +2,7 @@
 
 import logging
 
-from rest_framework import renderers, viewsets
+from rest_framework import renderers, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
@@ -45,11 +45,12 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         """
         order_id = self.request.data['order_id']
+        store_id = self.request.data['store_id']
         driver = self.get_driver()
         controller = DriverController(driver)
 
         try:
-            controller.assign_order(order_id)
+            controller.assign_order(order_id, store_id)
             status = True
             message = "Order Assigned successfully"
         except ValueError as e:

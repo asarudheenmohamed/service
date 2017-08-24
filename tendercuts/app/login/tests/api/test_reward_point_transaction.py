@@ -1,6 +1,8 @@
 """Test reward Point transection."""
 import pytest
 from app.tcash.lib import reward_points_controller as reward_points_controller
+from app.core.models.customer.entity import MRewardsTransaction, CustomerEntity
+from datetime import datetime
 
 
 @pytest.mark.django_db
@@ -21,10 +23,19 @@ class TestReward:
             Check custermer id is equal to mock user id
 
         """
+        # add reward amount for mock user
+        reward_point_obj = MRewardsTransaction(
+            customer=CustomerEntity.objects.get(entity_id=mock_user.customer.entity_id), amount=10000,
+            is_expired=0,
+            created_at=datetime.now(),
+            is_expiration_email_sent=1,
+            comment="Test reward amount added")
+        reward_point_obj.save()
+
         response = auth_rest.get(
             "/user/reward/",
             format='json')
-        # assert not isinstance(response, None)
+
         assert response.status_code == 200
         assert response.json()['results'][0][
             'customer'] == mock_user.customer.entity_id

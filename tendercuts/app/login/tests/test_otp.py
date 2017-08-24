@@ -112,9 +112,10 @@ class TestOtpMethods:
         Raises:
             customer Not found.
         """
-        with pytest.raises(Exception):
-            rest.get(
-                "/user/forgot_password_otp/9908765678111/", format='json')
+        response = rest.get(
+            "/user/forgot_password_otp/9908765678111/", format='json')
+
+        assert response.data['detail'] == "User does not exists"
 
 
 @pytest.mark.django_db

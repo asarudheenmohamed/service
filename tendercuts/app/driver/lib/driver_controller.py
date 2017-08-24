@@ -4,6 +4,7 @@ from app.core.models import SalesFlatOrder
 from config.celery import app
 from config.messaging import ORDER_STATE
 
+
 from ..models import DriverOrder
 
 
@@ -28,7 +29,7 @@ class DriverController(object):
 
         return order_obj[0]
 
-    def assign_order(self, order):
+    def assign_order(self, order, store_id):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
@@ -45,14 +46,13 @@ class DriverController(object):
 
         obj = self.get_order_obj(order)
 
-        if self.driver.customer.store_id != obj.store_id:
+        if int(store_id) != obj.store_id:
             raise ValueError('Store mismatch')
 
         elif DriverOrder.objects.filter(increment_id=order):
             raise ValueError('This order is already assigned')
 
         else:
-
             driver_object = DriverOrder.objects.create(
                 increment_id=order,
                 driver_id=self.driver.customer.entity_id)
@@ -65,6 +65,7 @@ class DriverController(object):
                     exchange=ORDER_STATE,
                     declare=[ORDER_STATE]
                 )
+
             driver_object.save()
 
             return driver_object
@@ -123,7 +124,6 @@ class DriverController(object):
             increment_id__endswith=order_end_id,
             store_id=store_id,
             status='Processing')
-
         return order_obj
 
     def complete_order(self, order_id):
