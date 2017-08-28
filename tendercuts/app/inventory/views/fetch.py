@@ -7,13 +7,14 @@ import itertools
 import json
 
 from django.db.models import F
-from rest_framework import generics, status, viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .. import models as models
-from app.core.models import  inventory
 
+from .. import models as models
+from .. import  serializers
+from app.core.models import inventory
 
 class OldInventoryViewSet(APIView):
     """
@@ -106,44 +107,41 @@ class OldInventoryViewSet(APIView):
 
 class InventoryViewSet(APIView):
     """
-    This viewset automatically provides `list` and `detail` actions.
-
+    This viewset automatically provides `list`
     Enpoint to provide the inventory for Day D
     """
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
     permission_classes = ()
 
+    # This query does the magic of parent child remapping.
+    core_query = """
+SELECT
+    child.id,
+    child.product_id,
+    IF(child.qty >0, child.qty, parent.qty) qty,
+    IF(child.scheduledqty >0, child.scheduledqty, parent.scheduledqty) schedule_qty,
+    child.store_id,
+    child.kg_qty,
+    child.kg_expiring,
+    child.kg_forecast
+FROM graminventory_latest as child
+LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id
+WHERE child.store_id = %s"""
+
     def get(self, request):
-        """
-        CatalogProductFlat1 contains global attributes such as sch delivery
-        Aitoc contains per store inventory
-
-        Fetch today's inventory from aitoc table and scheduled from scheduled
-        tables
-
-        params:
-            request:
-                1. store_id int - specifies the store id
-                2. website_id - aitoc has this stupid thing of website id
-                3. product_id (optional, list) - filter only those ids
-
-        """
+        """Get the inventory of the store."""
         store_id = self.request.GET['store_id']
         product_ids = self.request.GET.get("product_ids", [])
+        core_query = self.core_query
 
         if product_ids:
             product_ids = product_ids.split(",")
-            products = inventory.GraminventoryLatest.objects.filter(
-                product_id__in=product_ids,
-                store_id=store_id
-            )
-        else:
-            products = inventory.GraminventoryLatest.objects.filter(store_id=store_id)
+            core_query += " and child.product_id in ({})".format(",".join(product_ids))
+
+        queryset = inventory.GraminventoryLatest.objects.raw(core_query, [store_id])
+        serializer = serializers.InventorySerializer(queryset, many=True)
+
+        return  Response(serializer.data)
 
 
-        products = [
-            {"product": inv.product_id, "qty": inv.qty, "scheduledqty": inv.scheduledqty}
-            for inv in products]
-
-        return Response(products)

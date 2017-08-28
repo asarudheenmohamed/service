@@ -50,14 +50,20 @@ class AitocCataloginventoryStockItem(models.Model):
 
 
 class GraminventoryLatest(models.Model):
-    product_id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=22, primary_key=True)
+    # product_id = models.IntegerField()
+    product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING)
     qty = models.FloatField(blank=True, null=True)
     scheduledqty = models.FloatField(blank=True, null=True)
-    parent = models.CharField(max_length=255, blank=True, null=True)
+    parent = models.IntegerField(blank=True, null=True)
     store_id = models.IntegerField(blank=True, null=True)
+    kg_qty = models.FloatField(blank=True, null=True)
+    kg_expiring = models.FloatField(blank=True, null=True)
+    kg_forecast = models.IntegerField(blank=True, null=True)
+    gpu = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'graminventory_latest'
         app_label = "magento"
-        unique_together = (('product_id', 'store_id'),)
+        # unique_together = (('product_id', 'store_id'),)
