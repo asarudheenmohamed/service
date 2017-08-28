@@ -6,4 +6,4 @@ from app.core import models as models
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GraminventoryLatest
-        fields = ('product_id', 'qty', 'scheduledqty', 'parent', 'store_id', 'kg_qty', 'kg_expiring', 'kg_forecast', 'gpu')
+        fields = ('product', 'qty', 'scheduledqty', 'parent', 'store_id', 'kg_qty', 'kg_expiring', 'kg_forecast', 'gpu')
