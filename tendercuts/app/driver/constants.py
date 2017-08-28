@@ -1,3 +1,3 @@
 """Driver app related constants."""
 
-DRIVER_GROUP = 6
+DRIVER_GROUP = 9

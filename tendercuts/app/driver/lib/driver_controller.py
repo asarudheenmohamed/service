@@ -1,5 +1,4 @@
 """All driver controller related actions."""
-
 from app.core.models import SalesFlatOrder
 from config.celery import app
 from config.messaging import ORDER_STATE
@@ -28,7 +27,7 @@ class DriverController(object):
 
         return order_obj[0]
 
-    def assign_order(self, order):
+    def assign_order(self, order,store_id):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
@@ -45,7 +44,7 @@ class DriverController(object):
 
         obj = self.get_order_obj(order)
 
-        if self.driver.customer.store_id != obj.store_id:
+        if str(store_id) != str(obj.store_id):
             raise ValueError('Store mismatch')
 
         elif DriverOrder.objects.filter(increment_id=order):
@@ -120,8 +119,8 @@ class DriverController(object):
         """
 
         order_obj = SalesFlatOrder.objects.filter(
-            increment_id__endswith=order_end_id,
-            store_id=store_id,
+            increment_id__endswith=str(order_end_id),
+            store_id=str(store_id),
             status='Processing')
 
         return order_obj
