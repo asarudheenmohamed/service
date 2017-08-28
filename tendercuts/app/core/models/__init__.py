@@ -9,5 +9,5 @@ from .category import *
 
 
 from .customer import *
-from .inventory import AitocCataloginventoryStockItem
+from .inventory import AitocCataloginventoryStockItem, GraminventoryLatest
 from .otp import OtpList
