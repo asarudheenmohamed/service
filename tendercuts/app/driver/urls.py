@@ -23,6 +23,10 @@ router.register(
     r'fetch_related_order',
     views.FetchRelatedOrder,
     base_name='FetchRelatedViewSet')
+router.register(
+    r'driver_position',
+    views.DriverPositionViewSet,
+    base_name='DriverPositiontViewSet')
 
 urlpatterns = [
     url(r'', include(router.urls)),
