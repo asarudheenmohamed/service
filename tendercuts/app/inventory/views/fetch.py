@@ -111,7 +111,6 @@ class InventoryViewSet(APIView):
     authentication_classes = ()
     permission_classes = ()
 
-
     def get(self, request):
         """Get the inventory of the store."""
         store_id = self.request.GET['store_id']
