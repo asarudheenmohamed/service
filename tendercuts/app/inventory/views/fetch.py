@@ -122,9 +122,10 @@ SELECT
     IF(child.qty >0, child.qty, parent.qty) qty,
     IF(child.scheduledqty >0, child.scheduledqty, parent.scheduledqty) schedule_qty,
     child.store_id,
-    child.kg_qty,
-    child.kg_expiring,
-    child.kg_forecast
+    -- Round and remove NULL
+    IFNULL(ROUND(child.kg_qty, 2), 0) as kg_qty,
+    IFNULL(ROUND(child.kg_expiring, 2), 0) as kg_expiring,
+    IFNULL(ROUND(child.kg_forecast,2), 0) as kg_forecast
 FROM graminventory_latest as child
 LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id and child.store_id = parent.store_id
 WHERE child.store_id = %s"""
