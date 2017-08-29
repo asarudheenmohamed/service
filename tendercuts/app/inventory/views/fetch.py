@@ -126,7 +126,7 @@ SELECT
     child.kg_expiring,
     child.kg_forecast
 FROM graminventory_latest as child
-LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id
+LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id and child.store_id = parent.store_id
 WHERE child.store_id = %s"""
 
     def get(self, request):
