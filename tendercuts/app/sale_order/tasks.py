@@ -8,7 +8,7 @@ from app.core.lib.celery import TenderCutsTask
 logger = get_task_logger(__name__)
 
 
-@app.task(base=TenderCutsTask)
+@app.task(base=TenderCutsTask, ignore_result=True)
 def log_message(*args, **kwargs):
     """Celery Task to log messages."""
     print (kwargs)
