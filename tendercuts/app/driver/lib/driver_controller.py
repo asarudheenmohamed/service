@@ -1,7 +1,11 @@
 """All driver controller related actions."""
 import logging
 
+import app.core.lib.magento as mage
+from app.core.lib.order_controller import OrderController
 from app.core.models import SalesFlatOrder
+from app.driver.models.driver_order import (DriverOrder, DriverPosition,
+                                            OrderEvents)
 from config.celery import app
 from config.messaging import ORDER_STATE
 
@@ -17,6 +21,7 @@ class DriverController(object):
         """Constructor."""
         super(DriverController, self).__init__()
         self.driver = driver
+        self.conn = mage.Connector()
 
     def get_order_obj(self, order):
         """Get order object based on order id.
@@ -47,28 +52,22 @@ class DriverController(object):
             order = order.increment_id
 
         obj = self.get_order_obj(order)
-
         if int(store_id) != obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=order):
+        elif DriverOrder.objects.filter(increment_id=obj.increment_id):
             raise ValueError('This order is already assigned')
 
         else:
             driver_object = DriverOrder.objects.create(
-                increment_id=order,
-                driver_id=self.driver.customer.entity_id)
+                increment_id=order, driver_id=self.driver.customer.entity_id)
+            order_obj = SalesFlatOrder.objects.filter(
+                increment_id=order)
+            controller = OrderController(self.conn, order_obj[0])
+            controller.out_delivery()
 
-            with app.producer_or_acquire() as producer:
-                producer.publish(
-                    {"increment_id": order,
-                     "status": 'out_delivery'},
-                    serializer='json',
-                    exchange=ORDER_STATE,
-                    declare=[ORDER_STATE]
-                )
-
-            driver_object.save()
+            driver_object = DriverOrder.objects.get(
+                increment_id=int(order))
             logger.info(
                 '{} this order assign to the driver {}'.format(
                     order, self.driver.customer.entity_id))
@@ -89,19 +88,13 @@ class DriverController(object):
         driver_assigned_obj = DriverOrder.objects.filter(increment_id=order)
         driver_assigned_obj.delete()
 
+        controller = OrderController(self.conn, obj)
+        controller.processing()
+
         logger.info(
             'The Driver {} Unassign to this order {}'.format(
                 self.driver.customer.entity_id,
                 order))
-
-        with app.producer_or_acquire() as producer:
-            producer.publish(
-                {"increment_id": order,
-                 "status": 'processing'},
-                serializer='json',
-                exchange=ORDER_STATE,
-                declare=[ORDER_STATE]
-            )
 
     def fetch_orders(self, status):
         """Return all active orders.
@@ -140,7 +133,7 @@ class DriverController(object):
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__endswith=order_end_id,
             store_id=store_id,
-            status='Processing')
+            status='processing')
         return order_obj
 
     def complete_order(self, order_id):
@@ -151,11 +144,49 @@ class DriverController(object):
 
         """
         logger.info("Complete this order {}".format(order_id))
-        with app.producer_or_acquire() as producer:
-            producer.publish(
-                {"increment_id": order_id,
-                 "status": 'complete'},
-                serializer='json',
-                exchange=ORDER_STATE,
-                declare=[ORDER_STATE]
-            )
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id=order_id)
+        controller = OrderController(self.conn, order_obj[0])
+        controller.complete()
+
+    def driver_position(self, lat, lon):
+        """Create a Driver current latitude and longitude.
+
+        Params:
+            lat(int): driver location latitude
+            lon(int): driver location longitude
+
+        Returns:
+            Returns DriverPosition object
+
+        """
+        obj = DriverPosition.objects.create(
+            driver=self.driver, latitude=lat, longitude=lon)
+
+        logger.info(
+            "update the location, latitude and longitude for that driver {}".format(
+                self.driver.driver_id))
+
+        return obj
+
+    def order_events(self, location, status):
+        """Create a Driver current locations.
+
+        Params:
+            locations(str):driver current locations
+            status(str): order status
+
+        Returns:
+            Returns OrderEvents object
+
+        """
+        events_obj = OrderEvents.objects.create(
+            driver=self.driver,
+            location=location, status=status)
+
+        logger.info(
+            "update the location and order status for that driver {}".format(
+                self.driver.driver_id))
+
+        return events_obj

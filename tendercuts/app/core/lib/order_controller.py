@@ -5,6 +5,7 @@ magento and python layer
 
 import logging
 from .magento import Connector
+from app.core.models.sales_order import SalesFlatOrderGrid
 
 
 class OrderController(object):
@@ -17,15 +18,28 @@ class OrderController(object):
         self.order = order
         self.mage = magento_conn
 
+    def processing(self):
+        """The order status pending to processing state."""
+        invoice_id = self.mage.api.sales_order_invoice.create(
+            {'invoiceIncrementId ': self.order.increment_id})
+        self.mage.api.sales_order_invoice.capture(
+            {'invoiceIncrementId ': invoice_id})
+
+    def out_delivery(self):
+        """The order status processing to out for delivery."""
+        self.order.status = "out_delivery"
+        self.order.save()
+        obj = SalesFlatOrderGrid.objects.get(
+            increment_id=self.order.increment_id)
+        obj.status = "out_delivery"
+        obj.save()
+        # a = self.mage.api.sales_order_shipment.info(self.order.increment_id)
+
     def complete(self):
         """
         Using the SOAP API here, as we need to triggers observers in magento for
         reward and credit.
         """
-        invoice_id = self.mage.api.sales_order_invoice.create(
-            {'orderIncrementId': self.order.increment_id})
-        self.mage.api.sales_order_invoice.capture(
-            {'invoiceIncrementId ': invoice_id})
         response_data = self.mage.api.sales_order_shipment.create(
             {'orderIncrementId': self.order.increment_id})
 

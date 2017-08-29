@@ -1,15 +1,14 @@
-"""Endpoint for  driver assignment."""
+"""Endpoint for  driver unassignment."""
 
 import logging
 
-from rest_framework import renderers, status, viewsets
-from rest_framework.decorators import list_route
+from rest_framework import viewsets
 from rest_framework.response import Response
 
-from app.core import serializers
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
 from app.driver.lib.driver_controller import DriverController
+
 
 from ..auth import DriverAuthentication
 
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class UnassignOrdersViewSet(viewsets.GenericViewSet):
-    """Enpoint that assigns driver to order.
+    """Enpoint that unassigns driver to order.
 
     EndPoint:
         API: driver/unassign/
@@ -47,6 +46,7 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
         controller = DriverController(driver)
         try:
             controller.unassign_order(unassign_order_id)
+
             status = True
             message = 'Order UnAssigned successfully'
 

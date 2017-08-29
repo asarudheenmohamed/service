@@ -23,7 +23,9 @@ class DriverPosition(models.Model):
 
 
 class OrderEvents(models.Model):
-    """Driver Events model."""
-    driver_position = models.ForeignKey(DriverPosition)
+
+    # """Driver Events model."""
+    driver = models.ForeignKey(DriverOrder)
     location = models.CharField(max_length=500, blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=200)

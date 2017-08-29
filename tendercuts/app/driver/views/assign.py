@@ -10,6 +10,8 @@ from app.core import serializers
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
 from app.driver.lib.driver_controller import DriverController
+from app.driver.lib.driver_position_update import DriverLocations
+from app.driver.models.driver_order import DriverOrder
 
 from ..auth import DriverAuthentication
 
@@ -46,11 +48,18 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         """
         order_id = self.request.data['order_id']
         store_id = self.request.data['store_id']
+        lat = self.request.data['latitude']
+        lon = self.request.data['longitude']
         driver = self.get_driver()
         controller = DriverController(driver)
 
         try:
             controller.assign_order(order_id, store_id)
+            driver = DriverOrder.objects.get(
+                driver_id=driver.customer.entity_id, increment_id=int(order_id))
+            driver_location = DriverLocations(driver)
+            obj = driver_location.update_driver_position(order_id, lat, lon)
+
             status = True
             message = "Order Assigned successfully"
             logger.info(
@@ -74,10 +83,16 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         """
         order_id = self.request.data['order_id']
-
+        lat = self.request.data['latitude']
+        lon = self.request.data['longitude']
         driver = self.get_driver()
-        controller = DriverController(driver)
+        driver = DriverOrder.objects.filter(
+            driver_id=driver.customer.entity_id, increment_id=order_id)
+        controller = DriverController(driver[0])
         controller.complete_order(order_id)
+
+        driver_location = DriverLocations(driver[0])
+        driver_location.update_driver_position(order_id, lat, lon)
 
         logger.info("{} this order completed successfully".format(order_id))
 

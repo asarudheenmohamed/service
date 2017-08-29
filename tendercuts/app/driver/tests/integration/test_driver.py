@@ -29,11 +29,12 @@ given(
 
 
 @given('Fetch related order by <store_id>')
-def fetch_related_order(cache, auth_rest, store_id, generate_mock_order):
+def fetch_related_order(cache, auth_driver_rest,
+                        store_id, generate_mock_order):
     """Generate mock order and Fetch relevent orders based on mock order id.
 
     Params:
-        auth_rest(pytest fixture): user requests
+        auth_driver_rest(pytest fixture): user requests
         generate_mock_order(obj): mock order object
 
     Asserts:
@@ -42,28 +43,25 @@ def fetch_related_order(cache, auth_rest, store_id, generate_mock_order):
         Check response status is equal to processing state
 
     """
-    obj = SalesFlatOrder.objects.filter(
-        increment_id=generate_mock_order.increment_id)
+    increment_id = generate_mock_order.increment_id
+    obj = SalesFlatOrder.objects.filter(increment_id=increment_id)
     obj = obj[0]
-    obj.status = 'Processing'
+    obj.status = 'processing'
     obj.save()
 
     increment_id = str(generate_mock_order.increment_id)
-
-    inc_id = list(increment_id)
-    increment_id = increment_id.split(inc_id[2])
-
-    response = auth_rest.get(
+    response = auth_driver_rest.get(
         "/driver/fetch_related_order/",
-        {'order_id': increment_id[-1],
-            'store_id': store_id},
+        {'order_id': increment_id[-2:],
+         'store_id': store_id},
         format='json')
     cache['increment_id'] = response.data['results'][0]['increment_id']
     cache['store_id'] = store_id
 
 
-@given('a driver is assigned to the order')
-def driver_controller(cache, auth_rest, mock_user):
+@given('a driver is assigned to the order and the driver location for <latitude><longitude>')
+def driver_controller(cache, auth_driver_rest,
+                      mock_user, latitude, longitude):
     """Assign the order.
 
     params:
@@ -71,35 +69,52 @@ def driver_controller(cache, auth_rest, mock_user):
         generate_mock_order (fixture) - generates a mock order.
 
     """
-    response = auth_rest.post(
+    response = auth_driver_rest.post(
         "/driver/assign/",
         {'order_id': cache['increment_id'],
-         'store_id': cache['store_id']},
+         'store_id': cache['store_id'],
+         'latitude': latitude,
+         'longitude': longitude,
+         },
         format='json')
 
 
-@when('the driver completes the order')
-def complete_order(mock_user, cache):
-    """Complete the order.
+@when('update driver current locations for <latitude> <longitude> <status> <message>')
+def test_driver_position_update(
+        cache,
+        auth_driver_rest,
+        latitude,
+        longitude,
+        status,
+        message):
+    """Test driver location updations.
+
+    Params:
+        auth_driver_rest(pytest fixture):user requests
+
 
     Asserts:
-        Verify if the order is set in out_delivery stat
-
-    params:
-        driver_controller (fixture) - generates a driver object.
-        generate_mock_order (fixture) - generates a mock order.
+        Check response not equal to None
+        Check response status code in equal to 200
+        Check response status in equal to True
+        Check response message in equal to param message
 
     """
-    time.sleep(5)
-    order = SalesFlatOrder.objects.filter(
-        increment_id=cache['increment_id']).first()
-    assert order.status == 'out_delivery'
-    controller = DriverController(mock_user)
-    controller.complete_order(cache['increment_id'])
+    response = auth_driver_rest.post(
+        "/driver/driver_position/",
+        {'latitude': latitude,
+            'longitude': longitude,
+            'order_id': cache['increment_id']},
+        format='json')
+    assert (response) is not None
+    assert response.status_code == 200
+    assert str(response.data['status']) == status
+    assert response.data[
+        'message'] == message
 
 
-@then('the order should be completed')
-def order_complete(cache, auth_rest):
+@then('the order should be completed and the driver location for <latitude><longitude>')
+def order_complete(cache, auth_driver_rest, latitude, longitude):
     """Assert if order complete.
 
     params:
@@ -109,9 +124,11 @@ def order_complete(cache, auth_rest):
         the status of the order.
 
     """
-    response = auth_rest.post(
+    response = auth_driver_rest.post(
         "/driver/assign/complete/",
-        {'order_id': cache['increment_id']},
+        {'order_id': cache['increment_id'],
+         'latitude': latitude,
+         'longitude': longitude},
         format='json')
 
     assert (response) is not None
