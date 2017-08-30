@@ -111,6 +111,16 @@ class InventoryViewSet(APIView):
     authentication_classes = ()
     permission_classes = ()
 
+    def _is_store_closed(self):
+        tz = pytz.timezone('Asia/Kolkata')
+        today = datetime.date.today()
+        tomorrow = today + datetime.timedelta(1)
+
+        start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz), tzinfo=tz)
+        end = datetime.datetime.combine(tomorrow, datetime.time(7, tzinfo=tz), tzinfo=tz)
+
+        return start < datetime.datetime.now(tz=tz) < end
+
     def get(self, request):
         """Get the inventory of the store."""
         store_id = self.request.GET['store_id']
@@ -124,10 +134,9 @@ class InventoryViewSet(APIView):
 
         queryset = inventory.GraminventoryLatest.objects.filter(**filter_args)
 
-        tz = pytz.timezone('Asia/Kolkata')
         current_time = datetime.datetime.now(tz=tz)
 
-        if current_time.hour >= 20 and current_time.minute >= 0:
+        if self._is_store_closed():
             # hard-reset the inv after 8
             for inv in queryset:
                 inv.qty = 0
