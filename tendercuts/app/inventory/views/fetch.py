@@ -134,8 +134,6 @@ class InventoryViewSet(APIView):
 
         queryset = inventory.GraminventoryLatest.objects.filter(**filter_args)
 
-        current_time = datetime.datetime.now(tz=tz)
-
         if self._is_store_closed():
             # hard-reset the inv after 8
             for inv in queryset:
