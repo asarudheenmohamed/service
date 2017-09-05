@@ -3,11 +3,9 @@ Api endpoint to fetch the inventory
 """
 
 import datetime
-import itertools
-import json
+import pytz
 
 from django.db.models import F
-from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -106,9 +104,8 @@ class OldInventoryViewSet(APIView):
 
 
 class InventoryViewSet(APIView):
-    """
-    This viewset automatically provides `list`
-    Enpoint to provide the inventory for Day D
+    """TODO needs to be moved to model view set for legacy reason and laziness
+    I'm leaving it as APIVIEw
     """
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
@@ -129,18 +126,34 @@ SELECT
 FROM graminventory_latest as child
 LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id and child.store_id = parent.store_id
 WHERE child.store_id = %s"""
+    def _is_store_closed(self):
+        tz = pytz.timezone('Asia/Kolkata')
+        today = datetime.date.today()
+        tomorrow = today + datetime.timedelta(1)
+
+        start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz))
+        end = datetime.datetime.combine(tomorrow, datetime.time(7, tzinfo=tz))
+
+        return start < datetime.datetime.now(tz=tz) < end
 
     def get(self, request):
         """Get the inventory of the store."""
         store_id = self.request.GET['store_id']
         product_ids = self.request.GET.get("product_ids", [])
-        core_query = self.core_query
+
+        filter_args = {'store_id': store_id}
 
         if product_ids:
             product_ids = product_ids.split(",")
-            core_query += " and child.product_id in ({})".format(",".join(product_ids))
+            filter_args['product_id__in'] = product_ids
 
-        queryset = inventory.GraminventoryLatest.objects.raw(core_query, [store_id])
+        queryset = inventory.GraminventoryLatest.objects.filter(**filter_args)
+
+        if self._is_store_closed():
+            # hard-reset the inv after 8
+            for inv in queryset:
+                inv.qty = 0
+
         serializer = serializers.InventorySerializer(queryset, many=True)
 
         return  Response(serializer.data)
