@@ -22,6 +22,7 @@ MySQL-python
 python-magento
 celery
 redis
+django-redis
 requests
 django-debug-toolbar
 flower
@@ -43,3 +44,5 @@ pep8
 pydocstyle
 pylint
 
+#pynotebook
+jupyter

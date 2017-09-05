@@ -59,3 +59,42 @@ class CoreStore(models.Model):
         managed = False
         db_table = 'core_store'
         app_label = 'magento'
+
+
+class Storeattributes(models.Model):
+    storeattributeid = models.AutoField(primary_key=True)
+    # store_id = models.IntegerField(blank=True, null=True)
+    store = models.ForeignKey(CoreStore, models.DO_NOTHING)
+    online_allocation = models.FloatField(blank=True, null=True)
+    product_threeshold = models.FloatField(blank=True, null=True)
+    odoo_store_id = models.IntegerField(blank=True, null=True)
+    typeofstore = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'storeattributes'
+        app_label = 'magento'
+
+
+class LocationPincodePincode(models.Model):
+    entity_id = models.AutoField(primary_key=True)
+    pincode = models.CharField(max_length=255)
+    status = models.SmallIntegerField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'location_pincode_pincode
+        app_label = 'magento'
+
+
+class LocationPincodePincodeStore(models.Model):
+    pincode_id = models.ForeignKey(LocationPincodePincode, models.DO_NOTHING, primary_key=True)
+    store_id = models.SmallIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'location_pincode_pincode_store'
+        unique_together = (('pincode_id', 'store_id'),)
+        app_label = 'magento'

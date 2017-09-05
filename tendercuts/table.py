@@ -4,7 +4,9 @@ from config.settings.local import DATABASES  #  replace `your_project_dir`
 
 import django
 
-settings.configure()
+if not settings.configured:
+    settings.configure()
+
 settings.DATABASES = DATABASES
 
 django.setup()
@@ -34,7 +36,9 @@ tables = ["m_rewards_transaction"]
 tables = ["sales_flat_order_grid"]
 tables = ["mwddate", "mwddate_store"]
 tables = ["sales_flat_order"]
-tables = ["graminventory_latest"]
+tables = ["graminventory"]
+tables = ["storeattributes"]
+tables = ["location_pincode_pincode", "location_pincode_pincode_store"]
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,
