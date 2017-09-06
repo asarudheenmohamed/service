@@ -116,7 +116,7 @@ class InventoryViewSet(APIView):
         today = datetime.date.today()
 
         start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz))
-        end = datetime.datetime.combine(today, datetime.time(23, 59, 59 tzinfo=tz))
+        end = datetime.datetime.combine(today, datetime.time(23, 59, 59, tzinfo=tz))
 
         return start < datetime.datetime.now(tz=tz) < end
 
