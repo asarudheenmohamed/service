@@ -51,7 +51,10 @@ class DeliveryViewSet(APIView):
     def get(self, request):
         data = []
         data.append(models.ScheduledDelivery().serialize())
-        data.append(models.ExpressDelivery().serialize())
+        
+        express = models.ExpressDelivery().serialize()
+        if express:
+           data.append(express)
 
         return Response(data)
 
