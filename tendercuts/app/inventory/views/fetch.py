@@ -114,10 +114,9 @@ class InventoryViewSet(APIView):
     def _is_store_closed(self):
         tz = pytz.timezone('Asia/Kolkata')
         today = datetime.date.today()
-        tomorrow = today + datetime.timedelta(1)
 
         start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz))
-        end = datetime.datetime.combine(tomorrow, datetime.time(7, tzinfo=tz))
+        end = datetime.datetime.combine(today, datetime.time(23, 59, 59 tzinfo=tz))
 
         return start < datetime.datetime.now(tz=tz) < end
 
