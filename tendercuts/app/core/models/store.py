@@ -90,8 +90,8 @@ class LocationPincodePincode(models.Model):
 
 
 class LocationPincodePincodeStore(models.Model):
-    pincode_id = models.ForeignKey(LocationPincodePincode, models.DO_NOTHING, primary_key=True)
-    store_id = models.SmallIntegerField()
+    pincode = models.ForeignKey(LocationPincodePincode, models.DO_NOTHING, primary_key=True)
+    store = models.ForeignKey(CoreStore, models.DO_NOTHING)
 
     class Meta:
         managed = False
