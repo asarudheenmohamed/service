@@ -4,10 +4,12 @@
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+# Feel free to rename the models, but don't rename db_table values or
+# field names.
 from __future__ import unicode_literals
 
 from django.db import models
+
 
 class GmapLangandlatisLongandlatis(models.Model):
     entity_id = models.AutoField(primary_key=True)
@@ -27,7 +29,8 @@ class GmapLangandlatisLongandlatis(models.Model):
 class GmapLangandlatisLongandlatisStore(models.Model):
     # Eventhough the field is different, it will hook correctly due to the
     # primary_key tag.
-    longandlatis = models.ForeignKey(GmapLangandlatisLongandlatis, models.DO_NOTHING)
+    longandlatis = models.ForeignKey(
+        GmapLangandlatisLongandlatis, models.DO_NOTHING)
 
     # Break multiple foreign keys
     store_id = models.AutoField(primary_key=True)
@@ -51,9 +54,9 @@ class CoreStore(models.Model):
 
     # To_feild will be automatically picked up!
     location = models.ForeignKey(
-            GmapLangandlatisLongandlatisStore,
-            models.DO_NOTHING,
-            db_column="store_id")
+        GmapLangandlatisLongandlatisStore,
+        models.DO_NOTHING,
+        db_column="store_id")
 
     class Meta:
         managed = False
@@ -85,12 +88,13 @@ class LocationPincodePincode(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'location_pincode_pincode
+        db_table = 'location_pincode_pincode'
         app_label = 'magento'
 
 
 class LocationPincodePincodeStore(models.Model):
-    pincode = models.ForeignKey(LocationPincodePincode, models.DO_NOTHING, primary_key=True)
+    pincode = models.ForeignKey(
+        LocationPincodePincode, models.DO_NOTHING, primary_key=True)
     store = models.ForeignKey(CoreStore, models.DO_NOTHING)
 
     class Meta:

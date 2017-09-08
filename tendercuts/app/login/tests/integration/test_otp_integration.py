@@ -3,7 +3,7 @@ import pytest
 from pytest_bdd import given, scenario, then, when
 
 from app.core.lib.otp_controller import OtpController
-from app.core.lib.redis_controller import RedisController
+from app.core.cache.utils import get_key, set_key
 
 
 @pytest.mark.django_db
@@ -57,7 +57,8 @@ def get_otp(mobile, otp_type):
 
     """
     key = OtpController()._generate_redis_key(mobile, otp_type)
-    otp = RedisController().get_key(key)
+    otp = get_key(key)
+
     return otp
 
 

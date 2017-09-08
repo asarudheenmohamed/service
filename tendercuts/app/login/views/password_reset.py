@@ -11,10 +11,10 @@ from rest_framework.response import Response
 
 from app.core.lib.communication import SMS
 from app.core.lib.otp_controller import OtpController
-from app.core.lib.redis_controller import RedisController
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.lib.user_controller import (CustomerController,
                                           CustomerSearchController)
+from app.core.cache.utils import get_key
 
 from .. import models, serializers
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
     """OTP for resetting password."""
-    
+
     authentication_classes = ()
     permission_classes = ()
 
@@ -79,11 +79,11 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         otp = otp_obj.get_otp(phone, otp_obj.FORGOT)
 
         if customer_otp:
-           otp_validation = otp_obj.otp_verify(otp, customer_otp)
-           if not otp_validation:
-             raise exceptions.ValidationError("Invalid OTP")
+            otp_validation = otp_obj.otp_verify(otp, customer_otp)
+            if not otp_validation:
+                raise exceptions.ValidationError("Invalid OTP")
         else:
-            redis_value = RedisController().get_key(phone)
+            redis_value = get_key(phone)
             if redis_value not in ['verified']:
                 raise InvalidCredentials
 

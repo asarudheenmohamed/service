@@ -4,10 +4,10 @@ import uuid
 
 from django.db.models import Q
 
-from app.core.lib.redis_controller import RedisController
 from app.core.models.customer import (CustomerEntity, FlatCustomer,
                                       CustomerEntityVarchar)
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
+from app.core.cache.utils import get_key, set_key
 
 
 class CustomerSearchController(object):
@@ -138,15 +138,13 @@ class CustomerController(object):
         user = CustomerSearchController.load_by_phone_mail(username)
 
         if otp_mode:
-            redis_value = RedisController().get_key(username)
-
+            redis_value = get_key(username)
             if redis_value not in ['verified']:
                 raise InvalidCredentials
 
         else:
             if not cls(user).validate_password(password):
                 raise InvalidCredentials
-
         return user
 
     def validate_password(self, input_password):
@@ -162,7 +160,8 @@ class CustomerController(object):
         salts = self.customer.password_hash.split(":")
 
         if len(salts) == 1:
-            return self.customer.password_hash == hashlib.md5(input_password).hexdigest()
+            return self.customer.password_hash == hashlib.md5(
+                input_password).hexdigest()
 
         salted_hash, salt = salts
         computed_hash = hashlib.md5(salt + input_password)

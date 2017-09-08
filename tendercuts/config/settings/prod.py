@@ -47,6 +47,13 @@ MAGENTO = {
     "proto": "https"
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '/var/run/redis/redis.sock',
+    },
+}
+
 REDIS = {
     "host": "staging",
     "unix_socket_path": '/var/run/redis/redis.sock',

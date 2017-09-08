@@ -2,12 +2,12 @@
 import logging
 import random
 
+from django.conf import settings
 from rest_framework import exceptions
 
-from app.core.lib.user_controller import CustomerSearchController
-
+from app.core.cache.utils import get_key, set_key
 from app.core.lib.exceptions import CustomerNotFound
-from app.core.lib.redis_controller import RedisController
+from app.core.lib.user_controller import CustomerSearchController
 
 from .. import models
 
@@ -25,7 +25,6 @@ class OtpController(object):
     def __init__(self, log=None):
         """Intialized Redis Controller."""
         self.logger = log or logger
-        self.redis = RedisController()
 
     def _generate_redis_key(self, phone, otp_type):
         """Generate the save key."""
@@ -43,8 +42,7 @@ class OtpController(object):
         """
         key = self._generate_redis_key(phone, otp_type)
         otp = random.randint(1000, 9999)
-
-        self.redis.set_key(key, otp)
+        a = set_key(key, otp, 60 * 15)
         self.logger.info(
             "Generated a new OTP for the number {}".format(phone))
 
@@ -64,28 +62,26 @@ class OtpController(object):
         # check if user exists
         if otp_type != OtpController.SIGNUP:
             try:
-               CustomerSearchController.load_by_phone_mail(phone)
+                CustomerSearchController.load_by_phone_mail(phone)
             except CustomerNotFound:
-               raise exceptions.PermissionDenied("User does not exists")
+                raise exceptions.PermissionDenied("User does not exists")
 
         key = self._generate_redis_key(phone, otp_type)
-        otp = self.redis.get_key(key)
-
+        otp = get_key(key)
         # Create a new one
-        if otp is None:
+        if len(str(otp)) == 1 or otp is None:
             self.logger.debug(
                 "Generated a new OTP for the number {}".format(phone))
             otp = self._create_otp(phone, otp_type)
 
         otp = models.OtpList(mobile=phone, otp=otp)
-
         return otp
 
     def otp_verify(self, otp, customer_otp):
         """Verify otp in redis db."""
-        status = (otp.otp == customer_otp)
+        status = (int(otp.otp) == int(customer_otp))
 
         if status:
-            self.redis.set_key(otp.mobile, 'verified')
+            set_key(otp.mobile, 'verified', 60 * 10)
 
         return status
