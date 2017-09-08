@@ -7,7 +7,7 @@ from django.db.models import Q
 from app.core.models.customer import (CustomerEntity, FlatCustomer,
                                       CustomerEntityVarchar)
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
-from app.core.cache.utils import get_key, set_key
+from app.core import cache
 
 
 class CustomerSearchController(object):
@@ -138,7 +138,7 @@ class CustomerController(object):
         user = CustomerSearchController.load_by_phone_mail(username)
 
         if otp_mode:
-            redis_value = get_key(username)
+            redis_value = cache.get_key(username)
             if redis_value not in ['verified']:
                 raise InvalidCredentials
 

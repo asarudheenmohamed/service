@@ -7,8 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from app.core.models.store import LocationPincodePincodeStore
-from app.core.cache.utils import get_key, set_key
-from app.core.cache.constent import generate_profix_key
+from app.core import cache
 
 
 class FlatAddress(object):
@@ -31,20 +30,22 @@ class FlatAddress(object):
                 for eav in group:
                     address_dict[eav.attribute.attribute_code] = eav.value
 
-            key_val = generate_profix_key(
-                'PINCODE', address_dict.get('postcode'))
-            cache_value = get_key(
-                key_val, settings.POSIBLE_STORE_CACHE_VERSION)
+            key_val = cache.generate_prefix_key(
+                cache.PREFIX_PINCODE, address_dict.get('postcode'))
+            cache_value = cache.get_key(
+                key_val, settings.CACHE_DEFAULT_VERSION)
+            LocationPincodePincodeStore.objects.filter(
+                pincode__pincode=address_dict.get('postcode'))
+            if isinstance(cache_value, int) or cache_value is None:
 
-            if isinstance(cache_value, int):
                 pin_obj = LocationPincodePincodeStore.objects.filter(
                     pincode__pincode=address_dict.get('postcode'))
                 store_id = [
                     obj.store.store_id for obj in pin_obj]
                 address_dict['possible_stores'] = store_id
 
-                set_key(key_val, store_id, 60 * 60 *
-                        24, settings.POSIBLE_STORE_CACHE_VERSION)
+                cache.set_key(key_val, store_id, 60 * 60 *
+                              24, settings.CACHE_DEFAULT_VERSION)
 
             else:
                 address_dict['possible_stores'] = cache_value

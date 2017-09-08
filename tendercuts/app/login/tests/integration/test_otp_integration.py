@@ -3,7 +3,7 @@ import pytest
 from pytest_bdd import given, scenario, then, when
 
 from app.core.lib.otp_controller import OtpController
-from app.core.cache.utils import get_key, set_key
+from app.core import cache
 
 
 @pytest.mark.django_db
@@ -57,7 +57,7 @@ def get_otp(mobile, otp_type):
 
     """
     key = OtpController()._generate_redis_key(mobile, otp_type)
-    otp = get_key(key)
+    otp = cache.get_key(key)
 
     return otp
 

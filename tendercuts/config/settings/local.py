@@ -43,13 +43,13 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
+        'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': '/var/run/redis/redis.sock',
     },
 }
 
-POSIBLE_STORE_CACHE_VERSION = 1
 CACHE_DEFAULT_VERSION = 2
+
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
 

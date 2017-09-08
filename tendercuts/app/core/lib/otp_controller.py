@@ -5,7 +5,7 @@ import random
 from django.conf import settings
 from rest_framework import exceptions
 
-from app.core.cache.utils import get_key, set_key
+from app.core import cache
 from app.core.lib.exceptions import CustomerNotFound
 from app.core.lib.user_controller import CustomerSearchController
 
@@ -42,7 +42,7 @@ class OtpController(object):
         """
         key = self._generate_redis_key(phone, otp_type)
         otp = random.randint(1000, 9999)
-        a = set_key(key, otp, 60 * 15)
+        a = cache.set_key(key, otp, 60 * 15)
         self.logger.info(
             "Generated a new OTP for the number {}".format(phone))
 
@@ -67,7 +67,7 @@ class OtpController(object):
                 raise exceptions.PermissionDenied("User does not exists")
 
         key = self._generate_redis_key(phone, otp_type)
-        otp = get_key(key)
+        otp = cache.get_key(key)
         # Create a new one
         if len(str(otp)) == 1 or otp is None:
             self.logger.debug(
@@ -82,6 +82,6 @@ class OtpController(object):
         status = (int(otp.otp) == int(customer_otp))
 
         if status:
-            set_key(otp.mobile, 'verified', 60 * 10)
+            cache.set_key(otp.mobile, 'verified', 60 * 10)
 
         return status

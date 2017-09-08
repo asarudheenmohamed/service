@@ -47,6 +47,8 @@ MAGENTO = {
     "proto": "https"
 }
 
+CACHE_DEFAULT_VERSION = 2
+
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
