@@ -25,7 +25,7 @@ DATABASES = {
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v2_external',
+        'NAME': 'v3_1',
         'USER': 'root',
         'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
@@ -39,7 +39,7 @@ MAGENTO = {
     "port": 443,
     "username": "admin",
     "password": "Tendercuts123!",
-    "endpoint": "/v2_external/tendercuts-site/index.php/api/xmlrpc/",
+    "endpoint": "/v3/website/index.php/api/xmlrpc/",
     "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "https"
 }

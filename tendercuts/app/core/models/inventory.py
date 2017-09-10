@@ -11,6 +11,8 @@ from django.db import models
 from .product import CatalogProductEntity
 
 
+
+# Old inventory model
 class AitocCataloginventoryStockItem(models.Model):
     item_id = models.AutoField(primary_key=True)
     website_id = models.IntegerField()
@@ -44,4 +46,39 @@ class AitocCataloginventoryStockItem(models.Model):
         managed = False
         db_table = 'aitoc_cataloginventory_stock_item'
         unique_together = (('product', 'stock', 'website_id'),)
+        app_label = "magento"
+
+
+class Graminventory(models.Model):
+    graminventoryid = models.AutoField(primary_key=True)
+    date = models.DateField(blank=True, null=True)
+    # product_id = models.IntegerField(blank=True, null=True)
+    product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING)
+    store_id = models.IntegerField(blank=True, null=True)
+    opening = models.FloatField(blank=True, null=True)
+    qty = models.FloatField(blank=True, null=True)
+    expiringtoday = models.FloatField(blank=True, null=True)
+    forecastqty = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'graminventory'
+        unique_together = (('date', 'product_id', 'store_id'),)
+        app_label = "magento"
+
+class GraminventoryLatest(models.Model):
+    id = models.CharField(max_length=22, blank=True, null=True)
+    # product_id = models.IntegerField()
+    product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING)
+    qty = models.IntegerField(blank=True, null=True)
+    scheduledqty = models.IntegerField(blank=True, null=True)
+    store_id = models.IntegerField(blank=True, null=True)
+    total_qty = models.FloatField()
+    total_expiring = models.FloatField()
+    total_forecast = models.BigIntegerField()
+    gpu = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'graminventory_latest'
         app_label = "magento"

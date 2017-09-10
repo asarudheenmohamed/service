@@ -3,18 +3,18 @@ Api endpoint to fetch the inventory
 """
 
 import datetime
-import itertools
-import json
+import pytz
 
 from django.db.models import F
-from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from .. import models as models
+from .. import  serializers
+from app.core.models import inventory
 
-
-class InventoryViewSet(APIView):
+class OldInventoryViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
 
@@ -101,3 +101,45 @@ class InventoryViewSet(APIView):
         inventory = self.merge_lists(today, future, "product")
 
         return Response(inventory)
+
+
+class InventoryViewSet(APIView):
+    """TODO needs to be moved to model view set for legacy reason and laziness
+    I'm leaving it as APIVIEw
+    """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+
+    def _is_store_closed(self):
+        tz = pytz.timezone('Asia/Kolkata')
+        today = datetime.date.today()
+
+        start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz))
+        end = datetime.datetime.combine(today, datetime.time(23, 59, 59, tzinfo=tz))
+
+        return start < datetime.datetime.now(tz=tz) < end
+
+    def get(self, request):
+        """Get the inventory of the store."""
+        store_id = self.request.GET['store_id']
+        product_ids = self.request.GET.get("product_ids", [])
+
+        filter_args = {'store_id': store_id}
+
+        if product_ids:
+            product_ids = product_ids.split(",")
+            filter_args['product_id__in'] = product_ids
+
+        queryset = inventory.GraminventoryLatest.objects.filter(**filter_args)
+
+        if self._is_store_closed():
+            # hard-reset the inv after 8
+            for inv in queryset:
+                inv.qty = 0
+
+        serializer = serializers.InventorySerializer(queryset, many=True)
+
+        return  Response(serializer.data)
+
+
