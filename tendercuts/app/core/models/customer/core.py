@@ -108,8 +108,8 @@ class FlatCustomer(object):
         if self.customer is None:
             return customer
 
-        # Gather all attibute code varchars
-        eavs = itertools.chain(self.customer.varchars.all())
+        # Gather all attibute code varchars, ints (billing & shiping)
+        eavs = itertools.chain(self.customer.varchars.all(), self.customer.ints.all())
 
         grouper = itertools.groupby(list(eavs), lambda x: x.entity_id)
         for entity_id, group in grouper:

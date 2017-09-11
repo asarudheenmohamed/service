@@ -24,6 +24,9 @@ class TestCustomerControllerFetch(object):
         assert user['mobilenumber'] == expected_user.mobilenumber
         assert user['firstname'] == expected_user.firstname
         # assert user.is_valid is True
+        # assert if we are also fetching the billing address
+        assert user['default_billing'] == user['address'][0]['address_id']
+        assert 'thoraipakkam' == user['address'][0]['designated_store']
 
     def test_customer_fetch(self, cls, mock_user):
         """Test Fetch customer data based on customer id.

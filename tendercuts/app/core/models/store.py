@@ -85,7 +85,7 @@ class LocationPincodePincode(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'location_pincode_pincode
+        db_table = 'location_pincode_pincode'
         app_label = 'magento'
 
 

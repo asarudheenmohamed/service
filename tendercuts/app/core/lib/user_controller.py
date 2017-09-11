@@ -94,6 +94,7 @@ class CustomerSearchController(object):
             .prefetch_related(
                 "reward_point", "store_credit",
                 "varchars", "varchars__attribute",
+                "ints", "ints__attribute",
                 "addresses", "addresses__varchars",
                 "addresses__varchars__attribute",
                 "addresses__texts", "addresses__texts__attribute")

@@ -19,10 +19,14 @@ def generate_customer(
     firstnames = ["John", "Dave", "Sarah", "David"]
     lastnames = ["Appleseed", "Chapelle", "Silverman", "Schumer"]
 
+    mobilenumber = random.randint(1000000000, 2000000000)
+    firstname = firstname or random.choice(firstnames)
+    lastname = lastname or random.choice(lastnames)
+
     data = {
-        "mobilenumber": mobilenumber or random.randint(1000000000, 2000000000),
-        "firstname": firstname or random.choice(firstnames),
-        "lastname": lastname or random.choice(lastnames),
+        "mobilenumber": mobilenumber,
+        "firstname": firstname,
+        "lastname": lastname,
         "email": email or "{}@email.com".format(uuid.uuid4()),
         "password": "12345678",
         "website_id": 1,
@@ -30,8 +34,22 @@ def generate_customer(
         "group_id": group_id or 1
     }
 
+    address = {
+        'city' : 'Chennai',
+        'country_id' : 'IN',
+        'postcode' : 600087,
+        'region' : 'Tamil Nadu',
+        'street' : ['Street line 1', 'Streer line 2'],
+        'telephone' : mobilenumber,
+        'lastname' : lastname,
+        'firstname' : firstname,
+        'is_default_billing' : True,
+        'designated_store': 'thoraipakkam'
+    }
+
     mage = magento.Connector()
     data['entity_id'] = mage.api.customer.create(data)
+    mage.api.customer_address.create(data['entity_id'], address)
 
     return data
 
