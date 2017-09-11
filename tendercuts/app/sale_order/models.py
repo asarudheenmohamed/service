@@ -98,5 +98,8 @@ class ExpressDelivery(Delivery):
         data["cost"] = "49"
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = []
+        # Hack for the bug in mobile app
+        if not self.is_slots_available():
+            data = {}
 
         return data
