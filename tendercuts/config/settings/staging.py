@@ -53,6 +53,11 @@ REDIS = {
     "unix_socket_path": '/var/run/redis/redis.sock',
 }
 
+
+GOOGLEMAP = {
+    "key": "AIzaSyDhs8DDX2egKjzxIsu3kNcdJeasLa2ftJY",
+}
+
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",

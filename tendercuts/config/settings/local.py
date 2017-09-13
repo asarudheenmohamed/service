@@ -73,6 +73,9 @@ REDIS = {
     "db": 0
 }
 
+GOOGLEMAP = {
+    "key": "AIzaSyDhs8DDX2egKjzxIsu3kNcdJeasLa2ftJY",
+}
 
 PAYMENT = {
     "SIMPL": {

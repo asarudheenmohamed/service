@@ -35,6 +35,7 @@ xlrd
 #paytm
 pycrypto
 requests-toolbelt
+geolocation-python
 
 
 # Devlopment:

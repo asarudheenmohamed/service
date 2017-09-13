@@ -1,5 +1,6 @@
 """End point for the return user location address."""
 from geolocation.main import GoogleMaps
+from django.conf import settings
 
 
 class GeoLocations:
@@ -8,7 +9,7 @@ class GeoLocations:
     def __init__(self):
         """Initialize the Google map Api object."""
         self.google_maps = GoogleMaps(
-            api_key='AIzaSyDhs8DDX2egKjzxIsu3kNcdJeasLa2ftJY')
+            api_key=settings.GOOGLEMAP['key'])
 
     def get_location(self, lat, lng):
         """Get location for the user base latitude and longitude.
