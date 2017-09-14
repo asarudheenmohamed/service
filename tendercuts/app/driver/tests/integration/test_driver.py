@@ -4,13 +4,10 @@ Pre-requisite: The mage consumer should be running
 
 """
 
-import time
-
 import pytest
 from pytest_bdd import given, scenario, then, when
 
 from app.core.models import SalesFlatOrder
-from app.driver.lib.driver_controller import DriverController
 
 
 @pytest.mark.django_db
@@ -43,12 +40,6 @@ def fetch_related_order(cache, auth_driver_rest,
         Check response status is equal to processing state
 
     """
-    increment_id = generate_mock_order.increment_id
-    obj = SalesFlatOrder.objects.filter(increment_id=increment_id)
-    obj = obj[0]
-    obj.status = 'processing'
-    obj.save()
-
     increment_id = str(generate_mock_order.increment_id)
     response = auth_driver_rest.get(
         "/driver/fetch_related_order/",
@@ -79,8 +70,8 @@ def driver_controller(cache, auth_driver_rest,
         format='json')
 
 
-@when('update driver current locations for <latitude> <longitude> <status> <message>')
-def test_driver_position_update(
+@when('a update driver current locations for <latitude> and <longitude> <status> <message>')
+def driver_position_update(
         cache,
         auth_driver_rest,
         latitude,

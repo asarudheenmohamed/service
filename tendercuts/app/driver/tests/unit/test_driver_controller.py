@@ -1,18 +1,18 @@
 """Test cases for controller."""
 
-import pytest
 import time
 
-from app.driver.lib.driver_controller import DriverController
-from app.driver.models import DriverOrder
-from app.core.models import SalesFlatOrder
-from app.core.lib.order_controller import OrderController
+import pytest
+
 import app.core.lib.magento as mage
+from app.core.lib.order_controller import OrderController
+from app.drive.models import DriverOrder
+from app.driver.lib.driver_controller import DriverController
 
 
 @pytest.mark.django_db
 class TestDriverController:
-    """Test cases"""
+    """Test cases for Driver controller"""
 
     def test_driver_assignment(self, mock_user, generate_mock_order):
         """Assign driver test case.
@@ -87,8 +87,6 @@ class TestDriverController:
 
         """
         # mock status
-        # import pdb
-        # pdb.set_trace()
         conn = mage.Connector()
         controller = OrderController(conn, generate_mock_order)
         controller.out_delivery()
@@ -102,10 +100,11 @@ class TestDriverController:
         print orders
 
     def test_order_positions(self, mock_user, generate_mock_order):
-        """Test Drive Position updated.
+        """Test Drive Position updated and driver order events update.
 
         Asserts:
             Check response latitude and longitude.
+            Check response increment id is equal to mock order id
 
         """
         # mock driver
@@ -114,25 +113,17 @@ class TestDriverController:
             driver_id=mock_user.customer.entity_id)
 
         controller = DriverController(obj)
-        response = controller.driver_position(12.965365, 80.246106)
+        # test record position
+        response = controller.record_position(
+            mock_user.customer.entity_id,
+            generate_mock_order.increment_id,
+            12.965365,
+            80.246106)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106
 
-    def test_order_events(self, mock_user, generate_mock_order):
-        """Test Drive location updated.
+        # test order events
+        response = controller.record_events(response, 'completed')
 
-        Asserts:
-            Check response latitude and longitude.
-
-        """
-        # mock driver
-        obj = DriverOrder.objects.create(
-            increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.customer.entity_id)
-
-        controller = DriverController(obj)
-        response = controller.order_events('perungudi', 'completed')
-
-        assert response.location == 'perungudi'
-        assert response.status == 'completed'
+        assert response.driver_position.driver.increment_id == generate_mock_order.increment_id

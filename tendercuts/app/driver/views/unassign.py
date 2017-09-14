@@ -9,7 +9,6 @@ from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
 from app.driver.lib.driver_controller import DriverController
 
-
 from ..auth import DriverAuthentication
 
 logger = logging.getLogger(__name__)
@@ -48,15 +47,15 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
             controller.unassign_order(unassign_order_id)
 
             status = True
-            message = 'Order UnAssigned successfully'
+            message = 'Order unassigned successfully'
 
             logger.info(
-                '{} this order UnAssigned successfully'.format(
+                '{} this order unassigned successfully'.format(
                     unassign_order_id))
 
         except ValueError as e:
             logger.info(
-                'The Driver unable to unassign this order {}. details for {}'.format(
+                'Unable to assingn the order: {} to the driver:{}. Details: {}'.format(
                     unassign_order_id, str(e)))
             status = False
             message = str(e)
