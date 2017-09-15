@@ -6,7 +6,7 @@ import pytest
 
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
-from app.drive.models import DriverOrder
+from app.driver.models import DriverOrder
 from app.driver.lib.driver_controller import DriverController
 
 
@@ -24,7 +24,9 @@ class TestDriverController:
         controller = DriverController(mock_user)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,
-            generate_mock_order.store_id)
+            generate_mock_order.store_id,
+            12.965365,
+            80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
@@ -96,7 +98,8 @@ class TestDriverController:
             increment_id=generate_mock_order.increment_id,
             driver_id=mock_user.customer.entity_id).save()
         controller = DriverController(mock_user)
-        orders = controller.complete_order(generate_mock_order.increment_id)
+        orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
+                                           80.246106)
         print orders
 
     def test_order_positions(self, mock_user, generate_mock_order):
@@ -112,18 +115,17 @@ class TestDriverController:
             increment_id=generate_mock_order.increment_id,
             driver_id=mock_user.customer.entity_id)
 
-        controller = DriverController(obj)
+        controller = DriverController(mock_user)
         # test record position
-        response = controller.record_position(
-            mock_user.customer.entity_id,
-            generate_mock_order.increment_id,
-            12.965365,
-            80.246106)
+        response = controller.record_position(generate_mock_order.increment_id,
+                                              12.965365,
+                                              80.246106)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106
 
         # test order events
-        response = controller.record_events(response, 'completed')
+        response = controller.record_events(
+            response, generate_mock_order.increment_id)
 
         assert response.driver_position.driver.increment_id == generate_mock_order.increment_id

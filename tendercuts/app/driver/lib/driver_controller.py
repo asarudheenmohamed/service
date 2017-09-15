@@ -4,6 +4,7 @@ import logging
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.core.models import SalesFlatOrder
+from app.core.lib.user_controller import CustomerSearchController
 
 from ..models import DriverOrder, DriverPosition, OrderEvents
 
@@ -19,6 +20,12 @@ class DriverController(object):
         self.driver = driver
         self.conn = mage.Connector()
 
+    @classmethod
+    def driver_obj(cls, user_id):
+        driver = CustomerSearchController.load_by_id(user_id)
+
+        return cls(driver)
+
     def get_order_obj(self, order):
         """Get order object based on order id.
 
@@ -32,37 +39,46 @@ class DriverController(object):
 
         return order_obj[0]
 
-    def assign_order(self, order, store_id):
+    def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
 
         Params:
             order: (SalesFlatOrder|str) Order obj or increment_id
+            store_id (str): store id
+            lat(int): Driver location latitude
+            lon(lon): Driver location longitude
 
         Returns:
             obj DriverOrder
 
         """
-        obj = self.get_order_obj(order)
-        if int(store_id) != obj.store_id:
+        order_obj = self.get_order_obj(order)
+
+        if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=obj.increment_id):
+        elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
             raise ValueError('This order is already assigned')
 
         driver_object = DriverOrder.objects.create(
             increment_id=order, driver_id=self.driver.customer.entity_id)
 
-        order_obj = self.get_order_obj(order)
-        controller = OrderController(self.conn, order_obj)
-        controller.out_delivery()
-
-        driver_object = DriverOrder.objects.get(
-            increment_id=int(order))
         logger.info(
             '{} this order assigned to the driver {}'.format(
                 order, self.driver.customer.entity_id))
+
+        controller = OrderController(self.conn, order_obj)
+        # the order move to out for delivery
+        logger.info(
+            'This order:{} move to out for delivery.'.format(order))
+
+        controller.out_delivery()
+        # update current location for driver
+        position_obj = self.record_position(order, lat, lon)
+
+        self.record_events(position_obj, order)
 
         return driver_object
 
@@ -128,11 +144,13 @@ class DriverController(object):
             status='processing')
         return order_obj
 
-    def complete_order(self, order_id):
+    def complete_order(self, order_id, lat, lon):
         """Publish the message to the Mage queues.
 
         Params:
             order_id (str): Increment ID
+            lat(int): Driver location latitude
+            lon(lon): Driver location longitude
 
         """
         logger.info("Complete this order {}".format(order_id))
@@ -142,10 +160,15 @@ class DriverController(object):
         controller = OrderController(self.conn, order_obj)
         controller.complete()
 
-    def record_position(self, user_id, order_id, lat, lon):
+        # update current location for driver
+        position_obj = self.record_position(order_id, lat, lon)
+        self.record_events(position_obj, order_id)
+
+    def record_position(self, order_id, lat, lon):
         """Create a Driver current location latitude and longitude.
 
         Params:
+            order_id: order increment id
             lat(int): driver location latitude
             lon(int): driver location longitude
 
@@ -155,8 +178,9 @@ class DriverController(object):
         """
 
         order_obj = self.get_order_obj(order_id)
+
         driver_obj = DriverOrder.objects.filter(
-            driver_id=user_id, increment_id=order_obj.increment_id)
+            driver_id=self.driver.customer.entity_id, increment_id=order_obj.increment_id)
 
         if not driver_obj:
             raise ValueError('This order is not assign to you.')
@@ -169,19 +193,21 @@ class DriverController(object):
 
         return obj
 
-    def record_events(self, driver_position, status):
+    def record_events(self, driver_position, order_id):
         """Create a Driver current locations.
 
         Params:
+
             locations(str):driver current locations
-            status(str): order status
+            order_id(int): order increment_id
 
         Returns:
             Returns OrderEvents object
 
         """
+        order_obj = self.get_order_obj(order_id)
         events_obj = OrderEvents.objects.create(
-            driver_position=driver_position, status=status)
+            driver_position=driver_position, status=order_obj.status)
 
         logger.info(
             "update the location and order status for that driver {}".format(

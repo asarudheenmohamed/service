@@ -27,38 +27,6 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
     """
     authentication_classes = (DriverAuthentication,)
 
-    def get_driver(self):
-        """Extract DriverId from request."""
-        user_id = get_user_id(self.request)
-        driver = CustomerSearchController.load_by_id(user_id)
-
-        return driver
-
-    def update_driver_position(self, controller, driver, order_id, lat, lon):
-        """Update order events for driver.
-
-        Params:
-            controller(obj): DriverController initialize object
-            driver: flat customer object for driver
-            order_id: order increment_id
-            lat: latitude for driver current location
-            lon: longitude for driver current location
-
-        Returns:
-            return order events object
-
-        """
-        driver_position = controller.record_position(
-            driver.customer.entity_id, order_id, lat, lon)
-
-        order_obj = controller.get_order_obj(
-            driver_position.driver.increment_id)
-
-        obj = controller.record_events(
-            driver_position, order_obj.status)
-
-        return obj
-
     def create(self, request, *args, **kwargs):
         """Driver assignment  endpoint.
 
@@ -73,12 +41,13 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         store_id = self.request.data['store_id']
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
-        driver = self.get_driver()
-        controller = DriverController(driver)
+        user_id = get_user_id(self.request)
+        controller = DriverController.driver_obj(user_id)
 
         try:
-            controller.assign_order(order_id, store_id)
-            self.update_driver_position(controller, driver, order_id, lat, lon)
+            controller.assign_order(order_id, store_id, lat, lon)
+
+            # self.update_driver_position(order_id, lat, lon)
 
             status = True
             message = "Order Assigned successfully"
@@ -105,11 +74,11 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         order_id = self.request.data['order_id']
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
-        driver = self.get_driver()
+        user_id = get_user_id(self.request)
+        controller = DriverController.driver_obj(user_id)
 
-        controller = DriverController(driver)
-        controller.complete_order(order_id)
-        self.update_driver_position(controller, driver, order_id, lat, lon)
+        controller.complete_order(order_id, lat, lon)
+        # self.update_driver_position(controller, driver, order_id, lat, lon)
 
         logger.info("{} this order completed successfully".format(order_id))
 

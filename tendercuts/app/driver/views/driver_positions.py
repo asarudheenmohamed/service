@@ -34,9 +34,8 @@ class DriverPositionViewSet(viewsets.ModelViewSet):
         lon = self.request.data['longitude']
         user_id = get_user_id(self.request)
 
-        controller = DriverController(None)
-        driver_position = controller.record_position(
-            user_id, order_id, lat, lon)
+        controller = DriverController.driver_obj(user_id)
+        driver_position = controller.record_position(order_id, lat, lon)
 
         logger.info(
             '{}: Driver current location details updated'.format(user_id))

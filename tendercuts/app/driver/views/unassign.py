@@ -23,13 +23,6 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
     """
     authentication_classes = (DriverAuthentication,)
 
-    def get_driver(self):
-        """Extract DriverId from request."""
-        user_id = get_user_id(self.request)
-        driver = CustomerSearchController.load_by_id(user_id)
-
-        return driver
-
     def create(self, request, *args, **kwargs):
         """Driver unassignment endpoint.
 
@@ -41,8 +34,8 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
 
         """
         unassign_order_id = self.request.data['order_id']
-        driver = self.get_driver()
-        controller = DriverController(driver)
+        user_id = get_user_id(self.request)
+        controller = DriverController.driver_obj(user_id)
         try:
             controller.unassign_order(unassign_order_id)
 
