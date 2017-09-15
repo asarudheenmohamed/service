@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 import app.core.lib.magento as magento
 from app.core.lib.communication import SMS
 from app.core.lib.user_controller import CustomerSearchController
-from app.core.lib.otp_controller import OtpController
+from app.otp.lib.otp_controller import OtpController
 
 from .. import models, serializers
 
@@ -77,7 +77,10 @@ class OtpApiViewSet(viewsets.GenericViewSet):
                 "Generated a new OTP for the number {}".format(otp.mobile))
 
         msg = ("""Use {} as your signup OTP. OTP is confidential.""").format(otp.otp)
-        SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
+        if not resend:
+            SMS().send_otp(phnumber=otp.mobile, message=msg, otp=otp.otp)
+        else:
+            SMS().retry_otp(otp.mobile, resend)
 
         serializer = self.get_serializer(otp)
         return Response(serializer.data)

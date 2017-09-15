@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from app.core.models.store import LocationPincodePincodeStore
-from app.core import cache
+from app.core.lib import cache
 
 
 class FlatAddress(object):
@@ -131,7 +131,9 @@ class FlatCustomer(object):
             return customer
 
         # Gather all attibute code varchars, ints (billing & shiping)
-        eavs = itertools.chain(self.customer.varchars.all(), self.customer.ints.all())
+        eavs = itertools.chain(
+            self.customer.varchars.all(),
+            self.customer.ints.all())
 
         grouper = itertools.groupby(list(eavs), lambda x: x.entity_id)
         for entity_id, group in grouper:

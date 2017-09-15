@@ -24,20 +24,24 @@ class UserChangePassword(APIView):
     """
 
     def post(self, request, format=None):
-        """Reset password for request user.
+        """If the user reset the password means that will set as a new password.
 
-        Args:
-            request :
-                post data:
-                1. new_password (str): New password of the user
+        otherwise it automatically generate the password and send to the user via sms.
+
+        Params:
+            new_password (str): New password of the user
+            mobile(int): customer mobile number
 
         Raises:
             exceptions.ValidationError: Raises an exception in
             case not valid user if found
 
         """
+
+        mobile = self.request.data.get('mobile', False)
+        new_password = self.request.data.get('new_password', False)
+
         user_id = get_user_id(request)
-        new_password = request.data["new_password"]
 
         if not user_id:
             raise exceptions.ValidationError("Invalid user")
@@ -45,6 +49,15 @@ class UserChangePassword(APIView):
         user = CustomerSearchController.load_by_id(user_id)
 
         logger.info("Resetting password for the user {}".format(user_id))
-        CustomerController(user.customer).reset_password(new_password)
+        controller = CustomerController(user.customer)
+
+        if not new_password:
+            logger.info(
+                "Generate password and then reset.for the user {}".format(user_id))
+            controller.generate_and_reset_password(mobile)
+        else:
+            controller.reset_password(new_password)
+        logger.info(
+            "Successfully password reset.for the user {}".format(user_id))
 
         return Response({"status": True})

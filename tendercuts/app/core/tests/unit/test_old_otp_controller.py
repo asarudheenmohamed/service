@@ -1,7 +1,7 @@
 """End Point for the test redis controller."""
 import pytest
 
-from app.core.lib.otp_controller import OtpController
+from app.otp.lib.otp_controller import OtpController
 from rest_framework import exceptions
 
 
@@ -43,7 +43,7 @@ class TestOtpController:
         assert otp.mobile == mock_user.mobilenumber
         assert otp.otp is not None
 
-        assert ctrl.otp_verify(otp, "XXXX") is False
+        assert ctrl.otp_verify(otp, "111111111") is False
 
     def test_otp_create_invalid_customer(self, mock_user):
         """Test OTP controller getOtp.
