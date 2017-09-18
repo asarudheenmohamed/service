@@ -244,3 +244,6 @@ MAIL_GATEWAY = {
     "TC_USER": "reports@tendercuts.in",
     "TC_PASS": "D%6Byz6+no;Dhgv2"
 }
+
+# caching version
+CACHE_DEFAULT_VERSION = 2

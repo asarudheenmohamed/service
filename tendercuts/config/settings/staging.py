@@ -47,12 +47,13 @@ MAGENTO = {
     "proto": "https"
 }
 
-CACHE_DEFAULT_VERSION = 2
-
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
+        "BACKEND": "django_redis.cache.RedisCache",
         'LOCATION': '/var/run/redis/redis.sock',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     },
 }
 
