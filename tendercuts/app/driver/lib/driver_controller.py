@@ -23,7 +23,6 @@ class DriverController(object):
     @classmethod
     def driver_obj(cls, user_id):
         driver = CustomerSearchController.load_by_id(user_id)
-
         return cls(driver)
 
     def get_order_obj(self, order):
@@ -55,7 +54,6 @@ class DriverController(object):
 
         """
         order_obj = self.get_order_obj(order)
-
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
@@ -63,11 +61,11 @@ class DriverController(object):
             raise ValueError('This order is already assigned')
 
         driver_object = DriverOrder.objects.create(
-            increment_id=order, driver_id=self.driver.customer.entity_id)
+            increment_id=order, driver_id=self.driver.entity_id)
 
         logger.info(
             '{} this order assigned to the driver {}'.format(
-                order, self.driver.customer.entity_id))
+                order, self.driver.entity_id))
 
         controller = OrderController(self.conn, order_obj)
         # the order move to out for delivery
@@ -78,7 +76,7 @@ class DriverController(object):
         # update current location for driver
         position_obj = self.record_position(order, lat, lon)
 
-        self.record_events(position_obj, order)
+        self._record_events(position_obj, 'out_delivery')
 
         return driver_object
 
@@ -101,7 +99,7 @@ class DriverController(object):
 
         logger.info(
             'The Driver {} unassigned to this order {}'.format(
-                self.driver.customer.entity_id,
+                self.driver.entity_id,
                 order))
 
     def fetch_orders(self, status):
@@ -112,12 +110,12 @@ class DriverController(object):
 
         """
         order_ids = DriverOrder.objects.filter(
-            driver_id=self.driver.customer.entity_id) \
+            driver_id=self.driver.entity_id) \
             .values_list('increment_id', flat=True)
 
         logger.info(
             'Fetch that {} Driver assigning {} state orders'.format(
-                self.driver.customer.entity_id, status))
+                self.driver.entity_id, status))
 
         return SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
@@ -162,7 +160,7 @@ class DriverController(object):
 
         # update current location for driver
         position_obj = self.record_position(order_id, lat, lon)
-        self.record_events(position_obj, order_id)
+        self._record_events(position_obj, 'completed')
 
     def record_position(self, order_id, lat, lon):
         """Create a Driver current location latitude and longitude.
@@ -180,7 +178,7 @@ class DriverController(object):
         order_obj = self.get_order_obj(order_id)
 
         driver_obj = DriverOrder.objects.filter(
-            driver_id=self.driver.customer.entity_id, increment_id=order_obj.increment_id)
+            driver_id=self.driver.entity_id, increment_id=order_obj.increment_id)
 
         if not driver_obj:
             raise ValueError('This order is not assign to you.')
@@ -193,21 +191,20 @@ class DriverController(object):
 
         return obj
 
-    def record_events(self, driver_position, order_id):
+    def _record_events(self, driver_position, status):
         """Create a Driver current locations.
 
         Params:
 
             locations(str):driver current locations
-            order_id(int): order increment_id
+            status(str): order status
 
         Returns:
             Returns OrderEvents object
 
         """
-        order_obj = self.get_order_obj(order_id)
         events_obj = OrderEvents.objects.create(
-            driver_position=driver_position, status=order_obj.status)
+            driver_position=driver_position, status=status)
 
         logger.info(
             "update the location and order status for that driver {}".format(

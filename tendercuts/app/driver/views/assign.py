@@ -46,9 +46,6 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         try:
             controller.assign_order(order_id, store_id, lat, lon)
-
-            # self.update_driver_position(order_id, lat, lon)
-
             status = True
             message = "Order Assigned successfully"
             logger.info(
@@ -78,7 +75,6 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         controller = DriverController.driver_obj(user_id)
 
         controller.complete_order(order_id, lat, lon)
-        # self.update_driver_position(controller, driver, order_id, lat, lon)
 
         logger.info("{} this order completed successfully".format(order_id))
 

@@ -126,6 +126,6 @@ class TestDriverController:
 
         # test order events
         response = controller.record_events(
-            response, generate_mock_order.increment_id)
+            response, 'out_delivery')
 
         assert response.driver_position.driver.increment_id == generate_mock_order.increment_id
