@@ -2,11 +2,12 @@
 
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
-
 from . import views
+
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
+
 router.register(
     r'assign',
     views.DriverOrdersViewSet,
@@ -27,6 +28,11 @@ router.register(
     r'driver_position',
     views.DriverPositionViewSet,
     base_name='DriverPositiontViewSet')
+router.register(
+    r'delay_sms',
+    views.DriverSmsViewSet,
+    base_name='DriverSmsViewSet')
+
 
 urlpatterns = [
     url(r'', include(router.urls)),

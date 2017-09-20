@@ -129,3 +129,18 @@ class TestDriverController:
             response, 'out_delivery')
 
         assert response.driver_position.driver.increment_id == generate_mock_order.increment_id
+
+
+    def test_driver_delay_sms(self, mock_user, generate_mock_order):
+        """Test Customer receives the SMS.
+
+        Asserts:
+            Check status
+
+        """
+
+        controller = DriverController(mock_user)
+        customer = controller.driver_delay_sms(
+            generate_mock_order.increment_id)
+
+        assert customer is True
