@@ -30,7 +30,7 @@ DATABASES = {
     # Localhost
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v2',
+        'NAME': 'dbmaster',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -62,8 +62,8 @@ MAGENTO = {
     "port": 80,
     "username": "admin",
     "password": "Tendercuts123!",
-    "endpoint": "/website/index.php/api/xmlrpc/",
-    "servicepoint": "/website/index.php/servicelayer/",
+    "endpoint": "/tendercuts-site/index.php/api/xmlrpc/",
+    "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "http"
 }
 

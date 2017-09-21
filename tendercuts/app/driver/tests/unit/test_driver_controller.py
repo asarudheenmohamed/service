@@ -12,7 +12,7 @@ from app.driver.lib.driver_controller import DriverController
 
 @pytest.mark.django_db
 class TestDriverController:
-    """Test cases for Driver controller"""
+    """Test cases for Driver controller."""
 
     def test_driver_assignment(self, mock_user, generate_mock_order):
         """Assign driver test case.
@@ -82,7 +82,7 @@ class TestDriverController:
         assert orders[0].increment_id == generate_mock_order.increment_id
 
     def test_complete_order(self, mock_user, generate_mock_order):
-        """complete the order.
+        """Complete the order.
 
         Asserts:
             1. If the assigned order is completed.
@@ -130,7 +130,6 @@ class TestDriverController:
 
         assert response.driver_position.driver.increment_id == generate_mock_order.increment_id
 
-
     def test_driver_delay_sms(self, mock_user, generate_mock_order):
         """Test Customer receives the SMS.
 
@@ -138,7 +137,6 @@ class TestDriverController:
             Check status
 
         """
-
         controller = DriverController(mock_user)
         customer = controller.driver_delay_sms(
             generate_mock_order.increment_id)

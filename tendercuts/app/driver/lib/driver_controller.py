@@ -7,6 +7,7 @@ from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
 
+
 from ..models import DriverOrder, DriverPosition, OrderEvents
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ class DriverController(object):
 
     @classmethod
     def driver_obj(cls, user_id):
+        """Fetch Flatcustomer object by using user_id."""
         driver = CustomerSearchController.load_by_id(user_id)
         return cls(driver)
 
@@ -175,7 +177,6 @@ class DriverController(object):
             Returns DriverPosition object
 
         """
-
         order_obj = self.get_order_obj(order_id)
 
         driver_obj = DriverOrder.objects.filter(
@@ -213,22 +214,20 @@ class DriverController(object):
 
         return events_obj
 
-
     def driver_delay_sms(self, order_id):
-        """Send SMS to the customer
+        """Send SMS to the customer.
 
         Params:
             order_id(str):Customer placed order_id
+
         Returns:
             Returns True
 
         """
-
-        order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
-        customer_id = order_obj[0].customer_id
-        customer = CustomerSearchController.load_by_id(customer_id)
-        customer_ph_no = customer.mobilenumber
-        SMS().send(9952267549, 'I am in traffic, Sorry for the delay')
+        customer_id = DriverController(self.driver) \
+            .get_order_obj(order_id).customer_id
+        customer = CustomerSearchController.load_basic_info(customer_id)
+        SMS().send(customer[2], 'I am in traffic, Sorry for the delay')
         status = True
 
         return status
