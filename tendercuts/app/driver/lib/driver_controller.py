@@ -230,4 +230,8 @@ class DriverController(object):
         SMS().send(customer[2], 'I am in traffic, Sorry for the delay')
         status = True
 
+        logger.info(
+            "sending the delay SMS to the customer:{}".format(
+                customer[0]))
+
         return status
