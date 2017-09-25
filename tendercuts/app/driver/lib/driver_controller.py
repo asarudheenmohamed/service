@@ -224,8 +224,7 @@ class DriverController(object):
             Returns True
 
         """
-        customer_id = DriverController(self.driver) \
-            .get_order_obj(order_id).customer_id
+        customer_id = self.get_order_obj(order_id).customer_id
         customer = CustomerSearchController.load_basic_info(customer_id)
         SMS().send(customer[2], 'I am in traffic, Sorry for the delay')
         status = True
