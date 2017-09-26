@@ -32,7 +32,6 @@ class OtpRetryApi(viewsets.ModelViewSet):
 
         """
         phone = self.request.data['mobile']
-        otp_mode = self.request.data['otp_mode']
         retry_mode = self.request.data['retry_mode']
 
         # retry the otp
