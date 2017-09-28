@@ -6,7 +6,7 @@ from app.core.lib.order_controller import OrderController
 from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
-
+from app.driver import tasks
 
 from ..models import DriverOrder, DriverPosition, OrderEvents
 
@@ -57,6 +57,7 @@ class DriverController(object):
 
         """
         order_obj = self.get_order_obj(order)
+
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
@@ -80,7 +81,8 @@ class DriverController(object):
         position_obj = self.record_position(order, lat, lon)
 
         self._record_events(position_obj, 'out_delivery')
-
+        
+        tasks.send_sms.delay(order)
         return driver_object
 
     def unassign_order(self, order):

@@ -20,7 +20,7 @@ googlemaps
 MySQL-python
 
 python-magento
-celery
+celery==4.1.0
 redis
 requests
 django-debug-toolbar
