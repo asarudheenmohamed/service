@@ -16,9 +16,9 @@ class TestOtp:
 
     def test_otp(self, rest):
         """Test Otp send customer mobile number."""
-        response = rest.get("/user/otp/9908765678/", format='json')
+        response = rest.get("/user/otp/9080804360/", format='json')
         assert not isinstance(response, type(None))
-        assert response.data['mobile'] == "9908765678"
+        assert response.data['mobile'] == "9080804360"
 
 
 @pytest.mark.django_db
@@ -48,10 +48,10 @@ class TestResendOtp:
 
         """
         response = rest.get(
-            "/user/forgot_password_otp/9908765678/",
+            "/user/forgot_password_otp/9080804360/",
             format='json')
         assert not isinstance(response, type(None))
-        assert response.data['mobile'] == "9908765678"
+        assert response.data['mobile'] == "9080804360"
 
     @pytest.mark.parametrize("resend_type", (
         ["text"],
@@ -73,11 +73,11 @@ class TestResendOtp:
 
         """
         response = rest.get(
-            "/user/forgot_password_otp/9908765678/?resend_type={}".format(
+            "/user/forgot_password_otp/9080804360/?resend_type={}".format(
                 resend_type),
             format='json')
         assert not isinstance(response, type(None))
-        assert response.data['mobile'] == "9908765678"
+        assert response.data['mobile'] == "9080804360"
 
 
 @pytest.mark.django_db
@@ -93,17 +93,17 @@ class TestOtpMethods:
 
         """
         response = rest.get(
-            "/user/forgot_password_otp/9908765678/", format='json')
+            "/user/forgot_password_otp/9080804360/", format='json')
         assert not isinstance(response, type(None))
-        assert response.data['mobile'] == "9908765678"
+        assert response.data['mobile'] == "9080804360"
 
         redis_conn = redis.StrictRedis(**settings.REDIS)
-        otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9908765678"))
+        otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9080804360"))
 
         response = rest.get(
-            "/user/forgot_password_otp/9908765678/", format='json')
-        assert response.data['mobile'] == "9908765678"
-        otp1 = redis_conn.get("{}:{}".format("FORGOT_OTP", "9908765678"))
+            "/user/forgot_password_otp/9080804360/", format='json')
+        assert response.data['mobile'] == "9080804360"
+        otp1 = redis_conn.get("{}:{}".format("FORGOT_OTP", "9080804360"))
         assert otp == otp1
 
     def test_raise_error(self, rest):
@@ -114,7 +114,7 @@ class TestOtpMethods:
         """
         with pytest.raises(Exception):
             rest.get(
-                "/user/forgot_password_otp/9908765678111/", format='json')
+                "/user/forgot_password_otp/9080804360111/", format='json')
 
 
 @pytest.mark.django_db
@@ -124,7 +124,7 @@ class TestUserFetch:
     def test_user_fetch(self, auth_rest):
         """Test Fetch from user data."""
         response = auth_rest.get(
-            "/user/fetch/?phone=9908765678", format='json')
+            "/user/fetch/?phone=9080804360", format='json')
         print(response)
         assert not isinstance(response, type(None))
         assert len(response.data['attribute']) == 3

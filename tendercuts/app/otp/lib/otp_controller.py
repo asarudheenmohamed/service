@@ -5,11 +5,11 @@ import random
 from django.conf import settings
 from rest_framework import exceptions
 
-from app.core import cache
+from app.core.lib import cache
 from app.core.lib.exceptions import CustomerNotFound
 from app.core.lib.user_controller import CustomerSearchController
-
-from .. import models
+from app.core.lib.communication import SMS
+from app.core import models
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,11 @@ class OtpController(object):
     LOGIN = 'LOGIN'
     SIGNUP = 'SIGNUP'
     FORGOT = 'FORGOT'
+
+    msg_content = {
+        'FORGOT': "as your OTP to reset your password.",
+        'SIGNUP': "as your signup OTP. OTP is confidential.",
+        'LOGIN': "as your login OTP. OTP is confidential."}
 
     def __init__(self, log=None):
         """Intialized Redis Controller."""
@@ -48,6 +53,15 @@ class OtpController(object):
 
         return otp
 
+    def send_otp(self, otp_obj, otp_mode):
+        """Send Otp to a customer."""
+        msg = ("""Use {} {}.""").format(
+            otp_obj.otp, self.msg_content[str(otp_mode)])
+        SMS().send_otp(
+            phnumber=otp_obj.mobile,
+            message=msg,
+            otp=otp_obj.otp)
+
     def get_otp(self, phone, otp_type):
         """Get otp object.
 
@@ -67,6 +81,8 @@ class OtpController(object):
                 raise exceptions.PermissionDenied("User does not exists")
 
         key = self._generate_redis_key(phone, otp_type)
+        self.logger.info(
+            'get otp for the redis db in this mobile mumber {}'.format(phone))
         otp = cache.get_key(key)
         # Create a new one
         if len(str(otp)) == 1 or otp is None:
@@ -75,13 +91,16 @@ class OtpController(object):
             otp = self._create_otp(phone, otp_type)
 
         otp = models.OtpList(mobile=phone, otp=otp)
+
         return otp
 
     def otp_verify(self, otp, customer_otp):
         """Verify otp in redis db."""
+
         status = (int(otp.otp) == int(customer_otp))
 
         if status:
             cache.set_key(otp.mobile, 'verified', 60 * 10)
+            self.logger.info('The otp will be verified')
 
         return status

@@ -54,7 +54,7 @@ def refer_customer(cache, mock_user):
     assert referral_response.status_code == 200, "Unable to reach endpoint"
     resp = referral_response.json()
 
-    assert resp['status'] == 'true', "Endpoint returned false"
+    assert resp['status'] == True, "Endpoint returned false"
     assert "50" in resp['message'], "Invalid message sent"
 
 
@@ -66,7 +66,8 @@ def get_fifty(cache):
         "/user/fetch/?phone={}".format(new_customer.mobilenumber))
 
     resp = fetch_obj.json()
-    assert resp['attribute'][0]['value'] == 50, "Signed up user did not receive 50 points"
+    assert resp['attribute'][0][
+        'value'] == 50, "Signed up user did not receive 50 points"
 
 
 @when("the new user places an order")
@@ -86,4 +87,5 @@ def check_bonus(auth_rest, mock_user):
         "/user/fetch/?phone={}".format(mock_user.mobilenumber))
 
     resp = fetch_obj.json()
-    assert resp['attribute'][0]['value'] == 50, "Referee did not receive 50 points"
+    assert resp['attribute'][0][
+        'value'] == 50, "Referee did not receive 50 points"

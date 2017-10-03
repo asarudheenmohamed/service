@@ -2,8 +2,8 @@
 import pytest
 from pytest_bdd import given, scenario, then, when
 
-from app.core.lib.otp_controller import OtpController
-from app.core import cache
+from app.otp.lib.otp_controller import OtpController
+from app.core.lib import cache
 
 
 @pytest.mark.django_db
@@ -37,8 +37,8 @@ def generate_otp(cache, rest, phone, otp_type):
         Check response mobile is equal to test mobile number
 
     """
-    response = rest.get(
-        "/user/otp_view/{}/?otp_type={}".format(phone, otp_type),
+    response = rest.post(
+        "/otp/generate/", {'mobile': phone, 'otp_mode': otp_type},
         format='json')
     cache['mobile'] = response.data['mobile']
     cache['otp_type'] = otp_type
@@ -78,10 +78,11 @@ def otp_validation(cache, auth_rest, status, message):
     otp = get_otp(cache['mobile'], cache['otp_type'])
     if status == 'False':
         otp = 1111
-    response = auth_rest.get(
-        "/user/otp_validation/{}/?otp_type={}&otp={}".format(
-            cache['mobile'], cache['otp_type'], otp),
+    response = auth_rest.post(
+        "/otp/verify/", {'mobile': cache['mobile'],
+                         'otp_mode': cache['otp_type'], 'otp': otp},
         format='json')
+
     assert str(response.data['status']) == status
     assert response.data['message'] == message
 
@@ -98,11 +99,12 @@ def resend_otp_methods(cache, auth_rest, resend_type):
         Check response mobile is equal to test mobile number
 
     """
-    response = auth_rest.get(
-        "/user/otp_view/{}/?resend_type={}&otp_type={}".format(
-            cache['mobile'], resend_type, cache['otp_type']),
+    response = auth_rest.post(
+        "/otp/retry/", {'mobile': cache['mobile'],
+                        'otp_mode': cache['otp_type'], 'retry_mode': resend_type},
         format='json')
-    assert response.data['mobile'] == cache['mobile']
+    assert response.data['status'] == True
+    assert response.data['message'] == 'Successfully resend otp'
 
 
 @then('LogIn the user')

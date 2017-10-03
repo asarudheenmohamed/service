@@ -2,8 +2,8 @@ Feature: otp
 	
 	Examples: 
 	    | phone    |resend_type|status|    message        |
-	    |8973111017|  text     |True  |succesfuly verified|
-	    |8973111017|  voice    |False |Your OTP is Invalid|
+	    |9080804360|  text     |True  |Successfully verified|
+	    |9080804360|  voice    |False |Your OTP is Invalid|
 
 	Scenario Outline: Login via OTP
 	    Given Generating OTP for the given mobile number: <phone> <otp_type>
