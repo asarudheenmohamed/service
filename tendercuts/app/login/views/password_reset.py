@@ -10,11 +10,11 @@ from rest_framework import exceptions, viewsets
 from rest_framework.response import Response
 
 from app.core.lib.communication import SMS
-from app.core.lib.otp_controller import OtpController
+from app.otp.lib.otp_controller import OtpController
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.lib.user_controller import (CustomerController,
                                           CustomerSearchController)
-from app.core import cache
+from app.core.lib import cache
 
 from .. import models, serializers
 
@@ -54,12 +54,10 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
 
         logger.info("Generating OTP for {} with code: {}".format(
             otp.mobile, otp.otp))
-        msg = ("""Use {} as your OTP to reset your password.""").format(otp.otp)
-
-        SMS().send_otp(
-            phnumber=otp.mobile, message=msg, otp=otp.otp, resend_type=resend)
-        logger.info("OTP sent")
-
+        if not resend:
+            otp_obj.send_otp(otp, otp_obj.FORGOT)
+        else:
+            SMS().retry_otp(phone, resend)
         otp.otp = None
         serializer = self.get_serializer(otp)
 
@@ -78,24 +76,18 @@ class OtpForgotPasswordApiViewSet(viewsets.GenericViewSet):
         otp_obj = OtpController(logger)
         otp = otp_obj.get_otp(phone, otp_obj.FORGOT)
 
-        if customer_otp:
-            otp_validation = otp_obj.otp_verify(otp, customer_otp)
-            if not otp_validation:
-                raise exceptions.ValidationError("Invalid OTP")
-        else:
-            redis_value = cache(phone)
-            if redis_value not in ['verified']:
-                raise InvalidCredentials
-
-        random_pass = ''.join(
-            [random.choice(string.ascii_lowercase) for n in xrange(5)])
-        random_pass += str(random.randint(0, 9))
+        otp_validation = otp_obj.otp_verify(otp, customer_otp)
+        if not otp_validation:
+            raise exceptions.ValidationError("Invalid OTP")
 
         customer = CustomerSearchController.load_by_phone_mail(phone)
-        CustomerController(
-            customer.customer).reset_password(
+        controller = CustomerController(
+            customer.customer)
+        random_pass = controller.generate_random_password()
+        controller.reset_password(
             random_pass,
             dry_run=dry_run)
+
         msg = ("""Your request for password reset is now successful. New password: {}""").format(
             random_pass)
 

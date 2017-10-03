@@ -1,13 +1,16 @@
 """End point for the controll in user details."""
 import hashlib
+import random
+import string
 import uuid
 
 from django.db.models import Q
 
-from app.core.models.customer import (CustomerEntity, FlatCustomer,
-                                      CustomerEntityVarchar)
+from app.core.lib import cache
+from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
-from app.core import cache
+from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
+                                      FlatCustomer)
 
 
 class CustomerSearchController(object):
@@ -119,6 +122,34 @@ class CustomerController(object):
         self.customer = customer
 
     @classmethod
+    def verify_with_otp(self, username):
+        """Check whether the mobile number is verified or not in redis db.
+
+        Params:
+         username(int): customer mobile number
+
+        returns:
+            redis value
+
+        """
+        redis_value = cache.get_key(username)
+        if redis_value not in ['verified']:
+            raise InvalidCredentials
+
+        return redis_value
+
+    def authenticate_with_password(self, username, password):
+        """Check whether the given password is  Valid or not.
+
+        Params:
+         username(int): customer mobile number
+         password: customer entered password
+
+        """
+        if not self.validate_password(password):
+            raise InvalidCredentials
+
+    @classmethod
     def authenticate(cls, username, password, otp_mode=False):
         """Authenticate the user in 2 modes - otp & user/pass.
 
@@ -139,14 +170,36 @@ class CustomerController(object):
         user = CustomerSearchController.load_by_phone_mail(username)
 
         if otp_mode:
-            redis_value = cache.get_key(username)
-            if redis_value not in ['verified']:
-                raise InvalidCredentials
-
+            redis_value = cls.verify_with_otp(username)
         else:
-            if not cls(user).validate_password(password):
-                raise InvalidCredentials
+            cls(user).authenticate_with_password(username, password)
+
         return user
+
+    def generate_random_password(self):
+        """Generate a random password."""
+        random_pass = ''.join(
+            [random.choice(string.ascii_lowercase) for n in xrange(5)])
+        random_pass += str(random.randint(0, 9))
+        return random_pass
+
+    def generate_and_reset_password(self, mobile):
+        """Generate password and send password to customer mobile number.
+
+        params:
+         mobile(int): customer mobile number
+
+        """
+        # check if user verified
+        self.verify_with_otp(mobile)
+        # generate new password
+        new_password = self.generate_random_password()
+        # reset customer password
+        self.reset_password(new_password)
+        msg = ("""Your request for password reset is now successful. New password: {}""").format(
+            new_password)
+        # send password to customer mobile number
+        SMS().send(phnumber=mobile, message=msg)
 
     def validate_password(self, input_password):
         """Validate user password.
@@ -179,7 +232,6 @@ class CustomerController(object):
         password_entity = CustomerEntityVarchar.objects.filter(
             entity_id=self.customer.entity_id,
             attribute_id=12)  # password
-
         if len(password_entity) == 0:
             return
 
@@ -187,7 +239,6 @@ class CustomerController(object):
         salt = uuid.uuid4().hex
 
         computed_hash = hashlib.md5(salt + new_password)
-
         new_password = "{}:{}".format(computed_hash.hexdigest(), salt)
         password_entity.value = new_password
 

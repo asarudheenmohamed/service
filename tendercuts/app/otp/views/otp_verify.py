@@ -1,33 +1,34 @@
-"""This module is deprecated."""
+"""End point to verify the Otp."""
 import logging
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from app.core.lib.otp_controller import OtpController
+from rest_framework import viewsets
+from app.otp.lib.otp_controller import OtpController
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-class OtpValidation(APIView):
-    """OTP Validation."""
+class OtpVerifyApi(viewsets.ModelViewSet):
+    """Verify the Otp."""
 
     authentication_classes = ()
     permission_classes = ()
 
-    def get(self, request, *args, **kwargs):
-        """OTP validate in signup,forgot password and login method.
+    def create(self, request, *args, **kwargs):
+        """Check whether the customer entered otp is correct or not.
 
         params:
             mobile (str): New user mobile number
-            type(int):otp types are forgot otp or signup otp
+            otp_mode(int): otp types such as LOGIN,SIGNUP and FORGOT
+            otp(int): customer entered otp
 
         Returns:
-            Otp validation status
+            Otp verified status
 
         """
-        type_ = self.request.GET.get('otp_type')
-        customer_otp = self.request.GET.get('otp')
-        phone = kwargs['mobile']
+        type_ = self.request.data['otp_mode']
+        customer_otp = self.request.data['otp']
+        phone = self.request.data['mobile']
 
         otp_obj = OtpController(logger)
         # get otp object
@@ -36,7 +37,7 @@ class OtpValidation(APIView):
         is_verified = otp_obj.otp_verify(otp, customer_otp)
 
         if is_verified == True:
-            message = 'succesfuly verified'
+            message = 'Successfully verified'
         else:
             message = 'Your OTP is Invalid'
 

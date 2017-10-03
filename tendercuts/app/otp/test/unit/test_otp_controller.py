@@ -1,7 +1,7 @@
 """End point for the Test otp controller."""
 import pytest
 
-from app.core.lib.otp_controller import OtpController
+from app.otp.lib.otp_controller import OtpController
 
 
 @pytest.mark.parametrize("otp_type", [
@@ -22,8 +22,8 @@ def test_otpobj(otp_type):
 
     """
     otp_obj = OtpController()
-    otp = otp_obj.get_otp(9908765678, otp_type)
-    assert otp.mobile == 9908765678
+    otp = otp_obj.get_otp(9080804360, otp_type)
+    assert otp.mobile == 9080804360
 
 
 @pytest.mark.parametrize("otp_type", [
@@ -44,7 +44,7 @@ def test_otp_verify_false(otp_type):
 
     """
     otp_obj = OtpController()
-    otp = otp_obj.get_otp(9908765678, otp_type)
+    otp = otp_obj.get_otp(9080804360, otp_type)
     otp_validation = otp_obj.otp_verify(otp, 4343)
     assert otp_validation is False
 
@@ -66,6 +66,6 @@ def test_otp_verify_true(otp_type):
 
     """
     otp_obj = OtpController()
-    otp = otp_obj.get_otp(9908765678, otp_type)
+    otp = otp_obj.get_otp(9080804360, otp_type)
     otp_validation = otp_obj.otp_verify(otp, otp.otp)
     assert otp_validation is True

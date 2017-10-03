@@ -12,7 +12,7 @@ from ..lib.userprofile_controller import UserProfileEdit
 logger = logging.getLogger(__name__)
 
 
-class EditPrifile(APIView):
+class EditProfile(APIView):
     """API view to Edit user profile details like email,password, dob,username."""
 
     def post(self, request, format=None):
@@ -38,6 +38,6 @@ class EditPrifile(APIView):
             user_obj.reset_userprofile(code, value)
 
         response = {"status": True,
-                    "message": "successfully reset your {}".format(code),"result":code}
+                    "message": "successfully reset your {}".format(code), "result": code}
 
         return Response(response)
