@@ -22,7 +22,8 @@ class UserChangePassword(APIView):
     2.fetch class, since we dont have a serializer yet we will have a different view
 
     """
-
+    authentication_classes = ()
+    permission_classes = ()
     def post(self, request, format=None):
         """If the user reset the password means that will set as a new password.
 
@@ -41,7 +42,11 @@ class UserChangePassword(APIView):
         mobile = self.request.data.get('mobile', False)
         new_password = self.request.data.get('new_password', False)
 
-        user_id = get_user_id(request)
+        try:
+           user_id = get_user_id(request)
+	except IndexError:
+           customer = CustomerSearchController.load_by_phone_mail(mobile)
+           user_id = customer.customer.entity_id
 
         if not user_id:
             raise exceptions.ValidationError("Invalid user")
@@ -60,4 +65,4 @@ class UserChangePassword(APIView):
         logger.info(
             "Successfully password reset.for the user {}".format(user_id))
 
-        return Response({"status": True})
+        return Response({"status": True,'mobile':mobile})

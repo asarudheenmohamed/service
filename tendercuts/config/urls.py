@@ -32,5 +32,6 @@ urlpatterns = [
     url(r'sale_order/', include('app.sale_order.urls')),
     url(r'inventory/', include('app.inventory.urls')),
     url(r'payment/', include('app.payment.urls')),
-    url(r'tcash/', include('app.tcash.urls'))
+    url(r'tcash/', include('app.tcash.urls')),
+    url(r'otp/', include('app.otp.urls'))
 ]
