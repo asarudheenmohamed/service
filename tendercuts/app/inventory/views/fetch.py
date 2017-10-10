@@ -127,13 +127,12 @@ FROM graminventory_latest as child
 LEFT JOIN graminventory_latest as parent on child.parent = parent.product_id and child.store_id = parent.store_id
 WHERE child.store_id = %s"""
     def _is_store_closed(self):
-        tz = pytz.timezone('Asia/Kolkata')
         today = datetime.date.today()
 
-        start = datetime.datetime.combine(today, datetime.time(20, tzinfo=tz))
-        end = datetime.datetime.combine(today, datetime.time(23, 59, 59, tzinfo=tz))
+        start = datetime.datetime.combine(today, datetime.time(20))
+        end = datetime.datetime.combine(today, datetime.time(23, 59, 59))
 
-        return start < datetime.datetime.now(tz=tz) < end
+        return start < datetime.datetime.now() < end
 
     def get(self, request):
         """Get the inventory of the store."""
