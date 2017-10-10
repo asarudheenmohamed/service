@@ -43,8 +43,11 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': '/var/run/redis/redis.sock',
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     },
 }
 
@@ -64,13 +67,6 @@ MAGENTO = {
     "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "http"
 }
-
-REDIS = {
-    "host": "localhost",
-    "port": 6379,
-    "db": 0
-}
-
 
 PAYMENT = {
     "SIMPL": {

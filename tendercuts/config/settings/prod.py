@@ -50,16 +50,11 @@ MAGENTO = {
 CACHES = {
     'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        'LOCATION': '/var/run/redis/redis.sock',
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
-}
-
-REDIS = {
-    "host": "staging",
-    "unix_socket_path": '/var/run/redis/redis.sock',
 }
 
 PAYMENT = {

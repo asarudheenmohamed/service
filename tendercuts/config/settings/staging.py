@@ -57,11 +57,6 @@ CACHES = {
     },
 }
 
-REDIS = {
-    "host": "staging",
-    "unix_socket_path": '/var/run/redis/redis.sock',
-}
-
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",
