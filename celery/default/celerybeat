@@ -1,4 +1,6 @@
+##################
 # enable the correct one for stagin/production
+##################
 export DJANGO_SETTINGS_MODULE=config.settings.staging
 export DJANGO_SETTINGS_MODULE=config.settings.prod
 
