@@ -19,6 +19,7 @@ class DriverOrderAdmin(admin.ModelAdmin):
          driver obj
 
         """
+
         data = {}
         if request.method == 'POST':
 
