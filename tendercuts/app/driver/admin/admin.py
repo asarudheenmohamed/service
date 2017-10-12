@@ -23,7 +23,7 @@ class DriverOrderAdmin(admin.ModelAdmin):
         if request.method == 'POST':
 
             controller = StoreOrderController()
-            data = controller.get_store_driver_orde(request.POST['store_id'])
+            data = controller.get_store_driver_order(request.POST['store_id'])
 
         data['store_obj'] = CoreStore.objects.all()
         response = super(DriverOrderAdmin, self).changelist_view(
