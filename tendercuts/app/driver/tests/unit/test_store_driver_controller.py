@@ -1,7 +1,7 @@
 """Test cases for store driver controller."""
 import pytest
 from app.driver.lib.driver_controller import DriverController
-from app.driver.lib.driver_order_controller import StoreOrderController
+from app.driver.lib.store_order_controller import StoreOrderController
 
 
 @pytest.mark.django_db

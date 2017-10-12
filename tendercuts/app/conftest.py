@@ -3,6 +3,7 @@ Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
 from rest_framework.test import APIClient
+from app.driver.constants import DRIVER_GROUP
 
 
 @pytest.fixture
@@ -27,6 +28,7 @@ def auth_rest(mock_user):
 def serializer():
     """Helper class for for resolving API ."""
     class EavSerializer():
+
         @classmethod
         def serialize(cls, data):
             obj = cls()
@@ -35,7 +37,7 @@ def serializer():
                 attr_name = eav['code']
                 attr_value = eav['value']
 
-                if (type(attr_value) is not list):
+                if (not isinstance(attr_value, list)):
                     setattr(obj, attr_name, attr_value)
                 else:
                     setattr(
@@ -55,7 +57,6 @@ def generate_mock_order(request, mock_user):
     from app.core.lib.test.utils import GenerateOrder
     from app.core.models import SalesFlatOrder
     order_id = request.config.cache.get("mock/order", None)
-
     if order_id is None:
         order = GenerateOrder().generate_order(mock_user.entity_id)
         request.config.cache.set("mock/order", order.increment_id)
@@ -77,7 +78,6 @@ def mock_user(request):
     from app.core.models.customer import FlatCustomer
 
     customer_id = request.config.cache.get("mock/customer", None)
-
     if customer_id is None:
         customer_data = generate_customer()
         customer_id = customer_data['entity_id']
@@ -86,6 +86,27 @@ def mock_user(request):
     customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer
+
+
+@pytest.fixture(scope="session")
+def mock_driver(request):
+    """Generates a mock customer.
+
+    Uses pytest caching
+
+    """
+    from app.core.lib.test import generate_customer
+    from app.core.lib.user_controller import CustomerSearchController
+    from app.core.models.customer import FlatCustomer
+
+    customer_data = generate_customer(store_id=7, group_id=DRIVER_GROUP)
+    customer_id = customer_data['entity_id']
+    request.config.cache.set("mock/customer", customer_id)
+
+    customer = CustomerSearchController.load_by_id(customer_id)
+
+    return customer
+
 
 @pytest.fixture
 def cache():
