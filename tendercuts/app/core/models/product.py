@@ -100,6 +100,7 @@ class CatalogProductFlat(models.Model):
     uom_value = models.CharField(max_length=255, blank=True, null=True)
     weight_description = models.CharField(
         max_length=255, blank=True, null=True)
+    spicy_level = models.IntegerField(blank=True, null=True)
 
     class Meta:
         app_label = "magento"
