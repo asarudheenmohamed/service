@@ -27,13 +27,6 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
     """
     authentication_classes = (DriverAuthentication,)
 
-    def get_driver(self):
-        """Extract DriverId from request."""
-        user_id = get_user_id(self.request)
-        driver = CustomerSearchController.load_by_id(user_id)
-
-        return driver
-
     def create(self, request, *args, **kwargs):
         """Driver assignment  endpoint.
 
@@ -46,13 +39,19 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         """
         order_id = self.request.data['order_id']
         store_id = self.request.data['store_id']
-        driver = self.get_driver()
-        controller = DriverController(driver)
+        lat = self.request.data['latitude']
+        lon = self.request.data['longitude']
+
+        user_id = get_user_id(self.request)
+        controller = DriverController.driver_obj(user_id)
 
         try:
-            controller.assign_order(order_id,store_id)
+            controller.assign_order(order_id, store_id, lat, lon)
             status = True
             message = "Order Assigned successfully"
+            logger.info(
+                '{} this order assigned successfully'.format(
+                    order_id))
         except ValueError as e:
             status = False
             message = str(e)
@@ -71,10 +70,14 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         """
         order_id = self.request.data['order_id']
+        lat = self.request.data['latitude']
+        lon = self.request.data['longitude']
+        user_id = get_user_id(self.request)
+        controller = DriverController.driver_obj(user_id)
 
-        driver = self.get_driver()
-        controller = DriverController(driver)
-        controller.complete_order(order_id)
+        controller.complete_order(order_id, lat, lon)
+
+        logger.info("{} this order completed successfully".format(order_id))
 
         return Response({'status': True}, status=status.HTTP_201_CREATED)
 
@@ -94,5 +97,8 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)
         status = self.request.query_params['status']
+
+        logger.info(
+            'Fetch {} state orders'.format(status))
 
         return DriverController(driver).fetch_orders(status)

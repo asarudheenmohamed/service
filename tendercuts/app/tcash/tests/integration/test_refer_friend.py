@@ -34,6 +34,7 @@ def new_signup(cache):
 
 @given("logs into his account")
 def login(cache, rest):
+    """Login the new customer"""
     new_customer = cache["new_customer"]
 
     data = {"email": new_customer.email, "password": '12345678'}
@@ -45,6 +46,7 @@ def login(cache, rest):
 
 @given("is referred by an existing user")
 def refer_customer(cache, mock_user):
+    """Add 50 to reffered customer."""
     authenticated_rest = cache["authenticated_rest"]
 
     referral_response = authenticated_rest.post(
@@ -60,6 +62,7 @@ def refer_customer(cache, mock_user):
 
 @given("the new user get 50 in his account")
 def get_fifty(cache):
+    """Check New customer reward Points."""
     authenticated_rest = cache["authenticated_rest"]
     new_customer = cache["new_customer"]
     fetch_obj = authenticated_rest.get(
@@ -72,6 +75,7 @@ def get_fifty(cache):
 
 @when("the new user places an order")
 def place_order(cache, magento):
+    """Order placed in new customer."""
     new_customer = cache["new_customer"]
     order_obj = GenerateOrder()
     order_obj = order_obj.generate_order(new_customer.entity_id)
@@ -82,7 +86,7 @@ def place_order(cache, magento):
 
 @then("the referee get 50 in his account")
 def check_bonus(auth_rest, mock_user):
-    """Doc here"""
+    """Check referee bonus point 50 added."""
     fetch_obj = auth_rest.get(
         "/user/fetch/?phone={}".format(mock_user.mobilenumber))
 

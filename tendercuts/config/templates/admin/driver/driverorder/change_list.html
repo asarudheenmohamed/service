@@ -1,0 +1,139 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+
+{% endblock %}
+{% block result_list %}
+
+<!DOCTYPE html >
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <script type="text/javascript" async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFSsOwQqzTYeYPRXBzCGdwJPVl1E7WSAU">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <title>Creating a Store Locator on Google Maps</title>
+  <style>
+    /* Always set the map height explicitly to define the size of  the 
+     * element that contains the map. */
+    
+    #map {
+      height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 100%;
+      }
+
+    .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+    input[type=submit] {
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 90px;
+    margin-top: 5px;
+    font-size: 16px;
+    }
+    .addlink{
+      visibility: hidden;
+    }
+   
+
+ </style>
+  </head>
+  <body style="margin:0px; padding:0px;" onload="initMap()">
+    <div class="container-fluid">
+    <div class="row">
+         <form class="checkform" align="center" action="/admin/driver/driverorder/" method="POST" name='NewsParsingAlertForm'> {% csrf_token %}
+        <div class="col-sm-3">
+
+        <select name="store_id" class='form-control'>
+
+            {% for store in store_obj %}
+         
+            <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
+            
+            {% endfor %}
+
+        </select>
+        </form>
+        <input type="submit" class="submit" name="submit" value="Search"/>
+        {% for driver_obj in driver_objects%}
+        <div class="card" style="max-width: 20rem;" onclick='locmap({{ driver_obj.obj.driver_position.latitude }},{{ driver_obj.obj.driver_position.longitude }},"{{ driver_obj.name }}")'>
+        <div class="card-body">
+        <label for="driver" class="text-muted">Driver</label>
+        <p class="text-justify">{{ driver_obj.name }}</p>
+        <label for="contactno" class="text-muted">contact No</label>
+        <p >{{ driver_obj.phone }}</p>
+            <label for="order" class="text-muted">Order Id</label>
+            <p >{% for order in driver_obj.orders%} {{ order }} {% endfor %}</p>
+            
+        </div>
+        </div>
+        {% endfor %}
+        
+        </div>
+        
+
+    <div class="col-sm-9">
+        <div id="map" style="width: 900px; height: 900px"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <script>
+      var map;
+      var markers = [];
+      var infoWindow;
+      var locationSelect;
+      function initMap() {
+
+        locmap(12.976271,80.22223800000006,'tendercuts')
+      }
+
+        function locmap(lat,lon,name) {
+        
+
+          var sydney = {lat: lat, lng: lon};
+          var map = new google.maps.Map(document.getElementById('map'), {
+          center: sydney,
+          zoom: 14,
+          mapTypeId: 'roadmap',
+          mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+        });
+
+        
+
+        var marker = new google.maps.Marker({
+          position: sydney,
+          map: map,
+          title: name
+        });
+      
+        }
+      
+
+       
+ 
+  </script>
+    
+  </body>
+</html>
+{% endblock %}
