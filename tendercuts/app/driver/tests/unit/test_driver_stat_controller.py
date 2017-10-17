@@ -19,16 +19,15 @@ class TestDriverStatController:
 
         """
 
-        DriverOrder.objects.create(driver_id=100, increment_id=generate_mock_order.increment_id)
+        DriverOrder.objects.create(driver_id=mock_user.customer.entity_id, increment_id=generate_mock_order.increment_id)
 
         stat_controller = DriverStatController()
         orders = stat_controller.generate_stat(generate_mock_order.increment_id, "complete")
 
         assert orders == 1
         
-        DriverOrder.objects.create(driver_id=100, increment_id=generate_mock_order.increment_id)
+        DriverOrder.objects.create(driver_id=mock_user.customer.entity_id, increment_id=generate_mock_order.increment_id)
 
-        stat_controller = DriverStatController()
         orders = stat_controller.generate_stat(generate_mock_order.increment_id, "complete")
 
         assert orders == 2

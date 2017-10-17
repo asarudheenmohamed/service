@@ -3,7 +3,11 @@ from app.driver.models import DriverOrder, DriverStat
 
 
 class DriverStatController(object):
-    """Driver controller."""
+    """Driver stat controller."""
+    def __init__(self, order):
+        """Constructor."""
+        self.order = order
+
 
     def generate_stat(self, order_id, status):
         """Driver status controller.
@@ -23,6 +27,7 @@ class DriverStatController(object):
 
         try:
             driver = DriverOrder.objects.filter(increment_id=order_id)
+
             driver_stats = DriverStat.objects.get_or_create(
                     driver_id=driver[0].driver_id)
             driver_stats[0].no_of_orders += 1

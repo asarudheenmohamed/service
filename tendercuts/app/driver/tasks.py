@@ -21,7 +21,7 @@ def send_sms(order_id):
     logger.info("Send status as {} to the customer : {}".format(
         order_obj[0].status, customer[0]))
 
-    SMS().send(9952267549, order_obj[0].status)
+    SMS().send(customer[2], order_obj[0].status)
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
