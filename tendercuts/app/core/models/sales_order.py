@@ -480,7 +480,7 @@ class SalesFlatOrder(models.Model):
         tz = pytz.timezone('Asia/Kolkata')
 
         if self.deliverytype == 1:
-            promised_time = self.created_at + datetime.timedelta(minutes=90)
+            promised_time = self.created_at + datetime.timedelta(minutes=120)
             promised_time = promised_time.astimezone(tz)
 
         elif self.deliverytype == 2:
