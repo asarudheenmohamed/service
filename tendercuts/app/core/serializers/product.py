@@ -72,3 +72,13 @@ class CatalogProductFlat15Serializer(serializers.ModelSerializer):
     class Meta:
         model = models.CatalogProductFlat15
         fields = PRODUCT_FIELDS
+
+class CatalogProductFlat16Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogProductFlat16
+        fields = PRODUCT_FIELDS
+
+class CatalogProductFlat18Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogProductFlat18
+        fields = PRODUCT_FIELDS
