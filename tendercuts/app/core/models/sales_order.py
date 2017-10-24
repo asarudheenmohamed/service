@@ -465,8 +465,7 @@ class SalesFlatOrder(models.Model):
     def time_elapsed(self):
         return timezone.now() - self.created_at
 
-    @property
-    def promised_delivery_time(self):
+    def compute_delivery_time(self):
         """
         TODO needs optimization
         """
@@ -480,7 +479,7 @@ class SalesFlatOrder(models.Model):
         tz = pytz.timezone('Asia/Kolkata')
 
         if self.deliverytype == 1:
-            promised_time = self.created_at + datetime.timedelta(minutes=90)
+            promised_time = self.created_at + datetime.timedelta(minutes=120)
             promised_time = promised_time.astimezone(tz)
 
         elif self.deliverytype == 2:
@@ -502,6 +501,11 @@ class SalesFlatOrder(models.Model):
                 logger.info("Conversion to date faile")
                 promised_time = None
 
+        return promised_time
+
+    @property
+    def promised_delivery_time(self):
+        promised_time = self.compute_delivery_time()
         return format(
             promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
 
@@ -515,6 +519,10 @@ class SalesFlatOrder(models.Model):
             (promised_time.minute - current_time.minute)
 
         return remaining_time
+
+    def promised_delivery_time_dt(self):
+        promised_time = self.compute_delivery_time()
+        return promised_time if promised_time else ""
 
 
 class SalesFlatOrderItem(models.Model):
