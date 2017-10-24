@@ -1,11 +1,9 @@
 """All driver controller related actions."""
-<<<<<<< HEAD
-=======
+
 import logging
 
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
->>>>>>> origin/feat-driverassign
 from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
@@ -84,7 +82,7 @@ class DriverController(object):
         position_obj = self.record_position(order, lat, lon)
 
         self._record_events(position_obj, 'out_delivery')
-        
+
         tasks.send_sms.delay(order)
         return driver_object
 
@@ -166,6 +164,8 @@ class DriverController(object):
 
         controller = OrderController(self.conn, order_obj)
         controller.complete()
+        # send sms to customer
+        tasks.send_sms.delay(order)
 
         # update current location for driver
         position_obj = self.record_position(order_id, lat, lon)

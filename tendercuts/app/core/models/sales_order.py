@@ -510,6 +510,16 @@ class SalesFlatOrder(models.Model):
             promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
 
     @property
+    def remaing_time(self):
+        """Return a remaining order time in that order."""
+        promised_time = dateutil.parser.parse(self.promised_delivery_time)
+        promised_time = promised_time.time()
+        current_time = datetime.datetime.now().time()
+        remaining_time = (promised_time.hour - current_time.hour) * 60 + \
+            (promised_time.minute - current_time.minute)
+
+        return remaining_time
+
     def promised_delivery_time_dt(self):
         promised_time = self.compute_delivery_time()
         return promised_time if promised_time else ""
