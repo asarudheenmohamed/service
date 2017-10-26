@@ -8,6 +8,7 @@ from .magento import Connector
 from app.core.models.sales_order import SalesFlatOrderGrid
 
 
+
 class OrderController(object):
     """
     Update order status
@@ -27,21 +28,23 @@ class OrderController(object):
 
     def out_delivery(self):
         """The order status processing to out for delivery."""
-        self.order.status = "out_delivery"
-        self.order.save()
-        obj = SalesFlatOrderGrid.objects.get(
-            increment_id=self.order.increment_id)
-        obj.status = "out_delivery"
-        obj.save()
-        # a = self.mage.api.sales_order_shipment.info(self.order.increment_id)
+        #self.order.status = "out_delivery"
+        #self.order.save()
+        #obj = SalesFlatOrderGrid.objects.get(
+         #   increment_id=self.order.increment_id)
+        #obj.status = "out_delivery"
+        #obj.save()
+        response_data=self.mage.api.tendercuts_order_apis.updateOutForDelivery([{'increment_id':self.order.increment_id}])
+
+        response_data
 
     def complete(self):
         """
-        Using the SOAP API here, as we need to triggers observers in magento for
+        Using the megento custom API here, as we need to triggers observers in magento for
         reward and credit.
+
         """
-        response_data = self.mage.api.sales_order_shipment.create(
-            {'orderIncrementId': self.order.increment_id})
+        response_data=self.mage.api.tendercuts_order_apis.completeOrders([{'increment_id':self.order.increment_id}])
 
         return response_data
 

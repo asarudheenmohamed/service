@@ -165,7 +165,7 @@ class DriverController(object):
         controller = OrderController(self.conn, order_obj)
         controller.complete()
         # send sms to customer
-        tasks.send_sms.delay(order)
+        tasks.send_sms.delay(order_id)
 
         # update current location for driver
         position_obj = self.record_position(order_id, lat, lon)
