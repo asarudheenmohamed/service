@@ -12,23 +12,10 @@ logger = get_task_logger(__name__)
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
-def send_sms(order_id):
-    """Celery task to send the order's status to the customer."""
-    order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
-    customer = CustomerSearchController.load_basic_info(
-        order_obj[0].customer_id)
-
-    logger.info("Send status as {} to the customer : {}".format(
-        order_obj[0].status, customer[0]))
-
-    SMS().send(customer[2], order_obj[0].status)
-
-
-@app.task(base=TenderCutsTask, ignore_result=True)
 def driver_stat(order_id):
     """Celery task to add the driver completed order"""
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
-    stat_controller = DriverStatController()
+    stat_controller = DriverStatController(order_id)
     orders = stat_controller.generate_stat(
         order_obj.increment_id, order_obj.status)
 

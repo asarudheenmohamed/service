@@ -28,11 +28,11 @@ class DriverStatController(object):
         try:
             driver = DriverOrder.objects.filter(increment_id=order_id)
 
-            driver_stats = DriverStat.objects.get_or_create(
+            driver_stat = DriverStat.objects.get_or_create(
                     driver_id=driver[0].driver_id)
-            driver_stats[0].no_of_orders += 1
-            driver_stats[0].save()
+            driver_stat[0].no_of_orders += 1
+            driver_stat[0].save()
         except ValueError:
             print "This order was not placed"
 
-        return driver_stats[0].no_of_orders
+        return driver_stat[0].no_of_orders
