@@ -5,135 +5,339 @@
 {% endblock %}
 {% block result_list %}
 
+
 <!DOCTYPE html >
+<html>
   <head>
+
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script type="text/javascript" async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFSsOwQqzTYeYPRXBzCGdwJPVl1E7WSAU">
-    </script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-    <title>Creating a Store Locator on Google Maps</title>
-  <style>
-    /* Always set the map height explicitly to define the size of  the 
+      </script>
+      <style>
+      /* Always set the map height explicitly to define the size of  the
      * element that contains the map. */
-    
     #map {
       height: 100%;
     }
-    /* Optional: Makes the sample page fill the window. */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 100%;
-      }
+/* Optional: Makes the sample page fill the window. */
 
-    .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
-    input[type=submit] {
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin-left: 90px;
-    margin-top: 5px;
-    font-size: 16px;
-    }
-    .addlink{
-      visibility: hidden;
-    }
-   
+body{
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  color: #555;
+  backgroud-color: red;
+    font-family: 'Open Sans', sans-serif;
+}
+.container{
+  width: 100%;
+}
+.row{
+  width: 100%;
+}
+.row > div{
+  display: inline-block;
+  padding: 24px 0 0 24px;
+  vertical-align: top;
+  min-height: 100%;
+}
+.col-full{
+  width: 100%;
+}
+.col-left{
+  width: calc(34% - 24px);
+  background-color: #f7f7f7;
+}
+.col-right{
+  width: calc(65% - 48px);
 
- </style>
+  padding-top: 0 !important;
+}
+.object-tools  .object-tools a.golink, .object-tools a.addlink{
+  visibility: hidden;
+}
+
+.driver-list{
+  padding-right: 24px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.margin-right{
+  margin-right: 24px;
+  margin-top: 0px !important;
+}
+.card{
+  background-color: white;
+  padding: 16px 24px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  -ms-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  -o-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  -ms-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* .input-control input */
+.input-control form{
+  margin: 0;
+}
+h3{
+  font-size: 18px;
+}
+.input-control select{
+  margin: 0;
+  /*padding: 8px 0;*/
+  border: 0;
+  border-bottom: 1px solid #999999;
+  height: 38px;
+  width: calc(70% - 16px);
+  margin-right: 8px;
+  font-size: 18px;
+  letter-spacing: 1px;
+  background-color: white;
+}
+.input-control button{
+  margin: 0;
+  padding: 8px;
+  width: 29%;
+  background-color: red;
+  color: white;
+  border: 0px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.col-50:first-of-type{
+  width: calc(49% - 15px);
+  padding-right: 15px;
+}
+
+.col-70{
+  width: calc(70% - 15px);
+  padding-right: 15px;
+  display: inline-block;
+  vertical-align: top;
+}
+.col-30{
+  width: calc(28% - 15px);
+  padding-right: 15px;
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+  float: right;
+}
+
+.driver-name{
+  font-size: 18px;
+  font-weight: 600;
+}
+.status{
+  font-style: italic;
+}
+button{
+  background-color: red;
+  color: white;
+  padding: 8px 24px;
+  border: 0px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.bold{
+  color: #333333;
+  font-weight: 500;
+}
+.light-text{
+  color: #999999;
+}
+.order-id-list{
+  margin-top: 8px;
+}
+.order-id-list div{
+  display: inline-block;
+    padding: 8px;
+    background-color: #f2f2f2;
+    margin: 0 2px 8px;
+}
+
+
+      </style>
+    <title>Creating a Store Locator on Google Maps</title>
   </head>
-  <body style="margin:0px; padding:0px;" onload="initMap()">
-    <div class="container-fluid">
-    <div class="row">
-         <form class="checkform" align="center" action="/admin/driver/driverorder/" method="POST" name='NewsParsingAlertForm'> {% csrf_token %}
-        <div class="col-sm-3">
 
-        <select name="store_id" class='form-control'>
+  <body onload="initMap()">
+    <div class="container">
+      <div class="row">
+        <div class="col-left" valign="top">
+          <h3>TenderCuts Driver Management</h3>
+          <div class="card margin-right">
+            <div class="input-control">
+              <form class="checkform" align="center" action="/admin/driver/driverorder/deposit/" method="POST" name='NewsParsingAlertForm'> 
+                <select name="store_id" >
+                    {% for store in store_obj %}
+                  <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" name="submit">Search</button>
+                      <div><select id="locationSelect" style="width: 10%; display:none;"></select></div>
+              </form>
+            </div>
+          </div>
 
-            {% for store in store_obj %}
-         
-            <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
-            
+          <br />
+          <h3>List of drivers</h3>
+          <div class="driver-list">
+              {% for driver_obj in driver_objects%}
+            <div class="card">
+              <div class="driver-name">{{ driver_obj.name }}</div>
+              <div class="status">Processing</div>
+              <br />
+              <div class="col-70">
+
+                <div><span class="light-text">Mob : +91</span> <span class="bold">{{ driver_obj.phone }}</span></div>
+                <div><span class="light-text">Mail : </span> <span class="bold">{{ driver_obj.email }}</span></div>
+                <br />
+              </div>
+              <div class="col-30">
+                <button type="button" onclick='locmap({{ driver_obj.obj.driver_position.latitude }},{{ driver_obj.obj.driver_position.longitude }},"{{ driver_obj.name }}")'>Trace</button>
+              </div>
+              <br />
+              <br />
+              <div><span class="light-text">Order Id:</span>
+                <div class="order-id-list">
+                {% for order_id in driver_obj.orders%}
+                <div> {{ order_id }} </div>
+                {% endfor %}
+                </div>
+                </div>
+            </div>
             {% endfor %}
+          </div>
+        </div>
+        <div class="col-right" valign="top">
+        <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </body>
 
-        </select>
-        </form>
-        <input type="submit" class="submit" name="submit" value="Search"/>
-        {% for driver_obj in driver_objects%}
-        <div class="card" style="max-width: 20rem;" onclick='locmap({{ driver_obj.obj.driver_position.latitude }},{{ driver_obj.obj.driver_position.longitude }},"{{ driver_obj.name }}")'>
-        <div class="card-body">
-        <label for="driver" class="text-muted">Driver</label>
-        <p class="text-justify">{{ driver_obj.name }}</p>
-        <label for="contactno" class="text-muted">contact No</label>
-        <p >{{ driver_obj.phone }}</p>
-            <label for="order" class="text-muted">Order Id</label>
-            <p >{% for order in driver_obj.orders%} {{ order }} {% endfor %}</p>
-            
-        </div>
-        </div>
-        {% endfor %}
-        
-        </div>
-        
+  <script>
 
-    <div class="col-sm-9">
-        <div id="map" style="width: 900px; height: 900px"></div>
-    </div>
-    </div>
-    </div>
-    </div>
-    <script>
+      document.getElementById('map').style.height = (window.innerHeight - 124) + "px";
       var map;
       var markers = [];
       var infoWindow;
       var locationSelect;
       function initMap() {
-
-        locmap(12.976271,80.22223800000006,'tendercuts')
-      }
-
-        function locmap(lat,lon,name) {
-        
-
-          var sydney = {lat: lat, lng: lon};
-          var map = new google.maps.Map(document.getElementById('map'), {
+        var sydney = {lat: 12.976271, lng: 80.22223800000006};
+        var a=document.getElementById('map').value;
+        var map = new google.maps.Map(document.getElementById('map'), {
           center: sydney,
-          zoom: 14,
+          zoom: 11,
           mapTypeId: 'roadmap',
           mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
         });
 
-        
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
 
         var marker = new google.maps.Marker({
           position: sydney,
           map: map,
-          title: name
+          title: 'Hello World!'
         });
-      
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        infoWindow = new google.maps.InfoWindow();
+
+      }
+
+        function locmap(lat,lon) {
+          // var text1 = document.getElementById("card");
+
+      //do stuff with text1 and text2. E.g.: alert them:
+          var sydney = {lat: lat, lng: lon};
+          var map = new google.maps.Map(document.getElementById('map'), {
+          center: sydney,
+          zoom: 11,
+          mapTypeId: 'roadmap',
+          mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+        });
+
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+          position: sydney,
+          map: map,
+          title: 'Hello World!'
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        infoWindow = new google.maps.InfoWindow();
         }
       
 
-       
+       function createMarker(latlng, name, address) {
+          var html = "<b>" + name + "</b> <br/>" + address;
+          var marker = new google.maps.Marker({
+            map: map,
+            position: latlng
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(html);
+            infoWindow.open(map, marker);
+          });
+          markers.push(marker);
+        }
  
   </script>
-    
-  </body>
+
 </html>
 {% endblock %}
