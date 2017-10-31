@@ -12,7 +12,7 @@ class RewardsPointController:
     def __init__(self, log=None):
         """Initialize amound value and expired date email sent value."""
         self.log = logging.getLogger('reward_pint')
-        self.amount = 50
+        self.amount = 100
         self.is_expired = 0
         self.email_sent = 1
 
