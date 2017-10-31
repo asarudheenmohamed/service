@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
+from app.sale_order.lib.order_data_controller import OrderDataController
 
 
 class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -59,4 +60,26 @@ class DeliveryViewSet(APIView):
         return Response(data)
 
 
+class OrderDataViewSet(APIView):
+    """Endpoint to fetch order details.
 
+    EndPoint:
+        API: sales_order/order_data/
+
+    """
+
+    def get(self, request):
+        """To get our order details.
+
+        Input:
+            order_id
+
+        returns:
+            Response(param_data)
+
+        """
+        order_id = self.request.GET['order_id']
+        controller = OrderDataController(order_id)
+        param_data = controller.order_details(order_id)
+
+        return Response(param_data)

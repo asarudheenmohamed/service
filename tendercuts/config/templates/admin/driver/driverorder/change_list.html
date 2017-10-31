@@ -172,7 +172,7 @@ button{
           <h3>TenderCuts Driver Management</h3>
           <div class="card margin-right">
             <div class="input-control">
-              <form class="checkform" align="center" action="/admin/driver/driverorder/deposit/" method="POST" name='NewsParsingAlertForm'> 
+              <form align="center" action="/admin/driver/driverorder/" method="POST">
                 <select name="store_id" >
                     {% for store in store_obj %}
                   <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
@@ -190,7 +190,6 @@ button{
               {% for driver_obj in driver_objects%}
             <div class="card">
               <div class="driver-name">{{ driver_obj.name }}</div>
-              <div class="status">Processing</div>
               <br />
               <div class="col-70">
 
@@ -199,13 +198,20 @@ button{
                 <br />
               </div>
               <div class="col-30">
-                <button type="button" onclick='locmap({{ driver_obj.obj.driver_position.latitude }},{{ driver_obj.obj.driver_position.longitude }},"{{ driver_obj.name }}")'>Trace</button>
+                <button type="button" onclick='locmap({{ driver_obj.lat_and_lon.latitude }},{{ driver_obj.lat_and_lon.longitude }},"{{ driver_obj.name }}")'>Trace</button>
               </div>
               <br />
               <br />
               <div><span class="light-text">Order Id:</span>
                 <div class="order-id-list">
                 {% for order_id in driver_obj.orders%}
+                <div> {{ order_id }} </div>
+                {% endfor %}
+                </div>
+                </div>
+              <div><span class="light-text">Complete Order Id:</span>
+                <div class="order-id-list">
+                {% for order_id in driver_obj.complete_orders%}
                 <div> {{ order_id }} </div>
                 {% endfor %}
                 </div>
@@ -230,52 +236,10 @@ button{
       var locationSelect;
       function initMap() {
         var sydney = {lat: 12.976271, lng: 80.22223800000006};
-        var a=document.getElementById('map').value;
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: sydney,
-          zoom: 11,
-          mapTypeId: 'roadmap',
-          mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
-        });
-
-        var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-            '<div id="bodyContent">'+
-            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-            'sandstone rock formation in the southern part of the '+
-            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-            'south west of the nearest large town, Alice Springs; 450&#160;km '+
-            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-            'Aboriginal people of the area. It has many springs, waterholes, '+
-            'rock caves and ancient paintings. Uluru is listed as a World '+
-            'Heritage Site.</p>'+
-            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-            '(last visited June 22, 2009).</p>'+
-            '</div>'+
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-
-        var marker = new google.maps.Marker({
-          position: sydney,
-          map: map,
-          title: 'Hello World!'
-        });
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-        infoWindow = new google.maps.InfoWindow();
-
+        locmap(12.976271,80.22223800000006,'TenderCuts')
       }
 
-        function locmap(lat,lon) {
+        function locmap(lat,lon,name) {
           // var text1 = document.getElementById("card");
 
       //do stuff with text1 and text2. E.g.: alert them:
@@ -287,35 +251,10 @@ button{
           mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
         });
 
-        var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-            '<div id="bodyContent">'+
-            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-            'sandstone rock formation in the southern part of the '+
-            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-            'south west of the nearest large town, Alice Springs; 450&#160;km '+
-            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-            'Aboriginal people of the area. It has many springs, waterholes, '+
-            'rock caves and ancient paintings. Uluru is listed as a World '+
-            'Heritage Site.</p>'+
-            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-            '(last visited June 22, 2009).</p>'+
-            '</div>'+
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
-
         var marker = new google.maps.Marker({
           position: sydney,
           map: map,
-          title: 'Hello World!'
+          title: name
         });
         marker.addListener('click', function() {
           infowindow.open(map, marker);
