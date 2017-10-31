@@ -190,7 +190,6 @@ button{
               {% for driver_obj in driver_objects%}
             <div class="card">
               <div class="driver-name">{{ driver_obj.name }}</div>
-              <div class="status">Processing</div>
               <br />
               <div class="col-70">
 
@@ -199,13 +198,20 @@ button{
                 <br />
               </div>
               <div class="col-30">
-                <button type="button" onclick='locmap({{ driver_obj.obj.driver_position.latitude }},{{ driver_obj.obj.driver_position.longitude }},"{{ driver_obj.name }}")'>Trace</button>
+                <button type="button" onclick='locmap({{ driver_obj.lat_and_lon.latitude }},{{ driver_obj.lat_and_lon.longitude }},"{{ driver_obj.name }}")'>Trace</button>
               </div>
               <br />
               <br />
               <div><span class="light-text">Order Id:</span>
                 <div class="order-id-list">
                 {% for order_id in driver_obj.orders%}
+                <div> {{ order_id }} </div>
+                {% endfor %}
+                </div>
+                </div>
+              <div><span class="light-text">Complete Order Id:</span>
+                <div class="order-id-list">
+                {% for order_id in driver_obj.complete_orders%}
                 <div> {{ order_id }} </div>
                 {% endfor %}
                 </div>
