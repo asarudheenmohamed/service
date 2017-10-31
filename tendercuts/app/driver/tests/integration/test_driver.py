@@ -5,10 +5,8 @@ Pre-requisite: The mage consumer should be running
 """
 
 import pytest
-import time
+from pytest_bdd import given, scenario, then, when
 
-from pytest_bdd import given, when, then, scenario
-from app.driver.lib.driver_controller import DriverController
 from app.core.models import SalesFlatOrder
 
 
@@ -27,8 +25,34 @@ given(
     fixture='generate_mock_order')
 
 
-@given('a driver is assigned to the order')
-def driver_controller(mock_user, generate_mock_order):
+@given('Fetch related order by <store_id>')
+def fetch_related_order(cache, auth_driver_rest,
+                        store_id, generate_mock_order):
+    """Generate mock order and Fetch relevent orders based on mock order id.
+
+    Params:
+        auth_driver_rest(pytest fixture): user requests
+        generate_mock_order(obj): mock order object
+
+    Asserts:
+        Check response not equal to None
+        Check response status code in equal to 200
+        Check response status is equal to processing state
+
+    """
+    increment_id = str(generate_mock_order.increment_id)
+    response = auth_driver_rest.get(
+        "/driver/fetch_related_order/",
+        {'order_id': increment_id[-2:],
+         'store_id': store_id},
+        format='json')
+    cache['increment_id'] = response.data['results'][0]['increment_id']
+    cache['store_id'] = store_id
+
+
+@given('a driver is assigned to the order and the driver location for <latitude><longitude>')
+def driver_controller(cache, auth_driver_rest,
+                      mock_user, latitude, longitude):
     """Assign the order.
 
     params:
@@ -36,33 +60,52 @@ def driver_controller(mock_user, generate_mock_order):
         generate_mock_order (fixture) - generates a mock order.
 
     """
-    controller = DriverController(mock_user)
-    controller.assign_order(generate_mock_order)
+    response = auth_driver_rest.post(
+        "/driver/assign/",
+        {'order_id': cache['increment_id'],
+         'store_id': cache['store_id'],
+         'latitude': latitude,
+         'longitude': longitude,
+         },
+        format='json')
 
-    return controller
 
+@when('a update driver current locations for <latitude> and <longitude> <status> <message>')
+def driver_position_update(
+        cache,
+        auth_driver_rest,
+        latitude,
+        longitude,
+        status,
+        message):
+    """Test driver location updations.
 
-@when('the driver completes the order')
-def complete_order(driver_controller, generate_mock_order):
-    """Complete the order.
+    Params:
+        auth_driver_rest(pytest fixture):user requests
+
 
     Asserts:
-        Verify if the order is set in out_delivery stat
-
-    params:
-        driver_controller (fixture) - generates a driver object.
-        generate_mock_order (fixture) - generates a mock order.
+        Check response not equal to None
+        Check response status code in equal to 200
+        Check response status in equal to True
+        Check response message in equal to param message
 
     """
-    time.sleep(5)
-    order = SalesFlatOrder.objects.filter(
-        increment_id=generate_mock_order.increment_id).first()
-    assert order.status == 'out_delivery'
-    driver_controller.complete_order(generate_mock_order.increment_id)
+    response = auth_driver_rest.post(
+        "/driver/driver_position/",
+        {'latitude': latitude,
+            'longitude': longitude,
+            'order_id': cache['increment_id']},
+        format='json')
+    assert (response) is not None
+    assert response.status_code == 200
+    assert str(response.data['status']) == status
+    assert response.data[
+        'message'] == message
 
 
-@then('the order should be completed')
-def order_complete(generate_mock_order):
+@then('the order should be completed and the driver location for <latitude><longitude>')
+def order_complete(cache, auth_driver_rest, latitude, longitude):
     """Assert if order complete.
 
     params:
@@ -72,7 +115,12 @@ def order_complete(generate_mock_order):
         the status of the order.
 
     """
-    time.sleep(10)
-    order = SalesFlatOrder.objects.filter(
-        increment_id=generate_mock_order.increment_id).first()
-    assert order.status == 'complete'
+    response = auth_driver_rest.post(
+        "/driver/assign/complete/",
+        {'order_id': cache['increment_id'],
+         'latitude': latitude,
+         'longitude': longitude},
+        format='json')
+
+    assert (response) is not None
+    assert response.status_code == 201

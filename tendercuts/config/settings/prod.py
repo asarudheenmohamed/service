@@ -57,6 +57,7 @@ CACHES = {
     },
 }
 
+
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",

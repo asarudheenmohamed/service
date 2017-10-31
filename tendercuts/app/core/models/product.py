@@ -100,6 +100,7 @@ class CatalogProductFlat(models.Model):
     uom_value = models.CharField(max_length=255, blank=True, null=True)
     weight_description = models.CharField(
         max_length=255, blank=True, null=True)
+    spicy = models.IntegerField(blank=True, null=True)
 
     class Meta:
         app_label = "magento"
@@ -185,4 +186,16 @@ class CatalogProductFlat15(CatalogProductFlat):
     class Meta:
         managed = False
         db_table = 'catalog_product_flat_15'
+        app_label = "magento"
+
+class CatalogProductFlat16(CatalogProductFlat):
+    class Meta:
+        managed = False
+        db_table = 'catalog_product_flat_16'
+        app_label = "magento"
+
+class CatalogProductFlat18(CatalogProductFlat):
+    class Meta:
+        managed = False
+        db_table = 'catalog_product_flat_18'
         app_label = "magento"

@@ -35,7 +35,7 @@ app.conf.beat_schedule = {
     }
 }
 
-queues = [Queue('default', routing_key='task.#')]
+queues = [Queue('default', routing_key='task.#'), Queue('celery', routing_key='task.#')]
 queues.extend(settings.CELERY_QUEUES.values())
 
 app.conf.task_queues = tuple(queues)

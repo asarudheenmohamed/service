@@ -68,3 +68,13 @@ class CatalogCategoryFlatStore15Serializer(serializers.ModelSerializer):
     class Meta:
         model = models.CatalogCategoryFlatStore15
         fields = PRODUCT_FIELDS
+
+class CatalogCategoryFlatStore16Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogCategoryFlatStore16
+        fields = PRODUCT_FIELDS
+
+class CatalogCategoryFlatStore18Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogCategoryFlatStore18
+        fields = PRODUCT_FIELDS

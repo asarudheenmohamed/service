@@ -13,7 +13,7 @@ from app.core.lib.test.utils import *
 class TestOrder:
     """Test promised delivery time and order count."""
 
-    def test_orders(self, auth_rest):
+    def test_orders(self, auth_rest, mock_user):
         """Test promised delivery time and orders count.
 
         Params:
@@ -30,10 +30,14 @@ class TestOrder:
             hour=0, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
         shedule_date = dateutil.parser.parse(
             "{} {}".format(sheduled_date, "9:00"))
-        order_obj = GenerateOrder()
-        order_obj = order_obj.generate_order(18963, scheduled_order=True)
+
+        # 10 order place in mock order
+        for i in range(10):
+            order_obj = GenerateOrder()
+            order_obj = order_obj.generate_order(
+                mock_user.entity_id, scheduled_order=True)
         orders = auth_rest.get("/sale_order/orders/?user_id={}".format(
-            18963), format='json')
+            mock_user.entity_id), format='json')
         print(orders)
 
         assert str(orders.json()['results'][0]['promised_delivery_time']) == format(

@@ -25,3 +25,22 @@ def driver_stat(order_id):
 
     logger.info("No of order is added to driver : {}".format(
         order_obj[0].driver_id))
+
+def send_sms(order_id):
+    """Celery task to send the order's status to the customer."""
+
+    order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
+    if not order_obj:
+        raise ValueError('Order object Does not exist')
+
+    customer = CustomerSearchController.load_basic_info(
+        order_obj[0].customer_id)
+
+    msg = {'out_delivery': "Your order #{}, is now out for delivery.Have a great meal Wish to serve you again!",
+           'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
+           'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"}
+
+    logger.info("Send status as {} to the customer : {}".format(
+        order_obj[0].status, customer[0]))
+
+    SMS().send(int(customer[2]), msg[order_obj[0].status].format(order_id))

@@ -1,9 +1,17 @@
 """All driver controller related actions."""
-from app.core.models import SalesFlatOrder
-from config.celery import app
-from config.messaging import ORDER_STATE
 
-from ..models import DriverOrder
+import logging
+
+import app.core.lib.magento as mage
+from app.core.lib.order_controller import OrderController
+from app.core.models import SalesFlatOrder
+from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.communication import SMS
+from app.driver import tasks
+
+from ..models import DriverOrder, DriverPosition, OrderEvents
+
+logger = logging.getLogger(__name__)
 
 
 class DriverController(object):
@@ -13,6 +21,13 @@ class DriverController(object):
         """Constructor."""
         super(DriverController, self).__init__()
         self.driver = driver
+        self.conn = mage.Connector()
+
+    @classmethod
+    def driver_obj(cls, user_id):
+        """Fetch Flatcustomer object by using user_id."""
+        driver = CustomerSearchController.load_by_id(user_id)
+        return cls(driver)
 
     def get_order_obj(self, order):
         """Get order object based on order id.
@@ -27,46 +42,49 @@ class DriverController(object):
 
         return order_obj[0]
 
-    def assign_order(self, order,store_id):
+    def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
 
         Params:
             order: (SalesFlatOrder|str) Order obj or increment_id
+            store_id (str): store id
+            lat(int): Driver location latitude
+            lon(lon): Driver location longitude
 
         Returns:
             obj DriverOrder
 
         """
-        if isinstance(order, SalesFlatOrder):
-            order = order.increment_id
+        order_obj = self.get_order_obj(order)
 
-        obj = self.get_order_obj(order)
-
-        if str(store_id) != str(obj.store_id):
+        if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=order):
+        elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
             raise ValueError('This order is already assigned')
 
-        else:
+        driver_object = DriverOrder.objects.create(
+            increment_id=order, driver_id=self.driver.entity_id)
 
-            driver_object = DriverOrder.objects.create(
-                increment_id=order,
-                driver_id=self.driver.customer.entity_id)
+        logger.info(
+            '{} this order assigned to the driver {}'.format(
+                order, self.driver.entity_id))
 
-            with app.producer_or_acquire() as producer:
-                producer.publish(
-                    {"increment_id": order,
-                     "status": 'out_delivery'},
-                    serializer='json',
-                    exchange=ORDER_STATE,
-                    declare=[ORDER_STATE]
-                )
-            driver_object.save()
+        controller = OrderController(self.conn, order_obj)
+        # the order move to out for delivery
+        logger.info(
+            'This order:{} move to out for delivery.'.format(order))
 
-            return driver_object
+        controller.out_delivery()
+        # update current location for driver
+        position_obj = self.record_position(order, lat, lon)
+
+        self._record_events(position_obj, 'out_delivery')
+
+        tasks.send_sms.delay(order)
+        return driver_object
 
     def unassign_order(self, order):
         """Unassign the order to the driver.
@@ -82,14 +100,13 @@ class DriverController(object):
         driver_assigned_obj = DriverOrder.objects.filter(increment_id=order)
         driver_assigned_obj.delete()
 
-        with app.producer_or_acquire() as producer:
-            producer.publish(
-                {"increment_id": order,
-                 "status": 'processing'},
-                serializer='json',
-                exchange=ORDER_STATE,
-                declare=[ORDER_STATE]
-            )
+        controller = OrderController(self.conn, obj)
+        controller.processing()
+
+        logger.info(
+            'The Driver {} unassigned to this order {}'.format(
+                self.driver.entity_id,
+                order))
 
     def fetch_orders(self, status):
         """Return all active orders.
@@ -99,8 +116,12 @@ class DriverController(object):
 
         """
         order_ids = DriverOrder.objects.filter(
-            driver_id=self.driver.customer.entity_id) \
+            driver_id=self.driver.entity_id) \
             .values_list('increment_id', flat=True)
+
+        logger.info(
+            'Fetch that {} Driver assigning {} state orders'.format(
+                self.driver.entity_id, status))
 
         return SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
@@ -117,26 +138,105 @@ class DriverController(object):
             [SalesFlatOrder]
 
         """
+        logger.info(
+            'Fetch related order for that order last id {} and store id {}'.format(
+                order_end_id, store_id))
 
         order_obj = SalesFlatOrder.objects.filter(
-            increment_id__endswith=str(order_end_id),
-            store_id=str(store_id),
-            status='Processing')
+            increment_id__endswith=order_end_id,
+            store_id=store_id,
+            status='processing')
 
         return order_obj
 
-    def complete_order(self, order_id):
+    def complete_order(self, order_id, lat, lon):
         """Publish the message to the Mage queues.
 
         Params:
             order_id (str): Increment ID
+            lat(int): Driver location latitude
+            lon(lon): Driver location longitude
 
         """
-        with app.producer_or_acquire() as producer:
-            producer.publish(
-                {"increment_id": order_id,
-                 "status": 'complete'},
-                serializer='json',
-                exchange=ORDER_STATE,
-                declare=[ORDER_STATE]
-            )
+        logger.info("Complete this order {}".format(order_id))
+
+        order_obj = self.get_order_obj(order_id)
+
+        controller = OrderController(self.conn, order_obj)
+        controller.complete()
+        # send sms to customer
+        tasks.send_sms.delay(order)
+
+        # update current location for driver
+        position_obj = self.record_position(order_id, lat, lon)
+        self._record_events(position_obj, 'completed')
+
+    def record_position(self, order_id, lat, lon):
+        """Create a Driver current location latitude and longitude.
+
+        Params:
+            order_id: order increment id
+            lat(int): driver location latitude
+            lon(int): driver location longitude
+
+        Returns:
+            Returns DriverPosition object
+
+        """
+        order_obj = self.get_order_obj(order_id)
+
+        driver_obj = DriverOrder.objects.filter(
+            driver_id=self.driver.entity_id, increment_id=order_obj.increment_id)
+
+        if not driver_obj:
+            raise ValueError('This order is not assign to you.')
+
+        obj = DriverPosition.objects.create(
+            driver=driver_obj[0], latitude=lat, longitude=lon)
+        logger.info(
+            "update the location, latitude and longitude for that driver {}".format(
+                obj.driver_id))
+
+        return obj
+
+    def _record_events(self, driver_position, status):
+        """Create a Driver current locations.
+
+        Params:
+
+            locations(str):driver current locations
+            status(str): order status
+
+        Returns:
+            Returns OrderEvents object
+
+        """
+        events_obj = OrderEvents.objects.create(
+            driver_position=driver_position, status=status)
+
+        logger.info(
+            "update the location and order status for that driver {}".format(
+                events_obj.driver_position.driver_id))
+
+        return events_obj
+
+    def driver_delay_sms(self, order_id):
+        """Send SMS to the customer.
+
+        Params:
+            order_id(str):Customer placed order_id
+
+        Returns:
+            Returns True
+
+        """
+        customer_id = self.get_order_obj(order_id).customer_id
+        customer = CustomerSearchController.load_basic_info(customer_id)
+        SMS().send(customer[2], 'I am in traffic, Sorry for the delay')
+        status = True
+
+        logger.info(
+            "sending the delay SMS to the customer:{}".format(
+                customer[0]))
+
+        return status

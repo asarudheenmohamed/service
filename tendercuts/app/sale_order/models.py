@@ -37,7 +37,7 @@ class ScheduledDelivery(Delivery):
 
     @property
     def cost(self):
-        return 0
+        return 29
 
     def is_slots_available(self):
         return True
@@ -68,7 +68,7 @@ class ScheduledDelivery(Delivery):
     def serialize(self):
         data = {}
         data["name"] = "Scheduled Delivery"
-        data["cost"] = "19"
+        data["cost"] = self.cost
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = self.available_slots()
 
@@ -79,7 +79,7 @@ class ExpressDelivery(Delivery):
 
     @property
     def cost(self):
-        return 49
+        return 39
 
     def time_in_range(self, start, end, x):
         """Return true if x is in the range [start, end]"""
@@ -95,7 +95,7 @@ class ExpressDelivery(Delivery):
     def serialize(self):
         data = {}
         data["name"] = "Express Delivery"
-        data["cost"] = "49"
+        data["cost"] = self.cost
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = []
         # Hack for the bug in mobile app

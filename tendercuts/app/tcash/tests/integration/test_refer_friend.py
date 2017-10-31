@@ -34,6 +34,7 @@ def new_signup(cache):
 
 @given("logs into his account")
 def login(cache, rest):
+    """Login the new customer"""
     new_customer = cache["new_customer"]
 
     data = {"email": new_customer.email, "password": '12345678'}
@@ -45,6 +46,7 @@ def login(cache, rest):
 
 @given("is referred by an existing user")
 def refer_customer(cache, mock_user):
+    """Add 50 to reffered customer."""
     authenticated_rest = cache["authenticated_rest"]
 
     referral_response = authenticated_rest.post(
@@ -53,13 +55,13 @@ def refer_customer(cache, mock_user):
 
     assert referral_response.status_code == 200, "Unable to reach endpoint"
     resp = referral_response.json()
-
     assert resp['status'] == True, "Endpoint returned false"
-    assert "50" in resp['message'], "Invalid message sent"
+    assert "100" in resp['message'], "Invalid message sent"
 
 
-@given("the new user get 50 in his account")
+@given("the new user get 100 in his account")
 def get_fifty(cache):
+    """Check New customer reward Points."""
     authenticated_rest = cache["authenticated_rest"]
     new_customer = cache["new_customer"]
     fetch_obj = authenticated_rest.get(
@@ -67,11 +69,12 @@ def get_fifty(cache):
 
     resp = fetch_obj.json()
     assert resp['attribute'][0][
-        'value'] == 50, "Signed up user did not receive 50 points"
+        'value'] == 100, "Signed up user did not receive 50 points"
 
 
 @when("the new user places an order")
 def place_order(cache, magento):
+    """Order placed in new customer."""
     new_customer = cache["new_customer"]
     order_obj = GenerateOrder()
     order_obj = order_obj.generate_order(new_customer.entity_id)
@@ -80,12 +83,12 @@ def place_order(cache, magento):
     controller.complete()
 
 
-@then("the referee get 50 in his account")
+@then("the referee get 100 in his account")
 def check_bonus(auth_rest, mock_user):
-    """Doc here"""
+    """Check referee bonus point 50 added."""
     fetch_obj = auth_rest.get(
         "/user/fetch/?phone={}".format(mock_user.mobilenumber))
 
     resp = fetch_obj.json()
     assert resp['attribute'][0][
-        'value'] == 50, "Referee did not receive 50 points"
+        'value'] == 100, "Referee did not receive 50 points"

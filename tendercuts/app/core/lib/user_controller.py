@@ -212,14 +212,12 @@ class CustomerController(object):
 
         """
         salts = self.customer.password_hash.split(":")
-
         if len(salts) == 1:
             return self.customer.password_hash == hashlib.md5(
                 input_password).hexdigest()
 
         salted_hash, salt = salts
         computed_hash = hashlib.md5(salt + input_password)
-
         return computed_hash.hexdigest() == salted_hash
 
     def reset_password(self, new_password, dry_run=False):
