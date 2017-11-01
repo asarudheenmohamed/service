@@ -3,13 +3,13 @@
 import logging
 
 import app.core.lib.magento as mage
-from app.core.lib.order_controller import OrderController
-from app.core.models import SalesFlatOrder
-from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
+from app.core.lib.order_controller import OrderController
+from app.core.lib.user_controller import CustomerSearchController
+from app.core.models import SalesFlatOrder
 from app.driver import tasks
 
-from ..models import DriverOrder, DriverPosition, OrderEvents
+from ..models import DriverOrder, DriverPosition, DriverStat, OrderEvents
 
 logger = logging.getLogger(__name__)
 
@@ -240,3 +240,10 @@ class DriverController(object):
                 customer[0]))
 
         return status
+
+    def driver_stat_orders(self):
+        """Returns a driver stat object."""
+        driver_stat_obj = DriverStat.objects.filter(
+            driver_id=self.driver.entity_id)
+
+        return driver_stat_obj

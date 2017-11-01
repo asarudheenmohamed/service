@@ -32,6 +32,10 @@ router.register(
     r'delay_sms',
     views.DriverSmsViewSet,
     base_name='DriverSmsViewSet')
+router.register(
+    r'driver_stat',
+    views.DriverStatViewSet,
+    base_name='DriverStatViewSet')
 
 
 urlpatterns = [
