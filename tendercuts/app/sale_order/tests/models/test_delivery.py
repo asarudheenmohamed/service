@@ -20,7 +20,7 @@ class TestDeliveryModel:
         """
         Verify delivery cost
         """
-        assert ScheduledDelivery().cost == 0
+        assert ScheduledDelivery().cost == 29
         assert ExpressDelivery().cost == 49
 
     def test_slots_available(self):

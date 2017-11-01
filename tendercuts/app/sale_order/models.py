@@ -79,7 +79,7 @@ class ExpressDelivery(Delivery):
 
     @property
     def cost(self):
-        return 39
+        return 49
 
     def time_in_range(self, start, end, x):
         """Return true if x is in the range [start, end]"""
