@@ -11,4 +11,5 @@ node_modules/
 
 **/.idea
 tendercuts/npm-debug.log
+tendercuts/config/static
 

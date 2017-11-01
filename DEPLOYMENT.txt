@@ -78,8 +78,8 @@ Part - 3 Nginx server
 
  7. flower -A config --port=5555
 
-Part - 5: Rabbit mq deployment
 
+Ensure you create a super user
 
 
 
