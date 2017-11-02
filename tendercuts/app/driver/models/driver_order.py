@@ -27,3 +27,10 @@ class OrderEvents(models.Model):
     driver_position = models.ForeignKey(DriverPosition)
     updated_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=200)
+
+
+class DriverStat(models.Model):
+    """Driver Stat model."""
+    driver_id = models.IntegerField(blank=True, null=True)
+    no_of_orders = models.IntegerField(default=0)
+    km_travels = models.FloatField(blank=True, null=True)
