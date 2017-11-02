@@ -695,6 +695,11 @@ class SalesFlatOrderItem(models.Model):
         max_digits=12, decimal_places=4, blank=True, null=True)
     customercredit_hidden_tax = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
+    deliverydate = models.DateTimeField(blank=True, null=True)
+    deliveryslot = models.IntegerField(blank=True, null=True)
+    promisedeliverytime = models.CharField(max_length=255, blank=True, null=True)
+    deliverytype = models.IntegerField(blank=True, null=True)
+    grams = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
 
     class Meta:
         managed = False

@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'exists', views.UserExistsApi.as_view()),
     url(r'change_password', views.UserChangePassword.as_view()),
     url(r'edit_profile', views.EditProfile.as_view()),
+    url(r'version_control', views.VersionControl.as_view()),
 ]

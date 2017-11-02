@@ -68,6 +68,11 @@ MAGENTO = {
     "proto": "http"
 }
 
+MOBILE_VERSION = {
+    "min_mobile_version": '1.9.2',
+    "current_mobile_version": '1.9.5'
+}
+
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",

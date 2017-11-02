@@ -1,11 +1,9 @@
 """All driver controller related actions."""
-<<<<<<< HEAD
-=======
 import logging
 
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
->>>>>>> origin/feat-driverassign
+
 from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
