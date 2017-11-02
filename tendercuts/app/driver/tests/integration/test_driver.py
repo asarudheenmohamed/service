@@ -6,8 +6,8 @@ Pre-requisite: The mage consumer should be running
 
 import pytest
 from pytest_bdd import given, scenario, then, when
-
-from app.core.models import SalesFlatOrder
+import app.core.lib.magento as mage
+from app.core.lib.order_controller import OrderController
 
 
 @pytest.mark.django_db
@@ -41,6 +41,9 @@ def fetch_related_order(cache, auth_driver_rest,
 
     """
     increment_id = str(generate_mock_order.increment_id)
+    # Change that order status because fetch only processing orders
+    controller = OrderController(mage.Connector(), generate_mock_order)
+    controller.processing()
     response = auth_driver_rest.get(
         "/driver/fetch_related_order/",
         {'order_id': increment_id[-2:],
@@ -94,8 +97,7 @@ def driver_position_update(
     response = auth_driver_rest.post(
         "/driver/driver_position/",
         {'latitude': latitude,
-            'longitude': longitude,
-            'order_id': cache['increment_id']},
+            'longitude': longitude},
         format='json')
     assert (response) is not None
     assert response.status_code == 200

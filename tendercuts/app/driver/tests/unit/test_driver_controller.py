@@ -117,18 +117,18 @@ class TestDriverController:
 
         controller = DriverController(mock_user)
         # test record position
-        response = controller.record_position(generate_mock_order.increment_id,
-                                              12.965365,
-                                              80.246106)
+        response = controller.record_position(
+            12.965365,
+            80.246106)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106
 
         # test order events
-        response = controller.record_events(
-            response, 'out_delivery')
+        response = controller._record_events(obj,
+                                             response, 'out_delivery')
 
-        assert response.driver_position.driver.increment_id == generate_mock_order.increment_id
+        assert response.driver.increment_id == generate_mock_order.increment_id
 
     def test_driver_delay_sms(self, mock_user, generate_mock_order):
         """Test Customer receives the SMS.
