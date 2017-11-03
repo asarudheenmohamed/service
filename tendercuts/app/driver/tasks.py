@@ -6,24 +6,26 @@ from app.core.lib.celery import TenderCutsTask
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.communication import SMS
 from app.core.models import SalesFlatOrder
+from app.driver.lib.driver_stat_controller import DriverStatController
 
-
-logger = get_task_logger(__name__)
+import logging
+logger = logging.getLogger(__name__)
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
 def driver_stat(order_id):
     """Celery task to add the driver completed order"""
     try:
+       logger.info('driver stat order id {}'.format(order_id))
        order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
     except ValueError:
         print "This order id is invalid"
     stat_controller = DriverStatController(order_id)
     orders = stat_controller.generate_stat(
-        order_obj.increment_id, order_obj.status)
+        order_obj[0].increment_id, order_obj[0].status)
 
-    logger.info("No of order is added to driver : {}".format(
-        order_obj[0].driver_id))
+    #logger.info("No of order is added to driver : {}".format(
+        #order_obj[0].))
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)

@@ -1,6 +1,6 @@
 """Enpoint for the add new user reward amount status."""
 import logging
-
+from rest_framework import renderers, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -67,4 +67,4 @@ class RewardPointAmountApi(APIView):
                              'message': 'Already  you have be referred'
                              ' by your friend {}'.format(refered_user_basic_info[3])}
 
-        return Response(response_data)
+        return Response(response_data,status=status.HTTP_201_CREATED)
