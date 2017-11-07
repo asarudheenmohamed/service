@@ -69,8 +69,8 @@ MAGENTO = {
 }
 
 MOBILE_VERSION = {
-    "min_mobile_version": '1.9.2',
-    "current_mobile_version": '1.9.5'
+    "min_app_version": '1.9.2',
+    "current_app_version": '1.9.6'
 }
 
 PAYMENT = {

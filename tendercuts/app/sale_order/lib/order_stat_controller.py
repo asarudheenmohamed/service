@@ -1,7 +1,8 @@
 """All order controller related actions."""
-import logging
-import dateutil.parser
 import datetime
+import logging
+
+import dateutil.parser
 from django.db.models import Sum
 
 from app.core.lib.user_controller import CustomerSearchController
@@ -27,10 +28,12 @@ class OrderDataController(object):
             Returns params_data
 
         """
-        orders = SalesFlatOrder.objects.filter(increment_id=order_id)
+        order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
+        if not order_obj:
+            raise ValueError('Order object does not exist')
 
         params_data = []
-        for order in orders:
+        for order in order_obj:
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
@@ -77,7 +80,7 @@ class OrderDataController(object):
 
 
 class StoreOrderController(object):
-    """Order Data controller."""
+    """Store order controller."""
 
     def __init__(self, store):
         """Constructor."""
@@ -104,10 +107,9 @@ class StoreOrderController(object):
             .values('sku').annotate(Sum('qty_ordered'))
 
         sku_data = []
-        sku_orders = order_data.filter(sku=sku)
-        for sku_order in sku_orders:
-            sku_list = {'SKU': sku_order['sku'],
-                        'Qty': sku_order['qty_ordered__sum']}
-            sku_data.append(sku_list)
+        sku_orders = order_data.get(sku=sku)
+        sku_list = {'SKU': sku_orders['sku'],
+                    'Qty': sku_orders['qty_ordered__sum']}
+        sku_data.append(sku_list)
 
         return sku_data

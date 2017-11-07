@@ -1,34 +1,37 @@
-"""API endpoint to check mobile version."""
+"""API endpoint to check customer's mobile app version."""
 
 import logging
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..lib.mobile_version_controller import MobileVersionControl
+from ..lib.app_version_controller import AppVersionControl
 
 logger = logging.getLogger(__name__)
 
 
 class VersionControl(APIView):
-    """Endpoint to check whetehr user's mobile need to upgrade or not.
+    """Endpoint to check whether customer's app need to upgrade or not.
 
     EndPoint:
-        API: user/version_compare/
-    
+        API: user/version_control/
+
     """
-    
     def post(self, request, format=None):
-        """To check customer's mobile version to our supported version.
+        """To check customer's app version to our supported version.
 
         Input:
-            mobile_verson
+            app_verson(str): Customer's mobile app version
 
         returns:
             Response({upgraded: bool, mandatory_upgrade: bool})
 
         """
-        customer_mob_ver = request.data["mobile_verson"]
-        version = MobileVersionControl()
-        upgrade = version.version_comparision(customer_mob_ver)
+        customer_app_ver = request.data["app_verson"]
+        version = AppVersionControl()
+        upgrade = version.version_comparision(customer_app_ver)
+
+        logger.info("Customer mobile app version {} was checked".format(
+            customer_app_ver))
 
         return Response(upgrade)

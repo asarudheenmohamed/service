@@ -2,16 +2,14 @@
 import datetime
 import json
 
-from . import models
-from . import serializers
-from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-
-from rest_framework import status
 from rest_framework.views import APIView
 
-from app.sale_order.lib.order_stat_controller import OrderDataController, StoreOrderController
+from app.sale_order.lib.order_stat_controller import (OrderDataController,
+                                                      StoreOrderController)
+
+from . import models, serializers
 
 
 class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
