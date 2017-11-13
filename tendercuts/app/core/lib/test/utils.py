@@ -4,11 +4,14 @@ Contains helper functions to place order.
 """
 
 from datetime import datetime
+# import dateutil.parser
 
 import pytz
 from rest_framework.test import APIClient
 
 import app.core.lib.magento as mage
+
+from app.core.models import SalesFlatOrder, SalesFlatOrderItem
 
 
 class GenerateOrder(object):
@@ -18,7 +21,14 @@ class GenerateOrder(object):
         """Initialize in generate mork order object."""
         pass
 
-    def generate_order(self, customer_id, scheduled_order=False):
+    def add_product(self, api, cart_id, product_id):
+        for productname, qty in product_id:
+                product = api.catalog_product.info(productname)
+                product['qty'] = qty
+                api.cart_product.add(cart_id, [product], "7", "7")
+
+
+    def generate_order(self, customer_id, scheduled_order=False, product_id=[(196,1)]):
         """Generate order base customer id.
 
         Params:
@@ -35,7 +45,7 @@ class GenerateOrder(object):
             return in user order object
 
         """
-        from app.core.models import SalesFlatOrder
+        # from app.core.models import SalesFlatOrder
         conn = mage.Connector()
         api = conn.api
         cart_id = api.cart.create("7")
@@ -47,9 +57,8 @@ class GenerateOrder(object):
         customer['mode'] = 'customer'
         api.cart_customer.set(cart_id, customer)
 
-        product = api.catalog_product.info(196)
-        product['qty'] = 1
-        api.cart_product.add(cart_id, [product], "7", "7")
+        self.add_product(api, cart_id, product_id)
+
         lastname = 'Test User'if not customer[
             'lastname'] else customer['lastname']
         address = [{
@@ -97,6 +106,7 @@ class GenerateOrder(object):
         order_id = api.cart.order(cart_id, "7", None)
 
         orders = SalesFlatOrder.objects.filter(increment_id=order_id)
+        item_obj = SalesFlatOrderItem.objects.filter(order__increment_id=order_id)
         if scheduled_order:
             shedule_date = datetime.now()
             order = orders[0]
@@ -106,6 +116,12 @@ class GenerateOrder(object):
                 hour=0, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
             order.scheduled_slot = 52
             order.save()
+   
+            items = item_obj[0]
+            items.deliverydate = shedule_date.replace(
+                    hour=0, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
+            items.save()
+
         assert len(orders) == 1
 
         return orders[0]

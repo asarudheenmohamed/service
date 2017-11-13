@@ -1,16 +1,15 @@
+"""Endpoint to provide store and order details."""
 import datetime
 import json
 
-from . import models
-from . import serializers
-from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
-
-from rest_framework import status
 from rest_framework.views import APIView
 
-from app.sale_order.lib.order_data_controller import OrderDataController
+from app.sale_order.lib.order_stat_controller import (OrderDataController,
+                                                      StoreOrderController)
+
+from . import models, serializers
 
 
 class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,13 +18,14 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
 
     Enpoint to provide a list for sales orders
     """
+
     # queryset = models.SalesFlatOrder.objects.all()
     serializer_class = serializers.SalesOrderSerializer
 
     def get_queryset(self):
         try:
             user_id = self.request.query_params['user_id']
-                # .select_related("driver")       \
+            # .select_related("driver")       \
             queryset = models.SalesFlatOrder.objects        \
                 .filter(customer_id=user_id)                \
                 .exclude(status__in=['canceled', 'closed']) \
@@ -83,3 +83,32 @@ class OrderDataViewSet(APIView):
         param_data = controller.order_details(order_id)
 
         return Response(param_data)
+
+
+class StoreDataViewSet(APIView):
+    """Endpoint to fetch store order details.
+
+    EndPoint:
+        API: sales_order/store_order/
+
+    """
+
+    def get(self, request):
+        """To get our order details.
+
+        params:
+            request:
+                1.store_id(int) : Store id
+                2.deliverydate(DateTimeField): Order's delivery date
+                3.sku(str) : Product sku name
+        returns:
+            Response(order_list)
+
+        """
+        store_id = self.request.GET['store_id']
+        deliverydate = self.request.GET['deliverydate']
+        sku = self.request.GET['sku']
+        controller = StoreOrderController(store_id)
+        sku_order = controller.store_details(store_id, deliverydate, sku)
+
+        return Response(sku_order)

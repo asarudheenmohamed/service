@@ -57,6 +57,11 @@ CACHES = {
     },
 }
 
+MOBILE_VERSION = {
+    "min_app_version": '1.9.2',
+    "current_app_version": '1.9.6'
+}
+
 
 PAYMENT = {
     "SIMPL": {

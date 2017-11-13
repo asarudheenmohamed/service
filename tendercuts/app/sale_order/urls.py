@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'', include(router.urls)),
     url(r'delivery_slots', views.DeliveryViewSet.as_view()),
     url(r'order_data', views.OrderDataViewSet.as_view()),
+    url(r'store_order', views.StoreDataViewSet.as_view()),
 
 ]
