@@ -29,10 +29,10 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    'every-minute': {
-        'task': 'app.payment.tasks.check_payment_status',
-        'schedule': crontab(minute='*/3')
-    }
+#    'every-minute': {
+#        'task': 'app.payment.tasks.check_payment_status',
+#        'schedule': crontab(minute='*/3')
+#    }
 }
 
 queues = [Queue('default', routing_key='task.#'), Queue('celery', routing_key='task.#')]
