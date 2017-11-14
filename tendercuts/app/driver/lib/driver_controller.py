@@ -79,9 +79,9 @@ class DriverController(object):
 
         controller.out_delivery()
         # update current location for driver
-        position_obj = self.record_position(order, lat, lon)
+        position_obj = self.record_position(lat, lon)
 
-        self._record_events(position_obj, 'out_delivery')
+        self._record_events(driver_object, position_obj, 'out_delivery')
 
         tasks.send_sms.delay(order)
         return driver_object
@@ -146,7 +146,6 @@ class DriverController(object):
             increment_id__endswith=order_end_id,
             store_id=store_id,
             status='processing')
-
         return order_obj
 
     def complete_order(self, order_id, lat, lon):
@@ -161,17 +160,18 @@ class DriverController(object):
         logger.info("Complete this order {}".format(order_id))
 
         order_obj = self.get_order_obj(order_id)
-
+        driver_object = DriverOrder.objects.filter(
+            increment_id=order_id, driver_id=self.driver.entity_id)
         controller = OrderController(self.conn, order_obj)
         controller.complete()
         # send sms to customer
         tasks.send_sms.delay(order_id)
         tasks.driver_stat.delay(order_id)
         # update current location for driver
-        position_obj = self.record_position(order_id, lat, lon)
-        self._record_events(position_obj, 'completed')
+        position_obj = self.record_position(lat, lon)
+        self._record_events(driver_object[0], position_obj, 'completed')
 
-    def record_position(self, order_id, lat, lon):
+    def record_position(self, lat, lon):
         """Create a Driver current location latitude and longitude.
 
         Params:
@@ -183,23 +183,16 @@ class DriverController(object):
             Returns DriverPosition object
 
         """
-        order_obj = self.get_order_obj(order_id)
-
-        driver_obj = DriverOrder.objects.filter(
-            driver_id=self.driver.entity_id, increment_id=order_obj.increment_id)
-
-        if not driver_obj:
-            raise ValueError('This order is not assign to you.')
-
-        obj = DriverPosition.objects.create(
-            driver=driver_obj[0], latitude=lat, longitude=lon)
+        obj = DriverPosition(
+            driver_id=self.driver.entity_id, latitude=lat, longitude=lon)
+        obj.save()
         logger.info(
             "update the location, latitude and longitude for that driver {}".format(
                 obj.driver_id))
 
         return obj
 
-    def _record_events(self, driver_position, status):
+    def _record_events(self, driver_object, driver_position, status):
         """Create a Driver current locations.
 
         Params:
@@ -212,8 +205,9 @@ class DriverController(object):
 
         """
         events_obj = OrderEvents.objects.create(
-            driver_position=driver_position, status=status)
-
+            driver=driver_object,
+            driver_position=driver_position,
+            status=status)
         logger.info(
             "update the location and order status for that driver {}".format(
                 events_obj.driver_position.driver_id))

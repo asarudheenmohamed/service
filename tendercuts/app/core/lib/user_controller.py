@@ -3,18 +3,68 @@ import hashlib
 import random
 import string
 import uuid
-
+import logging
 from django.db.models import Q
-
+from django.conf import settings
 from app.core.lib import cache
 from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
                                       FlatCustomer)
+logger = logging.getLogger(__name__)
 
 
 class CustomerSearchController(object):
     """Static method to find the customer data."""
+
+    @classmethod
+    def load_cache_basic_info(cls, entity_ids):
+        """Return a driver basic information.
+
+        Params:
+            entity_ids(list): driver entity_id's
+
+        Returns:
+            Returns the basic information from django cache (redis db) if it is avaiable
+            otherwise Fetch the data from CustomerEntityVarchar table and updated to django cache.
+            Django cache is a temporary storage here we have set 24 hours validation (60*60*24).
+
+        """
+        cache_no_ids = []
+        info_obj = {}
+        for entity_id in entity_ids:
+            # get driver basic info in django cache
+            logger.debug(
+                'get driver information in django cache for that driver ids:{}'.format(
+                    entity_ids))
+
+            cache_details = cache.get_key(
+                entity_id, settings.CACHE_DEFAULT_VERSION)
+            if not cache_details:
+                cache_no_ids.append(entity_id)
+            else:
+                info_obj[entity_id] = cache_details
+        if cache_no_ids:
+            # fetch drive information from CustomerEntityVarchar model.
+            logger.debug(
+                "fetch user's information in CustomerEntityVarchar model:{}".format(
+                    entity_id))
+            for cache_id in cache_no_ids:
+                load_basic_info = cls.load_basic_info(cache_id)
+                user_details = {
+                    'entity_id': load_basic_info[0],
+                    'email': load_basic_info[1],
+                    'phone': load_basic_info[2],
+                    'name': load_basic_info[3]
+                }
+                info_obj.update({load_basic_info[0]: user_details})
+                cache.set_key(load_basic_info[0], user_details, 60 * 60 *
+                              24, settings.CACHE_DEFAULT_VERSION)
+        logger.info(
+            "get user's information for the given entity ids:{}".format(
+                list(entity_ids)))
+
+        return info_obj
 
     @classmethod
     def load_basic_info(cls, user_id):
@@ -34,12 +84,12 @@ class CustomerSearchController(object):
             .filter(attribute_id__in=[149, 5], entity_id=user_id) \
             .order_by('-attribute_id')                             \
             .values_list('entity', 'entity__email', 'value')
-
         if not query_set:
             raise CustomerNotFound
 
         flattened_data = []
         flattened_data.extend(query_set[0])
+
         # merge the name attribute also
         # first row second col
         flattened_data.append(query_set[1][2])
@@ -74,6 +124,7 @@ class CustomerSearchController(object):
         """
         query_set = CustomerEntityVarchar.objects.filter(
             Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
+
         if len(query_set) == 0:
 
             raise CustomerNotFound()
