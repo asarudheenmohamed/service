@@ -1,7 +1,7 @@
 """Returns assigned driver order obj and driver details based on store id."""
 import logging
 from datetime import date
-from itertools import groupby
+import itertools
 
 from django.conf import settings
 from django.db.models import Max
@@ -39,7 +39,7 @@ class StoreOrderController(object):
             "Fetch driver's current date completed orders for that driver ids:{}".format(list(driver_ids)))
         # the query set object convert to custom dict object
         driver_complete_orders = {}
-        for driver_id, objects in groupby(
+        for driver_id, objects in itertools.groupby(
                 order_event_objs, lambda order_event_obj: order_event_obj.driver.driver_id):
             complete_order_ids = []
             for obj in objects:
@@ -70,90 +70,6 @@ class StoreOrderController(object):
 
         return driver_lat_lon
 
-    def driver_load_basic_info(self, driver_ids):
-        """Fetch the driver basic info and stored in django cache.
-
-        Args:
-         driver_ids(list):driver entity ids
-
-        Returns:
-            A dict of (userid, email, phone, name)
-
-        """
-        query_set = CustomerEntityVarchar.objects                 \
-            .filter(attribute_id__in=[149, 5], entity_id__in=driver_ids) \
-            .order_by('-attribute_id')                             \
-            .values_list('entity', 'entity__email', 'value')
-        # the query set object convert to custom dict object
-        driver_info = {}
-        for driver_obj in query_set:
-            if driver_obj[0] not in driver_info:
-                driver_details = {
-                    'entity_id': driver_obj[0],
-                    'email': driver_obj[1],
-                    'phone': driver_obj[2]
-                }
-                driver_info[
-                    driver_obj[0]] = driver_details
-                # set driver basic information in django cache
-                logger.debug(
-                    "Set driver's phone,entity_id and email in django cache:{}".format(
-                        driver_id))
-
-                cache.set_key(driver_obj[0], driver_details, 60 * 60 *
-                              24, settings.CACHE_DEFAULT_VERSION)
-            else:
-                driver_details = driver_info.get(driver_obj[0])
-                driver_details['name'] = driver_obj[2]
-                # set driver basic information in django cache
-                logger.debug(
-                    "Set driver username in django cache:{}".format(
-                        driver_id))
-
-                cache.set_key(driver_obj[0], driver_details, 60 * 60 *
-                              24, settings.CACHE_DEFAULT_VERSION)
-
-        logger.info(
-            "Fetch driver's information from the CustomerEntityVarchar models and set the values in django cache for that driver ids:{}".format(
-                list(driver_ids)))
-
-        return driver_info
-
-    def get_driver_basic_info(self, driver_ids):
-        """Return a driver basic information.
-
-        Params:
-            driver_ids(list): driver entity_id's
-        """
-        cache_no_ids = []
-        driver_info = {}
-        for driver_id in driver_ids:
-            # get driver basic info in django cache
-            logger.debug(
-                'get driver information in django cache for that driver ids:{}'.format(
-                    driver_ids))
-
-            cache_driver_details = cache.get_key(
-                driver_id, settings.CACHE_DEFAULT_VERSION)
-            if not cache_driver_details:
-                cache_no_ids.append(driver_id)
-            else:
-                driver_info[driver_id] = cache_driver_details
-        if cache_no_ids:
-            # fetch drive information from CustomerEntityVarchar model.
-            logger.debug(
-                "fetch driver's information in CustomerEntityVarchar model:{}".format(
-                    driver_id))
-
-            load_info_cache_no_ids = self.driver_load_basic_info(cache_no_ids)
-            driver_info.update(load_info_cache_no_ids)
-
-        logger.info(
-            "get driver's information for the given driver ids:{}".format(
-                list(driver_ids)))
-
-        return driver_info
-
     def get_driver_orders(self, sale_order_ids):
         """Fetch driver ids based on out_delivery orders increment ids.
 
@@ -164,7 +80,7 @@ class StoreOrderController(object):
             increment_id__in=list(sale_order_ids))
         # the query set objects converts to custom dict object
         driver_orders = {}
-        for driver_id, objects in groupby(
+        for driver_id, objects in itertools.groupby(
                 driver_objs, lambda driver_obj: driver_obj.driver_id):
             order_ids = []
             for obj in objects:
@@ -189,20 +105,20 @@ class StoreOrderController(object):
         logger.info(
             'fetched the driver object in store id:{}'.format(
                 store_id))
-        sales_order_ids = SalesFlatOrder.objects.filter(
-            store__store_id=int(store_id), status='out_delivery').values_list(
-            'increment_id', flat=True)
-        # get driver current assigning orders
+        sales_order_ids = SalesFlatOrder.objects \
+            .filter(store__store_id=int(store_id), status='out_delivery') \
+            .values_list('increment_id', flat=True)
+        # get driver's current assigning orders
         driver_orders = self.get_driver_orders(sales_order_ids)
         driver_ids = list(driver_orders.keys())
-        # get driver current location
-        driver_lat_lon = self.get_lat_and_lon(
-            driver_ids)
-        # fetch driver current date completed orders
+        # get driver's current location
+        driver_lat_lon = self.get_lat_and_lon(driver_ids)
+
+        # fetch driver's current date completed orders
         driver_complete_orders = self.get_complete_order_ids(
             driver_ids)
-        # fetch diver basic info phone,mail,name
-        load_basic_info = self.get_driver_basic_info(
+        # fetch diver's basic info phone,mail,name
+        load_basic_info = CustomerSearchController.load_cache_basic_info(
             driver_ids)
 
         driver_objects = []
@@ -217,9 +133,8 @@ class StoreOrderController(object):
             driver_objects.append(driver_obj)
 
         logger.info(
-            'Fetched the all Driver events object and driver details in that store:{}'.format(
-                store_id))
-
+            'Fetched the all Driver events object and driver details in that store:{}'
+            .format(store_id))
         data = {
             'driver_objects': driver_objects,
             'select_store': {'id': int(store_id)}}

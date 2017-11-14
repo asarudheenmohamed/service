@@ -1,0 +1,420 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<!DOCTYPE html >
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFSsOwQqzTYeYPRXBzCGdwJPVl1E7WSAU">
+      </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+         <style>
+      /* Always set the map height explicitly to define the size of  the
+      * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+
+      body{
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        color: #555;
+      font-family: 'Open Sans', sans-serif;
+      }
+      .container{
+        width: 100%;
+      }
+      .row{
+        width: 100%;
+      }
+      .row > div{
+        display: inline-block;
+        vertical-align: top;
+        min-height: 100%;
+      }
+      .col-full{
+        width: 100%;
+      }
+      .col-left{
+        width: calc(25%);
+        border-right: 1px solid #ccc;
+      }
+      .col-right{
+        width: calc(75% - 24px);
+        margin-left: 16px;
+      }
+      .object-tools  .object-tools a.golink, .object-tools a.addlink{
+        visibility: hidden; 
+      }
+
+      .driver-list{
+        padding: 3px 16px 0 0;
+        overflow-y: auto;
+      }
+      .card{
+        -webkit-box-shadow: 0 -1px 0 #e0e0e0,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+        -ms-box-shadow: 0 -1px 0 #e0e0e0,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+        -o-box-shadow: 0 -1px 0 #e0e0e0,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+        -ms-shadow: 0 -1px 0 #e0e0e0,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+        box-shadow: 0 -1px 0 #e0e0e0,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+        margin-left: 3px;
+      }
+      .driver-list > .card:last-child{
+        margin-bottom: 16px;
+      }
+      .margin-right{
+        margin-right: 16px;
+        margin-top: 0px !important;
+      }
+      .card{
+        background-color: white;
+        padding: 8px 16px;
+      }
+      .input-control form{
+        margin: 0;
+      }
+      h4{
+        font-size: 16px;
+        margin:0 0 16px 0;
+        position: relative;
+        font-weight: 600;
+        padding: 0 !important;
+      }
+      .input-control select{
+        margin: 0;
+        border: 0;
+        border-bottom: 1px solid #999999;
+        height: 38px;
+        width: calc(70% - 16px);
+        margin-right: 16px;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background-color: white;
+      }
+      .select2-container{
+        margin: 0;
+        height: 38px;
+        width: calc(70% - 16px) !important;
+        margin-right: 16px;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background-color: white; 
+      }
+      .select2-container .select2-selection{
+        border: 0 !important;
+        border-bottom: 1px solid #999 !important;
+        padding: 4px 0;
+        outline: none;
+        height: 38px;
+        border-radius: 0 !important;
+      }
+      #select2-order_id-container{
+        padding-left: 0;
+      }
+      .input-control button{
+        margin: 0;
+        padding: 8px;
+        width: 28%;
+        background-color: red;
+        color: white;
+        border: 0px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .col-50:first-of-type{
+        width: calc(49% - 15px);
+        padding-right: 15px;
+      }
+
+      .driver-name{
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .driver-name button{
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 12px;
+        padding: 6px 16px;
+      }
+      .status{
+        font-style: italic;
+      }
+      button{
+        background-color: red;
+        color: white;
+        padding: 8px 16px;
+        border: 0px;
+        font-size: 14px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      span{
+        font-size: 13px;
+      }
+      .bold{
+        color: #333333;
+        font-weight: 500;
+      }
+      .light-text{
+        color: #999999;
+      }
+      .order-con{
+        margin-top: 12px;
+      }
+      .order-id-list{
+        margin-top: 8px;
+      }
+      .order-id-list span{
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: #f2f2f2;
+        margin: 0 2px 8px;
+        font-size: 13px;
+      }
+      .margin-top-16{
+        margin-top: 16px;
+      }
+      #filter-con{
+        position: absolute;
+        right: 24px;
+        top: 0;
+      }
+      #filter-con > div{
+        color: red;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border: 2px solid white;
+        padding: 3px 8px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.5s ease;
+      }
+      #filter-con > div:hover{
+        border-color: red;
+      }
+      #filter-control-con{
+        margin-top: 8px;
+      }
+      #filter-control-con, #remove-filter-btn{
+        display: none; 
+      }
+      .contact-con span{
+        font-size: 12px;
+      }
+      .contact-con span:nth-child(odd){
+        color: #aaa;
+      }
+      .mail-icon{
+        font-size: 20px !important;
+        line-height: 0;
+        vertical-align: middle !important;
+      }
+      form{
+        margin: 0;
+      }
+    </style>
+    <title>Creating a Store Locator on Google Maps</title>
+  </head>
+
+  <body onload="initMap()">
+    <div class="container">
+      <div class="row">
+        <div class="col-left" valign="top">
+          <h4>TenderCuts Driver Management</h4>
+          <div class="card margin-right">
+            <form align="center" action="/admin/driver/driverorder/" method="POST">
+            {% csrf_token %}
+              <div class="input-control">
+              
+                <select name="store_id" >
+                    {% for store in store_obj %}
+                  <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" name="submit">Search</button>
+                      <div><select id="locationSelect" style="width: 10%; display:none;"></select></div>
+              </form>
+              <!-- <div class="input-control">        
+                    <select id="order_id" placeholder="Order Id">
+                        <option value="0">Select Order Id</option>
+                        {% for driver_obj in driver_objects%}
+                          {% for order_id in driver_obj.orders%}
+                                <option value="{{ order_id }}"> {{ order_id }} </option>
+                              {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <button type="type" name="apply-filter" onclick="jQuery.fn.applyFilter()">Apply</button>
+            </div> -->
+            </div>
+
+            <div class="input-control">        
+                    <select id="order_id" placeholder="Order Id">
+                        <option value="0">Select Order Id</option>
+                        {% for driver_obj in driver_objects%}
+                          {% for order_id in driver_obj.orders%}
+                                <option value="{{ order_id }}"> {{ order_id }} </option>
+                              {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <button type="type" name="apply-filter" onclick="jQuery.fn.applyFilter()">Apply</button>
+            </div>
+               <!-- newly changed starts here -->
+            <div class="input-control" id="filter-control-con">        
+                    <select id="order_id" placeholder="Order Id">
+                        <option value="0">Select Order Id</option>
+                        {% for driver_obj in driver_objects%}
+                          {% for order_id in driver_obj.orders%}
+                                <option value="{{ order_id }}"> {{ order_id }} </option>
+                              {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <button type="type" name="apply-filter" onclick="jQuery.fn.applyFilter()">Apply</button>
+            </div>
+
+          </div>
+
+          <!-- newly changed starts here -->
+          <h4 class="margin-top-16">List of drivers 
+            <!-- <div id="filter-con">
+              <div id="show-filter-btn" onclick="jQuery.fn.showFilter()">Show Filter</div>
+              <div id="remove-filter-btn" onclick="jQuery.fn.removeFilter()">Remove Filter</div>
+            </div> -->
+          </h4>
+          <div class="driver-list">
+              {% for driver_obj in driver_objects%}
+            <div  class="card {% for order_id in driver_obj.orders%} {{ order_id }} {% endfor %}" >
+              <div class="driver-name">{{ driver_obj.name }}
+              <button type="button" onclick="locmap({{ driver_obj.lat_and_lon.latitude }},{{ driver_obj.lat_and_lon.longitude }},'{{ driver_obj.name }}')">Find</button>
+              </div>
+              <div class="contact-con">
+                    <span>&#9742;</span>&nbsp;<span class="bold">{{ driver_obj.phone }}</span> &nbsp;
+                    <span class="mail-icon">&#9993;</span>&nbsp;<span class="bold">{{ driver_obj.email }}</span>
+                  </div>
+         
+              <div class="order-con">
+                    <span class="light-text">Orders:</span>
+                    <span class="order-id-list">
+                      {% for order_id in driver_obj.orders%}
+                           <span> {{ order_id }} </span>
+                           {% endfor %}
+                    </span>
+                  </div>
+
+                  {% if driver_obj.complete_orders.count > 0 %}
+                  <div>
+                    <span class="light-text">Completea Orders :</span>
+                    <span class="order-id-list">                      
+                           {% for order_id in driver_obj.complete_orders%}                
+                           <span> {{ order_id }} </span>
+                           {% endfor %}                
+                    </span>
+                  </div>
+                  {% endif %}
+              </div>
+            {% endfor %}
+             
+          </div>
+        </div>
+        <div class="col-right" valign="top">
+        <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+
+      document.getElementById('map').style.height = (window.innerHeight - 124) + "px";
+      var map;
+      var markers = [];
+      var infoWindow;
+      var locationSelect;
+      function initMap() {
+        var sydney = {lat: 12.976271, lng: 80.22223800000006};
+        locmap(12.976271,80.22223800000006,'TenderCuts')
+      }
+
+        function locmap(lat,lon,name) {
+          // var text1 = document.getElementById("card");
+
+      //do stuff with text1 and text2. E.g.: alert them:
+          var sydney = {lat: lat, lng: lon};
+          var map = new google.maps.Map(document.getElementById('map'), {
+          center: sydney,
+          zoom: 18,
+          mapTypeId: 'roadmap',
+          mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+        });
+
+        var marker = new google.maps.Marker({
+          position: sydney,
+          map: map,
+          title: name
+        });
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+        infoWindow = new google.maps.InfoWindow();
+        }
+      
+
+       function createMarker(latlng, name, address) {
+          var html = "<b>" + name + "</b> <br/>" + address;
+          var marker = new google.maps.Marker({
+            map: map,
+            position: latlng
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(html);
+            infoWindow.open(map, marker);
+          });
+          markers.push(marker);
+        }
+
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $(".driver-list").css({height: (window.innerHeight - 267) + "px"});
+
+      var optionVal = new Array();
+      $('#order_id_list option').each(function() {
+          optionVal.push($(this).val());
+      });
+
+      $("#order_id").select2({
+        data: optionVal
+      });
+
+      jQuery.fn.applyFilter = () => {
+        var _orderId = jQuery("#order_id").val();
+        if(_orderId > 0){
+          jQuery(".driver-list .card").hide();
+          jQuery("."+ _orderId).fadeIn();              
+        }else{
+          alert("Invalid Order Id");
+        }
+      }
+  });
+  </script>
+
+</html>
+{% endblock %}
