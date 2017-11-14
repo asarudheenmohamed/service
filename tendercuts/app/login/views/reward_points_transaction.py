@@ -30,7 +30,7 @@ class RewardPointsTransaction(viewsets.ReadOnlyModelViewSet):
         """Endpoint fetch user reward point transection."""
         user_id = get_user_id(self.request)
         queryset = MRewardsTransaction.objects.filter(
-            customer__entity_id=user_id)
+            customer__entity_id=user_id).order_by('-created_at')
         logger.info(" Get Reward Points Transaction for the user {}".format(
             user_id))
         return queryset
