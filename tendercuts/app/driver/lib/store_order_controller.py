@@ -118,8 +118,11 @@ class StoreOrderController(object):
         driver_complete_orders = self.get_complete_order_ids(
             driver_ids)
         # fetch diver's basic info phone,mail,name
-        load_basic_info = CustomerSearchController.load_cache_basic_info(
-            driver_ids)
+        load_basic_info = {}
+        for driver_id in driver_ids:
+            driver_basic_info = CustomerSearchController.load_cache_basic_info(
+                driver_id)
+            load_basic_info[driver_id] = driver_basic_info
 
         driver_objects = []
         for driver_id in driver_ids:

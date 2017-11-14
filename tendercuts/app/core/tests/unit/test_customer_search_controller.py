@@ -79,8 +79,8 @@ class TestCustomerControllerFetch(object):
 
         """
 
-        response = cls.load_cache_basic_info([mock_user.entity_id])
-        assert response[mock_user.entity_id][
+        response = cls.load_cache_basic_info(mock_user.entity_id)
+        assert response[
             'email'] == mock_user.email
 
 

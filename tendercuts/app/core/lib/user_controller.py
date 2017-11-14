@@ -18,11 +18,11 @@ class CustomerSearchController(object):
     """Static method to find the customer data."""
 
     @classmethod
-    def load_cache_basic_info(cls, entity_ids):
+    def load_cache_basic_info(cls, entity_id):
         """Return a driver basic information.
 
         Params:
-            entity_ids(list): driver entity_id's
+            entity_id(list): user entity_id
 
         Returns:
             Returns the basic information from django cache (redis db) if it is avaiable
@@ -30,41 +30,34 @@ class CustomerSearchController(object):
             Django cache is a temporary storage here we have set 24 hours validation (60*60*24).
 
         """
-        cache_no_ids = []
-        info_obj = {}
-        for entity_id in entity_ids:
-            # get driver basic info in django cache
-            logger.debug(
-                'get driver information in django cache for that driver ids:{}'.format(
-                    entity_ids))
+        logger.debug(
+            'get driver information in django cache for that driver id:{}'.format(
+                entity_id))
 
-            cache_details = cache.get_key(
-                entity_id, settings.CACHE_DEFAULT_VERSION)
-            if not cache_details:
-                cache_no_ids.append(entity_id)
-            else:
-                info_obj[entity_id] = cache_details
-        if cache_no_ids:
+        # get driver basic info in django cache
+        user_details = cache.get_key(
+            entity_id, settings.CACHE_DEFAULT_VERSION)
+
+        if not user_details:
             # fetch drive information from CustomerEntityVarchar model.
             logger.debug(
-                "fetch user's information in CustomerEntityVarchar model:{}".format(
+                "fetch user information in CustomerEntityVarchar model:{}".format(
                     entity_id))
-            for cache_id in cache_no_ids:
-                load_basic_info = cls.load_basic_info(cache_id)
-                user_details = {
-                    'entity_id': load_basic_info[0],
-                    'email': load_basic_info[1],
-                    'phone': load_basic_info[2],
-                    'name': load_basic_info[3]
-                }
-                info_obj.update({load_basic_info[0]: user_details})
-                cache.set_key(load_basic_info[0], user_details, 60 * 60 *
-                              24, settings.CACHE_DEFAULT_VERSION)
-        logger.info(
-            "get user's information for the given entity ids:{}".format(
-                list(entity_ids)))
 
-        return info_obj
+            load_basic_info = cls.load_basic_info(entity_id)
+            user_details = {
+                'entity_id': load_basic_info[0],
+                'email': load_basic_info[1],
+                'phone': load_basic_info[2],
+                'name': load_basic_info[3]
+            }
+            cache.set_key(load_basic_info[0], user_details, 60 * 60 *
+                          24, settings.CACHE_DEFAULT_VERSION)
+            logger.info(
+                "get user information for the given entity id:{}".format(
+                    entity_id))
+
+        return user_details
 
     @classmethod
     def load_basic_info(cls, user_id):
