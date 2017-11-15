@@ -1,8 +1,12 @@
 """All order controller related actions."""
+import datetime
 import logging
 
+import dateutil.parser
+from django.db.models import Sum
+
 from app.core.lib.user_controller import CustomerSearchController
-from app.core.models import SalesFlatOrder
+from app.core.models import SalesFlatOrder, SalesFlatOrderItem
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +28,12 @@ class OrderDataController(object):
             Returns params_data
 
         """
-        orders = SalesFlatOrder.objects.filter(increment_id=order_id)
+        order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
+        if not order_obj:
+            raise ValueError('Order object does not exist')
 
         params_data = []
-        for order in orders:
+        for order in order_obj:
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
@@ -71,3 +77,39 @@ class OrderDataController(object):
                 order_id))
 
         return params_data
+
+
+class StoreOrderController(object):
+    """Store order controller."""
+
+    def __init__(self, store):
+        """Constructor."""
+        self.store = store
+
+    def store_details(self, store_id, deliverydate, sku):
+        """Fetch the store order details.
+
+        Params:
+            store_id(int) : Store id
+            deliverydate(DateTimeField): Order's delivery date
+            sku(str) : Product sku name
+
+        Returns:
+            Returns sku_data
+
+        """
+        deliverydate = dateutil.parser.parse(deliverydate)
+        order_data = SalesFlatOrderItem.objects.filter(
+            deliverydate__range=(
+                deliverydate,
+                deliverydate + datetime.timedelta(days=1)),
+            order__store_id=store_id)  \
+            .values('sku').annotate(Sum('qty_ordered'))
+
+        sku_data = []
+        sku_orders = order_data.get(sku=sku)
+        sku_list = {'SKU': sku_orders['sku'],
+                    'Qty': sku_orders['qty_ordered__sum']}
+        sku_data.append(sku_list)
+
+        return sku_data

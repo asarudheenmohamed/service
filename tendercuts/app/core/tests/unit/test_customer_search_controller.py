@@ -71,6 +71,18 @@ class TestCustomerControllerFetch(object):
         with pytest.raises(CustomerNotFound):
             cls.load_by_id(99999999)
 
+    def test_load_cache_basic_info(self, cls, mock_user):
+        """Test Fetch customer data based on entity_id.
+
+        Asserts:
+         Checks that mock user email id is equal to the response email id
+
+        """
+
+        response = cls.load_cache_basic_info(mock_user.entity_id)
+        assert response[
+            'email'] == mock_user.email
+
 
 @pytest.mark.django_db
 class TestCustomerBasicInfoSearch:

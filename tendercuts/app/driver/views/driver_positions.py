@@ -29,13 +29,12 @@ class DriverPositionViewSet(viewsets.ModelViewSet):
             status
 
         """
-        order_id = self.request.data['order_id']
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
         user_id = get_user_id(self.request)
 
         controller = DriverController.driver_obj(user_id)
-        driver_position = controller.record_position(order_id, lat, lon)
+        driver_position = controller.record_position(lat, lon)
 
         logger.info(
             '{}: Driver current location details updated'.format(user_id))
