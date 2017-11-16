@@ -31,7 +31,7 @@ class TestStoreDriverController:
         driver_order = controller.get_store_driver_order(
             generate_mock_order.store_id)
 
-        assert driver_order['driver_objects'][0][
-            'obj'].driver_position.driver.increment_id == generate_mock_order.increment_id
+        assert generate_mock_order.increment_id in driver_order['driver_objects'][0][
+            'orders']
         assert driver_order['driver_objects'][0][
             'email'] == mock_driver.customer.email

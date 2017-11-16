@@ -57,13 +57,23 @@ CACHES = {
     },
 }
 
+INTERNAL_IPS = (
+    '127.0.0.1'
+)
+
+
+MOBILE_VERSION = {
+    "min_app_version": '1.9.2',
+    "current_app_version": '1.9.6'
+}
+
+
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
 
 INTERNAL_IPS = (
     '127.0.0.1'
 )
-
 
 PAYMENT = {
     "SIMPL": {

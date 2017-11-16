@@ -16,7 +16,7 @@ class DriverOrder(models.Model):
 
 class DriverPosition(models.Model):
     """Driver Position model."""
-    driver = models.ForeignKey(DriverOrder)
+    driver_id = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(max_length=100)
     longitude = models.FloatField(max_length=100)
     recorded_time = models.DateTimeField(auto_now_add=True)
@@ -24,6 +24,7 @@ class DriverPosition(models.Model):
 
 class OrderEvents(models.Model):
     """Driver Events model."""
+    driver = models.ForeignKey(DriverOrder)
     driver_position = models.ForeignKey(DriverPosition)
     updated_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=200)
