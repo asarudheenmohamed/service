@@ -106,7 +106,7 @@
       }
       .select2-container{
         margin: 0;
-        height: 38px;
+        
         width: calc(70% - 16px) !important;
         margin-right: 16px;
         font-size: 14px;
@@ -126,7 +126,7 @@
       }
       .input-control button{
         margin: 0;
-        padding: 8px;
+        padding: 5px;
         width: 28%;
         background-color: red;
         color: white;
@@ -252,30 +252,10 @@
                 <button type="submit" name="submit">Search</button>
                       <div><select id="locationSelect" style="width: 10%; display:none;"></select></div>
               </form>
-              <!-- <div class="input-control">        
-                    <select id="order_id" placeholder="Order Id">
-                        <option value="0">Select Order Id</option>
-                        {% for driver_obj in driver_objects%}
-                          {% for order_id in driver_obj.orders%}
-                                <option value="{{ order_id }}"> {{ order_id }} </option>
-                              {% endfor %}
-                        {% endfor %}
-                    </select>
-                    <button type="type" name="apply-filter" onclick="jQuery.fn.applyFilter()">Apply</button>
-            </div> -->
+             
             </div>
 
-            <div class="input-control">        
-                    <select id="order_id" placeholder="Order Id">
-                        <option value="0">Select Order Id</option>
-                        {% for driver_obj in driver_objects%}
-                          {% for order_id in driver_obj.orders%}
-                                <option value="{{ order_id }}"> {{ order_id }} </option>
-                              {% endfor %}
-                        {% endfor %}
-                    </select>
-                    <button type="type" name="apply-filter" onclick="jQuery.fn.applyFilter()">Apply</button>
-            </div>
+            
                <!-- newly changed starts here -->
             <div class="input-control" id="filter-control-con">        
                     <select id="order_id" placeholder="Order Id">
@@ -293,10 +273,10 @@
 
           <!-- newly changed starts here -->
           <h4 class="margin-top-16">List of drivers 
-            <!-- <div id="filter-con">
+            <div id="filter-con">
               <div id="show-filter-btn" onclick="jQuery.fn.showFilter()">Show Filter</div>
               <div id="remove-filter-btn" onclick="jQuery.fn.removeFilter()">Remove Filter</div>
-            </div> -->
+            </div>
           </h4>
           <div class="driver-list">
               {% for driver_obj in driver_objects%}
@@ -403,7 +383,18 @@
       $("#order_id").select2({
         data: optionVal
       });
+      jQuery.fn.showFilter = () => {
+        jQuery("#filter-control-con").slideDown();
+        jQuery("#show-filter-btn").hide();
+        jQuery("#remove-filter-btn").fadeIn();
+      }
 
+      jQuery.fn.removeFilter = () => {
+        jQuery("#filter-control-con").slideUp();
+        jQuery("#remove-filter-btn").hide();
+        jQuery("#show-filter-btn").fadeIn();
+        jQuery(".driver-list .card").fadeIn();
+      }
       jQuery.fn.applyFilter = () => {
         var _orderId = jQuery("#order_id").val();
         if(_orderId > 0){
