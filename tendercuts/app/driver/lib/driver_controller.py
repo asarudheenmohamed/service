@@ -164,6 +164,8 @@ class DriverController(object):
             increment_id=order_id, driver_id=self.driver.entity_id)
         controller = OrderController(self.conn, order_obj)
         controller.complete()
+        # update customer current location
+        tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
         # send sms to customer
         tasks.send_sms.delay(order_id)
         tasks.driver_stat.delay(order_id)
