@@ -32,9 +32,13 @@ class OtpVerifyApi(viewsets.ModelViewSet):
 
         otp_obj = OtpController(logger)
         # get otp object
+        logger.info('To get a otp for this number:{}'.format(phone))
         otp = otp_obj.get_otp(phone, type_)
         # verify the otp
+        logger.info("to verifying the otp")
         is_verified = otp_obj.otp_verify(otp, customer_otp)
+
+        logger.info("otp verified")
 
         if is_verified == True:
             message = 'Successfully verified'
