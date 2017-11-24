@@ -7,7 +7,8 @@ from celery.utils.log import get_task_logger
 from app.core.lib.celery import TenderCutsTask
 from app.core.lib.communication import SMS
 from app.core.lib.user_controller import CustomerSearchController
-from app.core.models import SalesFlatOrder, entity
+from app.core.models import SalesFlatOrder
+from app.core.models.entity import EavAttribute
 from app.core.models.customer import address
 from app.driver.lib.driver_stat_controller import DriverStatController
 from config.celery import app
@@ -41,19 +42,20 @@ def customer_current_location(customer_id, lat, lon):
      lon(int):customer location longitude
 
     """
-    customer_address_obj = CustomerAddressEntity.objects.filter(
+    customer_address_obj = address.CustomerAddressEntity.objects.filter(
         parent__entity_id=customer_id)
     for loc_value in ['latitude', 'longitude']:
-        eav_obj = entity.EavAttribute.objects.filter(
+        eav_obj = EavAttribute.objects.filter(
             attribute_code=loc_value)
-        customer_addressentity_obj = CustomerAddressEntityText.objects.filter(
+        customer_addressentity_obj = address.CustomerAddressEntityText.objects.filter(
             attribute=eav_obj[0], entity=customer_address_obj[0])
         if customer_addressentity_obj:
             customer_addressentity_obj[
                 0].value = lat if loc_value == 'latitude' else lon
         else:
-            customer_addressentity_obj = CustomerAddressEntityText.objects.create(
+            customer_addressentity_obj = address.CustomerAddressEntityText.objects.create(
                 attribute=eav_obj[0],
+                entity_type_id=1,
                 entity=customer_address_obj[0],
                 value=lat if loc_value == 'latitude' else lon)
 
