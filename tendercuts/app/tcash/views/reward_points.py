@@ -43,13 +43,13 @@ class RewardPointAmountApi(APIView):
         # as we don't want multiple referrals.
         reward_obj = MRewardsReferral.objects.filter(
             new_customer=CustomerEntity.objects.get(entity_id=user_id))
-        
+ 
         logger.info("{} has been refered by {} and has {} existing order and "
             "{} reward objects".format(
                 user_id,
                 refered_user_id,
                 len(sales_flat_obj),
-                len(reward_obj))
+                len(reward_obj)))
 
         if not sales_flat_obj and not reward_obj:
             reward_obj = reward_points_controller.RewardsPointController(
