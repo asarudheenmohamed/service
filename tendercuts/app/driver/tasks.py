@@ -31,9 +31,7 @@ def driver_stat(order_id):
 @app.task(base=TenderCutsTask, ignore_result=True)
 def send_sms(order_id):
     """Celery task to send the order's status to the customer."""
-    logger.info('order_id:{}'.format(order_id))
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
-    logger.info('order_obj:{}'.format(order_obj))
     if not order_obj:
         raise ValueError('Order object Does not exist')
 
