@@ -13,6 +13,6 @@ class TenderCutsTask(celery.Task):
         msg = '{0!r} failed: {1!r}'.format(task_id, exc)
         Mail().send(
             "reports@tendercuts.in",
-            ["varun@tendercuts.in","asarudheen@tendercuts.in"],
+            ["tech@tendercuts.in"],
             "[CRITICAL] Task failure",
             msg)
