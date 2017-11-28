@@ -142,3 +142,22 @@ class TestDriverController:
             generate_mock_order.increment_id)
 
         assert customer is True
+
+    def test_create_driver_trip(self, mock_user, generate_mock_order):
+        """Test Customer receives the SMS.
+
+        Asserts:
+            Check mock driver order in response driver order
+
+        """
+        # mock driver
+        obj = DriverOrder.objects.create(
+            increment_id=generate_mock_order.increment_id,
+            driver_id=mock_user.customer.entity_id)
+
+        controller = DriverController(mock_user)
+
+        response = controller.create_driver_trip(
+            [generate_mock_order.increment_id])
+
+        assert obj in response.driver_order.all()

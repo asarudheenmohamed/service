@@ -14,6 +14,14 @@ class DriverOrder(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 
+class DriverTrip(models.Model):
+    """Driver Trip Model."""
+    driver_order = models.ManyToManyField(DriverOrder)
+    km_traveled = models.FloatField(blank=True, null=True)
+    trip_created_time = models.DateTimeField(default=timezone.now)
+    trip_ending_time = models.DateTimeField(default=timezone.now)
+
+
 class DriverPosition(models.Model):
     """Driver Position model."""
     driver_id = models.IntegerField(blank=True, null=True)

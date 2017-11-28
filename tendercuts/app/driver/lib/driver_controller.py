@@ -9,7 +9,7 @@ from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
 
-from ..models import DriverOrder, DriverPosition, DriverStat, OrderEvents
+from ..models import DriverOrder, DriverPosition, DriverStat, OrderEvents, DriverTrip
 
 logger = logging.getLogger(__name__)
 
@@ -241,3 +241,23 @@ class DriverController(object):
             driver_id=self.driver.entity_id)
 
         return driver_stat_obj
+
+    def create_driver_trip(self, order_ids):
+        """Create a driver trip.
+
+        Params:
+          order_ids (list): order increment ids
+
+        """
+        # fetch driver order objects
+        driver_orders = DriverOrder.objects.filter(
+            increment_id__in=order_ids)
+        # create driver trip
+        driver_trip = DriverTrip()
+        driver_trip.save()
+        driver_trip.driver_order.add(*driver_orders)
+
+        logger.info(
+            "trip created for the given orders:{}".format(order_ids))
+
+        return driver_trip
