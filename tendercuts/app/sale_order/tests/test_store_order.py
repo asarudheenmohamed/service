@@ -26,12 +26,12 @@ class TestOrder:
         """
         order_obj = GenerateOrder()
         order_obj = order_obj.generate_order(
-                mock_user.entity_id,
-                scheduled_order=True,
-                product_id=[(196, 1)])
+            mock_user.entity_id,
+            scheduled_order=True,
+            product_id=[(196, 1)])
 
         orders = auth_rest.get(
             "/sale_order/store_order/?store_id={}&sku={}&deliverydate={}"
-            .format(7, 'CHK_LEG_SKIN_OFF', '2017-10-31'), format='json')
+            .format(7, 'CHK_LEG_SKIN_OFF', datetime.now().date().strftime("%Y-%m-%d")), format='json')
 
         assert str(orders.json()[0]['SKU']) == 'CHK_LEG_SKIN_OFF'
