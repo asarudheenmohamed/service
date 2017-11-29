@@ -2,6 +2,7 @@
 
 import pytest
 
+
 @pytest.mark.django_db
 class TestApiInventoryFetch(object):
     """Test cases for products fetch."""
@@ -22,4 +23,4 @@ class TestApiInventoryFetch(object):
             format='json')
 
         assert len(response.data) >= 6
-        assert "New" in response.data[0]['category']['name']
+        assert "Pants & Denim" in response.data[0]['category']['name']
