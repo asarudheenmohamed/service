@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_driver_login(rest, mock_user):
+def test_driver_login(rest, mock_driver):
     """Test both driver and user login.
 
     Params:
@@ -23,7 +23,7 @@ def test_driver_login(rest, mock_user):
     # driver login
     response = rest.post(
         "/driver/login/",
-        {'phone': mock_user._flat['mobilenumber'], 'password': "12345678"},
+        {'phone': mock_driver._flat['mobilenumber'], 'password': "12345678"},
         format='json')
 
-    assert response.json()['mobilenumber'] == mock_user._flat['mobilenumber']
+    assert response.json()['mobilenumber'] == mock_driver._flat['mobilenumber']
