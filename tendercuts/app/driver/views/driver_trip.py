@@ -36,10 +36,11 @@ class DriverTripViewSet(viewsets.GenericViewSet):
             Response({status: bool, message: str})
 
         """
-        user_id = get_user_id(self.request)
         order_ids = self.request.data['order_ids']
-
-        controller = DriverController.driver_obj(user_id)
+        # get the user id
+        user_id = get_user_id(self.request)
+        # initialize the driver id in driver controller
+        controller = DriverController(user_id)
         logger.info(
             'to create the trip for the given list of orders:{}'.format(order_ids))
 

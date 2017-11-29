@@ -33,7 +33,7 @@ class DriverPositionViewSet(viewsets.ModelViewSet):
         lon = self.request.data['longitude']
         user_id = get_user_id(self.request)
 
-        controller = DriverController.driver_obj(user_id)
+        controller = DriverController(user_id)
         driver_position = controller.record_position(lat, lon)
 
         logger.info(

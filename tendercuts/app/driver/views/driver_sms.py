@@ -32,7 +32,7 @@ class DriverSmsViewSet(viewsets.ModelViewSet):
         """
         order_id = self.request.data['order_id']
         driver_id = get_user_id(self.request)
-        controller = DriverController.driver_obj(driver_id)
+        controller = DriverController(driver_id)
         status = controller.driver_delay_sms(order_id)
 
         return Response({'status': status})

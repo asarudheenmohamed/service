@@ -54,12 +54,10 @@ def fetch_related_order(cache, auth_driver_rest,
 
 
 @given('a driver is assigned to the order and the driver location for <latitude><longitude>')
-def driver_controller(cache, auth_driver_rest,
-                      mock_user, latitude, longitude):
+def driver_controller(cache, auth_driver_rest, latitude, longitude):
     """Assign the order.
 
     params:
-        mock_user (fixture) - generates a driver object
         generate_mock_order (fixture) - generates a mock order.
 
     """

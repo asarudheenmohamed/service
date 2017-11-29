@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 class DriverController(object):
     """Driver controller."""
 
-    def __init__(self, driver):
+    def __init__(self, driver_id):
         """Constructor."""
         super(DriverController, self).__init__()
-        self.driver = driver
+        self.driver = driver_id
         self.conn = mage.Connector()
 
     @classmethod
@@ -66,11 +66,11 @@ class DriverController(object):
             raise ValueError('This order is already assigned')
 
         driver_object = DriverOrder.objects.create(
-            increment_id=order, driver_id=self.driver.entity_id)
+            increment_id=order, driver_id=self.driver)
 
         logger.info(
             '{} this order assigned to the driver {}'.format(
-                order, self.driver.entity_id))
+                order, self.driver))
 
         controller = OrderController(self.conn, order_obj)
         # the order move to out for delivery
@@ -105,7 +105,7 @@ class DriverController(object):
 
         logger.info(
             'The Driver {} unassigned to this order {}'.format(
-                self.driver.entity_id,
+                self.driver,
                 order))
 
     def fetch_orders(self, status):
@@ -116,12 +116,12 @@ class DriverController(object):
 
         """
         order_ids = DriverOrder.objects.filter(
-            driver_id=self.driver.entity_id) \
+            driver_id=self.driver) \
             .values_list('increment_id', flat=True)
 
         logger.info(
             'Fetch that {} Driver assigning {} state orders'.format(
-                self.driver.entity_id, status))
+                self.driver, status))
 
         return SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
@@ -161,7 +161,7 @@ class DriverController(object):
 
         order_obj = self.get_order_obj(order_id)
         driver_object = DriverOrder.objects.filter(
-            increment_id=order_id, driver_id=self.driver.entity_id)
+            increment_id=order_id, driver_id=self.driver)
         controller = OrderController(self.conn, order_obj)
         controller.complete()
         # send sms to customer
@@ -184,7 +184,7 @@ class DriverController(object):
 
         """
         obj = DriverPosition(
-            driver_id=self.driver.entity_id, latitude=lat, longitude=lon)
+            driver_id=self.driver, latitude=lat, longitude=lon)
         obj.save()
         logger.info(
             "update the location, latitude and longitude for that driver {}".format(
@@ -238,7 +238,7 @@ class DriverController(object):
     def driver_stat_orders(self):
         """Returns a driver stat object."""
         driver_stat_obj = DriverStat.objects.filter(
-            driver_id=self.driver.entity_id)
+            driver_id=self.driver)
 
         return driver_stat_obj
 

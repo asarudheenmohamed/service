@@ -43,7 +43,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         lon = self.request.data['longitude']
 
         user_id = get_user_id(self.request)
-        controller = DriverController.driver_obj(user_id)
+        controller = DriverController(user_id)
 
         try:
             controller.assign_order(order_id, store_id, lat, lon)
@@ -73,7 +73,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
         user_id = get_user_id(self.request)
-        controller = DriverController.driver_obj(user_id)
+        controller = DriverController(user_id)
 
         controller.complete_order(order_id, lat, lon)
 
@@ -101,4 +101,4 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         logger.info(
             'Fetch {} state orders'.format(status))
 
-        return DriverController(driver).fetch_orders(status)
+        return DriverController(user_id).fetch_orders(status)
