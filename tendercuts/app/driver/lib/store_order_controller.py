@@ -55,9 +55,11 @@ class StoreOrderController(object):
           driver_ids(list): driver entity ids
 
         """
-        driver_lat_and_lon_records = DriverPosition.objects.values('driver_id', 'latitude', 'longitude').annotate(
-            recorded_time=Max('recorded_time')).filter(
-            driver_id__in=driver_ids)
+        driver_position_objs = DriverPosition.objects.values(
+            'driver_id').annotate(recorded_time=Max('recorded_time'), id=Max('id')).filter(driver_id__in=list(driver_ids))
+
+        driver_lat_and_lon_records = DriverPosition.objects.filter(
+            id__in=[driver_pk_id['id'] for driver_pk_id in driver_position_objs])
 
         logger.info(
             "Fetch driver's current positions for that driver ids:{}".format(list(driver_ids)))
@@ -65,8 +67,7 @@ class StoreOrderController(object):
         # the query set object convert to custom dict object
         driver_lat_lon = {}
         for driver_lat_lon_obj in driver_lat_and_lon_records:
-            driver_lat_lon[driver_lat_lon_obj[
-                'driver_id']] = driver_lat_lon_obj
+            driver_lat_lon[driver_lat_lon_obj.driver_id] = driver_lat_lon_obj
 
         return driver_lat_lon
 

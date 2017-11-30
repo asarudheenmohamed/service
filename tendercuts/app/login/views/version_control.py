@@ -17,6 +17,9 @@ class VersionControl(APIView):
         API: user/version_control/
 
     """
+    authentication_classes = ()
+    permission_classes = ()
+
     def post(self, request, format=None):
         """To check customer's app version to our supported version.
 

@@ -44,7 +44,7 @@ class UserDataFetch(APIView):
         """
         username = self.request.GET.get('email', None) or \
             self.request.GET.get('phone', None)
-        fields = ['reward_points', 'store_credit', 'address']
+        fields = ['reward_points', 'store_credit', 'address','default_billing','default_shipping']
 
         if username is None:
             raise exceptions.ValidationError("Invalid user")
