@@ -46,6 +46,9 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         controller = DriverController(user_id)
 
         try:
+            logger.debug(
+                'To assign the order:{} to the driver:{}'.format(
+                    order_id, user_id))
             controller.assign_order(order_id, store_id, lat, lon)
             status = True
             message = "Order Assigned successfully"
@@ -99,6 +102,7 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         status = self.request.query_params['status']
 
         logger.info(
-            'Fetch {} state orders'.format(status))
+            'To fetch the Driver:{} assigning {} state orders'.format(
+                user_id, status))
 
         return DriverController(user_id).fetch_orders(status)

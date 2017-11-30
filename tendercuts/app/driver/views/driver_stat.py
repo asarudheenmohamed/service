@@ -24,6 +24,9 @@ class DriverStatViewSet(viewsets.ReadOnlyModelViewSet):
         user_id = get_user_id(self.request)
 
         controller = DriverController(user_id)
+
+        logger.debug(
+            "To fetch the driver stat object for the driver:{}".format(user_id))
         obj = controller.driver_stat_orders()
 
         return obj

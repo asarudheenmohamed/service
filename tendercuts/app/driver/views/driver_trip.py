@@ -42,11 +42,9 @@ class DriverTripViewSet(viewsets.GenericViewSet):
         # initialize the driver id in driver controller
         controller = DriverController(user_id)
         logger.info(
-            'to create the trip for the given list of orders:{}'.format(order_ids))
+            'To create the trip with the given list of orders:{} for the driver:{}'.format(order_ids, user_id))
 
         controller.create_driver_trip(order_ids)
-
-        logger.info('trip created for that driver:{}'.format(user_id))
 
         return Response(
             {'status': True, "message": 'successfully trip created'})
