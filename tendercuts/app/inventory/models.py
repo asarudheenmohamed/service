@@ -20,3 +20,4 @@ class NotifyCustomer(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     expire_at = models.DateTimeField(default=timezone.now().replace(
                     hour=20, minute=0, second=0, microsecond=0, tzinfo=pytz.utc))
+    isnotified = models.BooleanField(default=False)

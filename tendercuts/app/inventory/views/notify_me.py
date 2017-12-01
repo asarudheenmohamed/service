@@ -1,11 +1,11 @@
 """Endpoints to provide customer notifications."""
-
 import logging
 
 from rest_framework import mixins, viewsets
-from rest_framework.response import Response
 
 from app.inventory.serializers import NotifyCustomerSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -30,4 +30,12 @@ class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewS
 
         """
         request.data.update({'customer': self.request.user.id})
-        return super(CustomerNotificationViewSet, self).create(request, *args, **kwargs)
+        super(CustomerNotificationViewSet, self).create(
+         request, *args, **kwargs)
+
+        logger.info(
+            "To create the NotifyCustomer objects for the user: {}".format(
+                self.request.user.id))
+
+        return super(CustomerNotificationViewSet, self).create(
+            request, *args, **kwargs)
