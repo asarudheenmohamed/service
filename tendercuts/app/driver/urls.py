@@ -40,5 +40,7 @@ router.register(
 
 urlpatterns = [
     url(r'', include(router.urls)),
-    url(r'login', views.DriverLoginApi.as_view())
+    url(r'login', views.DriverLoginApi.as_view()),
+    url(r'product_weight/update/(?P<pk>\d+)/$',
+        views.ProductWeightUpdateView.as_view())
 ]
