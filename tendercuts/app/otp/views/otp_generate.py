@@ -34,7 +34,11 @@ class OtpGenerateApi(viewsets.ModelViewSet):
         otp_mode = self.request.data['otp_mode']
 
         controller = OtpController(logger)
+
+        logger.info('To get a otp for this number:{}'.format(phone))
         otp_obj = controller.get_otp(phone, otp_mode)
+
+        logger.info('To send a otp for this number:{}'.format(phone))
         controller.send_otp(otp_obj, otp_mode)
 
         logger.info("OTP sent")
