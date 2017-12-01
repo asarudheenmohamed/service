@@ -34,6 +34,9 @@ class OtpRetryApi(viewsets.ModelViewSet):
         phone = self.request.data['mobile']
         retry_mode = self.request.data['retry_mode']
 
+        logger.info(
+            'Otp send the retry {} method in this number:{}'.format(
+                retry_mode, phone))
         # retry the otp
         SMS().retry_otp(phone, retry_mode)
 

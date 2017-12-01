@@ -19,7 +19,7 @@ class TestJusPayApi:
         """Verify endpoint exists."""
         with pytest.raises(KeyError):
             response = rest.get("/payment/juspay/", format='json')
-            assert type(response) is not HttpResponseNotFound
+            assert not isinstance(response, HttpResponseNotFound)
 
     def test_verify_api(self, rest):
         """Success case.
@@ -36,7 +36,7 @@ class TestJusPayApi:
              "status_id": 26,
              "signature": "DQ1su1wVQ1D9tYAcPBcAMoG4yagt8+jVLk0Qf/4xg6Y=",
              "signature_algorithm": "HMAC-SHA256"})
-        assert type(response) is HttpResponseRedirect
+        assert isinstance(response, HttpResponseRedirect)
 
     def test_verify_api_perms_denied(self, rest):
         """Failure case, where call is not triggered by juspay.

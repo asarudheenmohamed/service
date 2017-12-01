@@ -72,12 +72,10 @@ class TestDriverController:
         controller.processing()
 
         increment_id = str(generate_mock_order.increment_id)
-        inc_id = list(increment_id)
-        increment = increment_id.split(inc_id[3])
-
         controller = DriverController(mock_driver.entity_id)
+        controller = DriverController(mock_user)
         orders = controller.fetch_related_orders(
-            increment[-1], generate_mock_order.store_id)
+            increment_id[4:], generate_mock_order.store_id)
 
         assert (orders) is not None
         assert orders[0].increment_id == generate_mock_order.increment_id

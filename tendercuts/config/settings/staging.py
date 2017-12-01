@@ -67,6 +67,10 @@ MOBILE_VERSION = {
     "current_app_version": '1.9.6'
 }
 
+CELERY_MAIL = {
+    'sender_mail_id': "reports@tendercuts.in",
+    'received_mail_id': ["tech@tendercuts.in"]
+}
 
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
