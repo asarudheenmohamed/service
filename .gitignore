@@ -4,6 +4,7 @@ node_modules/
 **/.swp
 **/__pycache__/
 **/*.pyc
+**/.DS_Store
 
 **/dump.rdb
 **/celerybeat-schedule
