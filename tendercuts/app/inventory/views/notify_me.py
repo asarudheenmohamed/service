@@ -30,8 +30,6 @@ class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewS
 
         """
         request.data.update({'customer': self.request.user.id})
-        super(CustomerNotificationViewSet, self).create(
-         request, *args, **kwargs)
 
         logger.info(
             "To create the NotifyCustomer objects for the user: {}".format(
