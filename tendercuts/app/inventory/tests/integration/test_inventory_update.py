@@ -1,21 +1,24 @@
 """Integration tests for notify inventory module."""
 import pytest
+import datetime
+from pytest_bdd import given, when, then, scenario
 
 from app.inventory import tasks
+from app.core.models import Graminventory
 
 
 @pytest.mark.django_db
 @scenario(
     'inventory.feature',
     'Notify updated inventory'
- )
+)
 def test_notify():
     pass
 
 
-@given('Create notify object for store <store_id> and product <product_id>')
+@given('Create notify object for <product1> and <product2>')
 def create_notify(auth_rest,
-                  store_id, product_id):
+                  product1 , product2):
     """Create NotifyCustomer object.
 
     Params:
@@ -29,32 +32,47 @@ def create_notify(auth_rest,
         Check response store id is equal to given store id
 
     """
-    response = auth_rest.post(
-        "/inventory/notify_me/",
-        {'store_id': store_id,
-         'product_id': product_id,
-         },
-        format='json')
+    for data in [product1, product2]:
+        store_id, product_id = data.split(',')
 
-    assert (response) is not None
+        response = auth_rest.post(
+            "/inventory/notify_me/",
+            {'store_id': store_id,
+             'product_id': product_id,
+             },
+            format='json')
 
-    assert response.status_code == 200
+        assert (response) is not None
 
-    assert str(response.data['store_id']) == store_id
+        assert response.status_code == 201
+
+        assert str(response.data['store_id']) == store_id
 
 
-@when('Once the inventory updated customer will receive the SMS')
-def notify_customer():
+@when('The inventory is updated for <product1>, <product2>')
+def notify_customer(product1, product2):
     """Check customer receives the updated inventory sms.
 
     Asserts:
         Check the response is True
 
     """
+    for data in [product1, product2]:
+        store_id, product_id = map(int, data.split(','))
+        inv = Graminventory.objects.filter(
+            date=datetime.date.today(),
+            product_id=product_id,
+            store_id=store_id)
+
+        if not inv:
+            inv = Graminventory(
+                date=datetime.date.today(),
+                product_id=product_id,
+                store_id=store_id,
+                qty=10).save()
+
     response = tasks.notification_sms.apply()
-
     status = response.get()
-
     assert status == True
 
 
@@ -66,6 +84,4 @@ def update_isnotified():
         Check the response is True
 
     """
-    response1 = tasks.notification_sms.apply()
-
-    assert response1.get() == True
+    pass

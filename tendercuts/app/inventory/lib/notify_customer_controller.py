@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from app.core.models.inventory import GraminventoryLatest
 from app.inventory.models import NotifyCustomer
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -56,35 +57,59 @@ class NotifyCustomerController(object):
         """
         inventory_dict = {}
         customers_order = {}
-        customers_notify = {}
         available_product = {}
+        import ipdb
+        ipdb.set_trace()
 
-        for notify_obj in notify_objs:
-            customers_order.setdefault((
-                notify_obj.store_id, notify_obj.product_id), []).append(notify_obj.customer.username)
+        columns = ['id', 'product_id', 'store_id', 'customer']
+        notify_df = notify_objs.values_list(*columns)
+        notify_df = pd.DataFrame(list(notify_df), columns=columns)
 
-        inventory_objs = GraminventoryLatest.objects.select_related('product').filter(qty__gt=0)
+        columns = ['product_id', 'store_id', 'qty']
+        inventory_df = GraminventoryLatest.objects.select_related('product').filter(qty__gt=0).values_list(*columns)
+        inventory_df = pd.DataFrame(list(inventory_df), columns=columns)
 
-        for inventory_obj in inventory_objs:
-            inventory_dict[(inventory_obj.store_id, inventory_obj.product_id)] = inventory_obj.qty
+        # Merge the dataframe: Prepare the indexes for joining
+        notify_df = notify_df.set_index(['product_id', 'store_id'])
+        inventory_df = inventory_df.set_index(['product_id', 'store_id'])
+        notify_df = notify_df.join(inventory_df)
 
-        logger.debug(
-            "To check NotifyCustomer products{} are available in GraminventoryLatest{}".format(
-                customers_order, inventory_dict))
+        customers_notify = {}
+        def format_df(group):
+            customer_id = group.customer[0]
+            customers_notify[customer_id] = group[['product_id', 'store_id', 'id']].to_dict('records')
 
-        for inventory in inventory_dict:
-            if inventory in customers_order.keys():
-                available_product[inventory] = list(set(customers_order[inventory]))
+        notify_df.reset_index().groupby('customer').apply(format_df)
 
-        if not available_product:
-                raise ValueError('Notify customer orders are not available')
 
-        for product in available_product:
-            for customer in available_product[product]:
-                customers_notify.setdefault(customer, []).append(product)
+        # for notify_obj in notify_objs:
+        #     customers_order.setdefault((
+        #         notify_obj.store_id, notify_obj.product_id), []).append(notify_obj.customer.username)
+        #
+        # inventory_objs = GraminventoryLatest.objects.select_related('product').filter(qty__gt=0)
+        #
+        # for inventory_obj in inventory_objs:
+        #     inventory_dict[(inventory_obj.store_id, inventory_obj.product_id)] = inventory_obj.qty
+        #
+        # logger.debug(
+        #     "To check NotifyCustomer products{} are available in GraminventoryLatest{}".format(
+        #         customers_order, inventory_dict))
+        #
+        # for inventory in inventory_dict:
+        #     if inventory in customers_order.keys():
+        #         available_product[inventory] = list(set(customers_order[inventory]))
 
-        logger.info("consoldated the available products to each customers: {}".format(
-            customers_notify))
+        # if not available_product:
+        #         raise ValueError('Notify customer orders are not available')
+        #
+        # for product in available_product:
+        #     for customer in available_product[product]:
+        #         customers_notify.setdefault(customer, []).append(product)
+        #
+        # logger.info("consoldated the available products to each customers: {}".format(
+        #     customers_notify))
+        import ipdb
+        ipdb.set_trace()
 
         return customers_notify
 

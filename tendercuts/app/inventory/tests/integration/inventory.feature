@@ -1,10 +1,10 @@
 Feature: Inventory updated
 
 	Scenario: Notify updated inventory
-		Given Create notify object for store <store_id> and product <product_id>
-		When Once the inventory updated customer will receive the SMS
+		Given Create notify object for <product1> and <product2>
+		When The inventory is updated for <product1>, <product2>
 		Then Notify customer object will set as notified
 
 		Examples:
-		| store_id | product_id |
-		|    1     |    195     |
+		| product1 | product2 |
+		|    1,195 |  1,196   |

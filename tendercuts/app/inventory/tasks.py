@@ -20,8 +20,10 @@ def notification_sms():
     notify_obj = controller.get_customer_notify_obj()
     notify_customers = controller.get_avalible_notifies(notify_obj)
 
-    for notify_customer in notify_customers:
+    for customer_id, products in notify_customers.items():
         #convert unicode into string and get user id from user name
+        # {341: [{'id': 28, 'product_id': 195, 'store_id': 1},
+        #        {'id': 29, 'product_id': 196, 'store_id': 1}]}
         user_id = notify_customer.encode('ascii', 'ignore').split(":")
 
         if len(user_id) < 1:

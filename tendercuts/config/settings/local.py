@@ -48,19 +48,11 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    },
-    'debug-panel': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/debug-panel-cache',
-        'TIMEOUT': 300,
-        'OPTIONS': {
-            'MAX_ENTRIES': 200
-        }
     }
 }
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
-INSTALLED_APPS += ("debug_toolbar", "django_extensions", 'debug_panel')
+INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware", )
 
 INTERNAL_IPS = (
