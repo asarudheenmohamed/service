@@ -30,7 +30,7 @@ class TestOrderFetch:
         """
         driver_object = DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.customer.entity_id)
+            driver_id=mock_user.entity_id)
         driver_object.save()
         generate_mock_order.status = status
         generate_mock_order.save()

@@ -14,14 +14,14 @@ from app.driver.lib.driver_controller import DriverController
 class TestDriverController:
     """Test cases for Driver controller."""
 
-    def test_driver_assignment(self, mock_user, generate_mock_order):
+    def test_driver_assignment(self, mock_driver, generate_mock_order):
         """Assign driver test case.
 
         Asserts:
             1. If the driver is assigned
 
         """
-        controller = DriverController(mock_user)
+        controller = DriverController(mock_driver.entity_id)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,
             generate_mock_order.store_id,
@@ -31,7 +31,8 @@ class TestDriverController:
         assert driver_order.increment_id == generate_mock_order.increment_id
 
     @pytest.mark.parametrize('status', ['out_delivery', 'complete'])
-    def test_fetch_active_order(self, mock_user, generate_mock_order, status):
+    def test_fetch_active_order(
+            self, mock_driver, generate_mock_order, status):
         """Fetch all the active orders.
 
         Asserts:
@@ -45,15 +46,15 @@ class TestDriverController:
         # mock driver
         DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.customer.entity_id).save()
+            driver_id=mock_driver.entity_id).save()
 
-        controller = DriverController(mock_user)
+        controller = DriverController(mock_driver.entity_id)
         orders = controller.fetch_orders(status)
 
         assert len(orders) == 1
 
     def test_fetch_related_order(
-            self, auth_rest, mock_user, generate_mock_order):
+            self, auth_rest, mock_driver, generate_mock_order):
         """Generate mock order and Fetch relevent orders based on mock order id.
 
         Params:
@@ -71,17 +72,15 @@ class TestDriverController:
         controller.processing()
 
         increment_id = str(generate_mock_order.increment_id)
-        inc_id = list(increment_id)
-        increment = increment_id.split(inc_id[3])
-
+        controller = DriverController(mock_driver.entity_id)
         controller = DriverController(mock_user)
         orders = controller.fetch_related_orders(
-            increment[-1], generate_mock_order.store_id)
+            increment_id[4:], generate_mock_order.store_id)
 
         assert (orders) is not None
         assert orders[0].increment_id == generate_mock_order.increment_id
 
-    def test_complete_order(self, mock_user, generate_mock_order):
+    def test_complete_order(self, mock_driver, generate_mock_order):
         """Complete the order.
 
         Asserts:
@@ -96,13 +95,13 @@ class TestDriverController:
         # mock driver
         DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.customer.entity_id).save()
-        controller = DriverController(mock_user)
+            driver_id=mock_driver.entity_id).save()
+        controller = DriverController(mock_driver.entity_id)
         orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
                                            80.246106)
         print orders
 
-    def test_order_positions(self, mock_user, generate_mock_order):
+    def test_order_positions(self, mock_driver, generate_mock_order):
         """Test Drive Position updated and driver order events update.
 
         Asserts:
@@ -113,9 +112,9 @@ class TestDriverController:
         # mock driver
         obj = DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.customer.entity_id)
+            driver_id=mock_driver.entity_id)
 
-        controller = DriverController(mock_user)
+        controller = DriverController(mock_driver.entity_id)
         # test record position
         response = controller.record_position(
             12.965365,
@@ -130,15 +129,34 @@ class TestDriverController:
 
         assert response.driver.increment_id == generate_mock_order.increment_id
 
-    def test_driver_delay_sms(self, mock_user, generate_mock_order):
+    def test_driver_delay_sms(self, mock_driver, generate_mock_order):
         """Test Customer receives the SMS.
 
         Asserts:
             Check status
 
         """
-        controller = DriverController(mock_user)
+        controller = DriverController(mock_driver.entity_id)
         customer = controller.driver_delay_sms(
             generate_mock_order.increment_id)
 
         assert customer is True
+
+    def test_create_driver_trip(self, mock_driver, generate_mock_order):
+        """Test Customer receives the SMS.
+
+        Asserts:
+            Check mock driver order in response driver order
+
+        """
+        # mock driver
+        obj = DriverOrder.objects.create(
+            increment_id=generate_mock_order.increment_id,
+            driver_id=mock_driver.entity_id)
+
+        controller = DriverController(mock_driver.entity_id)
+
+        response = controller.create_driver_trip(
+            [generate_mock_order.increment_id])
+
+        assert obj in response.driver_order.all()

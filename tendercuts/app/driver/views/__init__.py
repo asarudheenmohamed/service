@@ -6,3 +6,4 @@ from .driver_positions import DriverPositionViewSet
 from .driver_sms import DriverSmsViewSet
 from .driver_stat import DriverStatViewSet
 from .update_weight import ProductWeightUpdateView
+from .driver_trip import DriverTripViewSet
