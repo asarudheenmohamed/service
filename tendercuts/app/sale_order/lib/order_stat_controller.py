@@ -57,7 +57,7 @@ class OrderDataController(object):
                     "street2": shipping_address.region or "",
                     "city": shipping_address.city,
                 },
-                "store":  order.store.code
+                "store": order.store.code
 
             }
 
@@ -77,6 +77,20 @@ class OrderDataController(object):
                 order_id))
 
         return params_data
+
+    def item_weight_update(self, item_objects):
+        """Update the order items weight.
+
+        params:
+          item_objects(list): order item details
+
+        """
+        for item in item_objects:
+            sales_order_item_obj = SalesFlatOrderItem.objects.filter(
+                item_id=item['item_id']).update(weight=item['weight'])
+
+            logger.info("updated the item:{} weight:{}".format(
+                item['item_id'], item['weight']))
 
 
 class StoreOrderController(object):

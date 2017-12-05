@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 
 from app.sale_order.lib.order_stat_controller import (OrderDataController,
                                                       StoreOrderController)
-
-from . import models, serializers
+from app.sale_order import models
+from app.core import serializers
 
 
 class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -40,6 +40,7 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
 
         return queryset
 
+
 class DeliveryViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
@@ -52,10 +53,10 @@ class DeliveryViewSet(APIView):
     def get(self, request):
         data = []
         data.append(models.ScheduledDelivery().serialize())
-        
+
         express = models.ExpressDelivery().serialize()
         if express:
-           data.append(express)
+            data.append(express)
 
         return Response(data)
 
