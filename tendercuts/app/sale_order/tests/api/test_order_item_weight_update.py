@@ -1,4 +1,4 @@
-"""Test driver order fetch."""
+"""Test order item weight update."""
 
 import pytest
 from app.core.models.sales_order import SalesFlatOrderItem
@@ -12,30 +12,28 @@ class TestUpdateWeight:
             self,
             auth_rest,
             generate_mock_order):
-        """Test the product weight update.
+        """Test order item weight update.
 
         Params:
             auth_rest(pytest fixture):user requests
 
         Asserts:
             Check response not equal to None
-            Check response weight is equal to to the custom weight
+            Check response status and message
 
         """
         # fetch the sale order item object
         sales_flat_order_item = SalesFlatOrderItem.objects.filter(
             order=generate_mock_order)
         data = {
-            'item_id': sales_flat_order_item[0].item_id,
-            'weight': 7,  # custom weight
-            'row_total': sales_flat_order_item[0].row_total}
+            'increment_id': sales_flat_order_item[0].order.increment_id,
+            'items': [{'item_id': sales_flat_order_item[0].item_id,
+                       'weight':7}]}
 
-        # put the values in product update end point
-        response = auth_rest.put(
-            "/driver/driver/product_weight/update/{}/".format(
-                sales_flat_order_item[0].item_id), data,
+        response = auth_rest.post(
+            "/sale_order/item_weight/", data,
             format='json')
-
         assert (response) is not None
         assert response.status_code == 200
-        assert float(response.data['weight']) == float(7)
+        assert response.data['status'] == True
+        assert response.data['message'] == "successfully weight update"
