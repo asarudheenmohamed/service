@@ -1,8 +1,9 @@
 """Sending updated inventory's status sms to the customers."""
 import logging
 
-from app.core.lib.celery import TenderCutsTask
+from django.contrib.auth.models import User
 
+from app.core.lib.celery import TenderCutsTask
 from app.core.lib.communication import SMS
 from app.core.lib.user_controller import CustomerSearchController
 from app.inventory.lib.notify_customer_controller import \
@@ -20,28 +21,26 @@ def notification_sms():
     notify_obj = controller.get_customer_notify_obj()
     notify_customers = controller.get_avalible_notifies(notify_obj)
 
+    logger.debug("To get the User object for notify_customers:{}".format(
+        notify_customers.keys()))
+
+    user_objs = User.objects.filter(id__in=notify_customers.keys())
+    user_dict = {user.id: user.username for user in user_objs}
     for customer_id, products in notify_customers.items():
-        #convert unicode into string and get user id from user name
-        # {341: [{'id': 28, 'product_id': 195, 'store_id': 1},
-        #        {'id': 29, 'product_id': 196, 'store_id': 1}]}
-        user_id = notify_customer.encode('ascii', 'ignore').split(":")
+        # To get user name from user_dict and change it into user_id
+        user_id = user_dict.get(customer_id).split(":")
 
         if len(user_id) < 1:
             user_id = None
         else:
             user_id = user_id[1]
 
-        customer = CustomerSearchController.load_basic_info(user_id)
-
-        msg = str(notify_customers[notify_customer])
-        SMS().send(int(customer[2]), msg)
+        customer = CustomerSearchController.load_cache_basic_info(user_id)
+        msg = str(products)
+        SMS().send(int(customer['phone']), msg)
 
     logger.info("Notified customers are receives the updated inventory SMS")
 
-    update_notify=controller.update_isnotified(notify_obj, notify_customers)
-
     status = True
- 
+
     return status
-
-

@@ -22,8 +22,8 @@ class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewS
         """To create customer order object.
 
         Input:
-            product_id(int) = customer's ordered product id,
-            store_id(int) = customer's ordered store id
+            product_id(int): customer's ordered product id,
+            store_id(int): customer's ordered store id
 
         returns:
             Created NotifyCustomer object

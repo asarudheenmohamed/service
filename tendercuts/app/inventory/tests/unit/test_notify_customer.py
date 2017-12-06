@@ -1,6 +1,9 @@
 """Test cases for Notify customer controller."""
+import datetime
+
 import pytest
 
+from app.core.models import Graminventory, GraminventoryLatest
 from app.inventory.lib.notify_customer_controller import \
     NotifyCustomerController
 from app.inventory.models import NotifyCustomer
@@ -21,20 +24,33 @@ class TestNotifyCustomerController:
         controller = NotifyCustomerController()
         notify_customers = controller.get_customer_notify_obj()
 
-        assert notify_customers[0].isnotified == False
+        obj = notify_customers.last()
+
+        assert obj.is_notified == False
+
+        # To check last Notifycustomer's products from Graminventory
+        inv = Graminventory.objects.filter(
+            date=datetime.date.today(),
+            product_id=obj.product_id,
+            store_id=obj.store_id)
+
+        # If it is not available, create it with our notify products
+        if not inv:
+            inv = Graminventory(
+                date=datetime.date.today(),
+                product_id=obj.product_id,
+                store_id=obj.store_id,
+                qty=10).save()
 
         customers_notify = controller.get_avalible_notifies(notify_customers)
 
-        username = customers_notify.keys()[0]
-        product = customers_notify[username][0]
+        # To check created products are added to our customers's_notify list
+        status = (obj.product_id, obj.store_id) in customers_notify.get(
+            obj.customer.id)
 
-        obj = NotifyCustomer.objects.filter(
-            customer__username=username,
-            product_id=product[1],
-            store_id=product[0])[0]
+        assert status == True
 
-        assert obj != []
+        obj = NotifyCustomer.objects.get(id=obj.id)
+        # To check is_notified is updated for Notify listed customers
 
-        controller.update_isnotified(notify_customers, customers_notify)
-
-        assert obj.isnotified == True
+        assert obj.is_notified == True
