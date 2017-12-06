@@ -8,8 +8,10 @@ from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
+from django.utils import timezone
 
-from ..models import DriverOrder, DriverPosition, DriverStat, OrderEvents, DriverTrip
+from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
+                      OrderEvents)
 
 logger = logging.getLogger(__name__)
 
@@ -278,3 +280,22 @@ class DriverController(object):
             "Trip created for the given orders:{}".format(order_ids))
 
         return driver_trip
+
+    def complete_driver_trip(self, order_ids):
+        """Update driver trip completed time.
+
+        Params:
+          order_ids (list): order increment ids
+
+        """
+        # fetch driver order objects
+        driver_orders = DriverOrder.objects.filter(
+            increment_id__in=order_ids)
+        # update the driver trip completed time
+        d = DriverTrip.objects.filter(
+            driver_order__in=driver_orders)
+        driver_trip = DriverTrip.objects.filter(
+            driver_order__in=driver_orders).update(trip_ending_time=timezone.now())
+
+        logger.info(
+            "Driver trip ending time updated for this driver:{}".format(self.driver))
