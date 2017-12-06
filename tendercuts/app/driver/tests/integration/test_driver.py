@@ -19,6 +19,14 @@ def test_driver_order_complete():
     pass
 
 
+@pytest.mark.django_db
+@scenario(
+    'driver.feature',
+    'Create the driver trip and completes it successfully',
+)
+def test_driver_trip():
+    pass
+
 # Reuse the mock order fixture
 given(
     'A customer places an order',
@@ -124,3 +132,47 @@ def order_complete(cache, auth_driver_rest, latitude, longitude):
 
     assert (response) is not None
     assert response.status_code == 201
+
+
+@given('create a driver trip')
+def driver_trip_create(cache, auth_driver_rest):
+    """Test driver trip creation.
+
+    params:
+        auth_driver_rest (fixture) - mock driver.
+
+    Asserts:
+        Checks the status and message for the created driver trip.
+
+    """
+    response = auth_driver_rest.post(
+        "/driver/driver_trip/",
+        {'order_ids': [cache['increment_id']]},
+        format='json')
+
+    assert (response) is not None
+    assert response.status_code == 200
+    assert response.data['status'] == True
+    assert response.data['message'] == 'successfully trip created'
+
+
+@then('completes the driver trip')
+def driver_trip_complete(cache, auth_driver_rest):
+    """Test driver trip completed.
+
+    params:
+        auth_driver_rest (fixture) - mock driver.
+
+    Asserts:
+        Checks the status for the completed driver trip.
+
+    """
+
+    response = auth_driver_rest.post(
+        "/driver/driver_trip/complete/",
+        {'order_ids': [cache['increment_id']]},
+        format='json')
+
+    assert (response) is not None
+    assert response.status_code == 201
+    assert response.data['status'] == True
