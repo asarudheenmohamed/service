@@ -124,8 +124,6 @@ class StoreOrderController(object):
                     'Qty': sku_orders['qty_ordered__sum']}
         sku_data.append(sku_list)
 
-        print sku_data[0]['Qty'],"ddddddddddddddddddddddddddddddd"
-
         logger.debug("Fetched sku: {} total quantity: {} in store: {} at date: {}".format(
                 sku, sku_data[0]['Qty'], store_id, deliverydate))
 
