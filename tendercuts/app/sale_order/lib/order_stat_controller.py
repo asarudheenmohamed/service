@@ -7,6 +7,7 @@ from django.db.models import Sum
 
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder, SalesFlatOrderItem
+from app.core.models.customer import MRewardsPurchase
 
 logger = logging.getLogger(__name__)
 
@@ -32,8 +33,12 @@ class OrderDataController(object):
         if not order_obj:
             raise ValueError('Order object does not exist')
 
+        logger.debug("To get the order details for given order_id:{}".format(
+                order_id))
+
         params_data = []
         for order in order_obj:
+            rewards = MRewardsPurchase.objects.filter(order_id=order.entity_id)[0]
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
@@ -46,6 +51,7 @@ class OrderDataController(object):
                 "discount_description": order.discount_description or '',
                 "payment_method": order.payment.all()[0].method,
                 "medium": order.medium,
+                "spend_amount": rewards.spend_amount,
 
                 "customer": {
                     "partner_name": order.customer_firstname,
@@ -61,6 +67,8 @@ class OrderDataController(object):
 
             }
 
+            logger.debug("To join the items list details to order details:{}")
+
             for item in order.items.all():
                 params.setdefault("product_list", []).append({
                     "sku": item.sku.strip(),
@@ -73,7 +81,7 @@ class OrderDataController(object):
                 })
             params_data.append(params)
 
-            logger.info("Getting order details list of order_id:{}".format(
+            logger.info("Fetched the order details list of order_id:{}".format(
                 order_id))
 
         return params_data
@@ -99,6 +107,10 @@ class StoreOrderController(object):
 
         """
         deliverydate = dateutil.parser.parse(deliverydate)
+
+        logger.debug("To get total quantity of sku: {} in store: {} at date: {}".format(
+                sku, store_id, deliverydate))
+
         order_data = SalesFlatOrderItem.objects.filter(
             deliverydate__range=(
                 deliverydate,
@@ -111,5 +123,10 @@ class StoreOrderController(object):
         sku_list = {'SKU': sku_orders['sku'],
                     'Qty': sku_orders['qty_ordered__sum']}
         sku_data.append(sku_list)
+
+        print sku_data[0]['Qty'],"ddddddddddddddddddddddddddddddd"
+
+        logger.debug("Fetched sku: {} total quantity: {} in store: {} at date: {}".format(
+                sku, sku_data[0]['Qty'], store_id, deliverydate))
 
         return sku_data
