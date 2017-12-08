@@ -101,6 +101,7 @@ class CatalogProductFlat(models.Model):
     weight_description = models.CharField(
         max_length=255, blank=True, null=True)
     spicy = models.IntegerField(blank=True, null=True)
+    gramsperunit = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         app_label = "magento"
