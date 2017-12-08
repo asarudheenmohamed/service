@@ -4,8 +4,10 @@ Feature: Driver completes the order
         Given A customer places an order
         And Fetch related order by <store_id>
         And a driver is assigned to the order and the driver location for <latitude><longitude>
-        When a update driver current locations for <latitude> and <longitude> <status> <message>
-        Then the order should be completed and the driver location for <latitude><longitude>
+        And a update driver current locations for <latitude> and <longitude> <status> <message>
+        And check the driver's current location
+        When the order should be completed and the driver location for <latitude><longitude>
+        Then find the no of driver stat objects
 
         Examples: 
 	    | store_id|latitude |longitude|status|message|
