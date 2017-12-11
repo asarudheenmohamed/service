@@ -180,3 +180,18 @@ class MRewardsReferral(models.Model):
         managed = False
         db_table = 'm_rewards_referral'
         app_label = "magento"
+
+class MRewardsPurchase(models.Model):
+    purchase_id = models.AutoField(primary_key=True)
+    quote_id = models.IntegerField(unique=True, blank=True, null=True)
+    order_id = models.IntegerField(unique=True, blank=True, null=True)
+    spend_points = models.IntegerField(blank=True, null=True)
+    spend_amount = models.FloatField(blank=True, null=True)
+    spend_min_points = models.IntegerField(blank=True, null=True)
+    spend_max_points = models.IntegerField(blank=True, null=True)
+    earn_points = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'm_rewards_purchase'
+        app_label = "magento"

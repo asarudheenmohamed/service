@@ -22,7 +22,7 @@ class TestJustPayGateway:
         """
         gw = JusPayGateway()
         status = gw.claim_payment(juspay_mock_order.increment_id, None)
-        assert status is False
+        assert status is True
 
     def test_fetch_payment_modes(self, mock_user):
         """Fetch payment modes.
@@ -82,14 +82,16 @@ class TestJuspayCustomerCreate():
         juspay_gw = JusPayGateway()
         cust = juspay_gw.get_or_create_customer(str(mock_user.entity_id))
 
-        assert cust.object_reference_id == "juspay_{}".format(mock_user.entity_id)
+        assert cust.object_reference_id == "juspay_{}".format(
+            mock_user.entity_id)
 
 
 @pytest.mark.django_db
 class TestJuspayCreateTransaction():
     """DEPRECATED NEEDS TO BE MOVED TO PYTEST BDD FOR EXISTING CARD"""
 
-    def _test_create_transaction_with_saved_card(self, juspay_mock_order, mock_user, juspay_dummy_card2):
+    def _test_create_transaction_with_saved_card(
+            self, juspay_mock_order, mock_user, juspay_dummy_card2):
         """Verify if create transaction with a saved card works.
 
         Asserts:

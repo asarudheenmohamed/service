@@ -12,7 +12,7 @@ from app.driver.lib.driver_controller import DriverController
 class TestDriverStatController:
     """Test cases"""
 
-    def test_generate_stat(self, mock_user, generate_mock_order):
+    def test_generate_stat(self, mock_driver, generate_mock_order):
         """Increase the complleted order for driver
 
         Asserts:
@@ -22,7 +22,7 @@ class TestDriverStatController:
         """
 
         DriverOrder.objects.create(
-            driver_id=mock_user.customer.entity_id,
+            driver_id=mock_driver.entity_id,
             increment_id=generate_mock_order.increment_id)
 
         stat_controller = DriverStatController(
@@ -33,7 +33,7 @@ class TestDriverStatController:
         assert orders == 1
 
         DriverOrder.objects.create(
-            driver_id=mock_user.customer.entity_id,
+            driver_id=mock_driver.entity_id,
             increment_id=generate_mock_order.increment_id)
 
         orders = stat_controller.generate_stat(
@@ -41,7 +41,7 @@ class TestDriverStatController:
 
         assert orders == 2
 
-    def test_driver_order_stat(self, mock_user):
+    def test_driver_order_stat(self, mock_driver):
         """Increase the complleted order for driver
 
         Asserts:
@@ -51,9 +51,9 @@ class TestDriverStatController:
         """
 
         DriverStat.objects.create(
-            driver_id=mock_user.customer.entity_id,
+            driver_id=mock_driver.entity_id,
             no_of_orders=1)
-        controller = DriverController.driver_obj(mock_user.customer.entity_id)
+        controller = DriverController(mock_driver.entity_id)
         obj = controller.driver_stat_orders()
 
         assert obj[0].no_of_orders == 1

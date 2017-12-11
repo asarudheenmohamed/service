@@ -53,7 +53,7 @@ def refer_customer(cache, mock_user):
         "/tcash/referral",
         {'user_id': mock_user.entity_id})
 
-    assert referral_response.status_code == 200, "Unable to reach endpoint"
+    assert referral_response.status_code == 201, "Unable to reach endpoint"
     resp = referral_response.json()
     assert resp['status'] == True, "Endpoint returned false"
     assert "100" in resp['message'], "Invalid message sent"

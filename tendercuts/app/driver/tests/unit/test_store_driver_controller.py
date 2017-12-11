@@ -18,7 +18,7 @@ class TestStoreDriverController:
 
         """
         # assign order for the mock driver
-        controller = DriverController(mock_driver)
+        controller = DriverController(mock_driver.entity_id)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,
             generate_mock_order.store_id,
@@ -26,11 +26,9 @@ class TestStoreDriverController:
             80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
-
         controller = StoreOrderController()
         driver_order = controller.get_store_driver_order(
             generate_mock_order.store_id)
-
         assert generate_mock_order.increment_id in driver_order['driver_objects'][0][
             'orders']
         assert driver_order['driver_objects'][0][

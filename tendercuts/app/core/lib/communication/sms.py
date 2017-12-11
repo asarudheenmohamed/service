@@ -1,7 +1,11 @@
 """End point for the send sms to the customer mobile number."""
+import logging
 import requests
 import sendotp
 from django.conf import settings
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class OldSMS():
@@ -91,10 +95,14 @@ class SMS():
         """
         phnumber = "%s%s" % ("91", str(phnumber))
         self.otp.msg = message
+        logger.debug('Otp send for this number:{}'.format(phnumber))
         otp = self.otp.send(
             phnumber,
             settings.SMS_GATEWAY["SENDER_ID"],
             otp)
+
+        logger.info(
+            'Otp sent successfully for this number:{}'.format(phnumber))
 
     def retry_otp(self, phnumber, retry_mode):
         """Resend OTP.
@@ -115,6 +123,14 @@ class SMS():
             "mobile": phnumber,
             "retrytype": str(retry_mode),
         }
+
+        logger.debug(
+            'Otp send the {} method for this number:{}'.format(
+                retry_mode, phnumber))
         requests.get(
             settings.SMS_GATEWAY["RESENDPOINT"],
             params=data)
+
+        logger.info(
+            'Otp successfully sent {} method for this number:{}'.format(
+                retry_mode, phnumber))

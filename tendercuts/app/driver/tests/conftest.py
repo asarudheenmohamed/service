@@ -5,6 +5,7 @@ from rest_framework.test import APIClient
 
 from app.core.lib.test import generate_customer
 from app.core.lib.user_controller import CustomerSearchController
+from app.driver.constants import DRIVER_GROUP
 
 
 @pytest.fixture(scope="session")
@@ -18,7 +19,7 @@ def mock_driver(request):
     """
     customer_id = request.config.cache.get("mock/driver", None)
     if customer_id is None:
-        customer_data = generate_customer(group_id=6)
+        customer_data = generate_customer(group_id=DRIVER_GROUP)
         customer_id = customer_data['entity_id']
         request.config.cache.set("mock/driver", customer_id)
 

@@ -88,26 +88,6 @@ def mock_user(request):
     return customer
 
 
-@pytest.fixture(scope="session")
-def mock_driver(request):
-    """Generates a mock customer.
-
-    Uses pytest caching
-
-    """
-    from app.core.lib.test import generate_customer
-    from app.core.lib.user_controller import CustomerSearchController
-    from app.core.models.customer import FlatCustomer
-
-    customer_data = generate_customer(store_id=7, group_id=DRIVER_GROUP)
-    customer_id = customer_data['entity_id']
-    request.config.cache.set("mock/customer", customer_id)
-
-    customer = CustomerSearchController.load_by_id(customer_id)
-
-    return customer
-
-
 @pytest.fixture
 def cache():
     """A cache to store data for bdd test cases"""

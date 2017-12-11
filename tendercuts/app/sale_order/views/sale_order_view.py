@@ -1,6 +1,7 @@
 """Endpoint to provide store and order details."""
 import datetime
 import json
+import logging
 
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
@@ -8,8 +9,10 @@ from rest_framework.views import APIView
 
 from app.sale_order.lib.order_stat_controller import (OrderDataController,
                                                       StoreOrderController)
+from app.sale_order import models
+from app.core import serializers
 
-from . import models, serializers
+logger = logging.getLogger(__name__)
 
 
 class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -40,6 +43,7 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
 
         return queryset
 
+
 class DeliveryViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
@@ -52,10 +56,10 @@ class DeliveryViewSet(APIView):
     def get(self, request):
         data = []
         data.append(models.ScheduledDelivery().serialize())
-        
+
         express = models.ExpressDelivery().serialize()
         if express:
-           data.append(express)
+            data.append(express)
 
         return Response(data)
 
@@ -81,6 +85,9 @@ class OrderDataViewSet(APIView):
         order_id = self.request.GET['order_id']
         controller = OrderDataController(order_id)
         param_data = controller.order_details(order_id)
+
+        logger.info("Fetched the order details for given ordeer_id:{}".format(
+            order_id))
 
         return Response(param_data)
 
@@ -110,5 +117,8 @@ class StoreDataViewSet(APIView):
         sku = self.request.GET['sku']
         controller = StoreOrderController(store_id)
         sku_order = controller.store_details(store_id, deliverydate, sku)
+
+        logger.debug("Fetched scheduled_order's sku quantity details at date: {}".format(
+                deliverydate))
 
         return Response(sku_order)

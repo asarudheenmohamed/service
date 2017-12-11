@@ -4,9 +4,12 @@ magento and python layer
 """
 
 import logging
-from .magento import Connector
+
 from app.core.models.sales_order import SalesFlatOrderGrid
 
+from .magento import Connector
+
+logger = logging.getLogger(__name__)
 
 
 class OrderController(object):
@@ -28,13 +31,11 @@ class OrderController(object):
 
     def out_delivery(self):
         """The order status processing to out for delivery."""
-        #self.order.status = "out_delivery"
-        #self.order.save()
-        #obj = SalesFlatOrderGrid.objects.get(
-         #   increment_id=self.order.increment_id)
-        #obj.status = "out_delivery"
-        #obj.save()
-        response_data=self.mage.api.tendercuts_order_apis.updateOutForDelivery([{'increment_id':self.order.increment_id}])
+        response_data = self.mage.api.tendercuts_order_apis.updateOutForDelivery(
+            [{'increment_id': self.order.increment_id}])
+        logger.info(
+            'This order:{} was changed to out for delivery'.format(
+                self.order.increment_id))
 
         response_data
 
@@ -44,7 +45,8 @@ class OrderController(object):
         reward and credit.
 
         """
-        response_data=self.mage.api.tendercuts_order_apis.completeOrders([{'increment_id':self.order.increment_id}])
+        response_data = self.mage.api.tendercuts_order_apis.completeOrders(
+            [{'increment_id': self.order.increment_id}])
 
         return response_data
 
@@ -52,15 +54,15 @@ class OrderController(object):
         """
         Triggring soap api here to enable any Mage observer
         """
-        logging.debug("Cancelling {}".format(self.order.increment_id))
+        logger.debug("Cancelling {}".format(self.order.increment_id))
 
         status = self.mage.api.sales_order.cancel(
             self.order.increment_id)
 
         if status:
-            logging.info("Cancelled {}".format(self.order.increment_id))
+            logger.info("Cancelled {}".format(self.order.increment_id))
         else:
-            logging.info("Unable to Cancel {}".format(self.order.increment_id))
+            logger.info("Unable to Cancel {}".format(self.order.increment_id))
 
         return status
 
