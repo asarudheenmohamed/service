@@ -69,6 +69,10 @@ class RewardPointAmountApi(APIView):
                              'message': "100 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 
+        elif sales_flat_obj and not reward_obj:
+            response_data = {'status': False,
+                             'message': 'Referal rewards only applicable for new customer'}
+
         else:
             refered_user_basic_info = CustomerSearchController.load_basic_info(reward_obj[
                 0].customer.entity_id)
@@ -76,4 +80,4 @@ class RewardPointAmountApi(APIView):
                              'message': 'Already  you have be referred'
                              ' by your friend {}'.format(refered_user_basic_info[3])}
 
-        return Response(response_data,status=status.HTTP_201_CREATED)
+        return Response(response_data, status=status.HTTP_201_CREATED)
