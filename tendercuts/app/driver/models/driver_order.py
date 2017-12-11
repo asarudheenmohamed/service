@@ -19,7 +19,7 @@ class DriverTrip(models.Model):
     driver_order = models.ManyToManyField(DriverOrder)
     km_traveled = models.FloatField(blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
-    trip_ending_time = models.DateTimeField(default=timezone.now)
+    trip_ending_time = models.DateTimeField(blank=True, null=True)
 
 
 class DriverPosition(models.Model):
