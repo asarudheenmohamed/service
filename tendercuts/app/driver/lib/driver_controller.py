@@ -292,10 +292,9 @@ class DriverController(object):
         driver_orders = DriverOrder.objects.filter(
             increment_id__in=order_ids)
         # update the driver trip completed time
-        d = DriverTrip.objects.filter(
-            driver_order__in=driver_orders)
+
         driver_trip = DriverTrip.objects.filter(
             driver_order__in=driver_orders).update(trip_ending_time=timezone.now())
 
-        logger.info(
-            "Driver trip ending time updated for this driver:{}".format(self.driver))
+        logger.debug(
+            "Driver:{} trip:{}'s end time:{} was updated".format(self.driver, driver_trip, timezone.now()))
