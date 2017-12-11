@@ -5,6 +5,7 @@ from .store import StoreSerializer
 
 
 class SalesOrderAddressSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.SalesFlatOrderAddress
         fields = ('fax', "street", "region", "city", 'postcode',
@@ -12,12 +13,21 @@ class SalesOrderAddressSerializer(serializers.ModelSerializer):
 
 
 class SalesFlatOrderItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.SalesFlatOrderItem
-        fields = ('item_id', "name", "qty_ordered", "row_total")
+        fields = (
+            'item_id',
+            "product_id",
+            "name",
+            "qty_ordered",
+            "weight",
+            "row_total"
+        )
 
 
 class SalesFlatOrderPaymentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.SalesFlatOrderPayment
         fields = ('method', )
