@@ -54,7 +54,7 @@ def fetch_related_order(cache, auth_driver_rest,
     cache['store_id'] = store_id
 
 
-@given('a driver is assigned to the order and the driver location for <latitude><longitude>')
+@given('a driver is assigned to the order at <latitude><longitude>')
 def driver_controller(cache, auth_driver_rest, latitude, longitude):
     """Assign the order.
 
