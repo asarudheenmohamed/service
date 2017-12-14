@@ -6,7 +6,7 @@ PRODUCT_FIELDS = ('price', 'short_description', 'description', 'sku',
                   "thumb",
                   "weight_description", "gross_weight_description",
                   "visibility", "status", "uom", "name", "entity_id",
-                  "spicy","gramsperunit",
+                  "spicy","gramsperunit","weight_from","weight_to"
                   )
 
 
