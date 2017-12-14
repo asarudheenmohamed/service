@@ -48,3 +48,24 @@ class DriverTripViewSet(viewsets.GenericViewSet):
 
         return Response(
             {'status': True, "message": 'successfully trip created'})
+
+    @list_route(methods=['post'], renderer_classes=[renderers.JSONRenderer])
+    def complete(self, request, *args, **kwargs):
+        """Driver order complete endpoint.
+
+        Input:
+            order_id
+
+        Returns:
+            Response({status: bool, message: str})
+
+        """
+        order_ids = self.request.data['order_ids']
+        user_id = get_user_id(self.request)
+        controller = DriverController(user_id)
+
+        controller.complete_driver_trip(order_ids)
+
+        logger.info("{} this order completed successfully".format(order_ids))
+
+        return Response({'status': True}, status=status.HTTP_201_CREATED)
