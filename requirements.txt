@@ -25,6 +25,7 @@ redis
 django-redis
 requests
 django-debug-toolbar
+django-debug-panel
 flower
 juspay
 razorpay

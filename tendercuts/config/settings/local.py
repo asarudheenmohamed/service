@@ -48,11 +48,12 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    },
+    }
 }
 
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
-MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
+MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware", )
 
 INTERNAL_IPS = (
     '127.0.0.1'
