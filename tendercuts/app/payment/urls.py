@@ -12,6 +12,10 @@ router.register(r'modes',
                 views.PaymentMethodViewSet,
                 base_name="PaymentMethodViewSet")
 
+router.register(r'payment_mode',
+                views.JuspayPaymentMethodViewSet,
+                base_name="JuspayPaymentMethodViewSet")
+
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'verify', views.VerifyTransaction.as_view()),
