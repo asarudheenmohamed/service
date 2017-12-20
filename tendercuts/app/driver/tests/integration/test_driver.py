@@ -8,6 +8,7 @@ import pytest
 from pytest_bdd import given, scenario, then, when
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
+from app.driver.models import DriverOrder, DriverPosition, OrderEvents
 
 
 @pytest.mark.django_db
@@ -61,7 +62,7 @@ def fetch_related_order(cache, auth_driver_rest,
     cache['store_id'] = store_id
 
 
-@given('a driver is assigned to the order and the driver location for <latitude><longitude>')
+@given('a driver is assigned to the order at <latitude><longitude>')
 def driver_controller(cache, auth_driver_rest, latitude, longitude):
     """Assign the order.
 
@@ -79,7 +80,7 @@ def driver_controller(cache, auth_driver_rest, latitude, longitude):
         format='json')
 
 
-@when('a update driver current locations for <latitude> and <longitude> <status> <message>')
+@given('a update driver current locations for <latitude> and <longitude> <status> <message>')
 def driver_position_update(
         cache,
         auth_driver_rest,
@@ -112,8 +113,8 @@ def driver_position_update(
         'message'] == message
 
 
-@then('the order should be completed and the driver location for <latitude><longitude>')
-def order_complete(cache, auth_driver_rest, latitude, longitude):
+@when('the order should be completed and the driver location for <latitude><longitude>')
+def order_complete(cache, mock_driver, auth_driver_rest, latitude, longitude):
     """Assert if order complete.
 
     params:
@@ -132,6 +133,44 @@ def order_complete(cache, auth_driver_rest, latitude, longitude):
 
     assert (response) is not None
     assert response.status_code == 201
+
+
+@pytest.mark.django_db(transaction=True)
+@then('find the no of driver stat objects')
+def test_driver_stat(cache, auth_driver_rest):
+    """Test driver stat objects.
+
+    params:
+        auth_driver_rest (fixture) - user requests.
+
+    Asserts:
+        Checks the count of driver stat object is 1.
+
+    """
+    response = auth_driver_rest.get(
+        "/driver/driver_stat/", format='json')
+    assert len(response.data['results']) == 0
+    assert (response) is not None
+
+
+@given("check the driver's current location")
+def test_driver_position(
+        cache, mock_driver, auth_driver_rest, latitude, longitude):
+    """Test driver curent posittion.
+
+    params:
+        auth_driver_rest (fixture) - user requests.
+
+    Asserts:
+        Check the driver current location.
+
+    """
+    driver_position_obj = DriverPosition.objects.filter(
+        driver_id=mock_driver.entity_id).last()
+
+    assert (driver_position_obj) is not None
+    assert str(driver_position_obj.latitude) == latitude
+    assert str(driver_position_obj.longitude) == longitude
 
 
 @given('create a driver trip')

@@ -97,6 +97,10 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
                            viewsets.GenericViewSet):
     """
     A viewset that provides default `list()` actions.
+
+    TODO: clean me, this shouldn't be a PaymentMethodViewSet, instead a
+    separate API. Making changes to this will break all existing customer
+    apps. So holding the changes for now.
     """
     serializer_class = serializer.PaymentModeSerializer
 

@@ -2,7 +2,7 @@ from .payu import Payu
 from .paytm import PaytmGateway
 from .simpl import GetSimplGateway
 from .rzp import RzpGateway
-from .juspay import JusPayGateway, JuspayTransaction
+from .juspay import JusPayGateway, JuspayTransaction, JuspayCustomer
 
 
 def get_gateway_by_method(method):

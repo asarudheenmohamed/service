@@ -4,7 +4,10 @@ from .. import models
 
 class PaymentModeSerializer(serializers.ModelSerializer):
     """
-    Serializer for PaymentMode
+    Serializer for PaymentMode, only used during the cart
+    checkout process.
+
+    TODO: clean me, architecturally this is incorrect.
     """
     class Meta:
         """
@@ -22,3 +25,4 @@ class PaymentModeSerializer(serializers.ModelSerializer):
         we need.
         """
         return models.PaymentMode(**validated_data)
+

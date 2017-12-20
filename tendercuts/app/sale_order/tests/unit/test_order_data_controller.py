@@ -3,7 +3,7 @@
 import pytest
 import time
 
-from app.sale_order.lib.order_data_controller import OrderDataController
+from app.sale_order.lib import OrderDataController
 
 
 @pytest.mark.django_db

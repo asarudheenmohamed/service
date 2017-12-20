@@ -33,7 +33,7 @@ class PaymentMode(models.Model):
     offers = models.CharField(max_length=100, blank=True, null=True)
 
     # blank true => required
-    order_id = models.CharField(max_length=100, null=False, blank=False)
+    order_id = models.CharField(max_length=100, null=False, blank=True)
 
     # Card specifid
     pin = models.CharField(max_length=32, blank=True, null=True)

@@ -48,11 +48,12 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    },
+    }
 }
 
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
-MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
+MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware", )
 
 INTERNAL_IPS = (
     '127.0.0.1'
@@ -89,7 +90,7 @@ PAYMENT = {
         "id": "0F38CA55EAA0492987E8B5FB5635D223",
         "secret": "C8B21475421D4A14AE78A825344B7E65",
         "url": "https://sandbox.juspay.in/card/tokenize",
-        "return_url": "http://staging.tendercuts.in:82/payment/juspay",
+        "return_url": "http://localhost:8000/payment/juspay",
         "environment": "sandbox"
     },
     "PAYU": {
