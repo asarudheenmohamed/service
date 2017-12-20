@@ -12,6 +12,7 @@ from app.core.models.entity import EavAttribute
 from app.core.models.customer import address
 from app.driver.lib.driver_stat_controller import DriverStatController
 from config.celery import app
+from app.driver.lib.end_of_day_driver_status import DriverStatusController
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,13 @@ def driver_stat(order_id):
 
     # logger.info("No of order is added to driver : {}".format(
     # order_obj[0].))
+
+
+@app.task(base=TenderCutsTask, ignore_result=True)
+def generate_end_of_day_driver_stat(order_id):
+    """Celery task to generate end of day driver status."""
+    controller = DriverStatusController()
+    controller.generate_driver_completed_order_status()
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
