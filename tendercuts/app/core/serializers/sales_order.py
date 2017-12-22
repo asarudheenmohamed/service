@@ -49,5 +49,5 @@ class SalesOrderSerializer(serializers.ModelSerializer):
                   "grand_total", "updated_at", "payment",
                   "store_id", "shipping_address", "items",
                   "status", "order_now", "promised_delivery_time",
-                  "promised_delivery_time_dt"
+                  "promised_delivery_time_dt","shipping_amount","discount_amount"
                   )

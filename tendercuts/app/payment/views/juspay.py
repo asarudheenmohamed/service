@@ -154,5 +154,6 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
             "customer_email": transaction.customer_email,
             "customer_phone": transaction.customer_phone
         }
+        logger.debug("Sending back {}".format(data))
 
         return Response(data)
