@@ -20,6 +20,7 @@ class DriverTrip(models.Model):
     km_traveled = models.FloatField(blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
+    trip_completed = models.BooleanField(default=False)
 
 
 class DriverPosition(models.Model):
@@ -43,3 +44,5 @@ class DriverStat(models.Model):
     driver_id = models.IntegerField(blank=True, null=True)
     no_of_orders = models.IntegerField(default=0)
     km_travels = models.FloatField(blank=True, null=True)
+
+
