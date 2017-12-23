@@ -2,14 +2,16 @@
 
 import logging
 
+from django.utils import timezone
+
 import app.core.lib.magento as mage
 from app.core.lib.communication import SMS
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
-from django.utils import timezone
 
+from .trip_controller import TripController
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 
@@ -90,6 +92,8 @@ class DriverController(object):
                 self.driver, lat, lon))
 
         self._record_events(driver_object, position_obj, 'out_delivery')
+
+        TripController().check_and_create_trip(driver_object)
 
         tasks.send_sms.delay(order)
         return driver_object
@@ -184,6 +188,8 @@ class DriverController(object):
         # update current location for driver
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
+
+        TripController().check_and_complete_trip(driver_object)
 
     def record_position(self, lat, lon):
         """Create a Driver current location latitude and longitude.
