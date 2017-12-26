@@ -3,12 +3,11 @@ from django.contrib import admin
 
 from app.core.models.store import CoreStore
 from app.driver.lib.store_order_controller import StoreOrderController
-from app.driver.models import DriverOrder
+from app.driver.models import DriverOrder, DriverTrip
 
 
 class DriverOrderAdmin(admin.ModelAdmin):
     """Driver order change view list."""
-
     def changelist_view(self, request):
         """Fetch driver object associated with the corresponding store.
 
@@ -35,3 +34,9 @@ class DriverOrderAdmin(admin.ModelAdmin):
         return response
 
 admin.site.register(DriverOrder, DriverOrderAdmin)
+
+class DriverTripAdmin(admin.ModelAdmin):
+    list_display  = [f.name for f in DriverTrip._meta.fields]
+
+
+admin.site.register(DriverTrip, DriverTripAdmin)

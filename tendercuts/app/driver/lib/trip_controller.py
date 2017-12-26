@@ -18,8 +18,9 @@ class TripController:
 
     def _complete_trip(self, trip):
         self.log.info("Completing the trip for driver {}".format(trip.id))
-        trip.trip_complete = True
+        trip.trip_completed = True
         trip.trip_ending_time = timezone.now()
+        trip.save()
 
     def _can_complete_trip(self, trip):
         """Check if the trip can be completed.
@@ -60,6 +61,7 @@ class TripController:
         :return: DriverTrip
         """
         key = self._get_key(order)
+        self.log.debug("Creating/updating a trip for {}".format(order.increment_id))
 
         if cache.get_key(key):
             self.log.debug("Found an exiting trip for the driver {}".format(

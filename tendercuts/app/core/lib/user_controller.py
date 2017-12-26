@@ -78,7 +78,7 @@ class CustomerSearchController(object):
             .order_by('-attribute_id')                             \
             .values_list('entity', 'entity__email', 'value')
         if not query_set:
-            raise CustomerNotFound
+            raise CustomerNotFound("No data found for customer: {}".format(user_id))
 
         flattened_data = []
         flattened_data.extend(query_set[0])

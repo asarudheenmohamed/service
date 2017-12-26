@@ -189,7 +189,11 @@ class DriverController(object):
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
 
-        TripController().check_and_complete_trip(driver_object)
+        try:
+            TripController().check_and_complete_trip(driver_object[0])
+        except ValueError:
+            # Legacy handling
+            pass
 
     def record_position(self, lat, lon):
         """Create a Driver current location latitude and longitude.
@@ -267,40 +271,3 @@ class DriverController(object):
 
         return driver_stat_obj
 
-    def create_driver_trip(self, order_ids):
-        """Create a driver trip.
-
-        Params:
-          order_ids (list): order increment ids
-
-        """
-        # fetch driver order objects
-        driver_orders = DriverOrder.objects.filter(
-            increment_id__in=order_ids)
-        # create driver trip
-        driver_trip = DriverTrip()
-        driver_trip.save()
-        driver_trip.driver_order.add(*driver_orders)
-
-        logger.info(
-            "Trip created for the given orders:{}".format(order_ids))
-
-        return driver_trip
-
-    def complete_driver_trip(self, order_ids):
-        """Update driver trip completed time.
-
-        Params:
-          order_ids (list): order increment ids
-
-        """
-        # fetch driver order objects
-        driver_orders = DriverOrder.objects.filter(
-            increment_id__in=order_ids)
-        # update the driver trip completed time
-
-        driver_trip = DriverTrip.objects.filter(
-            driver_order__in=driver_orders).update(trip_ending_time=timezone.now())
-
-        logger.debug(
-            "Driver:{} trip:{}'s end time:{} was updated".format(self.driver, driver_trip, timezone.now()))

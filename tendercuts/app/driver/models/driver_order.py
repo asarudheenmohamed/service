@@ -8,6 +8,8 @@ from django.utils import timezone
 
 class DriverOrder(models.Model):
     """Order Assigment model."""
+    def __unicode__(self):
+       return '{}:{}'.format(self.increment_id, self.driver_id)
 
     driver_id = models.IntegerField(blank=True, null=True)
     increment_id = models.CharField(max_length=50, blank=True, null=True)

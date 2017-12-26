@@ -32,7 +32,7 @@ def get_key(key, version=settings.CACHE_DEFAULT_VERSION):
 
     return cache_obj
 
-def delete_key(key):
+def delete_key(key, version=settings.CACHE_DEFAULT_VERSION):
     """Nuke the key from the cache.
 
     Params:
@@ -40,6 +40,6 @@ def delete_key(key):
 
     Returns: None
     """
-    cache.delete(key)
+    cache.delete(key, version=version)
 
 

@@ -36,10 +36,6 @@ router.register(
     r'driver_stat',
     views.DriverStatViewSet,
     base_name='DriverStatViewSet')
-router.register(
-    r'driver_trip',
-    views.DriverTripViewSet,
-    base_name='DriverTripViewSet')
 
 
 urlpatterns = [
