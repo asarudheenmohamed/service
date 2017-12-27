@@ -63,7 +63,7 @@ def customer_current_location(customer_id, lat, lon):
         else:
             customer_addressentity_obj = address.CustomerAddressEntityText.objects.create(
                 attribute=eav_obj[0],
-                entity_type_id=1,
+                entity_type__entity_type_id=1,
                 entity=customer_address_obj[0],
                 value=lat if loc_value == 'latitude' else lon)
 
