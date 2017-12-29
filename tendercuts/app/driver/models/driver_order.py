@@ -8,8 +8,9 @@ from django.utils import timezone
 
 class DriverOrder(models.Model):
     """Order Assigment model."""
+
     def __unicode__(self):
-       return '{}:{}'.format(self.increment_id, self.driver_id)
+        return '{}:{}'.format(self.increment_id, self.driver_id)
 
     driver_id = models.IntegerField(blank=True, null=True)
     increment_id = models.CharField(max_length=50, blank=True, null=True)
@@ -19,7 +20,7 @@ class DriverOrder(models.Model):
 class DriverTrip(models.Model):
     """Driver Trip Model."""
     driver_order = models.ManyToManyField(DriverOrder)
-    km_traveled = models.FloatField(blank=True, null=True)
+    km_traveled = models.CharField(max_length=20, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
     trip_completed = models.BooleanField(default=False)
@@ -46,5 +47,3 @@ class DriverStat(models.Model):
     driver_id = models.IntegerField(blank=True, null=True)
     no_of_orders = models.IntegerField(default=0)
     km_travels = models.FloatField(blank=True, null=True)
-
-
