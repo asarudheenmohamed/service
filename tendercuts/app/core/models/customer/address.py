@@ -71,7 +71,7 @@ class CustomerAddressEntityInt(models.Model):
 
 class CustomerAddressEntityText(models.Model):
     value_id = models.AutoField(primary_key=True)
-    # entity_type = models.ForeignKey('EavEntityType', models.DO_NOTHING)
+    entity_type = models.ForeignKey('EavEntityType', models.DO_NOTHING)
     attribute = models.ForeignKey('EavAttribute', models.DO_NOTHING)
     entity = models.ForeignKey(CustomerAddressEntity, models.DO_NOTHING, related_name="texts")
     value = models.TextField()
