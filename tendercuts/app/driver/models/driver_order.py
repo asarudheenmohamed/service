@@ -25,6 +25,39 @@ class DriverTrip(models.Model):
     trip_ending_time = models.DateTimeField(blank=True, null=True)
     trip_completed = models.BooleanField(default=False)
 
+    @property
+    def trip_starting_point(self):
+        """Retrns the driver trip starting pints latitude and longitude."""
+
+        trip_starting_point = OrderEvents.objects.filter(
+            driver=self.driver_order.all().first(),
+            status='out_delivery').prefetch_related('driver_position')[0]
+
+        return '{},{}'.format(trip_starting_point.driver_position.latitude,
+                              trip_starting_point.driver_position.longitude)
+
+    @property
+    def way_and_destination_points(self):
+        """Returns the driver destination points and way points."""
+
+        trip_way_point_obj = OrderEvents.objects.filter(
+            driver__in=self.driver_order.all(),
+            status='completed').order_by('updated_time')
+
+        # get trip last point
+        dest_point_obj = trip_way_point_obj.last()
+
+        destination_point = '{},{}'.format(
+            dest_point_obj.driver_position.latitude, dest_point_obj.driver_position.longitude)
+
+        way_points = ['{},{}'.format(
+            trip_way_point.driver_position.latitude,
+            trip_way_point.driver_position.longitude)
+            for trip_way_point in trip_way_point_obj]
+
+        return {"destination_point": destination_point,
+                "way_points": way_points}
+
 
 class DriverPosition(models.Model):
     """Driver Position model."""

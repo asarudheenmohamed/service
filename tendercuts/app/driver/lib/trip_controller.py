@@ -140,31 +140,21 @@ class TripController:
 
         """
 
-        order_event_objects = OrderEvents.objects.filter(driver__in=trip.driver_order.all(
-        )).order_by('updated_time').prefetch_related('driver_position')
-
-        self.log.info(
-            'Fetched the trip:{} events lat and longs'.format(
-                trip.id))
-
-        # get the driver starting location
-        driver_strting_position = order_event_objects.filter(
-            status='out_delivery').last()
-
-        driver_position_objs = [
-            order_event.driver_position for order_event in order_event_objects]
-
         # based on lat long distance has been measured for each trip taken by
         # the driver
-        compute_km = self._api.directions("{},{}".format(driver_strting_position.driver_position.latitude, driver_strting_position.driver_position.longitude), "{},{}".format(driver_position_objs[
-            -1].latitude, driver_position_objs[-1].longitude),
-            waypoints=["{},{}|".format(i.latitude, i.longitude)
-                       for i in driver_position_objs[1:-1]])
+
+        # driver trip starting point
+        starting_points = trip.trip_starting_point
+
+        # driver trip way and destination points
+        trip_points = trip.way_and_destination_points
+
+        compute_km = self._api.directions(starting_points, trip_points['destination_point'],
+                                          waypoints=trip_points['way_points'])
 
         self.log.info(
-            'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :lat:{},long:{} to ending point :lat:{},long:{} for a trip '.format(
-                driver_strting_position.driver_position.latitude, driver_strting_position.driver_position.longitude, driver_position_objs[
-                    0].latitude, driver_position_objs[0].longitude))
+            'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
+                starting_points, trip_points['destination_point']))
 
         # update trip km
         trip.km_traveled = compute_km[0]['legs'][0]['distance']['text']
