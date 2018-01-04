@@ -1,11 +1,13 @@
 """Automatically controls the trip of the driver"""
 import logging
 
-from app.core.lib import cache
-from app.driver.models import DriverTrip, OrderEvents
-from app.core.models import SalesFlatOrder
-from django.utils import timezone
 import googlemaps
+from django.conf import settings
+from django.utils import timezone
+
+from app.core.lib import cache
+from app.core.models import SalesFlatOrder
+from app.driver.models import DriverTrip, OrderEvents
 
 
 class TripController:
@@ -14,7 +16,7 @@ class TripController:
     def __init__(self, log=None):
         self.log = log or logging.getLogger()
         self._api = googlemaps.Client(
-            key='AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU')
+            key=settings.GOOGLE_MAP_DISTANCE_API['KEY'])
 
     def _get_key(self, order):
         """Set driver trip cache key.

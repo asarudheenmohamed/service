@@ -246,5 +246,11 @@ MAIL_GATEWAY = {
     "TC_PASS": "D%6Byz6+no;Dhgv2"
 }
 
+
+GOOGLE_MAP_DISTANCE_API = {
+    "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
+}
+
+
 # caching version
 CACHE_DEFAULT_VERSION = 2
