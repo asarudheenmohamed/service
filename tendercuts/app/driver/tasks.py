@@ -13,6 +13,7 @@ from app.core.models.customer import address
 from app.driver.lib.driver_stat_controller import DriverStatController
 from config.celery import app
 from app.driver.lib.end_of_day_driver_status import DriverStatusController
+from app.driver.lib.customer_location import CustomerLocationController
 
 logger = logging.getLogger(__name__)
 
@@ -50,22 +51,10 @@ def customer_current_location(customer_id, lat, lon):
      lon(int):customer location longitude
 
     """
-    customer_address_obj = address.CustomerAddressEntity.objects.filter(
-        parent__entity_id=customer_id)
-    for loc_value in ['latitude', 'longitude']:
-        eav_obj = EavAttribute.objects.filter(
-            attribute_code=loc_value)
-        customer_addressentity_obj = address.CustomerAddressEntityText.objects.filter(
-            attribute=eav_obj[0], entity=customer_address_obj[0])
-        if customer_addressentity_obj:
-            customer_addressentity_obj[
-                0].value = lat if loc_value == 'latitude' else lon
-        else:
-            customer_addressentity_obj = address.CustomerAddressEntityText.objects.create(
-                attribute=eav_obj[0],
-                entity_type__entity_type_id=1,
-                entity=customer_address_obj[0],
-                value=lat if loc_value == 'latitude' else lon)
+
+    customer_location_controller = CustomerLocationController()
+    customer_loc_obj = customer_location_controller.update_customer_location(
+        customer_id, lat, lon)
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
