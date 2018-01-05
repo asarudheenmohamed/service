@@ -2,12 +2,15 @@
 
 import time
 
+import mock
 import pytest
 
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
-from app.driver.models import DriverOrder
+from app.core.lib.user_controller import CustomerSearchController
 from app.driver.lib.driver_controller import DriverController
+from app.driver.lib.trip_controller import TripController
+from app.driver.models import DriverOrder
 
 
 @pytest.mark.django_db
@@ -34,49 +37,38 @@ class TestDriverController:
     def test_fetch_active_order(
             self, mock_driver, generate_mock_order, status):
         """Fetch all the active orders.
-
         Asserts:
             1. If the assigned order is fetched.
-
         """
         # mock status
         generate_mock_order.status = status
         generate_mock_order.save()
-
         # mock driver
         DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
             driver_id=mock_driver.entity_id).save()
-
         controller = DriverController(mock_driver.entity_id)
         orders = controller.fetch_orders(status)
-
         assert len(orders) == 1
 
     def test_fetch_related_order(
             self, auth_rest, mock_driver, generate_mock_order):
         """Generate mock order and Fetch relevent orders based on mock order id.
-
         Params:
             auth_rest(pytest fixture): user requests
             generate_mock_order(obj): mock order object
-
         Asserts:
             Check response not equal to None
             Check response increment id is equal to mock order id.
-
         """
         # change generate order status pending to processing
         conn = mage.Connector()
         controller = OrderController(conn, generate_mock_order)
         controller.processing()
-
         increment_id = str(generate_mock_order.increment_id)
         controller = DriverController(mock_driver.entity_id)
-        controller = DriverController(mock_user)
         orders = controller.fetch_related_orders(
             increment_id[4:], generate_mock_order.store_id)
-
         assert (orders) is not None
         assert orders[0].increment_id == generate_mock_order.increment_id
 
@@ -97,8 +89,11 @@ class TestDriverController:
             increment_id=generate_mock_order.increment_id,
             driver_id=mock_driver.entity_id).save()
         controller = DriverController(mock_driver.entity_id)
-        orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
-                                           80.246106)
+
+        with mock.patch.object(TripController, 'check_and_complete_trip', mock.Mock(return_value=None)):
+
+            orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
+                                               80.246106)
         print orders
 
     def test_order_positions(self, mock_driver, generate_mock_order):
@@ -142,21 +137,23 @@ class TestDriverController:
 
         assert customer is True
 
-    def test_create_driver_trip(self, mock_driver, generate_mock_order):
-        """Test Customer receives the SMS.
+    def test_update_driver_details(self, mock_driver, generate_mock_order):
+        """Test update driver details functionality.
 
         Asserts:
-            Check mock driver order in response driver order
+    Check mock driver details is equal to generate_mock_order assigned
+    driver details
 
         """
         # mock driver
-        obj = DriverOrder.objects.create(
-            increment_id=generate_mock_order.increment_id,
-            driver_id=mock_driver.entity_id)
+
+        driver_details = CustomerSearchController.load_cache_basic_info(
+            mock_driver.entity_id)
 
         controller = DriverController(mock_driver.entity_id)
 
-        response = controller.create_driver_trip(
-            [generate_mock_order.increment_id])
+        response = controller.update_driver_details(
+            generate_mock_order)
 
-        assert obj in response.driver_order.all()
+        assert generate_mock_order.driver_number == driver_details['phone']
+        assert generate_mock_order.driver_name == driver_details['name']
