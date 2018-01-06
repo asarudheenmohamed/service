@@ -33,6 +33,26 @@ class DriverController(object):
         driver = CustomerSearchController.load_by_id(user_id)
         return cls(driver)
 
+    def update_driver_details(self, order_obj):
+        """Update driver name and driver number in sale order object.
+
+        params:
+           order_obj (obj): sale order object
+
+        """
+
+        # fetch driver basic info
+        driver_details = CustomerSearchController.load_cache_basic_info(
+            self.driver)
+        order_obj.driver_number = driver_details['phone']
+        order_obj.driver_name = driver_details['name']
+
+        order_obj.save()
+
+        logger.info(
+            'The order:{} assigned driver details like driver name:{}, and driver number:{} updated'.format(
+                order_obj.increment_id, driver_details['name'], driver_details['phone']))
+
     def get_order_obj(self, order):
         """Get order object based on order id.
 
@@ -73,6 +93,9 @@ class DriverController(object):
 
         driver_object = DriverOrder.objects.create(
             increment_id=order, driver_id=self.driver)
+
+        # update driver name and driver number in sale order object
+        self.update_driver_details(order_obj)
 
         logger.info(
             'The order:{} was assigned to the driver {}'.format(
@@ -270,4 +293,3 @@ class DriverController(object):
                 self.driver))
 
         return driver_stat_obj
-
