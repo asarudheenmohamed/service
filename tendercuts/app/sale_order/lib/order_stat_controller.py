@@ -34,11 +34,12 @@ class OrderDataController(object):
             raise ValueError('Order object does not exist')
 
         logger.debug("To get the order details for given order_id:{}".format(
-                order_id))
+            order_id))
 
         params_data = []
         for order in order_obj:
-            rewards = MRewardsPurchase.objects.filter(order_id=order.entity_id)[0]
+            rewards = MRewardsPurchase.objects.filter(
+                order_id=order.entity_id)[0]
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
@@ -95,7 +96,11 @@ class OrderDataController(object):
         """
         for item in item_objects:
             sales_order_item_obj = SalesFlatOrderItem.objects.filter(
-                item_id=item['item_id']).update(weight=item['weight']/1000)
+                item_id=int(
+                    item['item_id'])).update(
+                weight=float(
+                    item['weight']) /
+                1000)
 
             logger.info("updated the item:{} weight:{}".format(
                 item['item_id'], item['weight']))
@@ -123,14 +128,13 @@ class StoreOrderController(object):
         deliverydate = dateutil.parser.parse(deliverydate)
 
         logger.debug("To get total quantity of sku: {} in store: {} at date: {}".format(
-                sku, store_id, deliverydate))
+            sku, store_id, deliverydate))
 
         order_data = SalesFlatOrderItem.objects.filter(
             deliverydate__range=(
                 deliverydate,
                 deliverydate + datetime.timedelta(days=1)),
-            order__store_id=store_id)  \
-            .values('sku').annotate(Sum('qty_ordered'))
+            order__store_id=store_id).values('sku').annotate(Sum('qty_ordered'))
 
         sku_data = []
         sku_orders = order_data.get(sku=sku)
@@ -139,6 +143,6 @@ class StoreOrderController(object):
         sku_data.append(sku_list)
 
         logger.debug("Fetched sku: {} total quantity: {} in store: {} at date: {}".format(
-                sku, sku_data[0]['Qty'], store_id, deliverydate))
+            sku, sku_data[0]['Qty'], store_id, deliverydate))
 
         return sku_data
