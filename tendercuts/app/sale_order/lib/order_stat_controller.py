@@ -19,22 +19,19 @@ class OrderDataController(object):
         """Constructor."""
         self.order = order
 
-    def order_details(self, order_id):
+    def order_details(self):
         """Fetch the order details.
-
-        Params:
-            order_id(str):Customer placed order_id
 
         Returns:
             Returns params_data
 
         """
-        order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
+        order_obj = SalesFlatOrder.objects.filter(increment_id=self.order)
         if not order_obj:
             raise ValueError('Order object does not exist')
 
         logger.debug("To get the order details for given order_id:{}".format(
-            order_id))
+            self.order))
 
         params_data = []
         for order in order_obj:
@@ -83,7 +80,7 @@ class OrderDataController(object):
             params_data.append(params)
 
             logger.info("Fetched the order details list of order_id:{}".format(
-                order_id))
+                self.order))
 
         return params_data
 

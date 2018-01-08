@@ -22,8 +22,7 @@ class TestOrderDataController:
         """
         order_controller = OrderDataController(
             generate_mock_order.increment_id)
-        order_data = order_controller.order_details(
-            generate_mock_order.increment_id)
+        order_data = order_controller.order_details()
 
         assert generate_mock_order.increment_id == order_data[
             0]['increment_id']
