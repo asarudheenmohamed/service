@@ -69,11 +69,11 @@ class TestDriverController:
         # change generate order status pending to processing
         conn = mage.Connector()
         controller = OrderController(conn, generate_mock_order)
-        controller.processing()
-
+        # controller.processing()
+        generate_mock_order.status = 'processing'
+        generate_mock_order.save()
         increment_id = str(generate_mock_order.increment_id)
         controller = DriverController(mock_driver.entity_id)
-        controller = DriverController(mock_user)
         orders = controller.fetch_related_orders(
             increment_id[4:], generate_mock_order.store_id)
 
@@ -141,22 +141,3 @@ class TestDriverController:
             generate_mock_order.increment_id)
 
         assert customer is True
-
-    def test_create_driver_trip(self, mock_driver, generate_mock_order):
-        """Test Customer receives the SMS.
-
-        Asserts:
-            Check mock driver order in response driver order
-
-        """
-        # mock driver
-        obj = DriverOrder.objects.create(
-            increment_id=generate_mock_order.increment_id,
-            driver_id=mock_driver.entity_id)
-
-        controller = DriverController(mock_driver.entity_id)
-
-        response = controller.create_driver_trip(
-            [generate_mock_order.increment_id])
-
-        assert obj in response.driver_order.all()

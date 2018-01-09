@@ -12,6 +12,8 @@ from app.driver.models import DriverTrip, OrderEvents
 
 class TripController:
     PREFIX = "trip"
+    TRIP_STARTING_POINT_PREFIX = 'stating_point'
+    TRIP_ENDING_POINT_PREFIX = 'ending_point'
 
     def __init__(self, log=None):
         self.log = log or logging.getLogger()
@@ -27,6 +29,26 @@ class TripController:
         """
 
         return "{}:{}".format(self.PREFIX, order.driver_id)
+
+    def generate_trip_starting_point_key(self, trip_id):
+        """Set driver trip starting point cache key.
+
+        Params:
+         order: driver trip id
+
+        """
+
+        return "{}:{}".format(self.TRIP_STARTING_POINT_PREFIX, trip_id)
+
+    def generate_trip_ending_point_key(self, trip_id):
+        """Set driver trip ending point cache key.
+
+        Params:
+         order: driver trip id
+
+        """
+
+        return "{}:{}".format(self.TRIP_ENDING_POINT_PREFIX, trip_id)
 
     def _complete_trip(self, trip):
         """Complete driver trip.
@@ -73,12 +95,13 @@ class TripController:
 
         return True
 
-    def check_and_create_trip(self, order):
+    def check_and_create_trip(self, order, driver_position):
         """Check if a trip is available or generates a TRIP.
         :param order:(DriverObject): Driver object
 
         :return: DriverTrip
         """
+
         key = self._get_key(order)
         self.log.debug(
             "Creating/updating a trip for {}".format(order.increment_id))
@@ -86,7 +109,6 @@ class TripController:
         if cache.get_key(key):
             self.log.debug("Found an exiting trip for the driver {}".format(
                 order.driver_id))
-
             trip = DriverTrip.objects.get(pk=cache.get_key(key))
             # Completing the old trip here, since the is a chance that it might
             # be stale, edge case where the driver trip's last order gets cancelled
@@ -95,25 +117,44 @@ class TripController:
                 self._complete_trip(trip)
                 # delete the key
                 cache.delete_key(key)
+
+                trip_ending_point = self.generate_trip_ending_point_key(
+                    trip.id)
+
+                cache.set_key(
+                    trip_ending_point,
+                    str(driver_position),
+                    60 * 60 * 24)  # expired at 1 day
+
                 # re-run the logic
-                self.check_and_create_trip(order)
+                self.check_and_create_trip(order, driver_position)
         else:
             self.log.debug("Creating a new trip for the driver {}".format(
                 order.driver_id))
+
             trip = DriverTrip.objects.create()
+
             cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
 
+            trip_starting_point = self.generate_trip_starting_point_key(
+                trip.id)
+
+            cache.set_key(
+                trip_starting_point,
+                str(driver_position),
+                60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
 
         return trip
 
-    def check_and_complete_trip(self, order):
+    def check_and_complete_trip(self, order, driver_position):
         """Check if a trip is available and completes a TRIP.
         :param order:(DriverObject): Driver object
 
         :return: none
         """
+
         key = self._get_key(order)
 
         # get current trip
@@ -130,6 +171,14 @@ class TripController:
             # delete the key
             cache.delete_key(key)
 
+            trip_ending_point = self.generate_trip_ending_point_key(
+                trip.id)
+
+            cache.set_key(
+                trip_ending_point,
+                str(driver_position),
+                60 * 60 * 24)  # expired at 1 day
+
         return trip
 
     def compute_driver_trip_distance(self, trip):
@@ -145,16 +194,21 @@ class TripController:
 
         # driver trip starting point
         starting_points = trip.trip_starting_point
+        ending_points = trip.trip_ending_point
 
-        # driver trip way and destination points
-        trip_points = trip.way_and_destination_points
+        way_points = []
+        for i in trip.driver_order.all():
+            order_way_points = i.way_points
+            mid_point = len(order_way_points) / 2
+            way_points.append(str(order_way_points[mid_point]))
+            way_points.append(str(order_way_points.last()))
 
-        compute_km = self._api.directions(starting_points, trip_points['destination_point'],
-                                          waypoints=trip_points['way_points'])
+        compute_km = self._api.directions(starting_points, ending_points,
+                                          waypoints=way_points)
 
         self.log.info(
             'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
-                starting_points, trip_points['destination_point']))
+                starting_points, ending_points))
 
         # update trip km
         trip.km_traveled = compute_km[0]['legs'][0]['distance']['text']

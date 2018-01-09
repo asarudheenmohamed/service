@@ -52,7 +52,8 @@ def fetch_related_order(cache, auth_driver_rest,
     increment_id = str(generate_mock_order.increment_id)
     # Change that order status because fetch only processing orders
     controller = OrderController(mage.Connector(), generate_mock_order)
-    controller.processing()
+    generate_mock_order.status = 'processing'
+    generate_mock_order.save()
     response = auth_driver_rest.get(
         "/driver/fetch_related_order/",
         {'order_id': increment_id[-2:],
@@ -171,47 +172,3 @@ def test_driver_position(
     assert (driver_position_obj) is not None
     assert str(driver_position_obj.latitude) == latitude
     assert str(driver_position_obj.longitude) == longitude
-
-
-@given('create a driver trip')
-def driver_trip_create(cache, auth_driver_rest):
-    """Test driver trip creation.
-
-    params:
-        auth_driver_rest (fixture) - mock driver.
-
-    Asserts:
-        Checks the status and message for the created driver trip.
-
-    """
-    response = auth_driver_rest.post(
-        "/driver/driver_trip/",
-        {'order_ids': [cache['increment_id']]},
-        format='json')
-
-    assert (response) is not None
-    assert response.status_code == 200
-    assert response.data['status'] == True
-    assert response.data['message'] == 'successfully trip created'
-
-
-@then('completes the driver trip')
-def driver_trip_complete(cache, auth_driver_rest):
-    """Test driver trip completed.
-
-    params:
-        auth_driver_rest (fixture) - mock driver.
-
-    Asserts:
-        Checks the status for the completed driver trip.
-
-    """
-
-    response = auth_driver_rest.post(
-        "/driver/driver_trip/complete/",
-        {'order_ids': [cache['increment_id']]},
-        format='json')
-
-    assert (response) is not None
-    assert response.status_code == 201
-    assert response.data['status'] == True

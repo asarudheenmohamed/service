@@ -93,7 +93,7 @@ class DriverController(object):
 
         self._record_events(driver_object, position_obj, 'out_delivery')
 
-        TripController().check_and_create_trip(driver_object)
+        TripController().check_and_create_trip(driver_object, position_obj)
 
         tasks.send_sms.delay(order)
         return driver_object
@@ -173,7 +173,6 @@ class DriverController(object):
 
         """
         logger.info("Complete this order {}".format(order_id))
-
         order_obj = self.get_order_obj(order_id)
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_id=self.driver)
@@ -190,7 +189,8 @@ class DriverController(object):
         self._record_events(driver_object[0], position_obj, 'completed')
 
         try:
-            TripController().check_and_complete_trip(driver_object[0])
+            TripController().check_and_complete_trip(
+                driver_object[0], position_obj)
         except ValueError:
             # Legacy handling
             pass
@@ -270,4 +270,3 @@ class DriverController(object):
                 self.driver))
 
         return driver_stat_obj
-
