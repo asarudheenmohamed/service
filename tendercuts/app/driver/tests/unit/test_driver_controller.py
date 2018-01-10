@@ -8,6 +8,7 @@ import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.driver.models import DriverOrder
 from app.driver.lib.driver_controller import DriverController
+import mock
 
 
 @pytest.mark.django_db
@@ -97,8 +98,12 @@ class TestDriverController:
             increment_id=generate_mock_order.increment_id,
             driver_id=mock_driver.entity_id).save()
         controller = DriverController(mock_driver.entity_id)
-        orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
-                                           80.246106)
+
+        from app.driver.lib.trip_controller import TripController
+        with mock.patch.object(TripController, 'check_and_complete_trip', mock.Mock(return_value=None)):
+
+            orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
+                                               80.246106)
         print orders
 
     def test_order_positions(self, mock_driver, generate_mock_order):

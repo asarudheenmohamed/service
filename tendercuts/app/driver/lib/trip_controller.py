@@ -7,12 +7,11 @@ from django.utils import timezone
 
 from app.core.lib import cache
 from app.core.models import SalesFlatOrder
-from app.driver.models import DriverTrip, OrderEvents
 
 
 class TripController:
     PREFIX = "trip"
-    TRIP_STARTING_POINT_PREFIX = 'stating_point'
+    TRIP_STARTING_POINT_PREFIX = 'starting_point'
     TRIP_ENDING_POINT_PREFIX = 'ending_point'
 
     def __init__(self, log=None):
@@ -101,7 +100,6 @@ class TripController:
 
         :return: DriverTrip
         """
-
         key = self._get_key(order)
         self.log.debug(
             "Creating/updating a trip for {}".format(order.increment_id))
@@ -133,9 +131,7 @@ class TripController:
                 order.driver_id))
 
             trip = DriverTrip.objects.create()
-
             cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
-
             trip_starting_point = self.generate_trip_starting_point_key(
                 trip.id)
 
@@ -178,7 +174,6 @@ class TripController:
                 trip_ending_point,
                 str(driver_position),
                 60 * 60 * 24)  # expired at 1 day
-
         return trip
 
     def compute_driver_trip_distance(self, trip):
@@ -195,7 +190,6 @@ class TripController:
         # driver trip starting point
         starting_points = trip.trip_starting_point
         ending_points = trip.trip_ending_point
-
         way_points = []
         for i in trip.driver_order.all():
             order_way_points = i.way_points
