@@ -7,6 +7,9 @@ from django.utils import timezone
 
 from app.core.lib import cache
 from app.core.models import SalesFlatOrder
+from app.driver.models.driver_order import DriverTrip
+import sys
+import traceback
 
 
 class TripController:
@@ -115,30 +118,22 @@ class TripController:
                 self._complete_trip(trip)
                 # delete the key
                 cache.delete_key(key)
-
                 trip_ending_point = self.generate_trip_ending_point_key(
                     trip.id)
-
-                cache.set_key(
-                    trip_ending_point,
-                    str(driver_position),
-                    60 * 60 * 24)  # expired at 1 day
-
                 # re-run the logic
-                self.check_and_create_trip(order, driver_position)
-        else:
-            self.log.debug("Creating a new trip for the driver {}".format(
-                order.driver_id))
+                return self.check_and_create_trip(order, driver_position)
 
-            trip = DriverTrip.objects.create()
-            cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
-            trip_starting_point = self.generate_trip_starting_point_key(
-                trip.id)
+        self.log.debug("Creating a new trip for the driver {}".format(
+            order.driver_id))
+        trip = DriverTrip.objects.create()
+        cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
+        trip_starting_point = self.generate_trip_starting_point_key(
+            trip.id)
 
-            cache.set_key(
-                trip_starting_point,
-                str(driver_position),
-                60 * 60 * 24)  # expired at 1 day
+        cache.set_key(
+            trip_starting_point,
+            str(driver_position),
+            60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
 
@@ -183,28 +178,37 @@ class TripController:
            trip(obj): completed driver trip object
 
         """
-
         # based on lat long distance has been measured for each trip taken by
         # the driver
 
         # driver trip starting point
         starting_points = trip.trip_starting_point
         ending_points = trip.trip_ending_point
+        # way point holds atleast one points for the each order
         way_points = []
-        for i in trip.driver_order.all():
-            order_way_points = i.way_points
+        for order in trip.driver_order.all():
+            order_way_points = order.way_points
             mid_point = len(order_way_points) / 2
             way_points.append(str(order_way_points[mid_point]))
             way_points.append(str(order_way_points.last()))
 
-        compute_km = self._api.directions(starting_points, ending_points,
-                                          waypoints=way_points)
+        try:
+            compute_km = self._api.directions(starting_points, ending_points,
+                                              waypoints=way_points)
 
-        self.log.info(
-            'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
-                starting_points, ending_points))
+            self.log.info(
+                'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
+                    starting_points, ending_points))
 
-        # update trip km
-        trip.km_traveled = compute_km[0]['legs'][0]['distance']['text']
+            # update trip km
+            trip.km_traveled = compute_km[0]['legs'][0]['distance']['text']
 
-        trip.save()
+            trip.save()
+
+        except Exception as msg:
+            self.log.error(
+                '{}, trip_id:{}'.format(
+                    repr(
+                        msg),
+                    trip.id))
+            pass

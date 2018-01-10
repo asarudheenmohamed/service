@@ -63,9 +63,10 @@ class TestDriverTripController:
         trip = TripController()
 
         drier_position = DriverPosition.objects.create(
-                driver_id=2151,
-                latitude=12.96095,
-                longitude=80.24094) with mock.patch.object(cache, 'get_key', mock.Mock(return_value=None)):
+            driver_id=2151,
+            latitude=12.96095,
+            longitude=80.24094)
+        with mock.patch.object(cache, 'get_key', mock.Mock(return_value=None)):
             mock_driver = DriverOrder.objects.create(
                 driver_id=1, increment_id=2)
             driver_trip = trip.check_and_create_trip(

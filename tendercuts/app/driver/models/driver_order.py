@@ -20,14 +20,14 @@ class DriverOrder(models.Model):
 
     @property
     def way_points(self):
-
-        trip_order_event_obj = OrderEvents.objects.filter(
-            driver=self, status='completed')[0]
-        driver_pos_objects = DriverPosition.objects.filter(
+        """Returns order way points."""
+        completed_time = OrderEvents.objects.filter(
+            driver=self, status='completed').values_list('updated_time', flat=True)
+        way_points = DriverPosition.objects.filter(
             driver_id=self.driver_id,
-            recorded_time__range=(self.created_at, trip_order_event_obj.updated_time))
+            recorded_time__range=(self.created_at, completed_time[0]))
 
-        return driver_pos_objects
+        return way_points
 
 
 class DriverTrip(models.Model):
