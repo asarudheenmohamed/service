@@ -84,7 +84,7 @@ class OrderDataViewSet(APIView):
         """
         order_id = self.request.GET['order_id']
         controller = OrderDataController(order_id)
-        param_data = controller.order_details(order_id)
+        param_data = controller.order_details()
 
         logger.info("Fetched the order details for given ordeer_id:{}".format(
             order_id))
@@ -119,6 +119,6 @@ class StoreDataViewSet(APIView):
         sku_order = controller.store_details(store_id, deliverydate, sku)
 
         logger.debug("Fetched scheduled_order's sku quantity details at date: {}".format(
-                deliverydate))
+            deliverydate))
 
         return Response(sku_order)
