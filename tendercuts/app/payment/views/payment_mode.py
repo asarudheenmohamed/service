@@ -47,6 +47,5 @@ class JuspayPaymentMethodViewSet(mixins.CreateModelMixin,
         payment_mode = serializer.save()
         user_id = get_user_id(self.request)
         juspay.JuspayPaymentMode().remove_payment_mode(user_id, payment_mode)
-        status = True
 
-        return Response(status)
+        return Response({"status": True})
