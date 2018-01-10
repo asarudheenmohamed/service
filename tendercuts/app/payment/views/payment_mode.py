@@ -46,6 +46,7 @@ class JuspayPaymentMethodViewSet(mixins.CreateModelMixin,
         serializer.is_valid(raise_exception=True)
         payment_mode = serializer.save()
         user_id = get_user_id(self.request)
-        juspay.JuspayPaymentMode().add_payment_mode(user_id, payment_mode)
+        juspay.JuspayPaymentMode().remove_payment_mode(user_id, payment_mode)
+        status = True
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status)
