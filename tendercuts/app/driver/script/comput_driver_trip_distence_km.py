@@ -26,6 +26,9 @@ class ComputeDriverTrip:
                 'To update the driver trip distance for this trip:{}'.format(
                     trip.id))
 
-            TripController().compute_driver_trip_distance(trip)
+            try:
+                TripController().compute_driver_trip_distance(trip)
+            except Exception as e:
+                print ("Unable to compute for trip id:{}".format(trip.id))
 
             logger.info('Trip:{} distance has been updated'.format(trip.id))

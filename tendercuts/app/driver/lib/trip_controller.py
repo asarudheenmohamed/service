@@ -201,14 +201,13 @@ class TripController:
                     starting_points, ending_points))
 
             # update trip km
-            trip.km_traveled = compute_km[0]['legs'][0]['distance']['text']
+            km_traveled = 0
+            for leg in compute_km[0]['legs']:
+                km_traveled += int(leg['distance']['value'])
 
+            trip.km_traveled = km_traveled
             trip.save()
 
         except Exception as msg:
-            self.log.error(
-                '{}, trip_id:{}'.format(
-                    repr(
-                        msg),
-                    trip.id))
-            pass
+            self.log.error('{}, trip_id:{}'.format(repr( msg), trip.id))
+            # Add error mail to tech ops here

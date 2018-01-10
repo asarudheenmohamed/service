@@ -44,8 +44,8 @@ class DriverController(object):
         # fetch driver basic info
         driver_details = CustomerSearchController.load_cache_basic_info(
             self.driver)
-        order_obj.driver_number = driver_details['phone']
-        order_obj.driver_name = driver_details['name']
+        #order_obj.driver_number = driver_details['phone']
+        #order_obj.driver_name = driver_details['name']
 
         order_obj.save()
 
