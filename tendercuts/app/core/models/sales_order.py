@@ -441,6 +441,9 @@ class SalesFlatOrder(models.Model):
 
     # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
 
+    driver_name = models.CharField(max_length=25, blank=True, null=True)
+    driver_number = models.CharField(max_length=12, blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = 'sales_flat_order'
@@ -709,9 +712,14 @@ class SalesFlatOrderItem(models.Model):
         max_digits=12, decimal_places=4, blank=True, null=True)
     deliverydate = models.DateTimeField(blank=True, null=True)
     deliveryslot = models.IntegerField(blank=True, null=True)
-    promisedeliverytime = models.CharField(max_length=255, blank=True, null=True)
+    promisedeliverytime = models.CharField(
+        max_length=255, blank=True, null=True)
     deliverytype = models.IntegerField(blank=True, null=True)
-    grams = models.DecimalField(max_digits=12, decimal_places=4, blank=True, null=True)
+    grams = models.DecimalField(
+        max_digits=12,
+        decimal_places=4,
+        blank=True,
+        null=True)
 
     class Meta:
         managed = False

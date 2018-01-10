@@ -17,8 +17,6 @@ Feature: Driver completes the order
         Given A customer places an order
         And Fetch related order by <store_id>
         And a driver is assigned to the order at <latitude><longitude>
-        And create a driver trip
-        Then complete a driver trip
 
         Examples:
 	    | store_id|latitude |longitude|

@@ -33,6 +33,26 @@ class DriverController(object):
         driver = CustomerSearchController.load_by_id(user_id)
         return cls(driver)
 
+    def update_driver_details(self, order_obj):
+        """Update driver name and driver number in sale order object.
+
+        params:
+           order_obj (obj): sale order object
+
+        """
+
+        # fetch driver basic info
+        driver_details = CustomerSearchController.load_cache_basic_info(
+            self.driver)
+        order_obj.driver_number = driver_details['phone']
+        order_obj.driver_name = driver_details['name']
+
+        order_obj.save()
+
+        logger.info(
+            'The order:{} assigned driver details like driver name:{}, and driver number:{} updated'.format(
+                order_obj.increment_id, driver_details['name'], driver_details['phone']))
+
     def get_order_obj(self, order):
         """Get order object based on order id.
 
@@ -74,6 +94,9 @@ class DriverController(object):
         driver_object = DriverOrder.objects.create(
             increment_id=order, driver_id=self.driver)
 
+        # update driver name and driver number in sale order object
+        self.update_driver_details(order_obj)
+
         logger.info(
             'The order:{} was assigned to the driver {}'.format(
                 order, self.driver))
@@ -93,7 +116,7 @@ class DriverController(object):
 
         self._record_events(driver_object, position_obj, 'out_delivery')
 
-        TripController().check_and_create_trip(driver_object)
+        TripController().check_and_create_trip(driver_object, position_obj)
 
         tasks.send_sms.delay(order)
         return driver_object
@@ -173,7 +196,6 @@ class DriverController(object):
 
         """
         logger.info("Complete this order {}".format(order_id))
-
         order_obj = self.get_order_obj(order_id)
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_id=self.driver)
@@ -190,7 +212,8 @@ class DriverController(object):
         self._record_events(driver_object[0], position_obj, 'completed')
 
         try:
-            TripController().check_and_complete_trip(driver_object[0])
+            TripController().check_and_complete_trip(
+                driver_object[0], position_obj)
         except ValueError:
             # Legacy handling
             pass
@@ -270,4 +293,3 @@ class DriverController(object):
                 self.driver))
 
         return driver_stat_obj
-
