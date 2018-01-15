@@ -98,11 +98,7 @@ class OrderDataController(object):
         """
         for item in item_objects:
             sales_order_item_obj = SalesFlatOrderItem.objects.filter(
-                item_id=int(
-                    item['item_id'])).update(
-                weight=float(
-                    item['weight']) /
-                1000)
+                item_id=item['item_id']).update(weight=float(item['weight'])/1000)
 
             logger.info("updated the item:{} weight:{}".format(
                 item['item_id'], item['weight']))

@@ -118,22 +118,21 @@ class TripController:
                 self._complete_trip(trip)
                 # delete the key
                 cache.delete_key(key)
-                trip_ending_point = self.generate_trip_ending_point_key(
-                    trip.id)
                 # re-run the logic
                 return self.check_and_create_trip(order, driver_position)
+   
+        else:
+            self.log.debug("Creating a new trip for the driver {}".format(
+               order.driver_id))
+            trip = DriverTrip.objects.create()
+            cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
+            trip_starting_point = self.generate_trip_starting_point_key(
+               trip.id)
 
-        self.log.debug("Creating a new trip for the driver {}".format(
-            order.driver_id))
-        trip = DriverTrip.objects.create()
-        cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
-        trip_starting_point = self.generate_trip_starting_point_key(
-            trip.id)
-
-        cache.set_key(
-            trip_starting_point,
-            str(driver_position),
-            60 * 60 * 24)  # expired at 1 day
+            cache.set_key(
+               trip_starting_point,
+               str(driver_position),
+               60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
 
