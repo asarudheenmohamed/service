@@ -134,3 +134,24 @@ class SMS():
         logger.info(
             'Otp successfully sent {} method for this number:{}'.format(
                 retry_mode, phnumber))
+
+    def send_sms(self, phnumber, message):
+        """Send the sms via value first api.
+
+        params:
+            phnumber (int): Ph number to send
+            message (str): message
+
+        """
+        data = {
+            "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWOED"],
+            "to": str(phnumber),
+            "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
+            "text": message
+        }
+
+        response = requests.get(settings.VALUE_FIRST_SMS_GATEWAY[
+            "ENDPOINT"], params=data)
+
+        return response

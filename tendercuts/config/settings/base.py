@@ -252,5 +252,13 @@ GOOGLE_MAP_DISTANCE_API = {
 }
 
 
+# value first new ventor
+VALUE_FIRST_SMS_GATEWAY = {
+    "ENDPOINT": "http://203.212.70.200/smpp/sendsms",
+    "USERNAME": "gfmhttp",
+    "PASSWOED": "9823opas",
+    "FROM": "TNDCTS"
+}
+
 # caching version
 CACHE_DEFAULT_VERSION = 2
