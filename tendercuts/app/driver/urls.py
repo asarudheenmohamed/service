@@ -41,5 +41,6 @@ router.register(
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'login', views.DriverLoginApi.as_view()),
+    url(r'version_control', views.VersionControl.as_view()),
 
 ]
