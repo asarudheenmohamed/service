@@ -37,6 +37,11 @@ app.conf.beat_schedule = {
     'every-day': {
         'task': 'app.driver.tasks.generate_end_of_day_driver_stat',
                 'schedule': crontab(minute='50', hour='23')
+    },
+
+    'every-day': {
+        'task': 'app.driver.tasks.set_checkout',
+                'schedule': crontab(minute='50', hour='23')
     }
 }
 
