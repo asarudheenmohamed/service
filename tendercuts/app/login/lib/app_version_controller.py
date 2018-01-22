@@ -25,9 +25,9 @@ class AppVersionControl(object):
             Returns status
 
         """
-        MIN_VER = settings.MOBILE_VERSION['min_app_version']
+        MIN_VER = settings.DRIVER_APP_VERSION['min_app_version']
 
-        if StrictVersion(user_app_ver) > StrictVersion(MIN_VER):
+        if StrictVersion(user_app_ver) >= StrictVersion(MIN_VER):
             update = True
         else:
             update = False
