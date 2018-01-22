@@ -74,6 +74,11 @@ MOBILE_VERSION = {
     "current_app_version": '1.9.6'
 }
 
+DRIVER_APP_VERSION = {
+    "min_app_version": '2.0.0',
+    "current_app_version": '2.0.0'
+}
+
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",
