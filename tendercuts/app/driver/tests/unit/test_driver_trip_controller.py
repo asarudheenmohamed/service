@@ -30,39 +30,39 @@ class TestDriverTripController:
         mock_trip.driver_order.add(*[mock_driver1, mock_driver2])
 
         # create mock driver position
-        drier_position = DriverPosition.objects.create(
+        driver_position = DriverPosition.objects.create(
             driver_user=django_user,
             latitude=12.96095,
             longitude=80.24094)
 
         OrderEvents.objects.create(
-            driver=mock_driver1,
-            driver_position=drier_position, status='out_delivery')
+            driver_order=mock_driver1,
+            driver_position=driver_position, status='out_delivery')
 
-        drier_position1 = DriverPosition.objects.create(
+        driver_position1 = DriverPosition.objects.create(
             driver_user=django_user,
             latitude=12.9759,
             longitude=80.221)
 
         OrderEvents.objects.create(
             driver_order=mock_driver1,
-            driver_position=drier_position1, status='completed')
+            driver_position=driver_position1, status='completed')
 
         OrderEvents.objects.create(
             driver_order=mock_driver2,
-            driver_position=drier_position, status='out_delivery')
+            driver_position=driver_position, status='out_delivery')
         # create mock driver order events
         OrderEvents.objects.create(
             driver_order=mock_driver2,
-            driver_position=drier_position1, status='completed')
+            driver_position=driver_position1, status='completed')
 
         return mock_driver2, mock_trip
 
     @pytest.mark.django_db
     def test_driver_trip_create(self, django_user):
-        trip = TripController(django_user)
+        trip = TripController(driver=django_user)
 
-        drier_position = DriverPosition.objects.create(
+        driver_position = DriverPosition.objects.create(
             driver_user=django_user,
             latitude=12.96095,
             longitude=80.24094)
@@ -70,7 +70,7 @@ class TestDriverTripController:
             mock_driver = DriverOrder.objects.create(
                 driver_user=django_user, increment_id=2)
             driver_trip = trip.check_and_create_trip(
-                mock_driver, drier_position)
+                mock_driver, driver_position)
 
         assert len(driver_trip.driver_order.all()) == 1
 
@@ -79,7 +79,7 @@ class TestDriverTripController:
             mock_driver = DriverOrder.objects.create(
                 driver_user=django_user, increment_id=3)
             driver_trip = trip.check_and_create_trip(
-                mock_driver, drier_position)
+                mock_driver, driver_position)
 
         assert len(driver_trip.driver_order.all()) == 2
 
@@ -88,17 +88,17 @@ class TestDriverTripController:
         """Test driver trip complete.
 
         """
-        trip = TripController(django_user)
-        drier_position = DriverPosition.objects.create(
+        trip = TripController(driver=django_user)
+        driver_position = DriverPosition.objects.create(
             driver_user=django_user,
             latitude=12.96095,
             longitude=80.24094)
         # create a mock driver and mock trip
 
-        mock_driver, mock_trip = self.update_driver_position()
+        mock_driver, mock_trip = self.update_driver_position(django_user)
         with mock.patch.object(cache, 'get_key', mock.Mock(return_value=mock_trip.id)):
             driver_trip = trip.check_and_complete_trip(
-                mock_driver, drier_position)
+                mock_driver, driver_position)
 
         assert driver_trip.trip_completed == True
 
@@ -110,11 +110,11 @@ class TestDriverTripController:
           Checks the driver trip kms
 
         """
-        trip = TripController(django_user)
+        trip = TripController(driver=django_user)
 
         # create a mock driver and mock trip
-        mock_driver, mock_trip = self.update_driver_position()
+        mock_driver, mock_trip = self.update_driver_position(django_user)
 
         driver_trip = trip.compute_driver_trip_distance(mock_trip)
 
-        assert mock_trip.km_traveled == 5552
+        assert mock_trip.km_traveled == 5553
