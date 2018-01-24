@@ -4,6 +4,7 @@ import logging
 import googlemaps
 from django.conf import settings
 from django.utils import timezone
+from datetime import datetime, date, timedelta
 
 from app.core.lib import cache
 from app.core.models import SalesFlatOrder
@@ -17,10 +18,11 @@ class TripController:
     TRIP_STARTING_POINT_PREFIX = 'starting_point'
     TRIP_ENDING_POINT_PREFIX = 'ending_point'
 
-    def __init__(self, log=None):
+    def __init__(self, log=None, driver=None):
         self.log = log or logging.getLogger()
         self._api = googlemaps.Client(
             key=settings.GOOGLE_MAP_DISTANCE_API['KEY'])
+        self.driver = driver
 
     def _get_key(self, order):
         """Set driver trip cache key.
@@ -30,7 +32,7 @@ class TripController:
 
         """
 
-        return "{}:{}".format(self.PREFIX, order.driver_id)
+        return "{}:{}".format(self.PREFIX, order.driver_user.username)
 
     def generate_trip_starting_point_key(self, trip_id):
         """Set driver trip starting point cache key.
@@ -59,6 +61,7 @@ class TripController:
           trip(obj): driver trip object
 
         """
+
         self.log.info("Completing the trip for driver {}".format(trip.id))
         trip.trip_completed = True
         trip.trip_ending_time = timezone.now()
@@ -120,23 +123,31 @@ class TripController:
                 cache.delete_key(key)
                 # re-run the logic
                 return self.check_and_create_trip(order, driver_position)
-   
+
         else:
             self.log.debug("Creating a new trip for the driver {}".format(
-               order.driver_id))
-            trip = DriverTrip.objects.create()
+                order.driver_id))
+            trip = DriverTrip.objects.create(driver_user=self.driver)
             cache.set_key(key, trip.id, 60 * 60 * 24)  # 1 day
             trip_starting_point = self.generate_trip_starting_point_key(
-               trip.id)
+                trip.id)
 
             cache.set_key(
-               trip_starting_point,
-               str(driver_position),
-               60 * 60 * 24)  # expired at 1 day
+                trip_starting_point,
+                str(driver_position),
+                60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
 
         return trip
+
+    def fetch_driver_trip(self, driver):
+        """Return a last 10 days driver trip."""
+        start_date = timezone.now() - timezone.timedelta(days=10)
+        driver_trip = DriverTrip.objects.filter(driver_user=driver, trip_created_time__range=(
+            start_date, datetime.now()))
+
+        return driver_trip
 
     def check_and_complete_trip(self, order, driver_position):
         """Check if a trip is available and completes a TRIP.
@@ -181,6 +192,7 @@ class TripController:
         # the driver
 
         # driver trip starting point
+
         starting_points = trip.trip_starting_point
         ending_points = trip.trip_ending_point
         # way point holds atleast one points for the each order
@@ -208,5 +220,5 @@ class TripController:
             trip.save()
 
         except Exception as msg:
-            self.log.error('{}, trip_id:{}'.format(repr( msg), trip.id))
+            self.log.error('{}, trip_id:{}'.format(repr(msg), trip.id))
             # Add error mail to tech ops here

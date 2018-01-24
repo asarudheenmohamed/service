@@ -9,6 +9,7 @@ from pytest_bdd import given, scenario, then, when
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.driver.models import DriverOrder, DriverPosition, OrderEvents
+from django.contrib.auth.models import User
 
 
 @pytest.mark.django_db
@@ -19,14 +20,6 @@ from app.driver.models import DriverOrder, DriverPosition, OrderEvents
 def test_driver_order_complete():
     pass
 
-
-@pytest.mark.django_db
-@scenario(
-    'driver.feature',
-    'Create the driver trip and completes it successfully',
-)
-def test_driver_trip():
-    pass
 
 # Reuse the mock order fixture
 given(
@@ -166,8 +159,11 @@ def test_driver_position(
         Check the driver current location.
 
     """
+    user = User.objects.filter(
+        username='u:{}'.format(
+            mock_driver.entity_id)).last()
     driver_position_obj = DriverPosition.objects.filter(
-        driver_id=mock_driver.entity_id).last()
+        driver_user=user).last()
 
     assert (driver_position_obj) is not None
     assert str(driver_position_obj.latitude) == latitude

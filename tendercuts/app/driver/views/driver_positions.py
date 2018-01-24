@@ -31,15 +31,14 @@ class DriverPositionViewSet(viewsets.ModelViewSet):
         """
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
-        user_id = get_user_id(self.request)
 
-        controller = DriverController(user_id)
+        controller = DriverController(self.request.user)
         logger.debug(
-            'To update the Driver:{} current location details'.format(user_id))
+            'To update the Driver:{} current location details'.format(self.request.user.username))
         driver_position = controller.record_position(lat, lon)
 
         logger.info(
-            '{}: Driver current location details updated'.format(user_id))
+            '{}: Driver current location details updated'.format(self.request.user.username))
 
         return Response(
             {'status': True, 'message': 'driver location updated successfully'})

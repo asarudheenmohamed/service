@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 from app.core.lib.test import generate_customer
 from app.core.lib.user_controller import CustomerSearchController
 from app.driver.constants import DRIVER_GROUP
+from django.contrib.auth.models import User
 
 
 @pytest.fixture(scope="session")
@@ -38,3 +39,10 @@ def auth_driver_rest(mock_driver):
     client = APIClient()
     client.force_authenticate(user=user)
     return client
+
+
+@pytest.fixture(scope="session")
+def django_user(mock_driver):
+    django_user = User.objects.get(username=mock_driver.dj_user_id)
+
+    return django_user

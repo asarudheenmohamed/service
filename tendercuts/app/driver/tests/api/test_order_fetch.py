@@ -10,9 +10,10 @@ class TestOrderFetch:
     @pytest.mark.parametrize('status', ['complete', 'out_delivery'])
     def test_driver_orders(
             self,
-            auth_rest,
+            auth_driver_rest,
             generate_mock_order,
             mock_user,
+            django_user,
             status):
         """Get reward point transection in 18963.
 
@@ -30,12 +31,11 @@ class TestOrderFetch:
         """
         driver_object = DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_id=mock_user.entity_id)
-        driver_object.save()
+            driver_user=django_user)
         generate_mock_order.status = status
         generate_mock_order.save()
 
-        response = auth_rest.get(
+        response = auth_driver_rest.get(
             "/driver/orders/?status={}".format(status),
             format='json')
 
