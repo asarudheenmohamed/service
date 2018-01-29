@@ -2,9 +2,13 @@
 
 from __future__ import unicode_literals
 
+import datetime
+import itertools
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-import itertools
+
 from app.core.lib import cache
 from django.contrib.auth.models import User
 
@@ -99,3 +103,11 @@ class DriverStat(models.Model):
     driver_id = models.IntegerField(blank=True, null=True)
     no_of_orders = models.IntegerField(default=0)
     km_travels = models.FloatField(blank=True, null=True)
+
+
+class DriverLoginLogout(models.Model):
+    """Driver Login Logout model."""
+    driver = models.ForeignKey(User)
+    date = models.DateField(default=datetime.date.today)
+    check_in = models.TimeField(auto_now=True)
+    check_out = models.TimeField(blank=True, null=True)

@@ -1,5 +1,6 @@
 """Sending order's status sms to the customer related celry tasks."""
 
+import datetime
 import logging
 
 from celery.utils.log import get_task_logger
@@ -8,12 +9,13 @@ from app.core.lib.celery import TenderCutsTask
 from app.core.lib.communication import SMS
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
-from app.core.models.entity import EavAttribute
 from app.core.models.customer import address
-from app.driver.lib.driver_stat_controller import DriverStatController
-from config.celery import app
-from app.driver.lib.end_of_day_driver_status import DriverStatusController
+from app.core.models.entity import EavAttribute
 from app.driver.lib.customer_location import CustomerLocationController
+from app.driver.lib.driver_stat_controller import DriverStatController
+from app.driver.lib.end_of_day_driver_status import DriverStatusController
+from app.driver.models import DriverLoginLogout
+from config.celery import app
 
 logger = logging.getLogger(__name__)
 
@@ -72,3 +74,18 @@ def send_sms(order_id):
         order_obj.status, customer[0]))
 
     SMS().send_sms(customer[2], msg[order_obj.status].format(order_id))
+
+
+@app.task(base=TenderCutsTask, ignore_result=True)
+def set_checkout():
+    """Celery task to set Check Out time for the driver."""
+    objs = DriverLoginLogout.objects.filter(
+        date=datetime.date.today(), check_out__isnull=True)
+
+    logger.info(
+        "To Update the check_out time for the drivers who forgot to check_out")
+
+    if objs:
+        objs.select_related('driver').update(
+            check_out=datetime.datetime.now().time().replace(
+                hour=23, minute=59, second=0, microsecond=0))
