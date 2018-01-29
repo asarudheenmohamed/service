@@ -1,5 +1,6 @@
 """Test cases for store driver controller."""
 import pytest
+
 from app.driver.lib.driver_controller import DriverController
 from app.driver.lib.store_order_controller import StoreOrderController
 
@@ -8,7 +9,8 @@ from app.driver.lib.store_order_controller import StoreOrderController
 class TestStoreDriverController:
     """Test cases for Store Driver controller."""
 
-    def test_get_store_driver_order(self, mock_driver, generate_mock_order):
+    def test_get_store_driver_order(
+            self, mock_driver, django_user, generate_mock_order):
         """Test store driver order objects.
 
         Asserts:
@@ -18,7 +20,8 @@ class TestStoreDriverController:
 
         """
         # assign order for the mock driver
-        controller = DriverController(mock_driver.entity_id)
+
+        controller = DriverController(django_user)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,
             generate_mock_order.store_id,

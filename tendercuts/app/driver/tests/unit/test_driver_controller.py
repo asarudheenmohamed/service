@@ -5,6 +5,7 @@ import time
 import mock
 import pytest
 
+from django.contrib.auth.models import User
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
@@ -39,7 +40,7 @@ class TestDriverController:
 
     @pytest.mark.parametrize('status', ['out_delivery', 'complete'])
     def test_fetch_active_order(
-            self, mock_driver, django_user, generate_mock_order, status):
+            self, mock_driver, generate_mock_order, status):
         """Fetch all the active orders.
         Asserts:
             1. If the assigned order is fetched.
@@ -47,12 +48,12 @@ class TestDriverController:
         # mock status
         generate_mock_order.status = status
         generate_mock_order.save()
-        # mock driver
 
+        user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
         DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_user=django_user)
-        controller = DriverController(django_user)
+            driver_user=user)
+        controller = DriverController(user)
         orders = controller.fetch_orders(status)
         assert len(orders) == 1
 
@@ -80,7 +81,7 @@ class TestDriverController:
         assert orders[0].increment_id == generate_mock_order.increment_id
 
     def test_complete_order(
-            self, mock_driver, django_user, generate_mock_order):
+            self, mock_driver, generate_mock_order):
         """Complete the order.
 
         Asserts:
@@ -93,10 +94,11 @@ class TestDriverController:
         controller.out_delivery()
 
         # mock driver
+        user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
         DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_user=django_user)
-        controller = DriverController(django_user)
+            driver_user=user)
+        controller = DriverController(user)
 
         with mock.patch.object(TripController, 'check_and_complete_trip',
                                mock.Mock(return_value=None)):
@@ -106,7 +108,7 @@ class TestDriverController:
         print orders
 
     def test_order_positions(
-            self, mock_driver, django_user, generate_mock_order):
+            self, mock_driver, generate_mock_order):
         """Test Drive Position updated and driver order events update.
 
         Asserts:
@@ -115,11 +117,12 @@ class TestDriverController:
 
         """
         # mock driver
+        user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
         obj = DriverOrder.objects.create(
             increment_id=generate_mock_order.increment_id,
-            driver_user=django_user)
+            driver_user=user)
 
-        controller = DriverController(django_user)
+        controller = DriverController(user)
         # test record position
         response = controller.record_position(
             12.965365,
@@ -148,7 +151,7 @@ class TestDriverController:
         assert customer is True
 
     def test_update_driver_details(
-            self, mock_driver, django_user, generate_mock_order):
+            self, mock_driver, generate_mock_order):
         """Test update driver details functionality.
 
         Asserts:
@@ -160,8 +163,8 @@ class TestDriverController:
 
         driver_details = CustomerSearchController.load_cache_basic_info(
             mock_driver.entity_id)
-
-        controller = DriverController(django_user)
+        user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
+        controller = DriverController(user)
 
         response = controller.update_driver_details(
             generate_mock_order)

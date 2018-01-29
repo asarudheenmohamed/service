@@ -245,8 +245,8 @@
               <div class="input-control">
               
                 <select name="store_id" >
-                    {% for store in store_obj %}
-                  <option value="{{ store.store_id }}" {% if store.store_id == select_store.id %}selected{% endif %}>{{ store.name}}</option>
+                    {% for store_obj in store_objects %}
+                  <option value="{{ store_obj.store.store_id }}" {% if store_obj.store.store_id == select_store.id %}selected{% endif %}>{{ store_obj.store.name}}</option>
                   {% endfor %}
                 </select>
                 <button type="submit" name="submit">Search</button>
