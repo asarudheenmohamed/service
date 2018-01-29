@@ -42,13 +42,13 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
 
-        user_id = get_user_id(self.request)
-        controller = DriverController(user_id)
+        driver = self.request
+        controller = DriverController(driver.user)
 
         try:
             logger.debug(
                 'To assign the order:{} to the driver:{}'.format(
-                    order_id, user_id))
+                    order_id, driver.user.username))
             controller.assign_order(order_id, store_id, lat, lon)
             status = True
             message = "Order Assigned successfully"
@@ -75,8 +75,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         order_id = self.request.data['order_id']
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
-        user_id = get_user_id(self.request)
-        controller = DriverController(user_id)
+        controller = DriverController(self.request.user)
 
         controller.complete_order(order_id, lat, lon)
 
@@ -105,4 +104,4 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
             'To fetch the Driver:{} assigning {} state orders'.format(
                 user_id, status))
 
-        return DriverController(user_id).fetch_orders(status)
+        return DriverController(self.request.user).fetch_orders(status)

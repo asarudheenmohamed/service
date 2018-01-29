@@ -28,8 +28,3 @@ class TenderCutsTask(celery.Task):
                 settings.CELERY_MAIL['received_mail_id'],
                 "[CRITICAL] Task failure in Staging",
                 msg)
-        Mail().send(
-            "reports@tendercuts.in",
-            ["tech@tendercuts.in"],
-            "[CRITICAL] Task failure",
-            msg)
