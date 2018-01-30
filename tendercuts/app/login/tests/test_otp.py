@@ -19,6 +19,7 @@ class TestOtp:
         """Test Otp send customer mobile number."""
         response = rest.get("/user/otp/9080804360/", format='json')
         assert not isinstance(response, type(None))
+
         assert response.data['mobile'] == "9080804360"
 
 
@@ -127,6 +128,5 @@ class TestUserFetch:
         """Test Fetch from user data."""
         response = auth_rest.get(
             "/user/fetch/?phone=9080804360", format='json')
-        print(response)
         assert not isinstance(response, type(None))
-        assert len(response.data['attribute']) == 3
+        assert response.status_code == 200

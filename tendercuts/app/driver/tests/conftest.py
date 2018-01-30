@@ -41,8 +41,9 @@ def auth_driver_rest(mock_driver):
     return client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def django_user(mock_driver):
-    django_user = User.objects.get(username=mock_driver.dj_user_id)
+    django_user = User.objects.get_or_create(
+        username=mock_driver.dj_user_id)[0]
 
     return django_user

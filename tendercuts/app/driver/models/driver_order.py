@@ -19,7 +19,7 @@ class DriverOrder(models.Model):
     def __unicode__(self):
         return '{}:{}'.format(self.increment_id, self.driver_id)
 
-    driver_user = models.ForeignKey(User, blank=True, null=True)
+    driver_user = models.ForeignKey(User, default=1)
     driver_id = models.IntegerField(blank=True, null=True)
     increment_id = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -38,7 +38,7 @@ class DriverOrder(models.Model):
 
 class DriverTrip(models.Model):
     """Driver Trip Model."""
-    driver_user = models.ForeignKey(User, blank=True, null=True)
+    driver_user = models.ForeignKey(User, default=1)
     driver_order = models.ManyToManyField(DriverOrder)
     km_traveled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
@@ -79,7 +79,7 @@ class DriverTrip(models.Model):
 
 class DriverPosition(models.Model):
     """Driver Position model."""
-    driver_user = models.ForeignKey(User, blank=True, null=True)
+    driver_user = models.ForeignKey(User, default=1)
     driver_id = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(max_length=100)
     longitude = models.FloatField(max_length=100)
@@ -99,7 +99,7 @@ class OrderEvents(models.Model):
 
 class DriverStat(models.Model):
     """Driver Stat model."""
-    driver_user = models.ForeignKey(User, blank=True, null=True)
+    driver_user = models.ForeignKey(User, default=1)
     driver_id = models.IntegerField(blank=True, null=True)
     no_of_orders = models.IntegerField(default=0)
     km_travels = models.FloatField(blank=True, null=True)

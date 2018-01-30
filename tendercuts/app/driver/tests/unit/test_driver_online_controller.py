@@ -11,14 +11,15 @@ from app.driver.models import DriverLoginLogout
 class TestDriverOnlineController:
     """Test cases for Store Driver controller."""
 
-    def test_driver_checkin(self):
+    def test_driver_checkin(self, mock_driver):
         """Create the Driver checkin objects.
 
         Asserts:
             1.Check last created object is our user object
             2.Check status is True
         """
-        user_obj = User.objects.all()[0]
+        user_obj = User.objects.get_or_create(
+            username=mock_driver.dj_user_id)[0]
 
         controller = DriverOnlineController(user_obj)
         status = controller.driver_checkin()
@@ -29,13 +30,14 @@ class TestDriverOnlineController:
 
         assert status is True
 
-    def test_driver_checkout(self):
+    def test_driver_checkout(self, mock_driver):
         """Update the Driver Check_Out time.
 
         Asserts:
             1.Check status is True
         """
-        user_obj = User.objects.all()[0]
+        user_obj = User.objects.get_or_create(
+            username=mock_driver.dj_user_id)[0]
 
         controller = DriverOnlineController(user_obj)
 
@@ -47,14 +49,15 @@ class TestDriverOnlineController:
 
         assert status is True
 
-    def test_driver_status(self):
+    def test_driver_status(self, mock_driver):
         """Check Driver online status.
 
         Asserts:
             1.Check status is True
             2.Check status is False
         """
-        user_obj = User.objects.all()[0]
+        user_obj = User.objects.get_or_create(
+            username=mock_driver.dj_user_id)[0]
 
         controller = DriverOnlineController(user_obj)
 
