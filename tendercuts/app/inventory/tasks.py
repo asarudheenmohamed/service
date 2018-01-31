@@ -4,8 +4,12 @@ import logging
 from django.contrib.auth.models import User
 
 from app.core.lib.celery import TenderCutsTask
-from app.core.lib.communication import SMS
+from app.core.lib.communication import SMS, Flock
 from app.core.lib.user_controller import CustomerSearchController
+from app.core.models.product import CatalogProductFlat1
+from app.core.models.store import CoreStore
+from app.inventory.lib.low_stock_notification_controller import \
+    LowStockNotificationController
 from app.inventory.lib.notify_customer_controller import \
     NotifyCustomerController
 from app.inventory.models import NotifyCustomer
@@ -44,3 +48,38 @@ def notification_sms():
     status = True
 
     return status
+
+
+@app.task(base=TenderCutsTask, ignore_result=True)
+def low_stock_notification():
+    """Celery task to notify the low stock information through flock."""
+    controller = LowStockNotificationController()
+    low_stocks = controller.get_low_stocks()
+
+    #  Inorder to get store name filter the object from CoreStore
+    store_objs = CoreStore.objects.filter(store_id__in=low_stocks.keys())
+    store_dict = {store.store_id: store.name for store in store_objs}
+
+    logger.debug("To send Flock message to filtered store groups: {}".format(
+        store_dict.values()))
+    #  Inorder to get product name filter the object from CatalogProductFlat1
+    product_obj = CatalogProductFlat1.objects.select_related('entity').all()
+    product_name = {product.sku: product.name for product in product_obj}
+
+    for store_id, products in low_stocks.items():
+        store_name = store_dict.get(store_id)
+        #  To prepare the flockml text for flockml attachment
+        product_detail = ["{}: <b>{} - {}(qty)</b>".format(
+            index, product_name.get(product['product__sku']), product['qty'])
+            for index, product in enumerate(products, 1)]
+        product_detail = "<br/>".join(product_detail)
+
+        title = "Out of stock Alerts"
+        description = "These products are going to be out of stock"
+
+        Flock().send_flockml(store_name, product_detail, title, description)
+
+    logger.info("Store groups: {} are received low stock message Successfully".format(
+        store_dict.values()))
+
+    return {'status': True}

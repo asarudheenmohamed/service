@@ -3,7 +3,7 @@ from app.core.models import GraminventoryLatest, Graminventory
 import datetime
 
 @pytest.mark.django_db
-class TestDpInventory:
+class _TestDpInventory:
     """
     271 (Breast Raw mat) -> 199 (B.Boneless)
     199 -> 380 GPU
@@ -47,7 +47,7 @@ class TestDpInventory:
 
 
 @pytest.mark.django_db
-class TestOmniInventory:
+class _TestOmniInventory:
     """
     271 (Breast Raw mat) -> 199 (B.Boneless)
     199 -> 380 GPU
@@ -79,6 +79,8 @@ class TestOmniInventory:
 
         product_id, store_id, _, _ = child
         inv = GraminventoryLatest.objects.filter(product_id=product_id, store_id=store_id)
+        import pdb
+        pdb.set_trace()
         assert len(inv) == 1
         assert inv[0].qty == expected_qty
         assert inv[0].scheduledqty == expected_sch
