@@ -83,3 +83,4 @@ def low_stock_notification():
         store_dict.values()))
 
     return {'status': True}
+

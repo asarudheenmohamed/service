@@ -79,8 +79,7 @@ class _TestOmniInventory:
 
         product_id, store_id, _, _ = child
         inv = GraminventoryLatest.objects.filter(product_id=product_id, store_id=store_id)
-        import pdb
-        pdb.set_trace()
+
         assert len(inv) == 1
         assert inv[0].qty == expected_qty
         assert inv[0].scheduledqty == expected_sch
