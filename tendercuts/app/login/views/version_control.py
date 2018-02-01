@@ -2,6 +2,7 @@
 
 import logging
 
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -31,8 +32,10 @@ class VersionControl(APIView):
 
         """
         customer_app_ver = request.data["app_verson"]
+        MIN_VER = settings.MOBILE_VERSION['min_app_version']
+
         version = AppVersionControl()
-        upgrade = version.version_comparision(customer_app_ver)
+        upgrade = version.version_comparision(customer_app_ver, MIN_VER)
 
         logger.info("Customer mobile app version {} was checked".format(
             customer_app_ver))
