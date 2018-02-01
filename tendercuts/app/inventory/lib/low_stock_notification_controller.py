@@ -4,6 +4,8 @@ import logging
 import pandas as pd
 
 from app.core.models.inventory import GraminventoryLatest
+from app.core.models.product import CatalogProductFlat1
+from app.core.models.store import CoreStore
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +36,7 @@ class LowStockNotificationController(object):
             "To get products which is less than 5 and create DaraFrame with columns: {}".format(
                 columns))
 
-        inventory_objs = GraminventoryLatest.objects.select_related(
+        inventory_objs = GraminventoryLatest.objects.prefetch_related(
             'product').filter(product__sku__in=fast_moving_sku, qty__lte=5).values_list(*columns)
 
         if not inventory_objs:
@@ -57,3 +59,39 @@ class LowStockNotificationController(object):
             low_stocks))
 
         return low_stocks
+
+
+    def get_stock_details(self, low_stocks):
+        """To get stock details(store name, product name).
+
+        Returns:
+            stock_details
+
+        """
+        #  Inorder to get store name filter the object from CoreStore
+        store_objs = CoreStore.objects.filter(store_id__in=low_stocks.keys())
+        store_dict = {store.store_id: store.name for store in store_objs}
+
+        #  Inorder to get product name filter the object from CatalogProductFlat1
+        product_obj = CatalogProductFlat1.objects.prefetch_related('entity').all()
+        product_name = {product.sku: product.name for product in product_obj}
+
+        stocks_details = []
+        for store_id, products in low_stocks.items():
+            stock_dict = {}
+            # To get store name by using store id
+            store_name = store_dict.get(store_id)
+            #  To prepare the flockml text for flockml attachment
+            product_detail = ["{}: <b>{} - {}(qty)</b>".format(
+                index, product_name.get(product['product__sku']), product['qty'])
+                for index, product in enumerate(products, 1)]
+            product_detail = "<br/>".join(product_detail)
+
+            stock_dict[store_name]=product_detail
+            stocks_details.append(stock_dict)
+
+        logger.info(
+            "Fetched stock details: {} from low stocks: {}".format(
+            stocks_details, low_stocks))
+
+        return stocks_details
