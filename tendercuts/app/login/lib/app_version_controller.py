@@ -2,7 +2,6 @@
 import logging
 from distutils.version import StrictVersion
 
-from django.conf import settings
 from rest_framework.response import Response
 
 logger = logging.getLogger(__name__)
@@ -15,7 +14,7 @@ class AppVersionControl(object):
         """Constructor."""
         pass
 
-    def version_comparision(self, user_app_ver):
+    def version_comparision(self, user_app_ver, MIN_VER):
         """To compare the app version in customer's mobile .
 
         Params:
@@ -25,8 +24,6 @@ class AppVersionControl(object):
             Returns status
 
         """
-        MIN_VER = settings.DRIVER_APP_VERSION['min_app_version']
-
         if StrictVersion(user_app_ver) >= StrictVersion(MIN_VER):
             update = True
         else:
