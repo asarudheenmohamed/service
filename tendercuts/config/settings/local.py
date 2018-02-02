@@ -37,7 +37,7 @@ DATABASES = {
     #         'PASSWORD': 'oochahwielai9mahDah3',
     #         'HOST': '127.0.0.1',
     #         'PORT': '3307',
-    #     }
+    #  
 
 }
 
@@ -68,15 +68,16 @@ MAGENTO = {
     "servicepoint": "/tendercuts-site/index.php/servicelayer/",
     "proto": "http"
 }
+APP_VERSIONS = {
+    "CUSTOMER_APP_VERSION": {
+        "min_app_version": '1.9.2',
+        "current_app_version": '1.9.6'
+    },
 
-MOBILE_VERSION = {
-    "min_app_version": '1.9.2',
-    "current_app_version": '1.9.6'
-}
-
-DRIVER_APP_VERSION = {
-    "min_app_version": '2.0.0',
-    "current_app_version": '2.0.0'
+    "DRIVER_APP_VERSION": {
+        "min_app_version": '2.0.0',
+        "current_app_version": '2.0.0'
+    }
 }
 
 PAYMENT = {

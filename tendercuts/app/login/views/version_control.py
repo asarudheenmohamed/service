@@ -32,7 +32,7 @@ class VersionControl(APIView):
 
         """
         customer_app_ver = request.data["app_verson"]
-        MIN_VER = settings.MOBILE_VERSION['min_app_version']
+        MIN_VER = settings.APP_VERSIONS['CUSTOMER_APP_VERSION']['min_app_version']
 
         version = AppVersionControl()
         upgrade = version.version_comparision(customer_app_ver, MIN_VER)

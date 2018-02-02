@@ -21,7 +21,7 @@ class TestVersionControl:
             Check version
 
         """
-        MIN_VER = settings.MOBILE_VERSION['min_app_version']
+        MIN_VER = settings.APP_VERSIONS['CUSTOMER_APP_VERSION']['min_app_version']
 
         version = AppVersionControl()
         ctrl_status = version.version_comparision(mob_ver, MIN_VER)
