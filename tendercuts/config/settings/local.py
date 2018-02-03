@@ -80,6 +80,18 @@ APP_VERSIONS = {
     }
 }
 
+GROUPS = {
+    "TECH_SUPPORT": "g:5282d2270ce34879981964619491b654",
+    "SCRUM": "g:5db92fa6225149be84183e4d79c19ada",
+    "thoraipakkam": "g:c5c7e097f86f488190deda41e769fc0f",
+    "valasarawakkam": "g:4b36aae148ac4a808e8e99f0bcb2d75e",
+    "velachery": "g:443107c94d7341939bf7b9db2c0744e3",
+    "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
+    "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
+    "OPS": "g:f4b98d63098243b9bf423ee8d89f7ef1",
+}
+
+
 PAYMENT = {
     "SIMPL": {
         "secret": "887b47b4aa1adffbdfa49e0c7fb0cc04",

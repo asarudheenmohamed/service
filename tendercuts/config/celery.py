@@ -42,6 +42,10 @@ app.conf.beat_schedule = {
     'every-day': {
         'task': 'app.driver.tasks.set_checkout',
                 'schedule': crontab(minute='50', hour='23')
+    },
+    'every-hour': {
+        'task': 'app.inventory.tasks.low_stock_notification',
+                'schedule': crontab(minute=0, hour='*/1')
     }
 }
 

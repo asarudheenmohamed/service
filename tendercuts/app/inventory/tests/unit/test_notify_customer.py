@@ -13,7 +13,7 @@ from app.inventory.models import NotifyCustomer
 class TestNotifyCustomerController:
     """To check Notify Customer Controller."""
 
-    def test_get_customer_notify(self):
+    def test_get_customer_notify(self, auth_rest):
         """To check our fetched.
 
         Asserts:
@@ -21,6 +21,15 @@ class TestNotifyCustomerController:
             Check whether the order details are fetched or not.
 
         """
+        response = auth_rest.post(
+            "/inventory/notify_me/",
+            {'store_id': 1,
+             'product_id': 221,
+             },
+            format='json')
+
+        assert response.status_code == 201
+
         controller = NotifyCustomerController()
         notify_customers = controller.get_customer_notify_obj()
 

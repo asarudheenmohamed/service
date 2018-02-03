@@ -4,8 +4,10 @@ import logging
 from django.contrib.auth.models import User
 
 from app.core.lib.celery import TenderCutsTask
-from app.core.lib.communication import SMS
+from app.core.lib.communication import SMS, Flock
 from app.core.lib.user_controller import CustomerSearchController
+from app.inventory.lib.low_stock_notification_controller import \
+    LowStockNotificationController
 from app.inventory.lib.notify_customer_controller import \
     NotifyCustomerController
 from app.inventory.models import NotifyCustomer
@@ -44,3 +46,23 @@ def notification_sms():
     status = True
 
     return status
+
+
+@app.task(base=TenderCutsTask, ignore_result=True)
+def low_stock_notification():
+    """Celery task to notify the low stock information through flock."""
+    controller = LowStockNotificationController()
+    low_stocks = controller.get_low_stocks()
+    stocks_details = controller.get_stock_details(low_stocks)
+
+    for stock_details in stocks_details:
+
+        store_name, product_detail = stock_details.items()[0]
+        title = "Out of stock Alerts"
+        description = "These products are going to be out of stock"
+
+        Flock().send_flockml(store_name, product_detail, title, description)
+
+    logger.info("low stock messages are Successfully sent to stores via Flock")
+
+    return {'status': True}
