@@ -69,25 +69,23 @@ class LowStockNotificationController(object):
 
         """
         #  Inorder to get store name filter the object from CoreStore
-        store_objs = CoreStore.objects.filter(store_id__in=low_stocks.keys())
-        store_dict = {store.store_id: store.name for store in store_objs}
+        store_objs = CoreStore.objects.filter(store_id__in=low_stocks.keys()).values_list('store_id', 'name')
 
         #  Inorder to get product name filter the object from CatalogProductFlat1
-        product_obj = CatalogProductFlat1.objects.prefetch_related('entity').all()
-        product_name = {product.sku: product.name for product in product_obj}
-
+        product_obj = CatalogProductFlat1.objects.prefetch_related('entity').values_list('sku', 'name')
+ 
         stocks_details = []
         for store_id, products in low_stocks.items():
             stock_dict = {}
             # To get store name by using store id
-            store_name = store_dict.get(store_id)
+            store_name = store_objs.get(store_id=store_id)[1]
             #  To prepare the flockml text for flockml attachment
             product_detail = ["{}: <b>{} - {}(qty)</b>".format(
-                index, product_name.get(product['product__sku']), product['qty'])
+                index, product_obj.get(sku=product['product__sku'])[1], product['qty'])
                 for index, product in enumerate(products, 1)]
             product_detail = "<br/>".join(product_detail)
 
-            stock_dict[store_name]=product_detail
+            stock_dict[store_name] = product_detail
             stocks_details.append(stock_dict)
 
         logger.info(
