@@ -8,6 +8,7 @@ from django.utils import timezone
 from app.core.models.inventory import *
 from app.inventory.lib.low_stock_notification_controller import \
     LowStockNotificationController
+from app.inventory import tasks
 
 
 @pytest.mark.django_db
@@ -18,7 +19,6 @@ class TestLowStockNotifyController:
         """To check products are filered or not.
 
         Asserts:
-
             Check whether our own created product is filtered or not.
 
         """
@@ -51,3 +51,34 @@ class TestLowStockNotifyController:
                 status = True
 
         assert status == True
+
+    def test_low_stock_notification(self):
+        """To check whether store groups are receives low stock messages or not.
+
+        Asserts:
+            Checks low task messages are sends.
+
+        """
+        product_id = 221
+        store_id = 1
+        qty = 4
+
+        inv = Graminventory.objects.filter(
+            date=datetime.date.today(),
+            product_id=product_id,
+            store_id=store_id,
+            qty__lte=4)
+
+        if not inv:
+            obj = Graminventory.objects.create(
+                product_id=product_id,
+                store_id=store_id,
+                qty=qty,
+                expiringtoday=qty,
+                forecastqty=qty,
+                date=timezone.now())
+
+        response = tasks.low_stock_notification.apply()
+        status = response.get()
+
+        assert status['status'] == True
