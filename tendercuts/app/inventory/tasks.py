@@ -56,11 +56,9 @@ def low_stock_notification():
     stocks_details = controller.get_stock_details(low_stocks)
 
     for stock_details in stocks_details:
-
         store_name, product_detail = stock_details.items()[0]
         title = "Out of stock Alerts"
         description = "These products are going to be out of stock"
-
         Flock().send_flockml(store_name, product_detail, title, description)
 
     logger.info("low stock messages are Successfully sent to stores via Flock")
