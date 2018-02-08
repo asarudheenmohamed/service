@@ -59,11 +59,11 @@ class TestDriverTripController:
             driver_order=mock_driver2,
             driver_position=driver_position, status='out_delivery')
         # create mock driver order events
-        OrderEvents.objects.create(
+        order_events = OrderEvents.objects.create(
             driver_order=mock_driver2,
             driver_position=driver_position1, status='completed')
 
-        return mock_driver2, mock_trip
+        return mock_driver2, mock_trip, order_events
 
     @pytest.mark.django_db
     def test_driver_trip_create(self, django_user):
@@ -106,7 +106,8 @@ class TestDriverTripController:
             longitude=80.24094)
         # create a mock driver and mock trip
 
-        mock_driver, mock_trip = self.update_driver_position(user_obj)
+        mock_driver, mock_trip, order_events = self.update_driver_position(
+            user_obj)
         with mock.patch.object(cache, 'get_key', mock.Mock(return_value=mock_trip.id)):
             driver_trip = trip.check_and_complete_trip(
                 mock_driver, driver_position)
@@ -126,8 +127,51 @@ class TestDriverTripController:
         trip = TripController(driver=user_obj)
 
         # create a mock driver and mock trip
-        mock_driver, mock_trip = self.update_driver_position(user_obj)
-
+        mock_driver, mock_trip, order_events = self.update_driver_position(
+            user_obj)
         driver_trip = trip.compute_driver_trip_distance(mock_trip)
 
-        assert mock_trip.km_traveled == 4549
+        assert mock_trip.km_travelled == 5554
+
+    def test_fetch_order_events(self, django_user):
+        """test fetch trip order events."""
+        user_obj = User.objects.get_or_create(
+            username=django_user.username)[0]
+        mock_driver, mock_trip, order_events = self.update_driver_position(
+            user_obj)
+        trip = TripController(driver=user_obj)
+
+        driver_order_events = trip.fetch_order_events(mock_trip)
+        assert order_events in driver_order_events
+
+    def test__complete_trip(self, django_user):
+        """Test completed trip."""
+        user_obj = User.objects.get_or_create(
+            username=django_user.username)[0]
+        driver_trip = DriverTrip.objects.create(driver_user=user_obj)
+
+        trip = TripController(driver=user_obj)
+
+        driver_order_events = trip._complete_trip(driver_trip)
+
+        trip = DriverTrip.objects.filter(id=driver_trip.id)
+
+        assert len(trip) is 0
+
+    def test_get_directions_km(self, django_user):
+        """Test google direction api."""
+        user_obj = User.objects.get_or_create(
+            username=django_user.username)[0]
+
+        trip = TripController(driver=user_obj)
+        distance = trip.get_directions_km(
+            '13.0492672,80.2372261',
+            '13.0740751,80.2205546',
+            ['13.0492672,80.2372261',
+             '13.0492672,80.2372261',
+             '13.0492717,80.237226',
+             '13.0492717,80.237226',
+             '13.07401678,80.22048674',
+             '13.0740751,80.2205546'])
+
+        assert distance == 4609

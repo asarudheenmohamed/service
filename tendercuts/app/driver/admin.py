@@ -24,6 +24,8 @@ class DriverOrderAdmin(admin.ModelAdmin):
         if request.method == 'POST':
 
             controller = StoreOrderController()
+            data = controller.get_store_driver_order(request.POST['store_id'])
+
         data['store_objects'] = Storeattributes.objects.filter(typeofstore=2)
         response = super(DriverOrderAdmin, self).changelist_view(
             request,

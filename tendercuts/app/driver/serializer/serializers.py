@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.driver.models.driver_order import DriverStat, DriverTrip
+from app.driver.models.driver_order import DriverStat, DriverTrip, DriverOrder
 from app.core.serializers.sales_order import SalesOrderSerializer
 
 
@@ -14,8 +14,20 @@ class DriverStatSerializer(serializers.ModelSerializer):
         fields = ('driver_id', 'no_of_orders')
 
 
+class DriverOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for DriverOrder
+    """
+    class Meta:
+        """
+        """
+        model = DriverOrder
+        fields = ('driver_user', 'increment_id', 'created_at')
+
+
 class DrivertripSerializer(serializers.ModelSerializer):
     """Serializer for DriverTrip."""
+    driver_order = DriverOrderSerializer(many=True)
 
     class Meta:
         """

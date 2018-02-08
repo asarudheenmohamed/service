@@ -26,7 +26,7 @@ class DriverStatController(object):
             raise ValueError("Order:{} is not completed yet".format(order_id))
 
         try:
-            driver = DriverOrder.objects.filter(increment_id=order_id)[0]
+            driver = DriverOrder.objects.filter(increment_id=order_id).last()
         except ValueError:
             print "This order was not placed"
 

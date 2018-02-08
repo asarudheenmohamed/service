@@ -24,23 +24,12 @@ class DriverOrder(models.Model):
     increment_id = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
-    @property
-    def way_points(self):
-        """Returns order way points."""
-        completed_time = OrderEvents.objects.filter(
-            driver_order=self, status='completed').values_list('updated_time', flat=True)
-        way_points = DriverPosition.objects.filter(
-            driver_id=self.driver_id,
-            recorded_time__range=(self.created_at, completed_time[0]))
-
-        return way_points
-
 
 class DriverTrip(models.Model):
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, default=1)
     driver_order = models.ManyToManyField(DriverOrder)
-    km_traveled = models.FloatField(max_length=100, blank=True, null=True)
+    km_travelled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
     trip_completed = models.BooleanField(default=False)
@@ -71,8 +60,7 @@ class DriverTrip(models.Model):
             return trip_ending_point
         else:
             trip_ending_point = OrderEvents.objects.filter(
-                driver_order__in=self.driver_order.all(),
-                status='completed').prefetch_related('driver_position').last()
+                driver_order__in=self.driver_order.all()).prefetch_related('driver_position').order_by('updated_time').last()
 
             return str(trip_ending_point.driver_position)
 
