@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('driver', '0013_auto_20180118_1557'),
+        ('driver', '0012_auto_20180118_1556'),
     ]
 
     operations = [

@@ -1,16 +1,18 @@
 """Automatically controls the trip of the driver"""
 import logging
-
-import googlemaps
-from django.conf import settings
-from django.utils import timezone
-from datetime import datetime, date, timedelta
-
-from app.core.lib import cache
-from app.core.models import SalesFlatOrder
-from app.driver.models.driver_order import DriverTrip
 import sys
 import traceback
+from datetime import date, datetime, timedelta
+
+from django.conf import settings
+from django.utils import timezone
+
+import googlemaps
+from app.core.lib import cache
+from app.core.lib.communication import Mail
+from app.core.models import SalesFlatOrder
+from app.driver.models.driver_order import (DriverPosition, DriverTrip,
+                                            OrderEvents)
 
 
 class TripController:
@@ -24,15 +26,14 @@ class TripController:
             key=settings.GOOGLE_MAP_DISTANCE_API['KEY'])
         self.driver = driver
 
-    def _get_key(self, order):
+    def _get_key(self):
         """Set driver trip cache key.
 
         Params:
          order: driver order object
 
         """
-
-        return "{}:{}".format(self.PREFIX, order.driver_user.username)
+        return "{}:{}".format(self.PREFIX, self.driver.username)
 
     def generate_trip_starting_point_key(self, trip_id):
         """Set driver trip starting point cache key.
@@ -61,12 +62,16 @@ class TripController:
           trip(obj): driver trip object
 
         """
+        trip_orders = trip.driver_order.all()
+        if trip_orders:
 
-        self.log.info("Completing the trip for driver {}".format(trip.id))
-        trip.trip_completed = True
-        trip.trip_ending_time = timezone.now()
-        trip.save()
-        self.compute_driver_trip_distance(trip)
+            self.log.info("Completing the trip for driver {}".format(trip.id))
+            trip.trip_completed = True
+            trip.trip_ending_time = timezone.now()
+            trip.save()
+            self.compute_driver_trip_distance(trip)
+        else:
+            trip.delete()
 
     def _can_complete_trip(self, trip):
         """Check if the trip can be completed.
@@ -89,7 +94,7 @@ class TripController:
                 continue
 
             # remove and continue.
-            if status == 'canceled':
+            if (status == 'canceled' or status == 'closed'):
                 driver_order = trip.driver_order.filter(
                     increment_id=order_id).first()
                 trip.driver_order.remove(driver_order)
@@ -106,7 +111,7 @@ class TripController:
 
         :return: DriverTrip
         """
-        key = self._get_key(order)
+        key = self._get_key()
         self.log.debug(
             "Creating/updating a trip for {}".format(order.increment_id))
 
@@ -156,7 +161,7 @@ class TripController:
         :return: none
         """
 
-        key = self._get_key(order)
+        key = self._get_key()
 
         # get current trip
         trip = cache.get_key(key)
@@ -181,6 +186,99 @@ class TripController:
                 60 * 60 * 24)  # expired at 1 day
         return trip
 
+    def fetch_order_events(self, trip):
+        """Fetch order events objects.
+
+        Args:
+           trip (obj): driver trip object
+
+        """
+        order_events = OrderEvents.objects.filter(driver_order__in=trip.driver_order.all(
+        )).prefetch_related('driver_position').order_by('updated_time')
+
+        return order_events
+
+    def _get_way_points(self, trip_starting_time,
+                        order_event_complete_objects, driver_id):
+        """"""
+        way_points = []
+
+        for event_complete_object in order_event_complete_objects:
+
+            # fetch driver position
+            position_objects = DriverPosition.objects.filter(
+                driver_id=driver_id, recorded_time__range=(
+                    trip_starting_time, event_complete_object.updated_time))
+            # mid index of driver position
+            mid_index = len(position_objects) / 2
+            # mid position
+            try:
+                mid_position = position_objects[mid_index]
+                way_points.append(str(mid_position))
+                way_points.append(str(event_complete_object.driver_position))
+            except:
+                pass
+
+            trip_starting_time = event_complete_object.updated_time
+
+        return way_points
+
+    def get_directions_km(self, starting_points,
+                          destination_point,
+                          way_points, trip_id):
+        """Compute the km based on particular directions latitude and longitude.
+
+        Args:
+            starting_points(str): trip starting point
+            destination_point(str): trip destination_point
+            way_points(str): trip way_points
+
+        returns:
+            direction distance(meter)
+
+          """
+        km_traveled = 0
+
+        try:
+
+            compute_km = scompute_km = self._api.directions(starting_points, destination_point,
+                                                            waypoints=way_points)
+
+            self.log.info(
+                'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
+                    starting_points, destination_point))
+
+            km_traveled = 0
+
+            for leg in compute_km[0]['legs']:
+                km_traveled += int(leg['distance']['value'])
+
+        except Exception as msg:
+            message = 'Error:{}, trip_id:{},waypoints:{},starting points:{},destination point:{}'.format(
+                repr(msg), trip_id, way_points, starting_points, destination_point)
+            self.log.error('{}, trip_id:{}'.format(repr(msg), trip_id))
+
+            # send error message in tech support mail
+            Mail().send(
+                "reports@tendercuts.in",
+                ["tech@tendercuts.in"],
+                "[CRITICAL] Error in Driver Trip distance computaion",
+                message)
+
+        return km_traveled
+
+    def _split(self, waypoints, index):
+        """Split the waypoints based on index."""
+        ways = []
+        while len(waypoints) > index:
+            pice = waypoints[:index]
+
+            ways.append(pice)
+            waypoints = waypoints[index:]
+        ways.append(waypoints)
+
+        return ways
+
     def compute_driver_trip_distance(self, trip):
         """Update the km taken by the driver for each trip.
 
@@ -193,32 +291,45 @@ class TripController:
 
         # driver trip starting point
 
-        starting_points = trip.trip_starting_point
-        ending_points = trip.trip_ending_point
-        # way point holds atleast one points for the each order
-        way_points = []
-        for order in trip.driver_order.all():
-            order_way_points = order.way_points
-            mid_point = len(order_way_points) / 2
-            way_points.append(str(order_way_points[mid_point]))
-            way_points.append(str(order_way_points.last()))
+        order_events = self.fetch_order_events(trip)
 
-        try:
-            compute_km = self._api.directions(starting_points, ending_points,
-                                              waypoints=way_points)
+        # starting and ending destination point
+        starting_points = str(order_events.first().driver_position)
+        destination_point = str(order_events.last().driver_position)
 
-            self.log.info(
-                'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
-                    starting_points, ending_points))
+        # trip starting point
+        trip_starting_time = order_events.first().updated_time
 
-            # update trip km
-            km_traveled = 0
-            for leg in compute_km[0]['legs']:
-                km_traveled += int(leg['distance']['value'])
+        # sort completed order only because we get a order completed
+        # location and completed time
+        order_event_complete_objects = order_events.filter(
+            status='completed').order_by('updated_time')
 
-            trip.km_traveled = km_traveled
-            trip.save()
+        driver_id = trip.driver_order.all().first().driver_id
 
-        except Exception as msg:
-            self.log.error('{}, trip_id:{}'.format(repr(msg), trip.id))
-            # Add error mail to tech ops here
+        way_points = self._get_way_points(
+            trip_starting_time, order_event_complete_objects, driver_id)
+
+        km_ = self.get_directions_km(
+            starting_points, destination_point, way_points, trip.id)
+
+        split_way = self._split(way_points, 22)
+
+        km_travelled = 0
+
+        for waypoints in split_way:
+            try:
+                destination = waypoints[-1]
+            except IndexError:
+                destination = destination_point
+
+            distance = self.get_directions_km(
+                starting_points, destination_point, waypoints, trip.id)
+
+            starting_point = destination
+
+            km_travelled += distance
+
+        trip.km_travelled = km_travelled
+
+        trip.save()
