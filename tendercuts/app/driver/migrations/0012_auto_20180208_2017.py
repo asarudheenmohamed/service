@@ -15,10 +15,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='drivertrip',
-            name='km_traveled',
-        ),
         migrations.AddField(
             model_name='driverorder',
             name='driver_user',
@@ -38,10 +34,5 @@ class Migration(migrations.Migration):
             model_name='drivertrip',
             name='driver_user',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='drivertrip',
-            name='km_travelled',
-            field=models.FloatField(blank=True, max_length=100, null=True),
-        ),
+        )
     ]
