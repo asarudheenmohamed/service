@@ -29,6 +29,7 @@ class DriverTrip(models.Model):
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_order = models.ManyToManyField(DriverOrder)
+    km_traveled = models.CharField(max_length=20, blank=True, null=True)
     km_travelled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
