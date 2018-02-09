@@ -19,7 +19,7 @@ class DriverOrder(models.Model):
     def __unicode__(self):
         return '{}:{}'.format(self.increment_id, self.driver_id)
 
-    driver_user = models.ForeignKey(User, default=1)
+    driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_id = models.IntegerField(blank=True, null=True)
     increment_id = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -27,7 +27,7 @@ class DriverOrder(models.Model):
 
 class DriverTrip(models.Model):
     """Driver Trip Model."""
-    driver_user = models.ForeignKey(User, default=1)
+    driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_order = models.ManyToManyField(DriverOrder)
     km_travelled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
@@ -45,7 +45,7 @@ class DriverTrip(models.Model):
             return trip_starting_point
         else:
             trip_starting_point = OrderEvents.objects.filter(
-                driver_order__in=self.driver_order.all(),
+                driver_order__in=self.driver.all(),
                 status='out_delivery').order_by('updated_time').prefetch_related('driver_position').first()
 
             return str(trip_starting_point.driver_position)
@@ -60,14 +60,14 @@ class DriverTrip(models.Model):
             return trip_ending_point
         else:
             trip_ending_point = OrderEvents.objects.filter(
-                driver_order__in=self.driver_order.all()).prefetch_related('driver_position').order_by('updated_time').last()
+                driver_order__in=self.driver.all()).prefetch_related('driver_position').order_by('updated_time').last()
 
             return str(trip_ending_point.driver_position)
 
 
 class DriverPosition(models.Model):
     """Driver Position model."""
-    driver_user = models.ForeignKey(User, default=1)
+    driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_id = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(max_length=100)
     longitude = models.FloatField(max_length=100)
@@ -79,7 +79,7 @@ class DriverPosition(models.Model):
 
 class OrderEvents(models.Model):
     """Driver Events model."""
-    driver_order = models.ForeignKey(DriverOrder)
+    driver = models.ForeignKey(DriverOrder)
     driver_position = models.ForeignKey(DriverPosition)
     updated_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=200)
@@ -87,7 +87,7 @@ class OrderEvents(models.Model):
 
 class DriverStat(models.Model):
     """Driver Stat model."""
-    driver_user = models.ForeignKey(User, default=1)
+    driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_id = models.IntegerField(blank=True, null=True)
     no_of_orders = models.IntegerField(default=0)
     km_travels = models.FloatField(blank=True, null=True)
