@@ -36,7 +36,7 @@ class DrivertripSerializer(serializers.ModelSerializer):
         fields = (
             'driver_order',
             'driver_user',
-            'km_traveled',
+            'km_travelled',
             'trip_created_time',
             'trip_ending_time',
             'trip_completed')

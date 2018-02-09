@@ -310,9 +310,6 @@ class TripController:
         way_points = self._get_way_points(
             trip_starting_time, order_event_complete_objects, driver_id)
 
-        km_ = self.get_directions_km(
-            starting_points, destination_point, way_points, trip.id)
-
         split_way = self._split(way_points, 22)
 
         km_travelled = 0

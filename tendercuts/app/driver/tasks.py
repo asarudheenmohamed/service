@@ -25,7 +25,7 @@ def driver_stat(order_id):
     """Celery task to add the driver completed order."""
 
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id).last()
-    if order_obj:
+    if not order_obj:
         raise ValueError('Order object Does not exist')
 
     stat_controller = DriverStatController(order_id)
