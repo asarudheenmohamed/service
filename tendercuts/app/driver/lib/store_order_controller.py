@@ -32,7 +32,7 @@ class StoreOrderController(object):
 
         """
         order_event_objs = OrderEvents.objects.filter(
-            driver_order__driver_user__in=driver_user,
+            driver__driver_user__in=driver_user,
             status='completed',
             updated_time__gte=date.today()).prefetch_related('driver_order')
 

@@ -43,7 +43,7 @@ class TestDriverTripController:
             longitude=80.24094)
 
         OrderEvents.objects.create(
-            driver_order=mock_driver1,
+            driver=mock_driver1,
             driver_position=driver_position, status='out_delivery')
 
         driver_position1 = DriverPosition.objects.create(
@@ -52,15 +52,15 @@ class TestDriverTripController:
             longitude=80.221)
 
         OrderEvents.objects.create(
-            driver_order=mock_driver1,
+            driver=mock_driver1,
             driver_position=driver_position1, status='completed')
 
         OrderEvents.objects.create(
-            driver_order=mock_driver2,
+            driver=mock_driver2,
             driver_position=driver_position, status='out_delivery')
         # create mock driver order events
         order_events = OrderEvents.objects.create(
-            driver_order=mock_driver2,
+            driver=mock_driver2,
             driver_position=driver_position1, status='completed')
 
         return mock_driver2, mock_trip, order_events
@@ -172,6 +172,6 @@ class TestDriverTripController:
              '13.0492717,80.237226',
              '13.0492717,80.237226',
              '13.07401678,80.22048674',
-             '13.0740751,80.2205546'])
+             '13.0740751,80.2205546'], 1)
 
         assert distance == 4609
