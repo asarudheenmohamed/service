@@ -261,7 +261,7 @@ class DriverController(object):
         """
 
         events_obj = OrderEvents.objects.create(
-            driver_order=driver_object,
+            driver=driver_object,
             driver_position=driver_position,
             status=status)
 

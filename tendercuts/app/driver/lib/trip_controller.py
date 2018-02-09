@@ -193,7 +193,7 @@ class TripController:
            trip (obj): driver trip object
 
         """
-        order_events = OrderEvents.objects.filter(driver_order__in=trip.driver_order.all(
+        order_events = OrderEvents.objects.filter(driver__in=trip.driver_order.all(
         )).prefetch_related('driver_position').order_by('updated_time')
 
         return order_events
@@ -237,7 +237,7 @@ class TripController:
             direction distance(meter)
 
           """
-        km_traveled = 0
+        km_travelled = 0
 
         try:
 
@@ -248,10 +248,10 @@ class TripController:
                 'Measured the km taken for the trip by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
                     starting_points, destination_point))
 
-            km_traveled = 0
+            km_travelled = 0
 
             for leg in compute_km[0]['legs']:
-                km_traveled += int(leg['distance']['value'])
+                km_travelled += int(leg['distance']['value'])
 
         except Exception as msg:
             message = 'Error:{}, trip_id:{},waypoints:{},starting points:{},destination point:{}'.format(
@@ -265,7 +265,7 @@ class TripController:
                 "[CRITICAL] Error in Driver Trip distance computaion",
                 message)
 
-        return km_traveled
+        return km_travelled
 
     def _split(self, waypoints, index):
         """Split the waypoints based on index."""

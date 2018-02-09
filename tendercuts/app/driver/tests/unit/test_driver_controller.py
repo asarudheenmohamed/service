@@ -134,7 +134,7 @@ class TestDriverController:
         # test order events
         response = controller._record_events(obj, response, 'out_delivery')
 
-        assert response.driver_order.increment_id == generate_mock_order.increment_id
+        assert response.driver.increment_id == generate_mock_order.increment_id
 
     def test_driver_delay_sms(
             self, mock_driver, django_user, generate_mock_order):
