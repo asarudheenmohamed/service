@@ -1,0 +1,80 @@
+# Rebuild once with docker-compose build
+# PREREQUISITE: ENSURE THAT MAGEDB backup is already set up, we don't do it here.
+
+version: '2'
+services:
+  django:
+    build: ./django
+    container_name: django
+    links:
+      - redis:redis
+      - rabbitmq:rabbitmq
+      - db:db
+      - mage-db:mage-db
+      - php:magento
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+  #  ports:
+  #    - 80:80
+  #    - 9000:9000
+    volumes:
+      - ../:/services/
+
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: services
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql-db:/var/lib/mysql
+    # access for all
+
+  # creating a second instance so that
+  # we can reuse the volume attached to this.
+  mage-db:
+    image: mysql:5.7
+    container_name: mage-db
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: dbmaster
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mage-db:/var/lib/mysql
+
+  php:
+    build: ./php
+    container_name: php
+    links:
+      - mage-db:mysql
+      - redis:redis
+      - rabbitmq:rabbitmq
+    depends_on:
+      - mage-db
+      - redis
+      - rabbitmq
+    ports:
+      - 80:80
+      - 9000:9000
+    volumes:
+      - /Applications/MAMP/htdocs/tendercuts-site/:/var/www/html/
+
+  redis:
+    image: redis
+    container_name: redis
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+
+
+volumes:
+  mysql-db:
+  mage-db:
