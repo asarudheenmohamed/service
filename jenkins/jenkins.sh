@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # start the environment
-cd $WORKSPACE/.jenkins && /usr/local/bin/docker-compose down;
-cd $WORKSPACE/.jenkins && /usr/local/bin/docker-compose up -d;
+cd $WORKSPACE/jenkins && /usr/local/bin/docker-compose down;
+cd $WORKSPACE/jenkins && /usr/local/bin/docker-compose up -d;
 
 echo "Installing packages";
 /usr/bin/docker exec -t -u postgres $(/usr/bin/docker ps -aqf "name=django") \
