@@ -28,7 +28,6 @@ class TestDriverController:
             1. If the driver is assigned
 
         """
-        print mock_driver.entity_id
         controller = DriverController(django_user)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,

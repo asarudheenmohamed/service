@@ -3,6 +3,19 @@
 import pytest
 from app.driver.models import DriverOrder
 
+@pytest.fixture
+def driver_order(generate_mock_order, django_user):
+    """Check and create"""
+    driver_object = DriverOrder.objects.filter(
+        increment_id=generate_mock_order.increment_id,
+        driver_user=django_user)
+
+    if not driver_object:
+        driver_object = DriverOrder.objects.create(
+            increment_id=generate_mock_order.increment_id,
+            driver_user=django_user)
+
+    return driver_object
 
 @pytest.mark.django_db
 class TestOrderFetch:
@@ -12,8 +25,7 @@ class TestOrderFetch:
             self,
             auth_driver_rest,
             generate_mock_order,
-            mock_user,
-            django_user,
+            driver_order,
             status):
         """Get reward point transection in 18963.
 
@@ -29,9 +41,6 @@ class TestOrderFetch:
             Check custermer id is equal to 18963
 
         """
-        driver_object = DriverOrder.objects.create(
-            increment_id=generate_mock_order.increment_id,
-            driver_user=django_user)
         generate_mock_order.status = status
         generate_mock_order.save()
 

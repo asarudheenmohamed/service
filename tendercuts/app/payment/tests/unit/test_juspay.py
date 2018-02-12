@@ -13,17 +13,6 @@ import pytest
 class TestJustPayGateway:
     """JP test cases for the controller."""
 
-    def test_payment_status(self, juspay_mock_order):
-        """Verify claim api.
-
-        Asserts:
-            if the status returned is true
-
-        """
-        gw = JusPayGateway()
-        status = gw.claim_payment(juspay_mock_order.increment_id, None)
-        assert status is True
-
     def test_fetch_payment_modes(self, mock_user):
         """Fetch payment modes.
 

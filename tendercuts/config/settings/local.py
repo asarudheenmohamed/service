@@ -1,8 +1,8 @@
 from .base import *
 from .celeryconfig import *
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
+CELERY_RESULT_BACKEND = 'amqp://guest:guest@rabbitmq:5672//'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -14,7 +14,7 @@ DATABASES = {
         'NAME': 'services',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '3306',
 
     },
@@ -25,7 +25,7 @@ DATABASES = {
         'NAME': 'dbmaster',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'mage-db',
         'PORT': '3306',
     }
 
@@ -44,7 +44,7 @@ DATABASES = {
 CACHES = {
     'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -60,35 +60,13 @@ INTERNAL_IPS = (
 )
 
 MAGENTO = {
-    "url": "localhost",
+    "url": "magento",
     "port": 80,
     "username": "admin",
-    "password": "Tendercuts123!",
-    "endpoint": "/tendercuts-site/index.php/api/xmlrpc/",
-    "servicepoint": "/tendercuts-site/index.php/servicelayer/",
+    "password": "(ZvfP5$7F?Q3u\dq",
+    "endpoint": "/index.php/api/xmlrpc/",
+    "servicepoint": "/index.php/servicelayer/",
     "proto": "http"
-}
-APP_VERSIONS = {
-    "CUSTOMER_APP_VERSION": {
-        "min_app_version": '1.9.2',
-        "current_app_version": '1.9.6'
-    },
-
-    "DRIVER_APP_VERSION": {
-        "min_app_version": '2.0.0',
-        "current_app_version": '2.0.0'
-    }
-}
-
-GROUPS = {
-    "TECH_SUPPORT": "g:5282d2270ce34879981964619491b654",
-    "SCRUM": "g:5db92fa6225149be84183e4d79c19ada",
-    "thoraipakkam": "g:c5c7e097f86f488190deda41e769fc0f",
-    "valasarawakkam": "g:4b36aae148ac4a808e8e99f0bcb2d75e",
-    "velachery": "g:443107c94d7341939bf7b9db2c0744e3",
-    "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
-    "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
-    "OPS": "g:f4b98d63098243b9bf423ee8d89f7ef1",
 }
 
 

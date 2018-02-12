@@ -262,3 +262,28 @@ VALUE_FIRST_SMS_GATEWAY = {
 
 # caching version
 CACHE_DEFAULT_VERSION = 2
+
+# app version
+APP_VERSIONS = {
+    "CUSTOMER_APP_VERSION": {
+        "min_app_version": '1.9.2',
+        "current_app_version": '1.9.6'
+    },
+
+    "DRIVER_APP_VERSION": {
+        "min_app_version": '2.0.0',
+        "current_app_version": '2.0.0'
+    }
+}
+
+# Flock groups
+GROUPS = {
+    "TECH_SUPPORT": "g:5282d2270ce34879981964619491b654",
+    "SCRUM": "g:5db92fa6225149be84183e4d79c19ada",
+    "thoraipakkam": "g:c5c7e097f86f488190deda41e769fc0f",
+    "valasarawakkam": "g:4b36aae148ac4a808e8e99f0bcb2d75e",
+    "velachery": "g:443107c94d7341939bf7b9db2c0744e3",
+    "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
+    "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
+    "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
+}

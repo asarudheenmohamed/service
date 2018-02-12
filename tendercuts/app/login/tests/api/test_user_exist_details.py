@@ -25,7 +25,7 @@ class TestUserExists:
             Check response equals to True
         """
         response = auth_rest.get(
-            "/user/exists/?email=varun@tendercuts123.com", format='json')
+            "/user/exists/?email=mail@varunprasad.in", format='json')
         assert not isinstance(response, type(None))
         assert response.data['result'] is True
 

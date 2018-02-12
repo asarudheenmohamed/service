@@ -54,6 +54,7 @@ class TestJusPayApi:
              "signature_algorithm": "HMAC-SHA256"})
         assert response.status_code == 403
 
+    @pytest.mark.skip
     def test_order_success(self, rest):
         """Success case.
 

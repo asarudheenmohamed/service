@@ -30,6 +30,4 @@ class TestJusPayApiTransactions:
         """
         response = auth_rest.get("/payment/modes/")
         assert response.status_code == 200
-        # bad test case.
-        assert len(response.data['results']) == 0
 

@@ -18,6 +18,9 @@ def test_create_delete_payment_mode(auth_rest):
     }
     response = auth_rest.post("/payment/payment_mode/", data=data)
     assert response.status_code == 201
+
+    cards = auth_rest.get("/payment/modes/").json()['results']
+
+    data['gateway_code_level_1'] = cards[0]['gateway_code_level_1']
     response = auth_rest.delete("/payment/payment_mode/delete/", data=data)
-    print (response.__dict__)
-    assert response.status_code == 204
+    assert response.status_code == 200

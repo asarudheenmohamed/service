@@ -23,4 +23,4 @@ class TestApiInventoryFetch(object):
             format='json')
 
         assert len(response.data) >= 6
-        assert "Pants & Denim" in response.data[0]['category']['name']
+        assert "What's New" in response.data[0]['category']['name']
