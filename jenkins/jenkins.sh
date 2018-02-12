@@ -11,7 +11,6 @@ echo "Installing packages";
 
 # DB NEEDS TO BE SET UP run replace commands.
 # CLEAN UP CACHE in php.
-# START CELERY
 
 echo "Starting celery in django container";
 /usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=django") \

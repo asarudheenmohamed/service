@@ -64,7 +64,7 @@ services:
 #      - 80:80
       - 9000:9000
     volumes:
-      - /Applications/MAMP/htdocs/tendercuts-site/:/var/www/html/
+      - ../website/:/var/www/html/
 
   redis:
     image: redis
