@@ -2,7 +2,7 @@
 
 # start the environment
 cd $WORKSPACE/jenkins && /usr/local/bin/docker-compose down;
-cd $WORKSPACE/jenkins && /usr/local/bin/docker-compose up -d;
+cd $WORKSPACE/jenkins && /usr/local/bin/docker-compose build && /usr/local/bin/docker-compose up -d --force-recreate;
 
 echo "Installing packages";
 /usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=django") \
