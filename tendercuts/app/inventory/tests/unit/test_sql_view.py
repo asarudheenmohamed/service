@@ -3,7 +3,7 @@ from app.core.models import GraminventoryLatest, Graminventory
 import datetime
 
 @pytest.mark.django_db
-class _TestDpInventory:
+class TestDpInventory:
     """
     271 (Breast Raw mat) -> 199 (B.Boneless)
     199 -> 380 GPU
@@ -24,9 +24,9 @@ class _TestDpInventory:
 
 
     @pytest.mark.parametrize("product_id,store_id,qty,forecast,expected_qty,expected_sch", [
-        (199, 4, 100, 100, 263, 263),  # fetch express and scheduled
-        (199, 4, 100, 0, 263, 0),  # fetch express
-        (199, 4, 0, 100, 0, 263),  # fetch express
+        (199, 4, 100, 100, 333, 333),  # fetch express and scheduled
+        (199, 4, 100, 0, 333, 0),  # fetch express
+        (199, 4, 0, 100, 0, 333),  # fetch express
     ])
     def test_express(self, product_id, store_id, qty, forecast, expected_qty, expected_sch):
         """Assert express inve"""

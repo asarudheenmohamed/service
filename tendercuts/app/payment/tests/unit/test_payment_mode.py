@@ -13,15 +13,20 @@ def test_payment_card_add(juspay_dummy_card1):
     locker = JuspayPaymentMode()
     customer_id = "18963"
 
-    before_count = locker.juspay.Cards.list(customer_id="juspay_" + customer_id)
+    cards = locker.juspay.Cards.list(customer_id="juspay_" + customer_id)
+    if cards:
+        [locker.juspay.Cards.delete(card_token=card.token) for card in cards]
+
+    before_count = 0
+
     resp = locker.add_payment_mode(customer_id, juspay_dummy_card1)
 
     after_count = locker.juspay.Cards.list(customer_id="juspay_" + customer_id)
-    assert len(before_count) + 1 == len(after_count)
+    assert before_count + 1 == len(after_count)
 
     # extract token for delete
     juspay_dummy_card1.gateway_code_level_1 = resp.token
     resp = locker.remove_payment_mode(customer_id, juspay_dummy_card1)
 
     after_count = locker.juspay.Cards.list(customer_id="juspay_" + customer_id)
-    assert len(before_count) == len(after_count)
+    assert before_count == len(after_count)

@@ -62,16 +62,6 @@ INTERNAL_IPS = (
 )
 
 
-MOBILE_VERSION = {
-    "min_app_version": '1.9.2',
-    "current_app_version": '1.9.6'
-}
-
-DRIVER_APP_VERSION = {
-    "min_app_version": '2.0.0',
-    "current_app_version": '2.0.0'
-}
-
 CELERY_MAIL = {
     'sender_mail_id': "reports@tendercuts.in",
     'received_mail_id': ["tech@tendercuts.in"]

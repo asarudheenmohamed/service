@@ -44,7 +44,7 @@ def create_notify(auth_rest, product1, product2):
              },
             format='json')
 
-        assert response.status_code == 201
+        assert response.status_code == 201, response.json()
 
         assert str(response.data['store_id']) == store_id
 

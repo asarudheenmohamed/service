@@ -131,7 +131,7 @@ class TestDriverTripController:
             user_obj)
         driver_trip = trip.compute_driver_trip_distance(mock_trip)
 
-        assert mock_trip.km_travelled == 5554
+        assert mock_trip.km_travelled == 5552
 
     def test_fetch_order_events(self, django_user):
         """test fetch trip order events."""

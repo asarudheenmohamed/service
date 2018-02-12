@@ -24,7 +24,7 @@ class TestApiInventoryFetch(object):
              "website_id": 2},
             format='json')
 
-        assert len(response.json()) >= 4
+        assert len(response.json()) != 0
 
     def test_fetch_inventory_product(self, auth_rest):
         """Test case for fetching inventory with product filter.

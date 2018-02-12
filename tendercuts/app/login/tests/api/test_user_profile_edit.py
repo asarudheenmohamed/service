@@ -48,8 +48,7 @@ class TestUserProfileEdit:
             Check custermer username is equal to changing username
 
         """
-        data = {"email": "test@gmail.com", "password": "test123"}
+        data = {"email": "mail@varun.xyz", "password": "qwerty123"}
         response = rest.post("/user/login", data=data)
         assert response.status_code == 200
-        assert response.json()['email'] == "test@gmail.com"
-        assert response.json()['firstname'] == "Testuser"
+        assert response.json()['email'] == "mail@varun.xyz"

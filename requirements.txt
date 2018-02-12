@@ -1,19 +1,23 @@
 # virtualenv
 # virtualenvwrapper
 # sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+# brew install chromedriver
+
 uwsgi
-django
+django==1.10.6
 
 # Appcongi
 django_extensions
-djangorestframework
+djangorestframework==3.6.2
 django-cors-headers
 enum
 
+mock
 pytest
 pytest-django
 pytest-bdd
 pytest-xdist
+pytest-capturelog
 googlemaps
 
 # sudo apt-get install libmysqlclient-dev
@@ -45,6 +49,7 @@ flake8
 pep8
 pydocstyle
 pylint
+splinter
 
 #pynotebook
 jupyter
