@@ -21,6 +21,7 @@ services:
   #    - 9000:9000
     volumes:
       - ../:/services/
+      - ./results/:/jenkins
 
   db:
     image: mysql:5.7

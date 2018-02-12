@@ -23,4 +23,4 @@ echo "Env is up and running, doing all dj migrations";
 echo "Starting tests";
 # Log into odoo container and start the tests
 /usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=django") \
-    sh -c "cd /services/tendercuts && py.test -vvv . --junitxml=/jenkins/jenkins.xml"
+    sh -c "cd /services/tendercuts && py.test -vvv . --cache-clear --junitxml=/jenkins/jenkins.xml"
