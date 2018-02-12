@@ -8,6 +8,10 @@ echo "Installing packages";
 /usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=django") \
     sh -c "sh /root/entrypoint.sh"
 
+echo "Installing php package";
+/usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=php") \
+    sh -c "cd /var/www/html && php composer.phar install"
+
 
 # DB NEEDS TO BE SET UP run replace commands.
 # CLEAN UP CACHE in php.
