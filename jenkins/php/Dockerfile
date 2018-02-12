@@ -14,7 +14,7 @@ RUN apt-get -y install zip unzip
 RUN docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-install opcache
 
-ADD env/ /root/
+ADD env /root/
 ADD start_apache.sh /root/
 
 ENTRYPOINT  sh /root/start_apache.sh \
