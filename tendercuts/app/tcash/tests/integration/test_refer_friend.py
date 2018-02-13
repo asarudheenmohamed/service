@@ -48,8 +48,6 @@ def login(cache, rest):
 def refer_customer(cache, referral_user):
     """Add 50 to reffered customer."""
     authenticated_rest = cache["authenticated_rest"]
-    import pdb
-    pdb.set_trace()
     referral_response = authenticated_rest.post(
         "/tcash/referral",
         {'user_id': referral_user.entity_id})
