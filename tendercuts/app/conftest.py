@@ -2,7 +2,14 @@
 Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
+
+from app.core.lib.test import generate_customer
+from app.core.lib.test.utils import GenerateOrder
+from app.core.lib.user_controller import CustomerSearchController
+from app.core.models import SalesFlatOrder
+from app.core.models.customer import FlatCustomer
 from app.driver.constants import DRIVER_GROUP
 
 
@@ -15,7 +22,6 @@ def rest():
 @pytest.fixture(scope="session")
 def auth_rest(mock_user):
     """Auth'd Api client to create requests."""
-    from django.contrib.auth.models import User
     # A bloody hack to ensure that the user is created in DJ.
     mock_user.generate_token()
     user = User.objects.get(username=mock_user.dj_user_id)
@@ -54,8 +60,7 @@ def generate_mock_order(request, mock_user):
     Uses pytest caching
 
     """
-    from app.core.lib.test.utils import GenerateOrder
-    from app.core.models import SalesFlatOrder
+
     order_id = request.config.cache.get("mock/order", None)
     if order_id is None:
         order = GenerateOrder().generate_order(mock_user.entity_id)
@@ -73,15 +78,28 @@ def mock_user(request):
     Uses pytest caching
 
     """
-    from app.core.lib.test import generate_customer
-    from app.core.lib.user_controller import CustomerSearchController
-    from app.core.models.customer import FlatCustomer
 
     customer_id = request.config.cache.get("mock/customer", None)
     if customer_id is None:
         customer_data = generate_customer()
         customer_id = customer_data['entity_id']
         request.config.cache.set("mock/customer", customer_id)
+
+    customer = CustomerSearchController.load_by_id(customer_id)
+
+    return customer
+
+
+@pytest.fixture
+def referral_user(request):
+    """Generates a mock customer.
+
+    Uses pytest caching
+
+    """
+    customer_data = generate_customer()
+    customer_id = customer_data['entity_id']
+    request.config.cache.set("mock/customer", customer_id)
 
     customer = CustomerSearchController.load_by_id(customer_id)
 

@@ -159,7 +159,7 @@ def test_driver_position(
         Check the driver current location.
 
     """
-    user = User.objects.filter(
+    user = User.objects.get_or_create(
         username='u:{}'.format(
             mock_driver.entity_id)).last()
     driver_position_obj = DriverPosition.objects.filter(

@@ -441,8 +441,8 @@ class SalesFlatOrder(models.Model):
 
     # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
 
-    #driver_name = models.CharField(max_length=25, blank=True, null=True)
-    #driver_number = models.CharField(max_length=12, blank=True, null=True)
+    driver_name = models.CharField(max_length=25, blank=True, null=True)
+    driver_number = models.CharField(max_length=12, blank=True, null=True)
 
     class Meta:
         managed = False
