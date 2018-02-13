@@ -68,7 +68,7 @@ def send_sms(order_id):
 
     msg = {'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
            'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
-           'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"}
+           'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it- 7097299492 Disliked it- 7097299569"}
 
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, customer[0]))
