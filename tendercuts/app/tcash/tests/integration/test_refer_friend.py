@@ -45,14 +45,15 @@ def login(cache, rest):
 
 
 @given("is referred by an existing user")
-def refer_customer(cache, mock_user):
+def refer_customer(cache, referral_user):
     """Add 50 to reffered customer."""
     authenticated_rest = cache["authenticated_rest"]
-
+    import pdb
+    pdb.set_trace()
     referral_response = authenticated_rest.post(
         "/tcash/referral",
-        {'user_id': mock_user.entity_id})
-
+        {'user_id': referral_user.entity_id})
+    cache['referred_mobile'] = referral_user.mobilenumber
     assert referral_response.status_code == 201, "Unable to reach endpoint"
     resp = referral_response.json()
     assert resp['status'] == True, "Endpoint returned false"
@@ -69,7 +70,7 @@ def get_fifty(cache):
 
     resp = fetch_obj.json()
     assert resp['attribute'][0][
-        'value'] == 100, "Signed up user did not receive 50 points"
+        'value'] == 100, "Signed up user did not receive 100 points"
 
 
 @when("the new user places an order")
@@ -84,11 +85,11 @@ def place_order(cache, magento):
 
 
 @then("the referee get 100 in his account")
-def check_bonus(auth_rest, mock_user):
+def check_bonus(cache, auth_rest):
     """Check referee bonus point 50 added."""
     fetch_obj = auth_rest.get(
-        "/user/fetch/?phone={}".format(mock_user.mobilenumber))
+        "/user/fetch/?phone={}".format(cache['referred_mobile']))
 
     resp = fetch_obj.json()
     assert resp['attribute'][0][
-        'value'] == 100, "Referee did not receive 50 points"
+        'value'] == 100, "Referee did not receive 100 points"
