@@ -34,17 +34,17 @@ class StoreOrderController(object):
         order_event_objs = OrderEvents.objects.filter(
             driver__driver_user__in=driver_user,
             status='completed',
-            updated_time__gte=date.today()).prefetch_related('driver_order')
+            updated_time__gte=date.today()).prefetch_related('driver')
 
         logger.info(
             "Fetch driver's current date completed orders for that driver ids:{}".format(list(driver_user)))
         # the query set object convert to custom dict object
         driver_complete_orders = {}
         for driver_user, objects in itertools.groupby(
-                order_event_objs, lambda order_event_obj: order_event_obj.driver_order.driver_id):
+                order_event_objs, lambda order_event_obj: order_event_obj.driver.driver_user):
             complete_order_ids = []
             for obj in objects:
-                complete_order_ids.append(obj.driver_order.increment_id)
+                complete_order_ids.append(obj.driver.increment_id)
             driver_complete_orders[driver_user] = complete_order_ids
 
         return driver_complete_orders
