@@ -199,7 +199,7 @@ class TripController:
         return order_events
 
     def _get_way_points(self, trip_starting_time,
-                        order_event_complete_objects, driver_id):
+                        order_event_complete_objects, driver_user):
         """"""
         way_points = []
 
@@ -207,7 +207,7 @@ class TripController:
 
             # fetch driver position
             position_objects = DriverPosition.objects.filter(
-                driver_id=driver_id, recorded_time__range=(
+                driver_user=driver_user, recorded_time__range=(
                     trip_starting_time, event_complete_object.updated_time))
             # mid index of driver position
             mid_index = len(position_objects) / 2
@@ -305,10 +305,8 @@ class TripController:
         order_event_complete_objects = order_events.filter(
             status='completed').order_by('updated_time')
 
-        driver_id = trip.driver_order.all().first().driver_id
-
         way_points = self._get_way_points(
-            trip_starting_time, order_event_complete_objects, driver_id)
+            trip_starting_time, order_event_complete_objects, trip.driver_user)
 
         split_way = self._split(way_points, 22)
 
