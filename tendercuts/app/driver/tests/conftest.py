@@ -29,7 +29,7 @@ def mock_driver(request):
     return customer
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def auth_driver_rest(mock_driver):
     """Auth'd Api client to create requests."""
     from django.contrib.auth.models import User
