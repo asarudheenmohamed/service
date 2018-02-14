@@ -20,18 +20,19 @@ def test_customer_current_location_task(generate_mock_order):
         generate_mock_order.customer_id, 11.342, 80.542)
 
     customer_address_obj = address.CustomerAddressEntity.objects.filter(
-        parent__entity_id=generate_mock_order.customer_id).last()
+        parent__entity_id=generate_mock_order.customer_id)
 
-    eav_obj = EavAttribute.objects.filter(attribute_code='latitude').last()
+    eav_obj = EavAttribute.objects.filter(attribute_code='latitude')
+    customer_addressentity_obj = address.CustomerAddressEntityText.objects.filter(
+        attribute=eav_obj[0], entity=customer_address_obj[0]).values_list('value')
+
+    # latitude = customer_addressentity_obj[0].value
+    assert str(customer_addressentity_obj[0][0]) == '11.342'
+
+    eav_obj = EavAttribute.objects.filter(attribute_code='longitude')
 
     customer_addressentity_obj = address.CustomerAddressEntityText.objects.filter(
-        attribute=eav_obj, entity=customer_address_obj)
+        attribute=eav_obj[0], entity=customer_address_obj[0]).values_list('value')
 
-    assert customer_addressentity_obj[0].value == '11.342'
-
-    eav_obj = EavAttribute.objects.filter(attribute_code='longitude').last()
-
-    customer_addressentity_obj = address.CustomerAddressEntityText.objects.filter(
-        attribute=eav_obj, entity=customer_address_obj).last()
-
-    assert customer_addressentity_obj.value == '80.542'
+    # longitude = customer_addressentity_obj[0].value
+    assert str(customer_addressentity_obj[0][0]) == '80.542'
