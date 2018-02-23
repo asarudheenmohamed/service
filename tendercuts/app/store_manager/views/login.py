@@ -45,7 +45,7 @@ class StoreManagerLoginApi(APIView):
         if not user:
             raise AuthenticationFailed(detail="Invalid User")
 
-        if user.check_password(password):
+        if not user.check_password(password):
             raise AuthenticationFailed(detail="Invalid User")
 
         if not user.groups.filter(name="Store Manager").exists():
