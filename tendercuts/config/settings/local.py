@@ -14,7 +14,7 @@ DATABASES = {
         'NAME': 'services',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '3306',
 
     },
@@ -25,7 +25,7 @@ DATABASES = {
         'NAME': 'dbmaster',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'mage-db',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 
@@ -44,7 +44,7 @@ DATABASES = {
 CACHES = {
     'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/0",
+        "LOCATION": "redis://localhost:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

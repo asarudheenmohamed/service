@@ -5,6 +5,7 @@ node_modules/
 **/__pycache__/
 **/*.pyc
 **/.DS_Store
+.pytest_cache
 
 **/dump.rdb
 **/celerybeat-schedule
