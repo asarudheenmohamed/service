@@ -8,7 +8,7 @@ class TestUserProfileEdit:
     """Test user profile Edit."""
     @pytest.mark.parametrize("field_value,code", (
         ["Testuser", "firstname"],
-        [("testuser{}@gmail.com".format(random.randint(1, 101))), "email"],
+        [("testuser{}@gmail.com".format(random.randint(1, 1000000))), "email"],
         ["test123", "password_hash"],
         ["Testuser", "firstname"],
     ))

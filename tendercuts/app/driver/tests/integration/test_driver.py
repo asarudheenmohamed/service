@@ -161,9 +161,9 @@ def test_driver_position(
     """
     user = User.objects.get_or_create(
         username='u:{}'.format(
-            mock_driver.entity_id)).last()
+            mock_driver.entity_id))
     driver_position_obj = DriverPosition.objects.filter(
-        driver_user=user).last()
+        driver_user=user[0]).last()
 
     assert (driver_position_obj) is not None
     assert str(driver_position_obj.latitude) == latitude

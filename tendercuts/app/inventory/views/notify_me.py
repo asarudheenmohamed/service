@@ -8,7 +8,8 @@ from app.inventory.serializers import NotifyCustomerSerializer
 logger = logging.getLogger(__name__)
 
 
-class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class CustomerNotificationViewSet(
+        mixins.CreateModelMixin, viewsets.GenericViewSet):
     """Endpoint to update the customer's order.
 
     EndPoint:
@@ -29,7 +30,8 @@ class CustomerNotificationViewSet(mixins.CreateModelMixin, viewsets.GenericViewS
             Created NotifyCustomer object
 
         """
-        request.data.update({'customer_id': self.request.user.id})
+
+        request.data.update({'customer': self.request.user.id})
 
         logger.info(
             "To create the NotifyCustomer objects for the user: {}".format(
