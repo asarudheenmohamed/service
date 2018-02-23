@@ -7,9 +7,9 @@ def test_sm_login(rest):
     Verify if we got a user tokenc
     """
 
-    user = User(
+    user = User.objects.create_user(
         email="thoriapakkam@gmail.com",
-        username="thoraipakkam1",
+        username="thoraipakkam",
         password="qwerty123")
     user.save()
 
@@ -19,7 +19,7 @@ def test_sm_login(rest):
 
     response = rest.post(
         "/store_manager/login/",
-        {'email': "thoraipakkam1", 'password': "qwerty123"},
+        {'email': "thoraipakkam", 'password': "qwerty123"},
         format='json')
 
     assert response.data['token'] is not None
@@ -28,15 +28,15 @@ def test_sm_login(rest):
 def test_not_sm_login(rest):
     """verify login fails"""
 
-    user = User(
+    user = User.objects.create_user(
         email="thoriapakkam@gmail.com",
-        username="thoraipakkam1",
+        username="thoraipakkam",
         password="qwerty123")
     user.save()
 
     response = rest.post(
         "/store_manager/login/",
-        {'email': "thoraipakkam1", 'password': "qwerty123"},
+        {'email': "thoraipakkam", 'password': "qwerty123"},
         format='json')
 
     assert response.status_code == 403
