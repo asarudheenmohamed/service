@@ -1,0 +1,1 @@
+from .store_manager_auth import StoreManagerAuthentication
