@@ -7,8 +7,10 @@ from app.store_manager.lib.store_order_controller import StoreOrderController
 @pytest.mark.django_db
 class TestStoreOrderController:
     """Test cases for store order controller."""
-    @pytest.mark.parametrize('status', ['canceled','complete','closed'])
-    def test_store_order(self, mock_user, generate_mock_order, status):
+    @pytest.mark.parametrize('status, result',
+                            [('out_delivery', True),
+                            ('canceled', False)])
+    def test_store_order(self, mock_user, generate_mock_order, status, result):
         """Fetch all 'out_delivery' and 'complete' state orders.
         Asserts:
             1. check 'out_delivery' and 'complete' state orders are fetched.
@@ -21,4 +23,4 @@ class TestStoreOrderController:
 
         obj = sale_order.filter(increment_id=generate_mock_order.increment_id)
 
-        assert len(obj) == 0
+        assert obj.exists()  == result
