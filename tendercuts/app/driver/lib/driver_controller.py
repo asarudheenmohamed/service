@@ -2,19 +2,20 @@
 
 import logging
 
+from django.conf import settings
 from django.utils import timezone
-from app.core.lib.utils import get_mage_userid
 
 import app.core.lib.magento as mage
 from app.core.lib.communication import SMS
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
 
-from .trip_controller import TripController
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
+from .trip_controller import TripController
 
 logger = logging.getLogger(__name__)
 
@@ -82,13 +83,23 @@ class DriverController(object):
             obj DriverOrder
 
         """
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id=order, status='processing')
+        if not order_obj:
+            raise ValueError('Order object Does not exist')
 
-        order_obj = self.get_order_obj(order)
+        order_obj = order_obj[0]
         logger.debug(
             'Fetched the order object of given order id:{}'.format(order))
 
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
+
+        if str(store_id) == '8' or str(store_id) == '5':
+            lat = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
+                'latitude']
+            lon = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
+                'longitude']
 
         elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
             raise ValueError('This order is already assigned')
