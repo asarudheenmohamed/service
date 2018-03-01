@@ -22,11 +22,11 @@ class StoreOrderController(object):
             Returns all active order obj.
 
         """
-        sales_order_ids = SalesFlatOrder.objects.filter(
+        sales_order_obj = SalesFlatOrder.objects.filter(
             store__store_id=int(store_id)).exclude(status__in=['canceled','complete','closed'])
 
         logger.info(
             "fetched 'out_delivery' and 'complete' state order obj in store:{}".format(
                 store_id))
 
-        return sales_order_ids
+        return sales_order_obj

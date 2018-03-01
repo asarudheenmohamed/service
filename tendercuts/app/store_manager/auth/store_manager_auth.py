@@ -20,14 +20,6 @@ class StoreManagerAuthentication(rest_framework.authentication.TokenAuthenticati
                             self).authenticate_credentials(key)
 
         if not user.groups.filter(name="Store Manager").exists():
-            import pdb
-            pdb.set_trace()
             raise AuthenticationFailed(detail="Invalid User")
 
-        # mage_id = get_mage_userid(user)
-        # driver = CustomerSearchController.load_by_id(mage_id)
-
-        # if driver.customer.group_id != DRIVER_GROUP:
-        #     raise exceptions.AuthenticationFailed('Invalid token')
-        
         return user, token
