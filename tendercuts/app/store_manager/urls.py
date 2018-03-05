@@ -13,6 +13,11 @@ router.register(
     views.StoreOrderViewSet,
     base_name='StoreOrderViewSet')
 
+router.register(
+    r'driver_lat_lon',
+    views.DriverLocationViewSet,
+    base_name='DriverLocationViewSet')
+
 urlpatterns = [
 	url(r'', include(router.urls)),
     url(r'login', views.StoreManagerLoginApi.as_view()),
