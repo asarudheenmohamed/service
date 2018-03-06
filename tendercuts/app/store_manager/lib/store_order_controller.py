@@ -47,7 +47,7 @@ class StoreOrderController(object):
 
         """
         sales_order_obj = SalesFlatOrder.objects.filter(
-            store__store_id=int(store_id)).exclude(status__in=['canceled','complete','closed'])
+            store__store_id=int(store_id)).exclude(status__in=['canceled', 'complete', 'closed'])
 
         logger.info(
             "fetched 'out_delivery' and 'complete' state order obj in store:{}".format(
