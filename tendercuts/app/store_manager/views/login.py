@@ -41,9 +41,12 @@ class StoreManagerLoginApi(APIView):
         username = self.request.data['email']
         password = self.request.data['password']
 
-        user = User.objects.get(username=username)
-        if not user:
+        user_obj = User.objects.filter(username=username)
+
+        if not user_obj:
             raise AuthenticationFailed(detail="Invalid User")
+
+        user = user_obj[0]
 
         if not user.check_password(password):
             raise AuthenticationFailed(detail="Invalid User")
