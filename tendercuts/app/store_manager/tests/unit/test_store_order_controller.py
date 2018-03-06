@@ -2,6 +2,10 @@
 import pytest
 
 from app.store_manager.lib.store_order_controller import StoreOrderController
+from django.contrib.auth.models import User
+from app.core.models import SalesFlatOrder
+from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
+                               OrderEvents)
 
 
 @pytest.mark.django_db
@@ -24,3 +28,27 @@ class TestStoreOrderController:
         obj = sale_order.filter(increment_id=generate_mock_order.increment_id)
 
         assert obj.exists()  == result
+
+    @pytest.mark.django_db
+    def test_driver_location(self, generate_mock_order):
+        """Check driver's current location.
+        Asserts:
+            Check Driver's current latitude & longitude.
+        """
+        user_obj = User.objects.all()[0]
+
+        past_record = DriverPosition.objects.create(
+            driver_user=user_obj,
+            latitude=12.9229,
+            longitude=80.1275)
+        recent_record = DriverPosition.objects.create(
+            driver_user=user_obj,
+            latitude=12.9759,
+            longitude=80.221)
+
+        controller = StoreOrderController()
+        current_location = controller.get_driver_location(user_obj)[0]
+
+        assert recent_record.latitude == current_location.latitude
+        assert recent_record.longitude == current_location.longitude
+

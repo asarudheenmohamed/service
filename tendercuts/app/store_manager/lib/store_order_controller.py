@@ -61,19 +61,17 @@ class StoreOrderController(object):
         Params:
             driver_obj(object): driver_user_obj
         Returns:
-            Returns driver current location.
+            Returns driver current latitude and longitude.
         """
-        driver_position_objs = DriverPosition.objects.values(
-            'driver_user').annotate(
-            recorded_time=Max('recorded_time'), id=Max('id')).get(
-            driver_user=driver_obj)
+        driver_position_obj = DriverPosition.objects.filter(
+            driver_user=driver_obj).last()
 
-        driver_lat_and_lon_records = DriverPosition.objects.filter(
-            id=driver_position_objs['id'])
+        driver_lat_lon = DriverPosition.objects.filter(
+            id=driver_position_obj.id)
 
         logger.info(
             "Fetch driver's current positions for that driver ids:{}".format(
                 driver_obj))
 
-        return driver_lat_and_lon_records
+        return driver_lat_lon
 
