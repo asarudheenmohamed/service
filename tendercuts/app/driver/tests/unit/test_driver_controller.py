@@ -63,12 +63,9 @@ class TestDriverController:
         driver_position = DriverPosition.objects.filter(
             driver_user=django_user).last()
 
-        lat = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
-            'latitude']
-        lon = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
-            'longitude']
-        assert str(driver_position.latitude) == lat
-        assert str(driver_position.longitude) == lon
+        lat, lon = settings.STORE_LAT_LONG[int(store_id)]
+        assert driver_position.latitude == lat
+        assert driver_position.longitude == lon
 
     @pytest.mark.parametrize('status', ['out_delivery', 'complete'])
     def test_fetch_active_order(

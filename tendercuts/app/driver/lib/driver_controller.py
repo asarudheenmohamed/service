@@ -95,14 +95,13 @@ class DriverController(object):
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        if str(store_id) == '8' or str(store_id) == '5':
-            lat = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
-                'latitude']
-            lon = settings.STORE_LATITUDE_AND_LONGITUDE[str(store_id)][
-                'longitude']
-
         elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
             raise ValueError('This order is already assigned')
+
+        try:
+            lat, lon = settings.STORE_LAT_LONG[int(store_id)]
+        except KeyError:
+            pass
 
         driver_object = DriverOrder.objects.create(
             increment_id=order, driver_user=self.driver)
