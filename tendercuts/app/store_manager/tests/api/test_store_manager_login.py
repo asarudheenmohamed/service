@@ -3,42 +3,42 @@ import pytest
 
 @pytest.mark.django_db
 def test_sm_login(rest):
-    """verify login api.
-    Verify if we got a user tokenc
-    """
+    """verify login api. Verify if we got a user token."""
 
-    user = User(
+    user = User.objects.create_user(
         email="thoriapakkam@gmail.com",
-        username="thoraipakkam1",
+        username="thoraipakkam",
         password="qwerty123")
     user.save()
 
-    my_group = Group.objects.get(name='Store Manager')
+    my_group, created = Group.objects.get_or_create(name='Store Manager')
     my_group.user_set.add(user)
-
 
     response = rest.post(
         "/store_manager/login/",
-        {'email': "thoraipakkam1", 'password': "qwerty123"},
+        {'email': "thoraipakkam", 'password': "qwerty123"},
         format='json')
 
     assert response.data['token'] is not None
 
 @pytest.mark.django_db
 def test_not_sm_login(rest):
-    """verify login fails"""
+    """verify login fails."""
 
-    user = User(
+    user = User.objects.create_user(
         email="thoriapakkam@gmail.com",
-        username="thoraipakkam1",
+        username="thoraipakkam",
         password="qwerty123")
     user.save()
 
     response = rest.post(
         "/store_manager/login/",
-        {'email': "thoraipakkam1", 'password': "qwerty123"},
+        {'email': "thoraipakkam", 'password': "qwerty123"},
         format='json')
 
     assert response.status_code == 403
+
+
+
 
 
