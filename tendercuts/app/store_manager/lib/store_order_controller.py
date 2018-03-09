@@ -2,11 +2,10 @@
 import logging
 from django.contrib.auth.models import User
 
-
 from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.driver.models import DriverOrder, DriverPosition, OrderEvents
-from django.db.models import Max
+from app.core.lib.utils import get_django_username
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +18,8 @@ class StoreOrderController(object):
         """Constructor."""
         pass
 
-    def get_driver_id(self, phone_number):
+    @classmethod
+    def get_driver_obj(self, phone_number):
         """To get driver user object.
 
         Params:
@@ -28,10 +28,9 @@ class StoreOrderController(object):
             Returns driver user object.
 
         """
+        driver_username = get_django_username(phone_number)
 
-        driver_id = CustomerSearchController.load_by_phone_mail(phone_number).dj_user_id
-
-        driver_user_obj = User.objects.get(username=driver_id)
+        driver_user_obj = User.objects.get(username=driver_username)
 
         logger.info("fetched driver user object:{}".format(driver_user_obj))
 
@@ -62,16 +61,14 @@ class StoreOrderController(object):
             driver_obj(object): driver_user_obj
         Returns:
             Returns driver current latitude and longitude.
+
         """
         driver_position_obj = DriverPosition.objects.filter(
             driver_user=driver_obj).last()
-
-        driver_lat_lon = DriverPosition.objects.filter(
-            id=driver_position_obj.id)
 
         logger.info(
             "Fetch driver's current positions for that driver ids:{}".format(
                 driver_obj))
 
-        return driver_lat_lon
+        return driver_position_obj
 
