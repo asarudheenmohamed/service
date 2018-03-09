@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.driver.models import DriverOrder, DriverPosition, OrderEvents
-from app.core.lib.utils import get_django_username
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +18,7 @@ class StoreOrderController(object):
         pass
 
     @classmethod
-    def get_driver_obj(self, phone_number):
+    def get_driver_obj(cls, phone_number):
         """To get driver user object.
 
         Params:
@@ -28,7 +27,7 @@ class StoreOrderController(object):
             Returns driver user object.
 
         """
-        driver_username = get_django_username(phone_number)
+        driver_username = CustomerSearchController.get_django_username(phone_number)
 
         driver_user_obj = User.objects.get(username=driver_username)
 
@@ -46,7 +45,8 @@ class StoreOrderController(object):
 
         """
         sales_order_obj = SalesFlatOrder.objects.filter(
-            store__store_id=int(store_id)).exclude(status__in=['canceled', 'complete', 'closed'])
+            store__store_id=int(store_id)).exclude(
+            status__in=['canceled', 'complete', 'closed'])
 
         logger.info(
             "fetched 'out_delivery' and 'complete' state order obj in store:{}".format(
