@@ -14,7 +14,7 @@ DATABASES = {
         'NAME': 'services',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '3306',
 
     },
@@ -25,7 +25,7 @@ DATABASES = {
         'NAME': 'dbmaster',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'mage-db',
         'PORT': '3306',
     }
 
@@ -37,21 +37,22 @@ DATABASES = {
     #         'PASSWORD': 'oochahwielai9mahDah3',
     #         'HOST': '127.0.0.1',
     #         'PORT': '3307',
-    #  
+    #
 
 }
 
 CACHES = {
     'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+    'rest_framework.renderers.JSONRenderer',)
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware", )
 
