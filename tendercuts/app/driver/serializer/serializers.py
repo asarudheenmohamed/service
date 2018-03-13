@@ -43,6 +43,9 @@ class DrivertripSerializer(serializers.ModelSerializer):
 
 
 class DriverPositionSerializer(serializers.ModelSerializer):
+    """Serializer for DriverPosition."""
     class Meta:
+        """
+        """
         model = DriverPosition
         fields = ('latitude', 'longitude', 'driver_user', 'recorded_time')
