@@ -252,14 +252,10 @@ GOOGLE_MAP_DISTANCE_API = {
 }
 
 # porur and mmda latitude and longitude
-STORE_LATITUDE_AND_LONGITUDE = {
-    '8': {"latitude": "13.082976",
-          "longitude": "80.171193"
-          },
+STORE_LAT_LONG = {
+    8: (13.082976, 80.171193),
 
-    '5': {"latitude": "13.041706",
-          "longitude": "80.176288"
-          },
+    5: (13.041706, 80.176288)
 }
 
 
