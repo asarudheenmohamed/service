@@ -1,6 +1,6 @@
 """Authentication for store manager, only store manager will be auth'd."""
-
 import rest_framework.authentication
+
 
 class StoreManagerAuthentication(rest_framework.authentication.TokenAuthentication):
     """Storemanagerauthication with group check."""

@@ -1,11 +1,11 @@
 """Returns assigned driver order obj and driver details based on store id."""
 import logging
+
 from django.contrib.auth.models import User
 
-from app.core.models import SalesFlatOrder
 from app.core.lib.user_controller import CustomerSearchController
-from app.driver.models import DriverOrder, DriverPosition, OrderEvents
-
+from app.core.models import SalesFlatOrder
+from app.driver.models import DriverPosition
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +23,13 @@ class StoreOrderController(object):
 
         Params:
             phone_number(int): driver phone_number
+
         Returns:
             Returns driver user object.
 
         """
-        driver_username = CustomerSearchController.get_django_username(phone_number)
+        driver_username = CustomerSearchController.get_django_username(
+            phone_number)
 
         driver_user_obj = User.objects.get(username=driver_username)
 
@@ -40,6 +42,7 @@ class StoreOrderController(object):
 
         Params:
             store_id(int): store id
+
         Returns:
             Returns all active order obj.
 
@@ -49,16 +52,17 @@ class StoreOrderController(object):
             status__in=['canceled', 'complete', 'closed'])
 
         logger.info(
-            "fetched 'out_delivery' and 'complete' state order obj in store:{}".format(
+            "fetched active state state order obj in store:{}".format(
                 store_id))
 
         return sales_order_obj
 
     def get_driver_location(self, driver_obj):
         """Fetch driver current location.
-        
+
         Params:
             driver_obj(object): driver_user_obj
+
         Returns:
             Returns driver current latitude and longitude.
 
@@ -71,4 +75,3 @@ class StoreOrderController(object):
                 driver_obj))
 
         return driver_position_obj
-
