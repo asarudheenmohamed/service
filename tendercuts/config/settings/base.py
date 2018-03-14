@@ -278,8 +278,8 @@ APP_VERSIONS = {
     },
 
     "DRIVER_APP_VERSION": {
-        "min_app_version": '2.0.0',
-        "current_app_version": '2.0.0'
+        "min_app_version": '2.1.0',
+        "current_app_version": '2.1.0'
     }
 }
 
