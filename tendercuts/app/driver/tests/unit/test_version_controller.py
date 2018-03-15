@@ -10,9 +10,9 @@ class TestVersionControl:
     """Test cases for customer app control version."""
 
     @pytest.mark.parametrize("mob_ver, status",
-                             [('1.9.9', {"upgraded": False,
+                             [('2.0.0', {"upgraded": False,
                                          "mandatory_upgrade": True}),
-                              ('2.0.0', {"upgraded": True,
+                              ('2.1.0', {"upgraded": True,
                                          "mandatory_upgrade": False})])
     def test_version_controller(self, mob_ver, status):
         """Test Customer mobile app version.
