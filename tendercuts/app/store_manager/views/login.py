@@ -1,5 +1,4 @@
 """Endpoint for store manager login."""
-
 import logging
 import traceback
 
@@ -14,10 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class StoreManagerLoginApi(APIView):
-    """
-    Enpoint that logs in user.
+    """Enpoint that logs in user."""
 
-    """
     authentication_classes = ()
     permission_classes = ()
 
@@ -37,15 +34,19 @@ class StoreManagerLoginApi(APIView):
 
         returns:
             A User object that is serialized
+
         """
         username = self.request.data['email']
         password = self.request.data['password']
 
-        user = User.objects.get(username=username)
-        if not user:
+        user_obj = User.objects.filter(username=username)
+
+        if not user_obj:
             raise AuthenticationFailed(detail="Invalid User")
 
-        if user.check_password(password):
+        user = user_obj[0]
+
+        if not user.check_password(password):
             raise AuthenticationFailed(detail="Invalid User")
 
         if not user.groups.filter(name="Store Manager").exists():
@@ -56,7 +57,8 @@ class StoreManagerLoginApi(APIView):
 
         # Todo: Optimize and use flat
         return Response({
-            'username': user.username,
+            'firstname': user.first_name,
+            'lastname': user.last_name,
             'email': user.email,
             'token': token.key
         })

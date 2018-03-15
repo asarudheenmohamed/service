@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.driver.models.driver_order import DriverStat, DriverTrip, DriverOrder
+from app.driver.models.driver_order import DriverStat, DriverTrip, DriverOrder, DriverPosition
 from app.core.serializers.sales_order import SalesOrderSerializer
 
 
@@ -40,3 +40,12 @@ class DrivertripSerializer(serializers.ModelSerializer):
             'trip_created_time',
             'trip_ending_time',
             'trip_completed')
+
+
+class DriverPositionSerializer(serializers.ModelSerializer):
+    """Serializer for DriverPosition."""
+    class Meta:
+        """
+        """
+        model = DriverPosition
+        fields = ('latitude', 'longitude', 'driver_user', 'recorded_time')
