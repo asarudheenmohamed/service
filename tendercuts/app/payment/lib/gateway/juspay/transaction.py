@@ -20,6 +20,21 @@ class JuspayTransaction(JuspayMixin):
         self.url = settings.PAYMENT['JUSPAY']['url']
         self.save_to_locker = save_to_locker
 
+    def process_wallet(self):
+        """
+        TRigger the NB call and process the order id inside the
+        PaymentMode
+        """
+        transaction = self.juspay.Payments.create_wallet_payment(
+            order_id=self.payment_mode.order_id,
+            merchant_id=self.merchant_id,
+            payment_method_type=self.payment_mode.gateway_code, # wallet
+            payment_method=self.payment_mode.gateway_code_level_1,  # PAYTM
+            redirect_after_payment=True,
+            format='json')
+
+        return transaction
+
     def process_nb(self):
         """
         TRigger the NB call and process the order id inside the
@@ -133,6 +148,9 @@ class JuspayTransaction(JuspayMixin):
 
         if self.payment_mode.is_juspay_nb():
             transaction = self.process_nb()
+
+        if self.payment_mode.is_juspay_wallet():
+            transaction = self.process_wallet()
 
         # if its a new card first tokenize it and make it old
         if self.payment_mode.is_juspay_card():

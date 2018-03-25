@@ -56,6 +56,21 @@ RETURN FORMAT_NUM(
         WHEN store_type = 2 THEN forecast
       END);
 
+DROP VIEW `graminventory_latest`;
+CREATE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `graminventory_latest`
+AS SELECT
+    child.id,
+    child.product_id,
+    CONVERT_TO_UNITS(child.total_qty, child.gpu) as qty,
+    CONVERT_TO_UNITS(child.total_scheduledqty, child.gpu) as scheduledqty,
+    child.store_id,
+    child.total_qty,
+    child.total_expiring,
+    child.total_forecast,
+    child.gpu
+FROM graminventory_latest_raw as child
+LEFT JOIN graminventory_latest_raw as parent on child.parent = parent.product_id and child.store_id = parent.store_id;
+
 DROP VIEW `graminventory_latest_raw`;
 CREATE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `graminventory_latest_raw`
 AS SELECT
@@ -85,20 +100,6 @@ AS SELECT
 FROM (((((`catalog_product_entity` `catalog` join `storeattributes` `store`) left join `graminventory` `inventory` on(((`inventory`.`product_id` = `catalog`.`entity_id`) and (`inventory`.`store_id` = `store`.`store_id`) and (`inventory`.`date` = curdate())))) left join `catalog_product_entity_varchar` `gpu` on(((`gpu`.`attribute_id` = 229) and (`inventory`.`product_id` = `gpu`.`entity_id`)))) left join `catalog_product_entity_varchar` `parent` on(((`parent`.`attribute_id` = 230) and (`catalog`.`entity_id` = `parent`.`entity_id`)))) left join `catalog_product_entity` `parententity` on((`parententity`.`sku` = `parent`.`value`)));
 
 
-DROP VIEW `graminventory_latest`;
-CREATE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `graminventory_latest`
-AS SELECT
-    child.id,
-    child.product_id,
-    CONVERT_TO_UNITS(child.total_qty, child.gpu) as qty,
-    CONVERT_TO_UNITS(child.total_scheduledqty, child.gpu) as scheduledqty,
-    child.store_id,
-    child.total_qty,
-    child.total_expiring,
-    child.total_forecast,
-    child.gpu
-FROM graminventory_latest_raw as child
-LEFT JOIN graminventory_latest_raw as parent on child.parent = parent.product_id and child.store_id = parent.store_id;
 
 ```
 
