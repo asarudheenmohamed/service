@@ -6,6 +6,7 @@ from __future__ import absolute_import, unicode_literals
 import base64
 import hmac
 import urllib
+import hashlib
 
 import pytest
 
@@ -24,6 +25,7 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
     """JusPay integration."""
 
     NETBANKING_CODE = "NB"
+    WALLET_CODE = "WALLET"
     SUCCESS = "CHARGED"
 
     def __init__(self, log=None):
@@ -97,7 +99,7 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
 
         return computed_hash == hash_code
 
-    def fetch_payment_modes(self, user_id=None):
+    def fetch_payment_modes(self, user_id=None, wallets=False):
         """Get all possible payment modes including user's saved card details.
 
         params:
@@ -122,7 +124,12 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             cards = self.juspay.Cards.list(
                 customer_id=JuspayCustomer.get_user_id(user_id))
 
-        return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards]
+        wallet_list = []
+        if wallets:
+            wallet_list = [mode for mode in modes
+                   if mode.payment_method_type == self.WALLET_CODE]
+
+        return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards + wallet_list]
 
     def juspay_order_create(self, order, customer):
         """First create an order in Juspay.

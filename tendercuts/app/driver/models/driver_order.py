@@ -25,6 +25,7 @@ class DriverOrder(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 
+
 class DriverTrip(models.Model):
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, blank=True, null=True)
