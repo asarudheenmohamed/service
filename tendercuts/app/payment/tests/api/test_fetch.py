@@ -39,7 +39,5 @@ class TestJusPayApiTransactions:
 
         """
         response = auth_rest.get("/payment/modes/", {"wallets": 1})
-        import pdb
-        pdb.set_trace()
         assert response.status_code == 200
 
