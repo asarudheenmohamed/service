@@ -20,13 +20,13 @@ from app.core.lib.test.utils import GenerateOrder
 def test_new_card_payment_success(cache):
     pass
 
-@pytest.mark.django_db
-@scenario(
-    'card.feature',
-    "User starts a transaction via paytm"
-)
-def test_new_paytm_payment_success(cache):
-    pass
+# @pytest.mark.django_db
+# @scenario(
+#     'card.feature',
+#     "User starts a transaction via paytm"
+# )
+# def test_new_paytm_payment_success(cache):
+#     pass
 
 
 # @pytest.mark.django_db
