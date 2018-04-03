@@ -75,7 +75,6 @@ services:
     image: rabbitmq
     container_name: rabbitmq
 
-
 volumes:
   mysql-db:
   mage-db:
