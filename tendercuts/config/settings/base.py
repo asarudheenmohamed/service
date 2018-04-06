@@ -251,6 +251,13 @@ GOOGLE_MAP_DISTANCE_API = {
     "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
 }
 
+# porur and mmda latitude and longitude
+STORE_LAT_LONG = {
+    8: (13.082976, 80.171193),
+
+    5: (13.041706, 80.176288)
+}
+
 
 # value first new ventor
 VALUE_FIRST_SMS_GATEWAY = {
@@ -271,8 +278,8 @@ APP_VERSIONS = {
     },
 
     "DRIVER_APP_VERSION": {
-        "min_app_version": '2.0.0',
-        "current_app_version": '2.0.0'
+        "min_app_version": '2.1.0',
+        "current_app_version": '2.1.0'
     }
 }
 

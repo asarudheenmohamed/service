@@ -10,6 +10,8 @@ from app.core.models import SalesFlatOrder
 from app.driver.lib.trip_controller import TripController
 from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
                                OrderEvents)
+from datetime import datetime
+
 
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -143,6 +145,26 @@ class TestDriverTripController:
 
         driver_order_events = trip.fetch_order_events(mock_trip)
         assert order_events in driver_order_events
+
+    def test__get_way_points(self, django_user):
+        """"""
+        starting_time = datetime.now()
+        user_obj = User.objects.get_or_create(
+            username=django_user.username)[0]
+        trip = TripController(driver=user_obj)
+        driver_order = DriverOrder.objects.create(
+            driver_user=user_obj,
+            increment_id=1111111)
+        driver_position = DriverPosition.objects.create(
+            driver_user=user_obj, latitude=11.24525, longitude=80.22222)
+        order_events = OrderEvents.objects.create(
+            driver=driver_order,
+            driver_position=driver_position)
+
+        driver_order_events = trip._get_way_points(
+            starting_time, [order_events], django_user)
+
+        assert driver_order_events[0] == '11.24525,80.22222'
 
     def test__complete_trip(self, django_user):
         """Test completed trip."""

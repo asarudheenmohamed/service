@@ -3,6 +3,10 @@
 import pytest
 from app.driver.models import DriverOrder
 
+from app.driver.models import DriverOrder, DriverPosition, OrderEvents
+from django.contrib.auth.models import User
+
+
 @pytest.fixture
 def driver_order(generate_mock_order, django_user):
     """Check and create"""
@@ -17,10 +21,11 @@ def driver_order(generate_mock_order, django_user):
 
     return driver_object
 
+
 @pytest.mark.django_db
 class TestOrderFetch:
 
-    @pytest.mark.parametrize('status', ['complete', 'out_delivery'])
+    @pytest.mark.parametrize('status', ['out_delivery', 'complete'])
     def test_driver_orders(
             self,
             auth_driver_rest,
@@ -44,10 +49,19 @@ class TestOrderFetch:
         generate_mock_order.status = status
         generate_mock_order.save()
 
+        user = User.objects.get_or_create(
+            username='u:{}'.format(
+                generate_mock_order.customer_id))
+
+        # assign order
+        DriverOrder.objects.create(
+            driver_user=user[0],
+            increment_id=generate_mock_order.increment_id)
+
         response = auth_driver_rest.get(
             "/driver/orders/?status={}".format(status),
             format='json')
 
         assert (response) is not None
         assert response.status_code == 200
-        assert len(response.json()['results']) == 1
+        assert response.json()['results'][0]['status'] == status

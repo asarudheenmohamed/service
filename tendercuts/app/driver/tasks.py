@@ -3,17 +3,10 @@
 import datetime
 import logging
 
-from celery.utils.log import get_task_logger
-
 from app.core.lib.celery import TenderCutsTask
 from app.core.lib.communication import SMS
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
-from app.core.models.customer import address
-from app.core.models.entity import EavAttribute
-from app.driver.lib.customer_location import CustomerLocationController
-from app.driver.lib.driver_stat_controller import DriverStatController
-from app.driver.lib.end_of_day_driver_status import DriverStatusController
 from app.driver.models import DriverLoginLogout
 from config.celery import app
 
@@ -23,6 +16,7 @@ logger = logging.getLogger(__name__)
 @app.task(base=TenderCutsTask, ignore_result=True)
 def driver_stat(order_id):
     """Celery task to add the driver completed order."""
+    from app.driver.lib.driver_stat_controller import DriverStatController
 
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id).last()
     if not order_obj:
@@ -36,6 +30,7 @@ def driver_stat(order_id):
 @app.task(base=TenderCutsTask, ignore_result=True)
 def generate_end_of_day_driver_stat(order_id):
     """Celery task to generate end of day driver status."""
+    from app.driver.lib.end_of_day_driver_status import DriverStatusController
     controller = DriverStatusController()
     controller.generate_driver_completed_order_status()
 
@@ -51,6 +46,7 @@ def customer_current_location(customer_id, lat, lon):
 
     """
 
+    from app.driver.lib.customer_location import CustomerLocationController
     customer_location_controller = CustomerLocationController()
     customer_loc_obj = customer_location_controller.update_customer_location(
         customer_id, lat, lon)
@@ -66,9 +62,10 @@ def send_sms(order_id):
     customer = CustomerSearchController.load_basic_info(
         order_obj.customer_id)
 
-    msg = {'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
-           'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
-           'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"}
+    msg = {
+        'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
+        'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
+        'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"}
 
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, customer[0]))

@@ -31,3 +31,13 @@ class TestJusPayApiTransactions:
         response = auth_rest.get("/payment/modes/")
         assert response.status_code == 200
 
+    def test_verify_api_modes_wallet_fetch(self, auth_rest):
+        """Fetch API modes.
+
+        Asserts:
+            1. Get request fetches NB and card details from JP
+
+        """
+        response = auth_rest.get("/payment/modes/", {"wallets": 1})
+        assert response.status_code == 200
+
