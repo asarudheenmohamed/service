@@ -144,7 +144,8 @@ class CustomerSearchController(object):
                 "ints", "ints__attribute",
                 "addresses", "addresses__varchars",
                 "addresses__varchars__attribute",
-                "addresses__texts", "addresses__texts__attribute")
+                "addresses__texts", "addresses__texts__attribute",
+                "addresses__ints", "addresses__ints__attribute")
 
         if not customers:
             raise CustomerNotFound
