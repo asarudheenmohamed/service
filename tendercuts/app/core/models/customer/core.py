@@ -23,7 +23,7 @@ class FlatAddress(object):
         for address in self.address:
             address_dict = {'address_id': address.entity_id}
             # Gather all varchars and texts
-            eavs = itertools.chain(address.varchars.all(), address.texts.all())
+            eavs = itertools.chain(address.varchars.all(), address.texts.all(), address.ints.all())
             grouper = itertools.groupby(list(eavs), lambda x: x.entity_id)
 
             for entity_id, group in grouper:
