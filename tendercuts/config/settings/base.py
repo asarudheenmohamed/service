@@ -264,8 +264,27 @@ VALUE_FIRST_SMS_GATEWAY = {
     "ENDPOINT": "http://203.212.70.200/smpp/sendsms",
     "USERNAME": "gfmhttp",
     "PASSWOED": "9823opas",
-    "FROM": "TNDCTS"
+    "FROM": "TNDCTS",
+    "GUID": "b637f10f-5acb-4f2e-8408-d6cfbf51ceb9"
 }
+
+
+ONLINE_ORDER_STATUS_MESSAGE = {
+    'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
+    'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
+    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"
+
+}
+
+
+RETAIL_ORDER_STATUS_MESSAGE = {
+    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+}
+
+RETAIL_ORDER_STATUS_SHEDULED_MESSAGE = {
+    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+}
+
 
 # caching version
 CACHE_DEFAULT_VERSION = 2
