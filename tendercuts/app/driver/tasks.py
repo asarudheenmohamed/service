@@ -72,7 +72,7 @@ def send_sms(order_id):
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, customer[0]))
 
-    if order_obj.medium:
+    if order_obj.medium == 4:
 
         message = settings.RETAIL_ORDER_STATUS_MESSAGE[
             order_obj.status].format(customer[4])
