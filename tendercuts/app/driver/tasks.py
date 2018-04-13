@@ -1,6 +1,6 @@
 """Sending order's status sms to the customer related celry tasks."""
 
-import datetime
+from datetime import datetime, timedelta
 import logging
 
 from app.core.lib.celery import TenderCutsTask
@@ -9,6 +9,8 @@ from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.driver.models import DriverLoginLogout
 from config.celery import app
+from django.conf import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -55,22 +57,46 @@ def customer_current_location(customer_id, lat, lon):
 @app.task(base=TenderCutsTask, ignore_result=True)
 def send_sms(order_id):
     """Celery task to send the order's status to the customer."""
-    order_obj = SalesFlatOrder.objects.filter(increment_id=order_id).last()
+
+    order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
+
     if not order_obj:
+
         raise ValueError('Order object Does not exist')
+
+    order_obj = order_obj.last()
 
     customer = CustomerSearchController.load_basic_info(
         order_obj.customer_id)
 
-    msg = {
-        'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
-        'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
-        'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"}
-
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, customer[0]))
 
-    SMS().send_sms(customer[2], msg[order_obj.status].format(order_id))
+    if order_obj.medium:
+
+        message = settings.RETAIL_ORDER_STATUS_MESSAGE[
+            order_obj.status].format(customer[4])
+
+        scheduled_time = datetime.now() + timedelta(hours=4)
+        scheduled_time = scheduled_time.strftime("%Y-%m-%d %H:%M:%S")
+
+        sheduled_message = settings.RETAIL_ORDER_STATUS_SHEDULED_MESSAGE[
+            'complete']
+
+        # sheduled the order like and dislike message
+        SMS().send_scheduled_sms(scheduled_time, customer[2],
+                                 sheduled_message)
+
+        logger.info(
+            "Sheduled the product like and dislike message for this customer:{}".format(
+                customer[4]))
+
+    else:
+        message = settings.ONLINE_ORDER_STATUS_MESSAGE[
+            'processing'].format(
+            order_obj.increment_id)
+
+    SMS().send_sms(customer[2], message)
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
@@ -84,5 +110,5 @@ def set_checkout():
 
     if objs:
         objs.select_related('driver').update(
-            check_out=datetime.datetime.now().time().replace(
+            check_out=datetime.now().time().replace(
                 hour=23, minute=59, second=0, microsecond=0))

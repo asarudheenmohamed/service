@@ -155,3 +155,18 @@ class SMS():
             "ENDPOINT"], params=data)
 
         return response
+
+    def send_scheduled_sms(self, scheduletime, phnumber, message):
+        data = {
+            "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWOED"],
+            "to": str(phnumber),
+            "scheduletime": scheduletime,
+            "action": "UPDATE",
+            "guid": settings.VALUE_FIRST_SMS_GATEWAY["GUID"],
+            "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
+            "text": message
+        }
+
+        response = requests.get(settings.VALUE_FIRST_SMS_GATEWAY[
+            "ENDPOINT"], params=data)
