@@ -145,7 +145,7 @@ class SMS():
         """
         data = {
             "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
-            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWOED"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
             "to": str(phnumber),
             "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
             "text": message
@@ -159,7 +159,7 @@ class SMS():
     def send_scheduled_sms(self, scheduletime, phnumber, message):
         data = {
             "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
-            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWOED"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
             "to": str(phnumber),
             "scheduletime": scheduletime,
             "action": "UPDATE",
