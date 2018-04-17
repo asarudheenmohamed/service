@@ -1,4 +1,4 @@
-"""Sending order's status sms to the customer related celry tasks."""
+"""Sending order's status sms to the customer related celery tasks."""
 
 from datetime import datetime, timedelta
 import logging
@@ -43,7 +43,7 @@ def customer_current_location(customer_id, lat, lon):
 
     Params:
      customer_id(int):user entity_id
-     lat(int):custoner location latitude
+     lat(int):customer location latitude
      lon(int):customer location longitude
 
     """
@@ -72,7 +72,7 @@ def send_sms(order_id):
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, customer[0]))
 
-    if order_obj.medium == 4:
+    if order_obj.medium == settings.ORDER_MIDIUM['POS']:
 
         message = settings.RETAIL_ORDER_STATUS_MESSAGE[
             order_obj.status].format(customer[4])
@@ -80,15 +80,15 @@ def send_sms(order_id):
         scheduled_time = datetime.now() + timedelta(hours=4)
         scheduled_time = scheduled_time.strftime("%Y-%m-%d %H:%M:%S")
 
-        sheduled_message = settings.RETAIL_ORDER_STATUS_SHEDULED_MESSAGE[
+        scheduled_message = settings.RETAIL_ORDER_STATUS_SCHEDULED_MESSAGE[
             'complete']
 
-        # sheduled the order like and dislike message
+        # scheduled the order like and dislike message
         SMS().send_scheduled_sms(scheduled_time, customer[2],
-                                 sheduled_message)
+                                 scheduled_message)
 
         logger.info(
-            "Sheduled the product like and dislike message for this customer:{}".format(
+            "Scheduled the product like and dislike message for this customer:{}".format(
                 customer[4]))
 
     else:
