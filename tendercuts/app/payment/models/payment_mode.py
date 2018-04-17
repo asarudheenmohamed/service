@@ -13,8 +13,8 @@ class PaymentMode(models.Model):
         offers : Offers string if any
         method (str): Main payment mode name (juspay, simpl), should corerspond
             to magento
-        gateway_code (str): Gateway specific name, such as "NB", CARDS etc
-        gateway_code_level_1 (str): More specific code of the GW vendor [TOKEN, NB CODE, CC Token] etc.
+        gateway_code (str): Gateway specific name, such as "NB", CARDS, WALLET
+        gateway_code_level_1 (str): More specific code of the GW vendor [TOKEN, NB CODE, CC Token, Wallet CODE] etc.
         priority(int): what should be the priority of these method
         order_id(str): Id of the order from magento
         pin (str): Can be a password/pin/cvv
@@ -121,3 +121,12 @@ class PaymentMode(models.Model):
             boolean True if nb otherwise false
         """
         return self.method == "juspay" and self.gateway_code == "NB"
+
+    def is_juspay_wallet(self):
+        """
+        check if the payment method is juspay NB
+
+        return:
+            boolean True if nb otherwise false
+        """
+        return self.method == "juspay" and self.gateway_code == "WALLET"

@@ -6,3 +6,6 @@ RUN apt-get update \
     && apt-get -y install python python-pip libmysqlclient-dev
 
 ADD entrypoint.sh /root/
+
+ADD requirements.txt /root/
+RUN pip install -r /root/requirements.txt;

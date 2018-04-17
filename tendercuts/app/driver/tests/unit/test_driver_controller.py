@@ -4,16 +4,17 @@ import time
 
 import mock
 import pytest
-
+from django.conf import settings
 from django.contrib.auth.models import User
+
 import app.core.lib.magento as mage
+from app.core.lib import cache
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.driver.lib.driver_controller import DriverController
-import mock
-
 from app.driver.lib.trip_controller import TripController
 from app.driver.models import DriverOrder
+from app.driver.models.driver_order import DriverPosition
 
 
 @pytest.mark.django_db
@@ -28,6 +29,8 @@ class TestDriverController:
             1. If the driver is assigned
 
         """
+        generate_mock_order.status = 'processing'
+        generate_mock_order.save()
         controller = DriverController(django_user)
         driver_order = controller.assign_order(
             generate_mock_order.increment_id,
@@ -36,6 +39,33 @@ class TestDriverController:
             80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
+
+    @pytest.mark.parametrize('store_id', [5, 8])
+    def test_driver_order_assign_mismatch_store(
+            self, store_id, mock_driver, django_user, generate_mock_order):
+        """Assign order for porur and arumbakkam store.
+
+        Asserts:
+            1. If the driver is assigned
+
+        """
+        generate_mock_order.status = 'processing'
+        generate_mock_order.store_id = store_id
+        generate_mock_order.save()
+        controller = DriverController(django_user)
+        with mock.patch.object(cache, 'get_key',
+                               mock.Mock(return_value=None)):
+            driver_order = controller.assign_order(
+                generate_mock_order.increment_id,
+                generate_mock_order.store_id,
+                12.965365,
+                80.246106)
+        driver_position = DriverPosition.objects.filter(
+            driver_user=django_user).last()
+
+        lat, lon = settings.STORE_LAT_LONG[int(store_id)]
+        assert driver_position.latitude == lat
+        assert driver_position.longitude == lon
 
     @pytest.mark.parametrize('status', ['out_delivery', 'complete'])
     def test_fetch_active_order(

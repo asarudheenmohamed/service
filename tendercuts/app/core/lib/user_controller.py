@@ -4,13 +4,14 @@ import random
 import string
 import uuid
 import logging
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.conf import settings
 from app.core.lib import cache
 from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
                                       FlatCustomer)
+
 logger = logging.getLogger(__name__)
 
 
@@ -73,12 +74,16 @@ class CustomerSearchController(object):
             A tuple of (userid, email, phone, name)
 
         """
-        query_set = CustomerEntityVarchar.objects                 \
-            .filter(attribute_id__in=[149, 5], entity_id=user_id) \
-            .order_by('-attribute_id')                             \
-            .values_list('entity', 'entity__email', 'value')
+        varchar_objects = CustomerEntityVarchar.objects.filter(
+            attribute_id__in=[
+                149, 5], entity_id=user_id).prefetch_related('entity__reward_point')
+
+        query_set = varchar_objects.order_by(
+            '-attribute_id').values_list('entity', 'entity__email', 'value')
+
         if not query_set:
-            raise CustomerNotFound("No data found for customer: {}".format(user_id))
+            raise CustomerNotFound(
+                "No data found for customer: {}".format(user_id))
 
         flattened_data = []
         flattened_data.extend(query_set[0])
@@ -86,6 +91,10 @@ class CustomerSearchController(object):
         # merge the name attribute also
         # first row second col
         flattened_data.append(query_set[1][2])
+
+        reward_points = varchar_objects.last().entity.reward_point.aggregate(Sum('amount'))
+
+        flattened_data.append(reward_points['amount__sum'])
 
         return flattened_data
 
@@ -144,14 +153,33 @@ class CustomerSearchController(object):
                 "ints", "ints__attribute",
                 "addresses", "addresses__varchars",
                 "addresses__varchars__attribute",
-                "addresses__texts", "addresses__texts__attribute")
-
+                "addresses__texts", "addresses__texts__attribute",
+                "addresses__ints", "addresses__ints__attribute")
         if not customers:
             raise CustomerNotFound
 
         obj = FlatCustomer(customers[0])
 
         return obj
+
+    @classmethod
+    def get_django_username(cls, phone_number):
+        """Get Django username from user phone number.
+
+        Params:
+            phone_number: User phone number.
+
+        Returns:
+            Django username
+
+        """
+        try:
+            customer = CustomerEntityVarchar.objects.filter(
+                Q(attribute_id=149) & (Q(value=phone_number) | Q(entity__email=phone_number)))[0]
+        except:
+            raise CustomerNotFound()
+
+        return ("{}:{}".format("u", customer.entity_id))
 
 
 class CustomerController(object):

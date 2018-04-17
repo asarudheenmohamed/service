@@ -251,14 +251,44 @@ GOOGLE_MAP_DISTANCE_API = {
     "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
 }
 
+# porur and mmda latitude and longitude
+STORE_LAT_LONG = {
+    8: (13.082976, 80.171193),
+
+    5: (13.041706, 80.176288)
+}
+
+ORDER_MIDIUM = {
+    'POS': 4
+}
+
 
 # value first new ventor
 VALUE_FIRST_SMS_GATEWAY = {
     "ENDPOINT": "http://203.212.70.200/smpp/sendsms",
     "USERNAME": "gfmhttp",
-    "PASSWOED": "9823opas",
-    "FROM": "TNDCTS"
+    "PASSWORD": "9823opas",
+    "FROM": "TNDCTS",
+    "GUID": "b637f10f-5acb-4f2e-8408-d6cfbf51ceb9"
 }
+
+
+ONLINE_ORDER_STATUS_MESSAGE = {
+    'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
+    'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
+    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"
+
+}
+
+
+RETAIL_ORDER_STATUS_MESSAGE = {
+    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+}
+
+RETAIL_ORDER_STATUS_SCHEDULED_MESSAGE = {
+    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+}
+
 
 # caching version
 CACHE_DEFAULT_VERSION = 2
@@ -267,12 +297,12 @@ CACHE_DEFAULT_VERSION = 2
 APP_VERSIONS = {
     "CUSTOMER_APP_VERSION": {
         "min_app_version": '1.9.2',
-        "current_app_version": '1.9.6'
+        "current_app_version": '2.0.3'
     },
 
     "DRIVER_APP_VERSION": {
-        "min_app_version": '2.0.0',
-        "current_app_version": '2.0.0'
+        "min_app_version": '2.1.0',
+        "current_app_version": '2.1.0'
     }
 }
 

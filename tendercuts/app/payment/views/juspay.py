@@ -5,20 +5,18 @@ Just pay related API calls
 import logging
 import traceback
 import urllib
-import json
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from rest_framework import exceptions
-from rest_framework.response import Response
 from rest_framework import views, viewsets, mixins
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
-
+from rest_framework.decorators import api_view, permission_classes, \
+    authentication_classes
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-
-from ..lib import gateway as gw
 from .. import serializer
+from ..lib import gateway as gw
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -82,7 +80,8 @@ class JusPayApprovalCallBack(views.APIView):
                 "confirming payment for the order ID: {}".format(increment_id))
             status = gateway.update_order_status(increment_id)
             logger.info(
-                "confirmed payment for the order ID: {} with status {}".format(increment_id, status))
+                "confirmed payment for the order ID: {} with status {}".format(
+                    increment_id, status))
 
             return HttpResponseRedirect(reverse('juspay_done', request=request))
         except Exception as e:
@@ -126,7 +125,12 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         gateway = gw.JusPayGateway(log=logger)
         user_id = self.get_user_id()
 
-        return gateway.fetch_payment_modes(user_id)
+        # if wallets are requested then fetch
+        wallets = False
+        if "wallets" in self.request.GET:
+            wallets = True
+
+        return gateway.fetch_payment_modes(user_id, wallets=wallets)
 
     def create(self, request, *args, **kwargs):
         """

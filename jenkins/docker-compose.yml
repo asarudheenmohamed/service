@@ -16,9 +16,9 @@ services:
       - db
       - redis
       - rabbitmq
-  #  ports:
+    ports:
   #    - 80:80
-  #    - 9000:9000
+      - 8010:8000
     volumes:
       - ../:/services/
       - ./results/:/jenkins
@@ -74,7 +74,6 @@ services:
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
-
 
 volumes:
   mysql-db:
