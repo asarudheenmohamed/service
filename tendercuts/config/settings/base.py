@@ -238,7 +238,9 @@ SMS_GATEWAY = {
     "KEY": "152377Awdd5u4YpFi5917274f",
     "SENDER_ID": "TENDER",
     "ENDPOINT": "https://control.msg91.com/api/sendhttp.php",
-    "RESENDPOINT": "http://api.msg91.com/api/retryotp.php"
+    "RESENDPOINT": "http://api.msg91.com/api/retryotp.php",
+    "ROUTE": 4,
+    "COUNTRY": 91
 }
 
 MAIL_GATEWAY = {
@@ -276,17 +278,17 @@ VALUE_FIRST_SMS_GATEWAY = {
 ONLINE_ORDER_STATUS_MESSAGE = {
     'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
     'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
-    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254"
+    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-7097299492 Disliked it-7097299569"
 
 }
 
 
 RETAIL_ORDER_STATUS_MESSAGE = {
-    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+    "complete": "Thanks for choosing Tendercuts.Your reward point #{} has been updated successfully.",
 }
 
 RETAIL_ORDER_STATUS_SCHEDULED_MESSAGE = {
-    "complete": "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-9543486488 Disliked it-9025821254",
+    "complete": "Thanks for choosing Tendercuts. Hope you had a great meal! Please give a missed call to rate our quality of the product. Like it-7097299492 Disliked it-7097299569",
 }
 
 

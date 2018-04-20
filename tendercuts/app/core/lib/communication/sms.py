@@ -54,7 +54,7 @@ class SMS():
             settings.SMS_GATEWAY["KEY"],
             "")
 
-    def send(self, phnumber, message):
+    def send(self, phnumber, message, scheduled_time=None):
         """Send the message.
 
         params:
@@ -70,11 +70,12 @@ class SMS():
             "mobiles": phnumber,
             "message": message,
             "sender": settings.SMS_GATEWAY["SENDER_ID"],
-            "route": 4,
-            "country": 91
+            "route": settings.SMS_GATEWAY["ROUTE"],
+            "country": settings.SMS_GATEWAY["COUNTRY"],
+            "schtime": scheduled_time
         }
 
-        requests.get(
+        response = requests.get(
             settings.SMS_GATEWAY["ENDPOINT"],
             verify=False,
             params=data)
@@ -147,23 +148,6 @@ class SMS():
             "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
             "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
             "to": str(phnumber),
-            "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
-            "text": message
-        }
-
-        response = requests.get(settings.VALUE_FIRST_SMS_GATEWAY[
-            "ENDPOINT"], params=data)
-
-        return response
-
-    def send_scheduled_sms(self, scheduletime, phnumber, message):
-        data = {
-            "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
-            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
-            "to": str(phnumber),
-            "scheduletime": scheduletime,
-            "action": "UPDATE",
-            "guid": settings.VALUE_FIRST_SMS_GATEWAY["GUID"],
             "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
             "text": message
         }

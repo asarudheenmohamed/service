@@ -84,8 +84,9 @@ def send_sms(order_id):
             'complete']
 
         # scheduled the order like and dislike message
-        SMS().send_scheduled_sms(scheduled_time, customer[2],
-                                 scheduled_message)
+        SMS().send(
+            customer[2],
+            scheduled_message, scheduled_time)
 
         logger.info(
             "Scheduled the product like and dislike message for this customer:{}".format(
@@ -93,10 +94,13 @@ def send_sms(order_id):
 
     else:
         message = settings.ONLINE_ORDER_STATUS_MESSAGE[
-            'processing'].format(
-            order_obj.increment_id)
+            order_obj.status]
 
-    SMS().send_sms(customer[2], message)
+    SMS().send(customer[2], message)
+
+    logger.info(
+        "Send order:{} {} state message for this customer:{}".format(
+            order_id, order_obj.status, customer[4]))
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
