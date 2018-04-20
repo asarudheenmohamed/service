@@ -34,6 +34,8 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       - mysql-db:/var/lib/mysql
+    ports:
+      - 3308:3306
     # access for all
 
   # creating a second instance so that
@@ -49,6 +51,8 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       - mage-db:/var/lib/mysql
+    ports:
+      - 3307:3306
 
   php:
     build: ./php
@@ -62,8 +66,8 @@ services:
       - redis
       - rabbitmq
     ports:
-#      - 80:80
-      - 9000:9000
+      - 80:80
+      # - 9000:9000
     volumes:
       - ../website/:/var/www/html/
 
