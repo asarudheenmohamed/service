@@ -30,6 +30,14 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
 
         tasks.send_sms.delay(message['increment_id'])
 
+    def on_update_order_lapse(self, message):
+        """Callback that gets triggered when the order in payload is complete,processing,out delivery."""
+
+        # One more way of calling.
+        from app.sale_order import tasks
+        tasks.update_order_lapse.delay(
+            message['status'], message['increment_id'])
+
     def handle_message(self, body, message):
         """RMQ callback for handling the message/payload."""
         # {u'status': u'complete', u'increment_id': u'700018288'}
@@ -50,6 +58,10 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
 
         if status in callbacks:
             callbacks[status](body)
+
+        if status in ['processing', 'complete', 'out_delivery']:
+
+            self.on_update_order_lapse(body)
 
         logger.info('Received message: {0!r}'.format(body))
 
