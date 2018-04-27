@@ -1,8 +1,10 @@
 from .base import *
 from .celeryconfig import *
 
-CELERY_BROKER_URL = 'amqp://guest:guest@192.168.131.117:5672//'
-CELERY_RESULT_BACKEND = 'amqp://guest:guest@192.168.131.117:5672//'
+#CELERY_BROKER_URL = 'amqp://guest:guest@192.168.131.117:5672//'
+CELERY_BROKER_URL = "amqp://tcuser:4pH.%x^f-D21@192.168.131.117:5672//"
+#CELERY_RESULT_BACKEND = 'amqp://guest:guest@192.168.131.117:5672//'
+CELERY_RESULT_BACKEND = 'amqp://tcuser:4pH.%x^f-D21@192.168.131.117:5672//'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
