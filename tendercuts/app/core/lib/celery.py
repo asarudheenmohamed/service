@@ -15,7 +15,7 @@ from .communication import Mail
 class TenderCutsTask(celery.Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        msg = '{0!r} failed: {1!r}'.format(task_id, exc)
+        msg = '{0!r} failed: {1!r}  error:{2!r}'.format(task_id, exc, einfo)
         if os.environ['DJANGO_SETTINGS_MODULE'] == 'config.settings.prod':
             Mail().send(
                 settings.CELERY_MAIL['sender_mail_id'],

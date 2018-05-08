@@ -53,6 +53,26 @@ def serializer():
             return obj
 
 
+@pytest.fixture(scope="session")
+def mock_driver(request):
+    """Generate a mock customer.
+
+    @override the fixture
+
+    Uses pytest caching.
+
+    """
+    customer_id = request.config.cache.get("mock/driver", None)
+    if customer_id is None:
+        customer_data = generate_customer(group_id=DRIVER_GROUP)
+        customer_id = customer_data['entity_id']
+        request.config.cache.set("mock/driver", customer_id)
+
+    customer = CustomerSearchController.load_by_id(customer_id)
+
+    return customer
+
+
 @pytest.fixture(scope="module")
 def generate_mock_order(request, mock_user):
     """Generates a mock order.
