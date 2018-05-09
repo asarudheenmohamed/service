@@ -6,6 +6,7 @@ services:
   django:
     build: ./django
     container_name: django
+    hostname: django
     links:
       - redis:redis
       - rabbitmq:rabbitmq
@@ -26,6 +27,7 @@ services:
   db:
     image: mysql:5.7
     container_name: db
+    hostname: service-db
     environment:
       MYSQL_HOST: localhost
       MYSQL_DATABASE: services
@@ -43,6 +45,7 @@ services:
   mage-db:
     image: mysql:5.7
     container_name: mage-db
+    hostname: mage-db
     environment:
       MYSQL_HOST: localhost
       MYSQL_DATABASE: dbmaster
@@ -57,6 +60,7 @@ services:
   php:
     build: ./php
     container_name: php
+    hostname: php
     links:
       - mage-db:mysql
       - redis:redis
@@ -82,10 +86,12 @@ services:
   redis:
     image: redis
     container_name: redis
+    hostname: redis
 
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
+    hostname: rabbitmq
 
 volumes:
   mysql-db:

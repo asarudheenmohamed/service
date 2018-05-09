@@ -132,7 +132,7 @@ class DriverController(object):
             driver=self.driver).check_and_create_trip(
             driver_object, position_obj)
 
-        tasks.send_sms.delay(order)
+        tasks.send_sms.delay(order, 'out_delivery')
 
         return driver_object
 
@@ -219,7 +219,7 @@ class DriverController(object):
         # update customer current location
         tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
         # send sms to customer
-        tasks.send_sms.delay(order_id)
+        tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)
 
         # update current location for driver

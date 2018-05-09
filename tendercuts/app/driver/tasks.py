@@ -55,48 +55,28 @@ def customer_current_location(customer_id, lat, lon):
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)
-def send_sms(order_id):
+def send_sms(order_id, template_key, scheduled_time=None):
     """Celery task to send the order's status to the customer."""
 
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
 
     if not order_obj:
-
         raise ValueError('Order object Does not exist')
 
     order_obj = order_obj.last()
 
-    customer = CustomerSearchController.load_basic_info(
+    userid, email, phone, name = CustomerSearchController.load_basic_info(
         order_obj.customer_id)
 
     logger.info("Send status as {} to the customer : {}".format(
-        order_obj.status, customer[0]))
+        order_obj.status, phone))
 
-    if order_obj.medium == settings.ORDER_MIDIUM['POS']:
+    message = settings.SMS_TEMPLATES[template_key]
 
-        message = settings.RETAIL_ORDER_STATUS_MESSAGE[
-            order_obj.status].format(customer[4])
-
-        scheduled_time = datetime.now() + timedelta(hours=4)
-        scheduled_time = scheduled_time.strftime("%Y-%m-%d %H:%M:%S")
-
-        scheduled_message = settings.RETAIL_ORDER_STATUS_SCHEDULED_MESSAGE[
-            'complete']
-
-        # scheduled the order like and dislike message
-        SMS().send(
-            customer[2],
-            scheduled_message, scheduled_time)
-
-        logger.info(
-            "Scheduled the product like and dislike message for this customer:{}".format(
-                customer[4]))
-
+    if scheduled_time:
+        SMS().send(phone, message, scheduled_time)
     else:
-        message = settings.ONLINE_ORDER_STATUS_MESSAGE[
-            order_obj.status]
-
-    SMS().send(customer[2], message)
+        SMS().send(phone, message)
 
     logger.info(
         "Send order:{} {} state message for this customer:{}".format(

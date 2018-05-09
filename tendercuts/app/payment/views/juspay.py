@@ -21,6 +21,20 @@ from ..lib import gateway as gw
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+@api_view(['POST'])
+def juspay_webhook(request):
+    """Process webhook callbacks"""
+
+    # dirty hack
+    # TODO: Needs to be moved to django auth/groups.
+    if request.user.id != 1:
+        return Response({'error': 'Unauthorized'}, status=401)
+
+    gateway = gw.JusPayGateway(log=logger)
+    gateway.reconcile_transaction(request.data)
+
+    return Response()
+
 
 @api_view(['GET'])
 @permission_classes([])

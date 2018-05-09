@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'verify', views.VerifyTransaction.as_view()),
     url(r'juspay', views.JusPayApprovalCallBack.as_view()),
     url(r'done', views.juspay_done, name="juspay_done"),
+    url(r'webhook', views.juspay_webhook, name="juspay_webhook"),
 ]

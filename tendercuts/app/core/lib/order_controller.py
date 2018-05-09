@@ -77,23 +77,24 @@ class OrderController(object):
         # express delivery
         if self.order.deliverytype == 1:
             self.order.status = "pending"
-            self.order.grid.status = "pending"
         # sch
         elif self.order.deliverytype == 2:
             self.order.status = "scheduled_order"
-            self.order.grid.status = "scheduled_order"
         # split
         else:
             self.order.status = "pending"
-            self.order.grid.status = "pending"
 
         self.order.save()
-        self.order.grid.save()
+
+        if getattr(self.order, "grid", None):
+            self.order.grid.save()
+            self.order.grid.status = "pending"
 
     def update_payment_status(self):
         """Update the payment_received flag.
 
         Ideally this should be merged with payment_sucess eventually
+        DEPRECATED
         """
         self.order.payment_received = 1
         self.order.save()

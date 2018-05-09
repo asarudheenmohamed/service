@@ -260,10 +260,6 @@ STORE_LAT_LONG = {
     5: (13.041706, 80.176288)
 }
 
-ORDER_MIDIUM = {
-    'POS': 4
-}
-
 
 # value first new ventor
 VALUE_FIRST_SMS_GATEWAY = {
@@ -274,23 +270,21 @@ VALUE_FIRST_SMS_GATEWAY = {
     "GUID": "b637f10f-5acb-4f2e-8408-d6cfbf51ceb9"
 }
 
+ORDER_MEDIUM = {
+    'POS': 4
+}
 
-ONLINE_ORDER_STATUS_MESSAGE = {
+SMS_TEMPLATES = {
     'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
     'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
-    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-7097299492 Disliked it-7097299569"
+    'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-7097299492 Disliked it-7097299569",
 
+    'retail_complete': "Thanks for choosing Tendercuts. Hope you had a great meal! Please give a missed call to rate our quality of the product. Like it-7097299492 Disliked it-7097299569",
+
+    'payment_confirmation': "Payment for order #{} is now confirmed, we will notify you when we start to deliver.",
+    'payment_refunded': "Payment alert: Payment for order #{} has been refunded and will reflect in your bank account in 5-7 working days.",
+    'payment_pending': "Payment alert: Payment for order #{} is not complete and will take upto 15 mins to confirm with the bank. Sorry for the inconvenience."
 }
-
-
-RETAIL_ORDER_STATUS_MESSAGE = {
-    "complete": "Thanks for choosing Tendercuts.Your reward point #{} has been updated successfully.",
-}
-
-RETAIL_ORDER_STATUS_SCHEDULED_MESSAGE = {
-    "complete": "Thanks for choosing Tendercuts. Hope you had a great meal! Please give a missed call to rate our quality of the product. Like it-7097299492 Disliked it-7097299569",
-}
-
 
 # caching version
 CACHE_DEFAULT_VERSION = 2
