@@ -6,12 +6,13 @@ from __future__ import absolute_import, unicode_literals
 import base64
 import hmac
 import urllib
+import traceback
 import hashlib
 
 import pytest
 
 from app.core import models as core_models
-from app.core.lib.exceptions import OrderNotFound
+from app.core.lib.exceptions import OrderNotFound, send_exception
 from app.core.lib.user_controller import *
 
 from ..base import AbstractGateway
@@ -19,6 +20,7 @@ from .... import models
 from .transaction import JuspayTransaction
 from .mixin import JuspayMixin
 from .customer import JuspayCustomer
+from .webhook import JuspayOrderSuccessProcessor
 
 @pytest.mark.django_db
 class JusPayGateway(AbstractGateway, JuspayMixin):
@@ -156,7 +158,6 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
 
         return jp_order
 
-
     def start_transaction(self, payment_mode, save_to_locker=True):
         """Start the transaction, Performs multiple steps.
 
@@ -213,3 +214,13 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         """
         juspay_order = self.juspay.Orders.status(order_id=order_id)
         return juspay_order.status == self.SUCCESS if juspay_order else False
+
+    def reconcile_transaction(self, payload):
+        try:
+            JuspayOrderSuccessProcessor.from_payload(payload).execute()
+        except Exception as e:
+            msg = traceback.format_exc()
+            send_exception("Juspay Order Recon Error", msg)
+
+
+

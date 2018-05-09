@@ -5,6 +5,7 @@ Every payment GW should implement this class
 from app.core.lib.order_controller import OrderController
 from app.core import models as core_models
 from app.core.lib import exceptions as core_exceptions
+from app.driver import tasks
 
 import abc
 import logging
@@ -45,8 +46,18 @@ class AbstractGateway(object):
         """
         pass
 
+    def reconcile_transaction(self, payload):
+        """Triggered after sometime, mostly from webhooks or polling.
+        Optional method.
+
+        param:
+            payload (dict) response json from the gateway.
+
+        """
+        pass
+
     def update_order_status(self, order_id):
-        """Update order.
+        """Update order status to "pending" (success).
 
         params:
             order (SaleFlatOrder): order
@@ -78,5 +89,9 @@ class AbstractGateway(object):
         if status:
             # Claim on magento side
             self.update_order_status(order_id)
+        else:
+            tasks.send_sms.delay(order_id, 'payment_pending')
+
 
         return status
+

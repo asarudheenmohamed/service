@@ -1,4 +1,6 @@
-"""Paytm Gateway APIs."""
+"""Paytm Gateway APIs.
+DEPRECATED
+"""
 
 from .base import AbstractGateway
 

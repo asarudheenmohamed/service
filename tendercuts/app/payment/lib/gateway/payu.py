@@ -1,4 +1,6 @@
-"""Payu Gateway APIs."""
+"""Payu Gateway APIs.
+DEPRECATED
+"""
 
 from .base import AbstractGateway
 

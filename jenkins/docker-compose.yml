@@ -6,6 +6,7 @@ services:
   django:
     build: ./django
     container_name: django
+    hostname: django
     links:
       - redis:redis
       - rabbitmq:rabbitmq
@@ -26,6 +27,7 @@ services:
   db:
     image: mysql:5.7
     container_name: db
+    hostname: service-db
     environment:
       MYSQL_HOST: localhost
       MYSQL_DATABASE: services
@@ -34,6 +36,8 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       - mysql-db:/var/lib/mysql
+    ports:
+      - 3308:3306
     # access for all
 
   # creating a second instance so that
@@ -41,6 +45,7 @@ services:
   mage-db:
     image: mysql:5.7
     container_name: mage-db
+    hostname: mage-db
     environment:
       MYSQL_HOST: localhost
       MYSQL_DATABASE: dbmaster
@@ -49,10 +54,13 @@ services:
       MYSQL_ROOT_HOST: '%'
     volumes:
       - mage-db:/var/lib/mysql
+    ports:
+      - 3307:3306
 
   php:
     build: ./php
     container_name: php
+    hostname: php
     links:
       - mage-db:mysql
       - redis:redis
@@ -62,18 +70,28 @@ services:
       - redis
       - rabbitmq
     ports:
-#      - 80:80
-      - 9000:9000
+      - 80:80
+      # - 9000:9000
     volumes:
       - ../website/:/var/www/html/
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mage-db:db
+    ports:
+      - 8081:80
 
   redis:
     image: redis
     container_name: redis
+    hostname: redis
 
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
+    hostname: rabbitmq
 
 volumes:
   mysql-db:

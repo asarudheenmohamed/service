@@ -422,7 +422,6 @@ class SalesFlatOrder(models.Model):
 
     store = models.ForeignKey(
         CoreStore, models.DO_NOTHING, blank=True, null=True)
-    store_id = models.IntegerField()
     # removing it till a time comes to integrate this
     # customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
     customer_id = models.IntegerField()
