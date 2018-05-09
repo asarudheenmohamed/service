@@ -42,7 +42,7 @@ def update_order_elapsed_time(order_id, status):
         order_id, order_status_list))
 
     controller = OrderTimeElapsedController(order_obj)
-    controller.update_order_status_time(status)
+    controller.compute_order_status_elapsed_time(status)
 
     # set order status list in redis db like
     # ['pending','processing','out_delivery','complete'] it's expire to 24 hours

@@ -35,7 +35,8 @@ class TestOrderDataController:
             order_controller = OrderTimeElapsedController(
                 generate_mock_order)
 
-            order_data = order_controller.update_order_status_time(state)
+            order_data = order_controller.compute_order_status_elapsed_time(
+                state)
 
         obj = OrderTimeElapsed.objects.filter(
             increment_id=generate_mock_order.increment_id).last()

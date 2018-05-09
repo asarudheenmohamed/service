@@ -99,7 +99,7 @@ class OrderTimeElapsedController(object):
         logger.info("Update a completed time:{} and elapsed time for  order id:{}".format(
             timezone.now(), self.order.increment_id))
 
-    def update_order_status_time(self, status):
+    def compute_order_status_elapsed_time(self, status):
         """Update order state time and elapsed time."""
 
         actions_map = {'pending': self.create_order_elapsed_obj,
