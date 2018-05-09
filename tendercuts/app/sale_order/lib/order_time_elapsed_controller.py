@@ -27,53 +27,9 @@ class OrderTimeElapsedController(object):
                       55: "17:00",
                       56: "19:00"}
 
-    def _update_order_elapsed_time(self, ela_obj):
-        """Compute order status elapsed time and update.
-
-        Params:
-         ela_obj(obj): elapsed object
-
-        """
-        time_elapsed = lambda ending_time, starting_time: round(((ending_time -
-                                                                  starting_time).total_seconds()) / 60, 0)
-        if self.order.deliverytype == 1:
-            ela_obj.pending_elapsed = time_elapsed(
-                ela_obj.processing_time, ela_obj.pending_time)
-
-            ela_obj.processing_elapsed = time_elapsed(
-                ela_obj.out_delivery_time, ela_obj.processing_time)
-
-            ela_obj.out_delivery_elapsed = time_elapsed(
-                ela_obj.completed_time, ela_obj.out_delivery_time)
-
-        if self.order.deliverytype == 2:
-
-            promised_time = dateutil.parser.parse(
-                "{} {}".format(self.order.scheduled_date, self.slots[self.order.scheduled_slot]))
-
-            if ela_obj.processing_time > promised_time:
-                ela_obj.pending_elapsed = time_elapsed(
-                    ela_obj.processing_time, promised_time)
-            else:
-                ela_obj.pending_elapsed = 0
-
-            if ela_obj.out_delivery_time > promised_time:
-                processing_elapse = time_elapsed(
-                    ela_obj.out_delivery_time, promised_time)
-
-                ela_obj.out_delivery_elapsed = time_elapsed(
-                    ela_obj.completed_time, ela_obj.out_delivery_time)
-
-            else:
-                ela_obj.processing_elapsed = 0
-
-                ela_obj.out_delivery_elapsed = time_elapsed(
-                    ela_obj.completed_time, promised_time)
-
-        ela_obj.save()
-
-        logger.info("order id:{} pending elapsed:{},processing elapsed:{},out_deliver elapsed:{} time computed.".format(
-            self.order.increment_id, ela_obj.pending_elapsed, ela_obj.processing_elapsed, ela_obj.out_delivery_elapsed))
+    def _complute_elapsed_time(self, ending_time, starting_time):
+        """Returns the elapsed time."""
+        return round(((ending_time - starting_time).total_seconds()) / 60, 0)
 
     def fetch_driver_basic_info(self):
         """Returns to the driver entity object."""
@@ -81,55 +37,81 @@ class OrderTimeElapsedController(object):
             attribute_id=149, value=self.order.driver_number)
 
         if len(query_set) == 0:
-
             raise CustomerNotFound()
 
         driver = query_set[0]
 
         return driver
 
+    def create_order_elapsed_obj(self):
+        """Create order elapsed object."""
+
+        if self.order.deliverytype == 2:
+            pending_time = dateutil.parser.parse(
+                "{} {}".format(self.order.scheduled_date, self.slots[self.order.scheduled_slot]))
+        else:
+            pending_time = self.order.created_at
+
+        OrderTimeElapsed.objects.create(
+            increment_id=self.order.increment_id,
+            deliverytype=self.order.deliverytype,
+            pending_time=pending_time,
+            created_at=timezone.now())
+
+        logger.info("Creating order elapsed object for order id:{}".format(
+            self.order.increment_id))
+
+    def update_processing_elapsed(self, elapsed_obj):
+        """Update order processing time and elapsed time."""
+
+        elapsed_obj.processing_time = timezone.now()
+        elapsed_obj.pending_elapsed = self._complute_elapsed_time(
+            timezone.now(), elapsed_obj.pending_time)
+
+        elapsed_obj.save()
+
+        logger.info("Update a processing time:{} and elapsed time for order id:{}".format(
+            timezone.now(), self.order.increment_id))
+
+    def update_out_delivery_elapsed(self, elapsed_obj):
+        """Update order out_delivery time and elapsed time."""
+        driver = self.fetch_driver_basic_info()
+
+        elapsed_obj.driver_user = User.objects.get(
+            username='u:{}'.format(driver.entity_id))
+        elapsed_obj.out_delivery_time = timezone.now()
+        elapsed_obj.processing_elapsed = self._complute_elapsed_time(
+            timezone.now(), elapsed_obj.processing_time)
+
+        elapsed_obj.save()
+
+        logger.info("Update a out_delivery time:{} and elapsed time for order id:{}".format(
+            timezone.now(), self.order.increment_id))
+
+    def update_completed_elapsed(self, elapsed_obj):
+        """Update order completed time and elapsed time."""
+        elapsed_obj.completed_time = timezone.now()
+        elapsed_obj.out_delivery_elapsed = self._complute_elapsed_time(
+            timezone.now(), elapsed_obj.out_delivery_time)
+
+        elapsed_obj.save()
+
+        logger.info("Update a completed time:{} and elapsed time for  order id:{}".format(
+            timezone.now(), self.order.increment_id))
+
     def update_order_status_time(self, status):
         """Update order state time and elapsed time."""
 
-        # driver object
+        actions_map = {'pending': self.create_order_elapsed_obj,
+                       'processing': self.update_processing_elapsed,
+                       'out_delivery': self.update_out_delivery_elapsed,
+                       'complete': self.update_completed_elapsed}
 
-        driver = self.fetch_driver_basic_info()
-        if status == 'pending':
+        elapsed_obj = OrderTimeElapsed.objects.filter(
+            increment_id=self.order.increment_id).last()
 
-            OrderTimeElapsed.objects.create(
-                increment_id=self.order.increment_id,
-                deliverytype=self.order.deliverytype,
-                pending_time=timezone.now(),
-                created_at=timezone.now())
-
-            logger.info("Creating order elapsed object for order id:{}".format(
-                self.order.increment_id))
-
-        elapsed_obj = OrderTimeElapsed.objects.get(
-            increment_id=self.order.increment_id)
-
-        if status == 'processing':
-
-            elapsed_obj.driver_user = User.objects.get(
-                username='u:{}'.format(driver.entity_id))
-            elapsed_obj.processing_time = timezone.now()
-            elapsed_obj.save()
-
-            logger.info("Update a processing time:{} for order id:{}".format(
-                timezone.now(), self.order.increment_id))
-
-        elif status == 'out_delivery':
-            elapsed_obj.out_delivery_time = timezone.now()
-            elapsed_obj.save()
-
-            logger.info("Update a out_delivery time:{} for order id:{}".format(
-                timezone.now(), self.order.increment_id))
-
-        elif status == 'complete':
-            elapsed_obj.completed_time = timezone.now()
-            elapsed_obj.save()
-
-            logger.info("Update a completed time:{} for  order id:{}".format(
-                timezone.now(), self.order.increment_id))
-
-            self._update_order_elapsed_time(elapsed_obj)
+        if status in actions_map:
+            if status == 'pending':
+                actions_map[status]()
+            else:
+                actions_map[status](elapsed_obj)
