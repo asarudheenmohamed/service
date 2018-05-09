@@ -22,8 +22,7 @@ RUN /usr/bin/zsh && git clone --recursive https://github.com/varunxyz/prezto.git
   && ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile \
   && ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv \
   && ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc \
-  && ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc \
-  && chsh -s /usr/bin/zsh
+  && ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc
 
 ADD env /root/
 ADD start_apache.sh /root/
