@@ -4,7 +4,7 @@ from celery import bootsteps
 from kombu import Consumer
 from config.settings import celeryconfig
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 class MageOrderChangeConsumer(bootsteps.ConsumerStep):
@@ -30,6 +30,14 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
 
         tasks.send_sms.delay(message['increment_id'])
 
+    def on_update_order_elapsed_time(self, message):
+        """Callback that gets triggered when the order in payload is complete,processing,out delivery."""
+
+        # One more way of calling.
+        from app.sale_order import tasks
+        tasks.update_order_elapsed_time.delay(
+            message['status'], message['increment_id'])
+
     def handle_message(self, body, message):
         """RMQ callback for handling the message/payload."""
         # {u'status': u'complete', u'increment_id': u'700018288'}
@@ -45,11 +53,15 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
             return
 
         # check for status callbacks
-        body = eval(body)
         status = body['status']
 
+        self.on_complete(body)
         if status in callbacks:
             callbacks[status](body)
+
+        if status in ['pending', 'processing', 'complete', 'out_delivery']:
+
+            self.on_update_order_elapsed_time(body)
 
         logger.info('Received message: {0!r}'.format(body))
 
