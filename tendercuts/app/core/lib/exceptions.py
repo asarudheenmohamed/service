@@ -1,5 +1,6 @@
 from app.core.lib.communication import Mail
 from django.conf import settings
+import os
 
 class OrderNotFound(Exception):
     pass

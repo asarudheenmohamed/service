@@ -87,8 +87,8 @@ class OrderController(object):
         self.order.save()
 
         if getattr(self.order, "grid", None):
-            self.order.grid.save()
             self.order.grid.status = "pending"
+            self.order.grid.save()
 
     def update_payment_status(self):
         """Update the payment_received flag.

@@ -92,10 +92,6 @@ class CustomerSearchController(object):
         # first row second col
         flattened_data.append(query_set[1][2])
 
-        reward_points = varchar_objects.last().entity.reward_point.aggregate(Sum('amount'))
-
-        flattened_data.append(reward_points['amount__sum'])
-
         return flattened_data
 
     @classmethod

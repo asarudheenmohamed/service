@@ -61,17 +61,22 @@ def send_sms(order_id, template_key, scheduled_time=None):
     order_obj = SalesFlatOrder.objects.filter(increment_id=order_id)
 
     if not order_obj:
-        raise ValueError('Order object Does not exist')
+        raise ValueError('Order object Does not exist for {}'.format(order_id))
 
     order_obj = order_obj.last()
 
-    userid, email, phone, name = CustomerSearchController.load_basic_info(
-        order_obj.customer_id)
+    try:
+         data = CustomerSearchController.load_basic_info(
+            order_obj.customer_id)
+         userid, email, phone, name = data
+    except Exception as e:
+        raise ValueError('Extract basic info failed {} for CID: {}'.format(
+            data, order_obj.customer_id))
 
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, phone))
 
-    message = settings.SMS_TEMPLATES[template_key]
+    message = settings.SMS_TEMPLATES[template_key].format(order_id)
 
     if scheduled_time:
         SMS().send(phone, message, scheduled_time)
@@ -80,7 +85,7 @@ def send_sms(order_id, template_key, scheduled_time=None):
 
     logger.info(
         "Send order:{} {} state message for this customer:{}".format(
-            order_id, order_obj.status, customer[4]))
+            order_id, order_obj.status, name))
 
 
 @app.task(base=TenderCutsTask, ignore_result=True)

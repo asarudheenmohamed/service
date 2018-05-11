@@ -19,3 +19,6 @@ class OrderTimeElapsed(models.Model):
     processing_elapsed = models.IntegerField(blank=True, null=True)
     out_delivery_elapsed = models.IntegerField(blank=True, null=True)
     deliverytype = models.IntegerField(blank=True, null=True)
+
+    def __unicode__(self):
+        return '{}'.format(self.increment_id)
