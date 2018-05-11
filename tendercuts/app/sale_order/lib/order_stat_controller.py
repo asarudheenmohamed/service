@@ -35,8 +35,13 @@ class OrderDataController(object):
 
         params_data = []
         for order in order_obj:
-            rewards = MRewardsPurchase.objects.filter(
-                order_id=order.entity_id)[0]
+            try:
+                rewards = MRewardsPurchase.objects.filter(
+                    order_id=order.entity_id)[0]
+                rewards = rewards.spend_amount
+            except IndexError:
+                rewards = 0
+
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
@@ -49,7 +54,7 @@ class OrderDataController(object):
                 "discount_description": order.discount_description or '',
                 "payment_method": order.payment.all()[0].method,
                 "medium": order.medium,
-                "spend_amount": rewards.spend_amount,
+                "spend_amount": rewards,
 
                 "customer": {
                     "partner_name": order.customer_firstname,

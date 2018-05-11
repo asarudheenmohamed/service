@@ -9,6 +9,7 @@ aws s3 cp s3://tendercuts-databackup/tendercutsmysqldata-01-Mar-2018-15-35.tar.g
 cat backup/v2.sql| docker exec  -i mage-db /usr/bin/mysql -u root --password=root dbmaster
 ```
 
+
 # Import views  
 ```sql
 DROP FUNCTION IF EXISTS RUN_ALLOCATION_RULE;
@@ -48,6 +49,7 @@ CREATE FUNCTION INVENTORY(store_type INT, online_allocation FLOAT, threshold FLO
 
 -- Function to compute sch inv for omni and dark store
 DROP FUNCTION IF EXISTS SCH_INVENTORY;
+
 CREATE FUNCTION `SCH_INVENTORY`(store_type INT, qty FLOAT, expiring FLOAT, forecast FLOAT) RETURNS decimal(8,2)
     DETERMINISTIC
 RETURN FORMAT_NUM(
@@ -56,6 +58,23 @@ RETURN FORMAT_NUM(
         WHEN store_type = 2 THEN forecast
       END);
 
+DROP VIEW `graminventory_latest`;
+CREATE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `graminventory_latest`
+AS SELECT
+    child.id,
+    child.product_id,
+    CONVERT_TO_UNITS(child.total_qty, child.gpu) as qty,
+    CONVERT_TO_UNITS(child.total_scheduledqty, child.gpu) as scheduledqty,
+    child.store_id,
+    child.total_qty,
+    child.total_expiring,
+    child.total_forecast,
+    child.gpu
+FROM graminventory_latest_raw as child
+LEFT JOIN graminventory_latest_raw as parent on child.parent = parent.product_id and child.store_id = parent.store_id;
+
+DROP VIEW `graminventory_latest_raw`;
+CREATE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `graminventory_latest_raw`
 
 DROP VIEW `graminventory_latest_raw`;
 CREATE VIEW `graminventory_latest_raw`
@@ -100,8 +119,6 @@ AS SELECT
 FROM graminventory_latest_raw as child
 LEFT JOIN graminventory_latest_raw as parent on child.parent = parent.product_id and child.store_id = parent.store_id;
 
-
-
 ```
 
 
@@ -119,6 +136,7 @@ UPDATE core_config_data
 UPDATE core_config_data
 	SET VALUE = REPLACE(value, 'https://d19owii3igrwxq.cloudfront.net', '{{secure_base_url}}')
     WHERE value like 'https://d19owii3igrwxq.cloudfront.net%'
+
 ```
 
 # In case magento does not restore properly

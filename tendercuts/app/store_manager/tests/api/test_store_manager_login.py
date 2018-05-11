@@ -38,4 +38,3 @@ def test_not_sm_login(rest):
         format='json')
 
     assert response.status_code == 403
-

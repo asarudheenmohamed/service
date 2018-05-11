@@ -51,6 +51,7 @@ def notification_sms():
 @app.task(base=TenderCutsTask, ignore_result=True)
 def low_stock_notification():
     """Celery task to notify the low stock information through flock."""
+    return
     controller = LowStockNotificationController()
     low_stocks = controller.get_low_stocks()
     stocks_details = controller.get_stock_details(low_stocks)

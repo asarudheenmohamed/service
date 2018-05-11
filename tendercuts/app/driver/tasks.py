@@ -87,7 +87,6 @@ def send_sms(order_id, template_key, scheduled_time=None):
         "Send order:{} {} state message for this customer:{}".format(
             order_id, order_obj.status, name))
 
-
 @app.task(base=TenderCutsTask, ignore_result=True)
 def set_checkout():
     """Celery task to set Check Out time for the driver."""
