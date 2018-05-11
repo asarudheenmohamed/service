@@ -28,10 +28,14 @@ processes the payload provided by juspay and updates the order status
     u'order_id': u'700033259', u'refunded': False, u'customer_phone': u'9710243651', u'udf8': u'', u'merchant_id': u'tendercuts', u'card': {u'name_on_card': u'', u'last_four_digits': u'', u'card_reference': u'0fc80a15caea1c33c74bcccece6f1f3c', u'card_fingerprint': u'78g5l1fp62obpivbqsved6dsgb', u'using_saved_card': True, u'card_type': u'DEBIT', u'card_issuer': u'', u'expiry_year': u'2018', u'card_brand': u'VISA', u'saved_to_locker': True, u'expiry_month': u'08', u'card_isin': u'424242'}, u'product_id': u'', u'payment_method_type': u'CARD', u'udf10': u'', u'bank_error_message': u'', u'udf1': u'', u'udf3': u'', u'udf2': u'', u'udf5': u'', u'udf4': u'', u'udf7': u'', u'udf6': u'', u'udf9': u'', u'date_created': u'2018-05-08T06:29:08Z', u'return_url': u'http://staging.tendercuts.in:82/payment/juspay'}}, u'id': u'evt_1vol8hxlgpmx53ee'}
 
 """
+import logging
+
 from app.core import models as core_models
 from app.core.lib import order_controller as controller
 from .mixin import JuspayMixin
 from app.driver import tasks
+
+logger = logging.getLogger(__name__)
 
 class JuspayOrderSuccessProcessor(JuspayMixin):
 
@@ -75,6 +79,7 @@ class JuspayOrderSuccessProcessor(JuspayMixin):
 
         in case of payment_pending status, confirm the order.
         """
+        logger.info("Payment Recon: Confirming {}".format(self.order.increment_id))
 
         if self.order.status == "pending_payment":
             # update status to pending
@@ -93,9 +98,14 @@ class JuspayOrderSuccessProcessor(JuspayMixin):
 
 
     def action_order_refund(self):
+        logger.info("Payment Recon: Refunding {} for {}".format(
+            self.order.increment_id,
+            self.order.grand_total
+        ))
         self.juspay.Orders.refund(
             unique_request_id=self.order.increment_id,
-            order_id=self.order.increment_id)
+            order_id=self.order.increment_id,
+            amount=self.order.grand_total)
 
         # SMS TRIGGERING
         tasks.send_sms.delay(self.order.increment_id, 'payment_refunded')

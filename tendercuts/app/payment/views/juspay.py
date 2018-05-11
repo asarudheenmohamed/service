@@ -27,7 +27,7 @@ def juspay_webhook(request):
 
     # dirty hack
     # TODO: Needs to be moved to django auth/groups.
-    if request.user.id != 1:
+    if request.user.id != 3:
         return Response({'error': 'Unauthorized'}, status=401)
 
     gateway = gw.JusPayGateway(log=logger)
