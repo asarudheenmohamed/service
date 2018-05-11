@@ -7,15 +7,15 @@ from config.celery import app
 from celery.utils.log import get_task_logger
 
 from app.core.lib import order_controller as controller
+from app.core.lib import magento
 from app.core.lib.celery import TenderCutsTask
 from app.core import models as core_models
-from app.payment import lib
 
 logger = get_task_logger(__name__)
 
 
 @app.task(base=TenderCutsTask)
-def check_payment_status():
+def cancel_payment_pending_orders():
     """Celery Task to set payment received flag.
 
     We look for orders in the last 30 mins
@@ -23,34 +23,22 @@ def check_payment_status():
     THRESHOLD = 30 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)
+    conn = magento.Connector()
 
-    payment_pending_orders = core_models.SalesFlatOrder.objects           \
-        .filter(status='pending', created_at__range=[start, end]) \
+    payment_pending_orders = core_models.SalesFlatOrder.objects   \
+        .filter(status='pending_payment', created_at__lt=start) \
         .prefetch_related('payment')
 
+    result = []
     for order in payment_pending_orders:
         inc_id = order.increment_id
-        logger.info("Verifying the status of {}".format(inc_id))
-        method = order.payment.first().method
+        logger.info("cancelling the order {}".format(inc_id))
+        try:
+            controller.OrderController(conn, order).cancel()
+            result.append(inc_id)
+        except Exception as e:
+            # err why ?
+            pass
 
-        if not method:
-            logger.error(
-                "Unable to find the payment method for {}").format(inc_id)
-            continue
+    return result
 
-        if method == "cashondelivery":
-             # ignore COD
-             continue
-
-        logger.info("querying {} for the payment status of {}".format(
-            method, inc_id)) 
-
-        gateway = lib.gateway.get_gateway_by_method(method)
-        status = gateway().check_payment_status(inc_id)
-
-        logger.info("Got status as {} from PG: {} for ORD: {}".format(
-            status, method, inc_id))
-
-        if status:
-            # set the payment received flag to true
-            controller.OrderController(None, order).update_payment_status()

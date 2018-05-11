@@ -34,18 +34,24 @@ app.conf.beat_schedule = {
     #        'task': 'app.payment.tasks.check_payment_status',
     #        'schedule': crontab(minute='*/3')
     #    }
-    'every-day': {
+    'every-day-stat': {
         'task': 'app.driver.tasks.generate_end_of_day_driver_stat',
-                'schedule': crontab(minute='50', hour='23')
+        'schedule': crontab(minute='50', hour='23')
     },
 
-    'every-day': {
+    'every-day-checkout': {
         'task': 'app.driver.tasks.set_checkout',
-                'schedule': crontab(minute='50', hour='23')
+        'schedule': crontab(minute='50', hour='23')
     },
+
     'every-hour': {
         'task': 'app.inventory.tasks.low_stock_notification',
-                'schedule': crontab(minute=0, hour='*/1')
+        'schedule': crontab(minute=0, hour='*/1')
+    },
+
+    'every-five-min-payment': {
+       'task': 'app.payment.tasks.cancel_payment_pending_orders',
+       'schedule': crontab(minute='*/5')
     }
 }
 
