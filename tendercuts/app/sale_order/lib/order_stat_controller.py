@@ -54,7 +54,7 @@ class OrderDataController(object):
                 "discount_description": order.discount_description or '',
                 "payment_method": order.payment.all()[0].method,
                 "medium": order.medium,
-                "spend_amount": reward_amount,
+                "spend_amount": rewards,
 
                 "customer": {
                     "partner_name": order.customer_firstname,
