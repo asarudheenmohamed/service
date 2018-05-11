@@ -30,7 +30,7 @@ django-redis
 requests
 django-debug-toolbar
 django-debug-panel
-flower
+flower==0.9.1
 juspay
 razorpay
 python-dateutil
