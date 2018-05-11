@@ -202,3 +202,9 @@ class CatalogProductFlat18(CatalogProductFlat):
         managed = False
         db_table = 'catalog_product_flat_18'
         app_label = "magento"
+
+class CatalogProductFlat21(CatalogProductFlat):
+    class Meta:
+        managed = False
+        db_table = 'catalog_product_flat_21'
+        app_label = "magento"
