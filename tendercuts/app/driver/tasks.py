@@ -15,7 +15,7 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def driver_stat(order_id):
     """Celery task to add the driver completed order."""
     from app.driver.lib.driver_stat_controller import DriverStatController
@@ -29,7 +29,7 @@ def driver_stat(order_id):
         order_obj.increment_id, order_obj.status)
 
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def generate_end_of_day_driver_stat(order_id):
     """Celery task to generate end of day driver status."""
     from app.driver.lib.end_of_day_driver_status import DriverStatusController
@@ -37,7 +37,7 @@ def generate_end_of_day_driver_stat(order_id):
     controller.generate_driver_completed_order_status()
 
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def customer_current_location(customer_id, lat, lon):
     """Update customer current location.
 
@@ -54,7 +54,7 @@ def customer_current_location(customer_id, lat, lon):
         customer_id, lat, lon)
 
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def send_sms(order_id, template_key, scheduled_time=None):
     """Celery task to send the order's status to the customer."""
 
@@ -87,7 +87,7 @@ def send_sms(order_id, template_key, scheduled_time=None):
         "Send order:{} {} state message for this customer:{}".format(
             order_id, order_obj.status, name))
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def set_checkout():
     """Celery task to set Check Out time for the driver."""
     objs = DriverLoginLogout.objects.filter(

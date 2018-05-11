@@ -18,7 +18,7 @@ def log_message(*args, **kwargs):
     print(kwargs)
 
 
-@app.task(base=TenderCutsTask, ignore_result=True)
+@app.task(base=TenderCutsTask)
 def update_order_elapsed_time(order_id, status):
     """Update order time lapse.
 
