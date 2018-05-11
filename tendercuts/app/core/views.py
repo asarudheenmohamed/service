@@ -85,11 +85,17 @@ class ProductViewSet(APIView):
             data = {}
             data['category'] = category_seralizer(category[category_id]).data
 
-            _, product_ids, _ = zip(*records)
+            data['products'] = []
+            for _, pid, sort_order in records:
+                if pid not in products:
+                    continue
 
-            data['products'] = [ products[pid] for pid in product_ids \
-                    if pid in products]
-            data['products'] = product_serializer(data['products'], many=True).data
+                product = products[pid]
+                product = product_serializer(product).data
+
+                # inject sort order into the product.
+                product['sort_order'] = int(sort_order)
+                data['products'].append(product)
 
             response.append(data)
 
