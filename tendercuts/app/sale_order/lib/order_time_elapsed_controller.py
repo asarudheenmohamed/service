@@ -45,10 +45,13 @@ class OrderTimeElapsedController(object):
 
     def create_order_elapsed_obj(self):
         """Create order elapsed object."""
+        order_obj = SalesFlatOrder.objects.filter(increment_id=self.order.increment_id).last()
 
-        if self.order.deliverytype == 2:
+        if int(order_obj.deliverytype) == 2:
+            import pytz
             pending_time = dateutil.parser.parse(
-                "{} {}".format(self.order.scheduled_date, self.slots[self.order.scheduled_slot]))
+                "{} {}".format(order_obj.scheduled_date, self.slots[order_obj.scheduled_slot]))
+            pending_time = pending_time.replace(tzinfo=pytz.utc)
         else:
             pending_time = self.order.created_at
 
@@ -59,7 +62,7 @@ class OrderTimeElapsedController(object):
             created_at=timezone.now())
 
         logger.info("Creating order elapsed object for order id:{}".format(
-            self.order.increment_id))
+            order_obj.increment_id))
 
     def update_processing_elapsed(self, elapsed_obj):
         """Update order processing time and elapsed time."""

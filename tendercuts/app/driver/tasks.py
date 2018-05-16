@@ -91,7 +91,7 @@ def send_sms(order_id, template_key, scheduled_time=None):
 def set_checkout():
     """Celery task to set Check Out time for the driver."""
     objs = DriverLoginLogout.objects.filter(
-        date=datetime.date.today(), check_out__isnull=True)
+        date=datetime.today(), check_out__isnull=True)
 
     logger.info(
         "To Update the check_out time for the drivers who forgot to check_out")
