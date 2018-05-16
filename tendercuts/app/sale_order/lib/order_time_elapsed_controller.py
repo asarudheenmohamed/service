@@ -55,11 +55,11 @@ class OrderTimeElapsedController(object):
         else:
             pending_time = self.order.created_at
 
-        OrderTimeElapsed.objects.create(
-            increment_id=self.order.increment_id,
-            deliverytype=self.order.deliverytype,
-            pending_time=pending_time,
-            created_at=timezone.now())
+        elapsed_obj,status=OrderTimeElapsed.objects.get_or_create(increment_id=self.order.increment_id)
+        elapsed_obj.deliverytype=self.order.deliverytype
+        elapsed_obj.pending_time=pending_time
+        elapsed_obj.created_at=timezone.now()
+        elapsed_obj.save()
 
         logger.info("Creating order elapsed object for order id:{}".format(
             order_obj.increment_id))
