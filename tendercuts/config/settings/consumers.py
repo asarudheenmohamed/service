@@ -43,8 +43,8 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         # One more way of calling.
         from app.sale_order import tasks
         if message['status']=='pending':
-           tomorrow = datetime.utcnow() + timedelta(seconds=60)
-           tasks.update_order_elapsed_time.apply_async((message['increment_id'],message['status']),eta=tomorrow)
+           eta_time = datetime.utcnow() + timedelta(seconds=60)
+           tasks.update_order_elapsed_time.apply_async((message['increment_id'], message['status']), eta=eta_time)
         else:
            tasks.update_order_elapsed_time.delay(
                message['increment_id'],message['status'])
@@ -69,7 +69,11 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         if status in callbacks:
             callbacks[status](body)
 
-        if status in ['pending', 'processing', 'complete', 'out_delivery'] and str(body['medium'])!=str(settings.ORDER_MEDIUM['POS']):
+        if str(body['medium'])==str(settings.ORDER_MEDIUM['POS']):
+            message.ack()
+            return
+
+        if status in ['scheduled_order','pending', 'processing', 'complete', 'out_delivery']:
             self.on_update_order_elapsed_time(body)
 
         logger.info('Received message: {0!r}'.format(body))
