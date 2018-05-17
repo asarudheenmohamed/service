@@ -30,8 +30,9 @@ def juspay_webhook(request):
     if not request.user.groups.filter(name="Admin").exists():
         return Response({'error': 'Unauthorized'}, status=401)
 
-    gateway = gw.JusPayGateway(log=logger)
-    gateway.reconcile_transaction(request.data)
+    if request.data['event_name'] == "ORDER_SUCCEEDED":
+       gateway = gw.JusPayGateway(log=logger)
+       gateway.reconcile_transaction(request.data)
 
     return Response()
 
