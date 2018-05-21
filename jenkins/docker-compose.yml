@@ -110,3 +110,6 @@ services:
 volumes:
   mysql-db:
   mage-db:
+
+networks:
+  django:
