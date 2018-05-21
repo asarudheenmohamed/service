@@ -23,6 +23,8 @@ services:
     volumes:
       - ../:/services/
       - ./results/:/jenkins
+    networks:
+      - django
 
   db:
     image: mysql:5.7
@@ -38,6 +40,8 @@ services:
       - mysql-db:/var/lib/mysql
     ports:
       - 3308:3306
+    networks:
+      - django
     # access for all
 
   # creating a second instance so that
@@ -56,6 +60,8 @@ services:
       - mage-db:/var/lib/mysql
     ports:
       - 3307:3306
+    networks:
+      - django
 
   php:
     build: ./php
@@ -69,12 +75,14 @@ services:
       - mage-db
       - redis
       - rabbitmq
-#    ports:
-#      - 80:80
+    ports:
+      - 80:80
       # - 9000:9000
     volumes:
       - ../website/:/var/www/html/
-  
+    networks:
+      - django
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -82,16 +90,22 @@ services:
       - mage-db:db
     ports:
       - 8081:80
+    networks:
+      - django
 
   redis:
     image: redis
     container_name: redis
     hostname: redis
+    networks:
+      - django
 
   rabbitmq:
     image: rabbitmq
     container_name: rabbitmq
     hostname: rabbitmq
+    networks:
+      - django
 
 volumes:
   mysql-db:
