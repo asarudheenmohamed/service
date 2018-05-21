@@ -9,7 +9,7 @@ echo "Installing packages";
     sh -c "sh /root/entrypoint.sh"
 
 echo "Installing php package";
-/usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=php") \
+/usr/bin/docker exec -t -u root $(/usr/bin/docker ps -aqf "name=magento") \
     sh -c "cd /var/www/html && php composer.phar install"
 
 echo "Env is up and running, doing all dj migrations";
