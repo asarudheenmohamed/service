@@ -72,7 +72,7 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             return is_paid
 
         # If the order is not paid then, double check at pg
-        juspay_order = self.juspay.Orders.get_status(order_id=order.increment_id)
+        juspay_order = self.juspay.Orders.status(order_id=order.increment_id)
 
         if juspay_order.status == "CHARGED":
             return True
