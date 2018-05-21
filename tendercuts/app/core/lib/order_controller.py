@@ -5,9 +5,10 @@ magento and python layer
 
 import logging
 
-from app.core.models.sales_order import SalesFlatOrderGrid
+from app.core.models.sales_order import SalesFlatOrderGrid, SalesFlatOrderStatusHistory
 
 from .magento import Connector
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -76,15 +77,25 @@ class OrderController(object):
         """
         # express delivery
         if self.order.deliverytype == 1:
-            self.order.status = "pending"
+            status = "pending"
         # sch
         elif self.order.deliverytype == 2:
-            self.order.status = "scheduled_order"
+            status = "scheduled_order"
         # split
         else:
-            self.order.status = "pending"
+            status = "pending"
 
+        self.order.status = status
         self.order.save()
+
+        # update order status in OrderStatusHistory
+        SalesFlatOrderStatusHistory.objects.create(
+            parent=self.order,
+            status=status,
+            created_at=timezone.now(),
+            is_customer_notified=1,
+            is_visible_on_front=1,
+            entity_name='order')
 
         if getattr(self.order, "grid", None):
             self.order.grid.status = "pending"
