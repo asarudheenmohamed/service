@@ -52,7 +52,7 @@ app.conf.beat_schedule = {
     'every-five-min-payment': {
        'task': 'app.payment.tasks.cancel_payment_pending_orders',
        'schedule': crontab(minute='*/5')
-    }
+    },
 }
 
 queues = [
