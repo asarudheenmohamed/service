@@ -66,7 +66,21 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         self.log.debug("Order status for {} is {}".format(
             order_id, order.status))
 
-        return order.status == 'pending' or order.status == "scheduled_order"
+        is_paid = order.status == 'pending' or order.status == "scheduled_order"
+
+        if is_paid:
+            return is_paid
+
+        # If the order is not paid then, double check at pg
+        juspay_order = self.juspay.Orders.get_status(order_id=order.increment_id)
+
+        if juspay_order.status == "CHARGED":
+            self.update_order_status(order)
+            return True
+
+        return False
+
+
 
     def verify_signature(self, params, hash_code, hash_algo):
         """Verify the HASH signature.

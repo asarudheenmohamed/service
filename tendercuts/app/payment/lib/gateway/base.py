@@ -60,20 +60,25 @@ class AbstractGateway(object):
         """Update order status to "pending" (success).
 
         params:
-            order (SaleFlatOrder): order
+            order (SaleFlatOrder| str): order
             payment_success (bool): boolean, indicating sucess from GW
 
         """
-        sale_order = core_models.SalesFlatOrder.objects.filter(
-            increment_id=order_id)
+        if type(order_id) is str:
+            sale_order = core_models.SalesFlatOrder.objects.filter(
+                increment_id=order_id)
 
-        if not sale_order:
-            raise core_exceptions.OrderNotFound()
+            if not sale_order:
+                raise core_exceptions.OrderNotFound()
 
-        order = OrderController(None, sale_order[0])
+            sale_order = sale_order.first()
+        else:
+            sale_order = order_id
+
+        order = OrderController(None, sale_order)
         order.payment_success()
 
-        return sale_order[0].status
+        return sale_order.status
 
     def verify_transaction(self, order_id, vendor_id):
         """Claim the transaction in the payment gateway.
