@@ -5,7 +5,7 @@ magento and python layer
 
 import logging
 
-from app.core.models.sales_order import SalesFlatOrderGrid, SalesFlatOrderStatusHistory
+from app.core.models.sales_order import SalesFlatOrderGrid
 
 from .magento import Connector
 from django.utils import timezone
@@ -87,15 +87,6 @@ class OrderController(object):
 
         self.order.status = status
         self.order.save()
-
-        # update order status in OrderStatusHistory
-        SalesFlatOrderStatusHistory.objects.create(
-            parent=self.order,
-            status=status,
-            created_at=timezone.now(),
-            is_customer_notified=1,
-            is_visible_on_front=1,
-            entity_name='order')
 
         if getattr(self.order, "grid", None):
             self.order.grid.status = "pending"

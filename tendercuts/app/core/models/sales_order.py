@@ -726,22 +726,6 @@ class SalesFlatOrderItem(models.Model):
         app_label = "magento"
 
 
-class SalesFlatOrderStatusHistory(models.Model):
-    entity_id = models.AutoField(primary_key=True)
-    parent = models.ForeignKey('SalesFlatOrder', models.DO_NOTHING)
-    is_customer_notified = models.IntegerField(blank=True, null=True)
-    is_visible_on_front = models.SmallIntegerField()
-    comment = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=32, blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
-    entity_name = models.CharField(max_length=32, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sales_flat_order_status_history'
-        app_label = "magento"
-
-
 class SalesFlatOrderAddress(models.Model):
     entity_id = models.AutoField(primary_key=True)
     parent = models.ForeignKey(SalesFlatOrder, models.DO_NOTHING,
