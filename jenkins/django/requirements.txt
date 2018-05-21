@@ -24,7 +24,7 @@ googlemaps
 MySQL-python
 
 python-magento
-celery==4.1.0
+celery==4.0.2
 redis
 django-redis
 requests
