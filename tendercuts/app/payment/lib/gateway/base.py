@@ -64,7 +64,9 @@ class AbstractGateway(object):
             payment_success (bool): boolean, indicating sucess from GW
 
         """
-        if type(order_id) is str:
+        if type(order_id) is core_models.SalesFlatOrder:
+            sale_order = order_id
+        else:
             sale_order = core_models.SalesFlatOrder.objects.filter(
                 increment_id=order_id)
 
@@ -72,8 +74,6 @@ class AbstractGateway(object):
                 raise core_exceptions.OrderNotFound()
 
             sale_order = sale_order.first()
-        else:
-            sale_order = order_id
 
         order = OrderController(None, sale_order)
         order.payment_success()

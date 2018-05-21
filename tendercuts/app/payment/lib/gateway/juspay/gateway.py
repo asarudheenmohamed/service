@@ -75,7 +75,6 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         juspay_order = self.juspay.Orders.get_status(order_id=order.increment_id)
 
         if juspay_order.status == "CHARGED":
-            self.update_order_status(order)
             return True
 
         return False
