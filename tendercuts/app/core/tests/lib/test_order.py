@@ -3,7 +3,7 @@ Test cases for testing orders contrller
 """
 
 import pytest
-from app.core.models.sales_order import SalesFlatOrder, SalesFlatOrderStatusHistory
+from app.core.models.sales_order import SalesFlatOrder
 from app.core.lib.order_controller import OrderController
 
 
@@ -54,8 +54,3 @@ class TestOrderController:
         order = SalesFlatOrder.objects.filter(entity_id=1)[0]
         assert order.status == "pending"
         assert order.grid.status == "pending"
-
-        order_history = SalesFlatOrderStatusHistory.objects.filter(
-            parent=order, status="pending")
-
-        assert order_history is not None

@@ -1,6 +1,3 @@
 [submodule "website"]
 	path = website
 	url = git@bitbucket.org:tendercutsservices/website.git
-[submodule "notebooks"]
-	path = notebooks
-	url = git@bitbucket.org:tendercutsservices/notebooks.git
