@@ -114,7 +114,7 @@ class OrderTimeElapsedController(object):
                        'processing': self.update_processing_elapsed,
                        'out_delivery': self.update_out_delivery_elapsed,
                        'complete': self.update_completed_elapsed,
-                       'scheduled_order': create_order_elapsed_obj}
+                       'scheduled_order': self.create_order_elapsed_obj}
 
         elapsed_obj = OrderTimeElapsed.objects.filter(
             increment_id=self.order.increment_id).last()
