@@ -37,7 +37,7 @@ class TestStoreOrderController:
             Check Driver's current latitude & longitude.
 
         """
-        user_obj = User.objects.all()[0]
+        user_obj, status = User.objects.get_or_create(username="u:1234")
 
         past_record = DriverPosition.objects.create(
             driver_user=user_obj,

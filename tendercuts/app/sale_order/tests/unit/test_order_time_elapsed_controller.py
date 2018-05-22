@@ -18,7 +18,7 @@ class TestOrderDataController:
     @pytest.mark.parametrize("delivery_type,status", [
         (1, ("pending", "processing", "out_delivery", "complete"))])
     def test_update_order_status_time(
-            self, mock_driver, delivery_type, status):
+            self, mock_driver, generate_mock_order, delivery_type, status):
         """Test to order elapsed time lapse.
         Asserts:
             Checks the order elapsed object increment id is mock order increment_id.
