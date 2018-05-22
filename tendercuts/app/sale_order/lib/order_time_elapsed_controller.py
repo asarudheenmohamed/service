@@ -29,7 +29,10 @@ class OrderTimeElapsedController(object):
 
     def _complute_elapsed_time(self, ending_time, starting_time):
         """Returns the elapsed time."""
-        return round(((ending_time - starting_time).total_seconds()) / 60, 0)
+        elapsed_time = round(
+            ((ending_time - starting_time).total_seconds()) / 60, 0)
+
+        return elapsed_time if elapsed_time > 0 else 0
 
     def fetch_driver_basic_info(self):
         """Returns to the driver entity object."""
@@ -45,7 +48,8 @@ class OrderTimeElapsedController(object):
 
     def create_order_elapsed_obj(self):
         """Create order elapsed object."""
-        order_obj = SalesFlatOrder.objects.filter(increment_id=self.order.increment_id).last()
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id=self.order.increment_id).last()
 
         if int(order_obj.deliverytype) == 2:
             import pytz
@@ -55,10 +59,11 @@ class OrderTimeElapsedController(object):
         else:
             pending_time = self.order.created_at
 
-        elapsed_obj,status=OrderTimeElapsed.objects.get_or_create(increment_id=self.order.increment_id)
-        elapsed_obj.deliverytype=self.order.deliverytype
-        elapsed_obj.pending_time=pending_time
-        elapsed_obj.created_at=timezone.now()
+        elapsed_obj, status = OrderTimeElapsed.objects.get_or_create(
+            increment_id=self.order.increment_id)
+        elapsed_obj.deliverytype = self.order.deliverytype
+        elapsed_obj.pending_time = pending_time
+        elapsed_obj.created_at = timezone.now()
         elapsed_obj.save()
 
         logger.info("Creating order elapsed object for order id:{}".format(
@@ -108,13 +113,14 @@ class OrderTimeElapsedController(object):
         actions_map = {'pending': self.create_order_elapsed_obj,
                        'processing': self.update_processing_elapsed,
                        'out_delivery': self.update_out_delivery_elapsed,
-                       'complete': self.update_completed_elapsed}
+                       'complete': self.update_completed_elapsed,
+                       'scheduled_order': create_order_elapsed_obj}
 
         elapsed_obj = OrderTimeElapsed.objects.filter(
             increment_id=self.order.increment_id).last()
 
         if status in actions_map:
-            if status == 'pending':
+            if status in ['pending', 'scheduled_order']:
                 actions_map[status]()
             else:
                 actions_map[status](elapsed_obj)
