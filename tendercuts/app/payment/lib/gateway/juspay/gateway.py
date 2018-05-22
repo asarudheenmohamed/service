@@ -53,8 +53,6 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             boolean: indicating if the payment was captured.
 
         """
-        self.log.debug(
-            "Checking order status for {} from JUSPAY".format(order_id))
         # response = juspay.Orders.status(order_id=order_id)
         order = core_models.SalesFlatOrder.objects.filter(
             increment_id=order_id)
@@ -63,8 +61,8 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             raise OrderNotFound()
 
         order = order[0]
-        self.log.debug("Order status for {} is {}".format(
-            order_id, order.status))
+        self.log.debug("VERIFY: Order status for {} is {}".format(
+            order.increment_id, order.status))
 
         is_paid = order.status == 'pending' or order.status == "scheduled_order"
 
@@ -72,7 +70,9 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             return is_paid
 
         # If the order is not paid then, double check at pg
-        juspay_order = self.juspay.Orders.get_status(order_id=order.increment_id)
+        juspay_order = self.juspay.Orders.status(order_id=order.increment_id)
+        self.log.debug( "Order status for {} from JUSPAY is {}".format(
+            order_id, juspay_order.status))
 
         if juspay_order.status == "CHARGED":
             return True
