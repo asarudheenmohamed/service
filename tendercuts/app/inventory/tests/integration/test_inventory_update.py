@@ -1,6 +1,6 @@
 """Integration tests for notify inventory module."""
 import datetime
-
+import time
 import pytest
 from pytest_bdd import given, scenario, then, when
 
@@ -76,6 +76,7 @@ def notify_customer(product1, product2):
                 store_id=store_id,
                 qty=10).save()
 
+    time.sleep(60)
     response = tasks.notification_sms.apply()
     status = response.get()
 
