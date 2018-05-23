@@ -17,7 +17,7 @@ def test_customer_current_location_task(generate_mock_order):
     """
 
     customer_location_obj = tasks.customer_current_location.apply(
-        generate_mock_order.customer_id, 11.342, 80.542).get()
+        args=[generate_mock_order.customer_id, 11.342, 80.542]).get()
 
     customer_address_obj = address.CustomerAddressEntity.objects.filter(
         parent__entity_id=generate_mock_order.customer_id)
