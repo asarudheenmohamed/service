@@ -20,7 +20,7 @@ def test_notify():
 
 
 @given('Create notify object for <product1> and <product2>')
-def create_notify(auth_rest, product1, product2):
+def create_notify(auth_rest, mock_django_user, product1, product2):
     """Create NotifyCustomer object.
 
     Params:
