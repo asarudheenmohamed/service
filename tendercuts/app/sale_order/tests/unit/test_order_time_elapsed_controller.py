@@ -3,11 +3,13 @@
 import time
 from datetime import datetime, timedelta
 
-import pytest
+from django.contrib.auth.models import User
 from django.utils import timezone
 
+import pytest
 from app.core.models import SalesFlatOrder, SalesFlatOrderItem
-from app.sale_order.lib.order_time_elapsed_controller import OrderTimeElapsedController
+from app.sale_order.lib.order_time_elapsed_controller import \
+    OrderTimeElapsedController
 from app.sale_order.model import OrderTimeElapsed
 
 
@@ -23,6 +25,8 @@ class TestOrderDataController:
         Asserts:
             Checks the order elapsed object increment id is mock order increment_id.
         """
+        User.objects.get_or_create(username=mock_driver.dj_user_id)
+
         for state in status:
             generate_mock_order.status = state
             generate_mock_order.scheduled_slot = 52
