@@ -76,9 +76,9 @@ def notify_customer(product1, product2):
                 store_id=store_id,
                 qty=10).save()
 
-    response = tasks.notification_sms()
-
-    assert response == True
+    response = tasks.notification_sms.apply()
+    status = response.get()
+    assert status == True
 
 
 @then('Notify customer object will set as notified')
