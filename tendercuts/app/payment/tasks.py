@@ -3,13 +3,15 @@ ALl payment related celery tasks.
 """
 
 import datetime
-from config.celery import app
+
 from celery.utils.log import get_task_logger
 
+from app.core import models as core_models
 from app.core.lib import order_controller as controller
 from app.core.lib import magento
 from app.core.lib.celery import TenderCutsTask
-from app.core import models as core_models
+from app.payment.lib.gateway.juspay import JuspayOrderSuccessProcessor
+from config.celery import app
 
 logger = get_task_logger(__name__)
 
@@ -42,3 +44,11 @@ def cancel_payment_pending_orders():
 
     return result
 
+
+@app.task(base=TenderCutsTask)
+def order_success(order_id):
+    """Trigger juspayorder success processor.
+    Params:
+     order_id(str):order increment_id
+    """
+    JuspayOrderSuccessProcessor.from_payload(order_id).execute()
