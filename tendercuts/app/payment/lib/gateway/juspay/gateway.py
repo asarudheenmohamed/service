@@ -239,7 +239,7 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         content = payload.get('content', {})
         order = content.get('order', {})
         order_id = order.get('order_id', None)
-        eta_time = datetime.utcnow() + timedelta(seconds=30)
+        eta_time = datetime.utcnow() + timedelta(seconds=60)
 
         if payload['event_name'] == "ORDER_SUCCEEDED":
             # Set task execution time
