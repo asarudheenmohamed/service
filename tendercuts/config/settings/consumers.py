@@ -74,6 +74,8 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
             'processing': [self._on_update_order_elapsed_time],
             'out_delivery': [self._on_update_order_elapsed_time],
             'complete': [self._on_update_order_elapsed_time],
+            'canceled':[self._on_update_order_elapsed_time,self._send_sms],
+            'closed':[self._on_update_order_elapsed_time]
         }
 
         # validations

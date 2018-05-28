@@ -10,7 +10,7 @@ from app.core import models as core_models
 from app.core.lib import order_controller as controller
 from app.core.lib import magento
 from app.core.lib.celery import TenderCutsTask
-from app.payment.lib.gateway.juspay import JuspayOrderSuccessProcessor
+from app.payment.lib.gateway.juspay.webhook import JuspayOrderSuccessProcessor
 from config.celery import app
 
 logger = get_task_logger(__name__)
