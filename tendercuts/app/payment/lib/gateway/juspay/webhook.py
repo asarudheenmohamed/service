@@ -81,7 +81,7 @@ class JuspayOrderSuccessProcessor(JuspayMixin):
             # update status to pending
             ord_ctrl = controller.OrderController(None, self.order)
             ord_ctrl.payment_success(
-                is_commend='Payment verified from webhook(juspay)')
+                is_comment='Payment verified from webhook(juspay)')
 
         # in cases of any other status, it means that we have
         # started processing the order, so just update the payment
