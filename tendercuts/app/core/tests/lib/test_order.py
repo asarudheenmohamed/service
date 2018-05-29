@@ -1,9 +1,7 @@
-"""
-Test cases for testing orders contrller
-"""
+"""Test cases for testing orders contrller."""
 
 import pytest
-from app.core.models.sales_order import SalesFlatOrder
+from app.core.models.sales_order import SalesFlatOrder, SalesFlatOrderStatusHistory
 from app.core.lib.order_controller import OrderController
 
 
@@ -13,44 +11,33 @@ class TestOrderController:
     Companion for Order Controller
     """
 
-    def test_order_express(self):
+    @pytest.mark.parametrize("status,delivery_type,comment", [
+        ("pending_payment", 1, "Payment verify fron juspay"),
+        ("pending_payment", 2, None)])
+    def test_order_payment_success(
+            self, status, delivery_type, comment):
         """
         Asserts:
-         Instance is valid
+         Checks the mock order status
         """
         # mock the order
-        order = SalesFlatOrder.objects.filter(entity_id=1)[0]
-        order.status = "pending_payment"
-        order.grid.status = "pending_payment"
-        order.order_now = 1
-        order.save()
-        order.grid.save()
 
-        # no need mage controller
-        ord_ctrl = OrderController(None, order)
-        ord_ctrl.payment_success()
+        generate_mock_order = SalesFlatOrder.objects.filter(
+            deliverytype=delivery_type).last()
+        generate_mock_order.scheduled_slot = 52
+        generate_mock_order.status = status
+        generate_mock_order.save()
 
-        order = SalesFlatOrder.objects.filter(entity_id=1)[0]
-        assert order.status == "pending"
-        assert order.grid.status == "pending"
+        ord_ctrl = OrderController(None, generate_mock_order)
+        ord_ctrl.payment_success(is_comment=comment)
 
-    def test_order_scheduled(self):
-        """
-        Asserts:
-         Instance is valid
-        """
-        # mock the order
-        order = SalesFlatOrder.objects.filter(entity_id=1)[0]
-        order.status = "pending_payment"
-        order.grid.status = "pending_payment"
-        order.order_now = 0
-        order.save()
-        order.grid.save()
+        order = SalesFlatOrder.objects.filter(
+            increment_id=generate_mock_order.increment_id).last()
 
-        # no need mage controller
-        ord_ctrl = OrderController(None, order)
-        ord_ctrl.payment_success()
+        assert order.status in ["pending", "scheduled_order"]
+        assert order.grid.status in ["pending", "scheduled_order"]
 
-        order = SalesFlatOrder.objects.filter(entity_id=1)[0]
-        assert order.status == "pending"
-        assert order.grid.status == "pending"
+        response = SalesFlatOrderStatusHistory.objects.filter(
+            parent__increment_id=order.increment_id).last()
+
+        assert response.comment in ["Payment verify fron juspay", None]

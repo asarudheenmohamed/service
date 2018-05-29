@@ -17,6 +17,8 @@ from rest_framework.reverse import reverse
 
 from .. import serializer
 from ..lib import gateway as gw
+from app.payment import tasks
+from datetime import datetime, timedelta
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -30,9 +32,8 @@ def juspay_webhook(request):
     if not request.user.groups.filter(name="Admin").exists():
         return Response({'error': 'Unauthorized'}, status=401)
 
-    if request.data['event_name'] == "ORDER_SUCCEEDED":
-       gateway = gw.JusPayGateway(log=logger)
-       gateway.reconcile_transaction(request.data)
+    gateway = gw.JusPayGateway(log=logger)
+    gateway.reconcile_transaction(request.data)
 
     return Response()
 

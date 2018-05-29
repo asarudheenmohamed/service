@@ -56,7 +56,7 @@ class AbstractGateway(object):
         """
         pass
 
-    def update_order_status(self, order_id):
+    def update_order_status(self, order_id, is_comment=None):
         """Update order status to "pending" (success).
 
         params:
@@ -64,7 +64,7 @@ class AbstractGateway(object):
             payment_success (bool): boolean, indicating sucess from GW
 
         """
-        if type(order_id) is core_models.SalesFlatOrder:
+        if isinstance(order_id, core_models.SalesFlatOrder):
             sale_order = order_id
         else:
             sale_order = core_models.SalesFlatOrder.objects.filter(
@@ -76,7 +76,7 @@ class AbstractGateway(object):
             sale_order = sale_order.first()
 
         order = OrderController(None, sale_order)
-        order.payment_success()
+        order.payment_success(is_comment)
 
         return sale_order.status
 
@@ -93,10 +93,9 @@ class AbstractGateway(object):
         status = self.claim_payment(order_id, vendor_id)
         if status:
             # Claim on magento side
-            self.update_order_status(order_id)
+            self.update_order_status(
+                order_id, is_comment='Payment verified from juspay')
         else:
             tasks.send_sms.delay(order_id, 'payment_pending')
 
-
         return status
-
