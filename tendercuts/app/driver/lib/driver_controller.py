@@ -171,7 +171,7 @@ class DriverController(object):
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
-            status=status)
+            status=status).order_by('-updated_at')[:10]
         logger.debug(
             'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
                 order_ids))
