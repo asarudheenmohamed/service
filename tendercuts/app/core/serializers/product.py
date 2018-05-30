@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .. import models as models
 from . import attribute
 
-PRODUCT_FIELDS = ('price', 'short_description', 'description', 'sku',
+PRODUCT_FIELDS = ('price','special_price', 'short_description', 'description', 'sku',
                   "thumb",
                   "weight_description", "gross_weight_description",
                   "visibility", "status", "uom", "name", "entity_id",
