@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 class JuspayOrderSuccessProcessor(JuspayMixin):
 
     @classmethod
-    def from_payload(cls, payload):
+    def from_payload(cls, order_id):
         """Generates a processor instance from the payload.
 
         params:
@@ -51,12 +51,6 @@ class JuspayOrderSuccessProcessor(JuspayMixin):
             ValueError: In case of invalid payload
 
         """
-        event_name = payload['event_name']
-        # extract order id
-        content = payload.get('content', {})
-        order = content.get('order', {})
-        order_id = order.get('order_id', None)
-
         if not order_id:
             raise ValueError("Invalid order id {}".format(payload))
 
@@ -86,7 +80,8 @@ class JuspayOrderSuccessProcessor(JuspayMixin):
         if self.order.status == "pending_payment":
             # update status to pending
             ord_ctrl = controller.OrderController(None, self.order)
-            ord_ctrl.payment_success()
+            ord_ctrl.payment_success(
+                is_comment='Payment verified from webhook(juspay)')
 
         # in cases of any other status, it means that we have
         # started processing the order, so just update the payment

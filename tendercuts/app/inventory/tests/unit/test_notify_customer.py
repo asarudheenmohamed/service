@@ -1,8 +1,9 @@
 """Test cases for Notify customer controller."""
 import datetime
 
-import pytest
+from django.contrib.auth.models import User
 
+import pytest
 from app.core.models import Graminventory, GraminventoryLatest
 from app.inventory.lib.notify_customer_controller import \
     NotifyCustomerController
@@ -13,7 +14,7 @@ from app.inventory.models import NotifyCustomer
 class TestNotifyCustomerController:
     """To check Notify Customer Controller."""
 
-    def test_get_customer_notify(self, auth_rest):
+    def test_get_customer_notify(self, mock_user):
         """To check our fetched.
 
         Asserts:
@@ -21,14 +22,11 @@ class TestNotifyCustomerController:
             Check whether the order details are fetched or not.
 
         """
-        response = auth_rest.post(
-            "/inventory/notify_me/",
-            {'store_id': 1,
-             'product_id': 221,
-             },
-            format='json')
-
-        assert response.status_code == 201
+        # mock the notify object
+        user, status = User.objects.get_or_create(
+            username=mock_user.dj_user_id)
+        NotifyCustomer.objects.create(product_id=221,
+                                      store_id=1, customer=user)
 
         controller = NotifyCustomerController()
         notify_customers = controller.get_customer_notify_obj()

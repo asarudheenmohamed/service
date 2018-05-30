@@ -127,6 +127,15 @@ def referral_user(request):
 
 
 @pytest.fixture
+def mock_django_user(auth_rest):
+    django_user = User.objects.get_or_create(
+        id=auth_rest.handler._force_user.id,
+        username=auth_rest.handler._force_user.username)[0]
+
+    return django_user
+
+
+@pytest.fixture
 def cache():
     """A cache to store data for bdd test cases"""
     return {}

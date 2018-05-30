@@ -1,6 +1,6 @@
 """Integration tests for notify inventory module."""
 import datetime
-
+import time
 import pytest
 from pytest_bdd import given, scenario, then, when
 
@@ -20,7 +20,7 @@ def test_notify():
 
 
 @given('Create notify object for <product1> and <product2>')
-def create_notify(auth_rest, product1, product2):
+def create_notify(auth_rest, mock_django_user, product1, product2):
     """Create NotifyCustomer object.
 
     Params:
@@ -78,7 +78,6 @@ def notify_customer(product1, product2):
 
     response = tasks.notification_sms.apply()
     status = response.get()
-
     assert status == True
 
 

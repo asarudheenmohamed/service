@@ -6,6 +6,7 @@ import pytest
 import uuid
 import mock
 
+
 @pytest.fixture
 def mock_order():
     order = {
@@ -18,11 +19,11 @@ def mock_order():
         "rewardpoints_base_amount": 0,
         "rewardpoints_amount": 0,
         "rewardpoints_referal_earn": 0,
-        "rewardpoints_invited_discount":0,
+        "rewardpoints_invited_discount": 0,
         "rewardpoints_invited_base_discount": 0,
         "rewardpoints_refer_customer_id": 0,
         "location_id": 0,
-        "mail_send":0,
+        "mail_send": 0,
         "order_now": 1,
         "driver_id": 0
     }
@@ -32,6 +33,7 @@ def mock_order():
         parent=order, method="cashondelivery")
 
     return order
+
 
 class TestWebhook:
 
@@ -44,7 +46,7 @@ class TestWebhook:
     ])
     @pytest.mark.django_db
     def test_order_confirmation(self, mock_order, initial_state,
-        expected_state, initial_payment_mode, should_call):
+                                expected_state, initial_payment_mode, should_call):
         """Asserts:
         1\ Status change
         2\ payment mode change.
@@ -58,18 +60,19 @@ class TestWebhook:
         payment.method = initial_payment_mode
         payment.save()
 
-        payload = {
-            'event_name': u'ORDER_SUCCEEDED',
-            'content': {
-                'order': {
-                    'order_id': mock_order.increment_id,
-                    'payment_method': u'VISA'
-                }
-            }
-        }
+        # payload = {
+        #     'event_name': u'ORDER_SUCCEEDED',
+        #     'content': {
+        #         'order': {
+        #             'order_id': mock_order.increment_id,
+        #             'payment_method': u'VISA'
+        #         }
+        #     }
+        # }
 
         with mock.patch.object(tasks.send_sms, 'delay', mock.Mock(return_value=1)) as mock_method:
-            processor = JuspayOrderSuccessProcessor.from_payload(payload)
+            processor = JuspayOrderSuccessProcessor.from_payload(
+                mock_order.increment_id)
             processor.execute()
             if should_call:
                 mock_method.assert_called()

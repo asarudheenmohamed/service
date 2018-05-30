@@ -4,23 +4,26 @@ Juspay gateway
 from __future__ import absolute_import, unicode_literals
 
 import base64
-import hmac
-import urllib
-import traceback
 import hashlib
+import hmac
+import traceback
+import urllib
+from datetime import datetime, timedelta
 
 import pytest
 
 from app.core import models as core_models
 from app.core.lib.exceptions import OrderNotFound, send_exception
 from app.core.lib.user_controller import *
+from app.payment import tasks
 
-from ..base import AbstractGateway
 from .... import models
-from .transaction import JuspayTransaction
-from .mixin import JuspayMixin
+from ..base import AbstractGateway
 from .customer import JuspayCustomer
+from .mixin import JuspayMixin
+from .transaction import JuspayTransaction
 from .webhook import JuspayOrderSuccessProcessor
+
 
 @pytest.mark.django_db
 class JusPayGateway(AbstractGateway, JuspayMixin):
@@ -78,8 +81,6 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
             return True
 
         return False
-
-
 
     def verify_signature(self, params, hash_code, hash_algo):
         """Verify the HASH signature.
@@ -142,9 +143,10 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         wallet_list = []
         if wallets:
             wallet_list = [mode for mode in modes
-                   if mode.payment_method_type == self.WALLET_CODE]
+                           if mode.payment_method_type == self.WALLET_CODE]
 
-        return [models.PaymentMode.from_justpay(mode) for mode in nbs + cards + wallet_list]
+        return [models.PaymentMode.from_justpay(
+            mode) for mode in nbs + cards + wallet_list]
 
     def juspay_order_create(self, order, customer):
         """First create an order in Juspay.
@@ -229,11 +231,16 @@ class JusPayGateway(AbstractGateway, JuspayMixin):
         return juspay_order.status == self.SUCCESS if juspay_order else False
 
     def reconcile_transaction(self, payload):
-        try:
-            JuspayOrderSuccessProcessor.from_payload(payload).execute()
-        except Exception as e:
-            msg = traceback.format_exc()
-            send_exception("Juspay Order Recon Error", msg)
+        """Order success trigger in celery tasks.
+        Params:
+            payload(dict):order juspay dict obj
+            eta: task execution time
+        """
+        content = payload.get('content', {})
+        order = content.get('order', {})
+        order_id = order.get('order_id', None)
+        eta_time = datetime.utcnow() + timedelta(seconds=60)
 
-
-
+        if payload['event_name'] == "ORDER_SUCCEEDED":
+            # Set task execution time
+            tasks.order_success.apply_async(args=[order_id], eta=eta_time)
