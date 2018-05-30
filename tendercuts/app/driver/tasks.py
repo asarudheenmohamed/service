@@ -66,12 +66,12 @@ def send_sms(order_id, template_key, scheduled_time=None):
     order_obj = order_obj.last()
 
     try:
-         data = CustomerSearchController.load_basic_info(
+        data = CustomerSearchController.load_basic_info(
             order_obj.customer_id)
-         userid, email, phone, name = data
+        userid, email, phone, name = data
     except Exception as e:
-        raise ValueError('Extract basic info failed {} for CID: {}'.format(
-            data, order_obj.customer_id))
+        raise ValueError('Extract basic info failed for CID: {}'.format(
+            order_obj.customer_id))
 
     logger.info("Send status as {} to the customer : {}".format(
         order_obj.status, phone))
@@ -86,6 +86,7 @@ def send_sms(order_id, template_key, scheduled_time=None):
     logger.info(
         "Send order:{} {} state message for this customer:{}".format(
             order_id, order_obj.status, name))
+
 
 @app.task(base=TenderCutsTask)
 def set_checkout():
