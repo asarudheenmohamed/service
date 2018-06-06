@@ -27,23 +27,8 @@ def update_order_elapsed_time(order_id, status):
      status(str):order status
 
     """
-    order_obj = SalesFlatOrder.objects.filter(increment_id=order_id).last()
-
-    order_status_list = cache.get_key(order_obj.increment_id)
-
-    if order_status_list is None:
-        order_status_list = [order_obj.status]
-    elif status not in order_status_list:
-        order_status_list.append(order_obj.status)
-    else:
-        return None
-
-    logger.info("Set order:{} status: {} in redis db".format(
-        order_id, order_status_list))
+    order_obj = SalesFlatOrder.objects.filter(increment_id=str(order_id)).last()
 
     controller = OrderTimeElapsedController(order_obj)
     controller.compute_order_status_elapsed_time(status)
 
-    # set order status list in redis db like
-    # ['pending','processing','out_delivery','complete'] it's expire to 24 hours
-    cache.set_key(order_obj.increment_id, order_status_list, 60 * 60 * 24)

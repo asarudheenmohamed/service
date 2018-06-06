@@ -56,7 +56,7 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         from app.sale_order import tasks
 
         eta_time = datetime.utcnow() + timedelta(seconds=10)
-        # eta set the task excution time
+        #eta set the task excution time
         tasks.update_order_elapsed_time.apply_async(
             (message['increment_id'], message['status']), eta=eta_time)
 
@@ -69,7 +69,7 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
 
         }
         online_order_callbacks = {
-            'pending': [self._on_update_order_elapsed_time, self._send_sms],
+            'pending': [self._on_update_order_elapsed_time],
             'scheduled_order': [self._on_update_order_elapsed_time],
             'processing': [self._on_update_order_elapsed_time],
             'out_delivery': [self._on_update_order_elapsed_time],
