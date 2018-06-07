@@ -46,21 +46,11 @@ def cancel_payment_pending_orders():
 
                 tasks.send_sms.delay(inc_id, 'payment_confirmation')
 
-                logger.info(
-                    "Sent payment confirmation message to the order:{} ".format(
-                        inc_id))
                 continue
 
         try:
             order_controller.cancel()
             logger.info("cancelled the order {}".format(inc_id))
-
-            tasks.send_sms.delay(
-                inc_id,
-                'payment_pending_to_cancel')
-            logger.info(
-                "message sent while payment pending to cancel the order:{} ".format(
-                    inc_id))
 
             result.append(inc_id)
 
