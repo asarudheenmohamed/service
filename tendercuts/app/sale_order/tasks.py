@@ -27,8 +27,8 @@ def update_order_elapsed_time(order_id, status):
      status(str):order status
 
     """
-    order_obj = SalesFlatOrder.objects.filter(increment_id=str(order_id)).last()
+    order_obj = SalesFlatOrder.objects.filter(
+        increment_id=str(order_id)).last()
 
     controller = OrderTimeElapsedController(order_obj)
     controller.compute_order_status_elapsed_time(status)
-
