@@ -275,8 +275,9 @@ ORDER_MEDIUM = {
 }
 
 SMS_TEMPLATES = {
-    'canceled':'Dear Customer Your Order No.#{}. has been Cancelled. We are sorry to have missed you this time. Do call us again for fresh, juicy and tender choices from Tender Cuts. Looking forward to serving you! Tendercuts.in',
-    'pending':'Thank you for your trust in Tender Cuts. Your fresh, juicy and tender choice is noted and your order id is #{}. We will keep you updated on progress',
+    'payment_pending_to_cancel': 'your order #{} has been Cancelled.',
+    'canceled': 'Dear Customer Your Order No.#{}. has been Cancelled. We are sorry to have missed you this time. Do call us again for fresh, juicy and tender choices from Tender Cuts. Looking forward to serving you! Tendercuts.in',
+    'pending': 'Thank you for your trust in Tender Cuts. Your fresh, juicy and tender choice is noted and your order id is #{}. We will keep you updated on progress',
     'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
     'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
     'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-7097299492 Disliked it-7097299569",
