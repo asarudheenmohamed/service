@@ -4,6 +4,7 @@ import pytest
 from app.payment import tasks
 import datetime
 from app.payment.lib.gateway.payu import Payu
+import mock
 
 
 @pytest.mark.django_db
