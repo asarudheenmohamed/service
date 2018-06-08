@@ -19,6 +19,9 @@ def test_cancel_payment_pending_orders(generate_mock_order):
     THRESHOLD = 35 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)
+    payment = generate_mock_order.payment.all()[0]
+    payment.method = "juspay"
+    payment.save()
     generate_mock_order.status = 'pending_payment'
     generate_mock_order.created_at = start
     generate_mock_order.save()
