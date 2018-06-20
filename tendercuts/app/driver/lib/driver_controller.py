@@ -12,7 +12,6 @@ from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
-
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
@@ -166,12 +165,14 @@ class DriverController(object):
 
         """
         order_ids = DriverOrder.objects.filter(
-            driver_user=self.driver) \
-            .values_list('increment_id', flat=True)
+            driver_user=self.driver,
+            created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
+            'increment_id',
+            flat=True)
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
-            status=status).order_by('-updated_at')[:10]
+            status=status)[:10]
         logger.debug(
             'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
                 order_ids))

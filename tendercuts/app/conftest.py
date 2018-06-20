@@ -91,6 +91,15 @@ def generate_mock_order(request, mock_user):
     return order
 
 
+@pytest.fixture(scope="module")
+def generate_new_order(request, mock_user):
+    """Generates a new order.
+    """
+    order = GenerateOrder().generate_order(mock_user.entity_id)
+
+    return order
+
+
 @pytest.fixture(scope="session")
 def mock_user(request):
     """Generates a mock customer.

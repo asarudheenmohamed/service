@@ -428,6 +428,7 @@ class SalesFlatOrder(models.Model):
 
     # Replace these ID fields with models
     driver_id = models.IntegerField()
+
     # shipping_address_id = models.IntegerField(blank=True, null=True)
 
     # to_field by default points to the primay key
@@ -442,6 +443,7 @@ class SalesFlatOrder(models.Model):
 
     driver_name = models.CharField(max_length=25, blank=True, null=True)
     driver_number = models.CharField(max_length=12, blank=True, null=True)
+    sequence_number = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
