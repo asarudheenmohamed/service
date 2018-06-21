@@ -112,7 +112,7 @@ class TestDriverTripController:
             user_obj)
         with mock.patch.object(cache, 'get_key', mock.Mock(return_value=mock_trip.id)):
             driver_trip = trip.check_and_complete_trip(
-                mock_driver, driver_position)
+                mock_driver2, driver_position)
 
         assert driver_trip.trip_completed == True
 

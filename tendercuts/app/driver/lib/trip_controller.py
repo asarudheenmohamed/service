@@ -143,6 +143,12 @@ class TripController:
                 60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
+        trip_driver_orders = trip.driver_order.all()
+
+        # update order sequence number
+        SalesFlatOrder.objects.filter(
+            increment_id=order.increment_id).update(
+            sequence_number=len(trip_driver_orders))
 
         return trip
 
