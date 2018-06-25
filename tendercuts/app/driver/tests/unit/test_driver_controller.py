@@ -200,3 +200,26 @@ class TestDriverController:
 
         assert generate_mock_order.driver_number == driver_details['phone']
         assert generate_mock_order.driver_name == driver_details['name']
+
+    def test_update_order_completed_location(
+            self, mock_driver, generate_mock_order):
+        """Test update order completed location.
+
+        Params:
+           mock_driver (fixture): mock driver fix
+           generate_mock_order (fixture): mock order
+        Asserts:
+            Check mock location details is equal to generate_mock_order locations
+        """
+        driver_details = CusbtomerSearchController.load_cache_basic_info(
+            mock_driver.entity_id)
+        user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
+        controller = DriverController(user)
+
+        response = controller.update_order_completed_location(
+            generate_mock_order, 12.965365, 80.246106)
+        order_address_obj = SalesFlatOrderAddress.objects.filter(
+            parent=generate_mock_order).last()
+
+        assert order_address_obj.latitude == 12.965365
+        assert generate_mock_order.longitude == 80.246106
