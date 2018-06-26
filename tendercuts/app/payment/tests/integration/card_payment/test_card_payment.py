@@ -110,8 +110,6 @@ def user_order(mock_user):
 
 @when('Customer pays succesfully with card')
 def customer_pays_sucessfully_with_card(customer_transaction_via_card):
-    import pdb
-    pdb.set_trace()
     with Browser('chrome') as browser:
         browser.visit(customer_transaction_via_card.json()['url'])
         css_sel = 'button.success'
