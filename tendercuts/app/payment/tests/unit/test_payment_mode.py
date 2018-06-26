@@ -4,14 +4,14 @@ from app.payment.lib.gateway.juspay import JuspayPaymentMode
 
 
 @pytest.mark.django_db
-def test_payment_card_add(juspay_dummy_card1):
+def test_payment_card_add(mock_user, juspay_dummy_card1):
     """Asserts:
         if the card in added to juspay locker
         if the card is deleted from juspay locker
     """
 
     locker = JuspayPaymentMode()
-    customer_id = "18963"
+    customer_id = str(mock_user.entity_id)
 
     cards = locker.juspay.Cards.list(customer_id="juspay_" + customer_id)
     if cards:
