@@ -8,7 +8,7 @@ import mock
 
 
 @pytest.mark.django_db
-def test_cancel_payment_pending_orders(generate_mock_order):
+def test_cancel_payment_pending_orders(generate_new_order):
     """Test the cancel payment pending order task.
 
         Asserts:
@@ -32,7 +32,7 @@ def test_cancel_payment_pending_orders(generate_mock_order):
 
 
 @pytest.mark.django_db
-def test_payubiz_payment_pending_orders(generate_mock_order):
+def test_payubiz_payment_pending_orders(generate_new_order):
     """Test the payubiz payment pending order task.
 
         Asserts:
