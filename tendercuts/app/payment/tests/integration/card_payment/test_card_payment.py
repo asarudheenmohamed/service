@@ -52,19 +52,21 @@ def customer_transaction_via_card(
     user_order.save()
 
     juspay_dummy_card1.order_id = user_order.increment_id
-    juspay_dummy_card1.priority = 100
+    juspay_dummy_card1.priority = 101
 
     serialized_data = PaymentModeSerializer(juspay_dummy_card1)
     # convent model to py dict and remove the gateway_code so we get None in
     # dict
     data = serialized_data.data
-    del data['gateway_code_level_1']
+    data['gateway_code_level_1'] = "0d29af82-5dcb-48a9-9c5c-f587178dd470"
+    data['brand'] = "VISA"
 
     # start transaction
     response = auth_rest.post("/payment/modes/", data=data)
     assert response.status_code == 200
 
     return response
+
 
 @given('Customer starts the transaction via paytm')
 def customer_transaction_via_paytm(
@@ -95,6 +97,7 @@ def customer_transaction_via_paytm(
 
     return response
 
+
 @given('User places an order')
 def user_order(mock_user):
     order = GenerateOrder().generate_order(mock_user.entity_id)
@@ -107,6 +110,8 @@ def user_order(mock_user):
 
 @when('Customer pays succesfully with card')
 def customer_pays_sucessfully_with_card(customer_transaction_via_card):
+    import pdb
+    pdb.set_trace()
     with Browser('chrome') as browser:
         browser.visit(customer_transaction_via_card.json()['url'])
         css_sel = 'button.success'
@@ -161,7 +166,8 @@ def verify_transaction(user_order):
     # order = SalesFlatOrder.objects.filter(
     #     increment_id=generate_mock_order.increment_id).first()
     # assert order.status == "pending"
-    # TODO add receiving callback step here. due to localhost restrictions not done
+    # TODO add receiving callback step here. due to localhost restrictions not
+    # done
 
 
 @then("Card is saved")
@@ -178,5 +184,3 @@ def verify_saved_card(auth_rest):
         lambda payment: payment['gateway_code'] == 'CARD',
         response.json()['results'])[0]
     assert len(str(card['gateway_code_level_1'])) > 10
-
-
