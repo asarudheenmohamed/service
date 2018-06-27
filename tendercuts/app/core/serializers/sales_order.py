@@ -50,5 +50,5 @@ class SalesOrderSerializer(serializers.ModelSerializer):
                   "store_id", "shipping_address", "items",
                   "status", "order_now", "promised_delivery_time",
                   "promised_delivery_time_dt","shipping_amount",
-                  "discount_amount","driver_name","driver_number"
+                  "discount_amount","driver_name","driver_number","sequence_number",
                   )
