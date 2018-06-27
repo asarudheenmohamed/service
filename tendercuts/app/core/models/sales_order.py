@@ -771,6 +771,8 @@ class SalesFlatOrderAddress(models.Model):
     vat_request_date = models.TextField(blank=True, null=True)
     vat_request_success = models.SmallIntegerField(blank=True, null=True)
     giftregistry_item_id = models.IntegerField(blank=True, null=True)
+    latitude = models.CharField(max_length=255, blank=True, null=True)
+    longitude = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

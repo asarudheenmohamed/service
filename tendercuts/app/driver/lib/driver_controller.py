@@ -201,6 +201,17 @@ class DriverController(object):
 
         return order_obj
 
+    def update_order_completed_location(self, order_obj, lat, lon):
+        """Update order completed location like lat and lon.
+        params:
+         order_obj (obj):sale order object
+         lat (str):geolocation latitude
+         lon (lon):geolocation longitude
+
+        """
+        order_obj.shipping_address.all().update(
+            latitude=lat, longitude=lon)
+
     def complete_order(self, order_id, lat, lon):
         """Publish the message to the Mage queues.
 
@@ -217,6 +228,8 @@ class DriverController(object):
         controller = OrderController(self.conn, order_obj)
         controller.complete()
         # update customer current location
+        position_obj = self.update_order_completed_location(
+            order_obj, lat, lon)
         tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
