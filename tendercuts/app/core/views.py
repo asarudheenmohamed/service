@@ -156,6 +156,9 @@ class ProductPriceViewSet(APIView):
 
     """
 
+    authentication_classes = ()
+    permission_classes = ()
+    
     def get(self, request):
         """Get Products prices for current store.
 
