@@ -30,14 +30,14 @@ class ProductsPriceController(object):
             models,
             "CatalogProductFlat{}".format(store_id))
 
+        columns = ['price', 'special_price', 'entity_id']
+
         #  Filter only the active and visible products
-        products = products.objects.filter(status=1, visibility=4)
+        products = products.objects.filter(status=1, visibility=4).values_list(*columns)
 
         # Create the DataFrame for products
-        columns = ['price', 'special_price', 'entity_id']
-        products_df = products.values_list(*columns)
         products_df = pd.DataFrame(
-            list(products_df), columns=columns).to_dict('records')
+            list(products), columns=columns).to_dict('records')
 
         logger.info(
             'Fetched the products prices:{} in store{}'.format(
