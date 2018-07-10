@@ -34,6 +34,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306',
 
+    },
+    'erp': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tendercuts',
+        'USER': 'odoo',
+        'PASSWORD': 'odoo',
+        'HOST': 'odoo-db',
+        'PORT': '5432',
     }
 }
 
