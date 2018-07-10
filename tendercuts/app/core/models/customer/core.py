@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from app.core.models.store import LocationPincodePincodeStore
 from app.core.lib import cache
+from app.geohashing.lib.geohash_controller import GeohashController
 
 
 class FlatAddress(object):
@@ -29,7 +30,7 @@ class FlatAddress(object):
             for entity_id, group in grouper:
                 for eav in group:
                     address_dict[eav.attribute.attribute_code] = eav.value
-
+            
             key_val = cache.generate_prefix_key(
                 cache.PREFIX_PINCODE, address_dict.get('postcode'))
             cache_value = cache.get_key(
@@ -49,6 +50,16 @@ class FlatAddress(object):
 
             else:
                 address_dict['possible_stores'] = cache_value
+            
+            #store_id for customer address
+            address_store_id = None
+            if address_dict['geohash'] != None:
+                address_store_id = GeohashController().get_store_id(
+                    address_dict['geohash'],
+                    address_dict['latitude'],
+                    address_dict['longitude'])
+            
+            address_dict['store_id'] = address_store_id
 
             addresses.append(address_dict)
 

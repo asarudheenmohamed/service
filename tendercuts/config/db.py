@@ -3,12 +3,16 @@ class DBRouter(object):
     A router to control all database operations on models in the
     auth application.
     """
+
     def db_for_read(self, model, **hints):
         """
         Attempts to read auth models go to auth_db.
         """
         if model._meta.app_label == 'magento':
             return 'magento'
+        elif model._meta.app_label == 'erp':
+            return 'erp'
+
         return "default"
 
     def db_for_write(self, model, **hints):
@@ -17,6 +21,10 @@ class DBRouter(object):
         """
         if model._meta.app_label == 'magento':
             return 'magento'
+
+        elif model._meta.app_label == 'erp':
+            return 'erp'
+
         return "default"
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -31,3 +39,4 @@ class DBRouter(object):
         database.
         """
         return True
+        

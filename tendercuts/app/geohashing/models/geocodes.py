@@ -29,16 +29,18 @@ class StockWarehouse(models.Model):
         managed = False
         db_table = 'stock_warehouse'
         unique_together = (('code', 'company'), ('name', 'company'),)
+        app_label = "erp"
 
 
 class StockWarehouseTcMapViewGeohashRel(models.Model):
-    stock_warehouse = models.ForeignKey(StockWarehouse, models.DO_NOTHING)
-    tc_map_view_geohash = models.ForeignKey('TcMapViewGeohash', models.DO_NOTHING)
+    stock_warehouse = models.ForeignKey(StockWarehouse, models.DO_NOTHING, primary_key=True)
+    tc_map_view_geohash = models.ForeignKey('TcMapViewGeohash', models.DO_NOTHING, primary_key=True)
 
     class Meta:
         managed = False
         db_table = 'stock_warehouse_tc_map_view_geohash_rel'
         unique_together = (('stock_warehouse', 'tc_map_view_geohash'),)
+        app_label = "erp"
 
 
 class TcMapViewGeohash(models.Model):
@@ -49,3 +51,4 @@ class TcMapViewGeohash(models.Model):
     class Meta:
         managed = False
         db_table = 'tc_map_view_geohash'
+        app_label = "erp"
