@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'app.login',
     'app.sale_order',
     'app.inventory',
-    'app.payment'
+    'app.payment',
+    'app.geohashing',
+    'app.rating'
 ]
 
 REST_FRAMEWORK = {
