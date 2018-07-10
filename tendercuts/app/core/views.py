@@ -1,15 +1,21 @@
-from . import serializers as serializers
-from . import models as models
-
-from rest_framework.views import APIView
-from rest_framework import viewsets, generics, mixins
-import json
 import datetime
-from rest_framework.response import Response
-from .lib import magento as magento
 import itertools
+import json
+import logging
 
-from rest_framework import status
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from app.core.lib.controller import ProductsPriceController
+from app.core.models.product import CatalogProductFlat1
+
+from . import models as models
+from . import serializers as serializers
+from .lib import magento as magento
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
@@ -140,3 +146,36 @@ class CustomerDataApi(APIView):
         data = models.Customer().get_data(user_id)
 
         return Response(data)
+
+
+class ProductPriceViewSet(APIView):
+    """Endpoint to get product price details.
+
+    EndPoint:
+        API: core/product_price/
+
+    """
+
+    authentication_classes = ()
+    permission_classes = ()
+    
+    def get(self, request):
+        """Get Products prices for current store.
+
+        Input:
+            store_id
+
+        return:
+            Response(products_prices: dict)
+        """
+        store_id = self.request.GET['store_id']
+
+        controller = ProductsPriceController()
+
+        logger.debug(
+            'To get product prices for current store:{}'.format(
+                store_id))
+
+        products_prices = controller.get_products_price(store_id)
+
+        return Response(products_prices)
