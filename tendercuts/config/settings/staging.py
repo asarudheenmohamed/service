@@ -40,7 +40,7 @@ DATABASES = {
         'NAME': 'tendercuts',
         'USER': 'odoo',
         'PASSWORD': 'odoo',
-        'HOST': 'odoo-db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
