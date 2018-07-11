@@ -21,6 +21,6 @@ class GeohashToStore(APIView):
         geohash = request.data["geohash"]
         lat = request.data["lat"]
         lng = request.data["lng"]
-        status = controller.get_store_mage_code(geohash,lat,lng)
+        status = controller.get_store_id(geohash,lat,lng)
 
         return Response(status)
