@@ -57,12 +57,12 @@ class FlatAddress(object):
                 latitude, longitude = None, None
                 if ('latitude' in address_dict and 'longitude' in address_dict):
                     latitude, longitude = address_dict['latitude'], address_dict['longitude']
-                    response = GeohashController().get_store_id(
-                        address_dict['geohash'],
-                        latitude,
-                        longitude)
-                    if response['status'] is True:
-                        address_store_id = response['store_id']
+                response = GeohashController().get_store_id(
+                    address_dict['geohash'],
+                    latitude,
+                    longitude)
+                if response['status'] is True:
+                    address_store_id = response['store_id']
 
             address_dict['store_id'] = address_store_id
 
