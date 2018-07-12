@@ -97,6 +97,10 @@ class ProductViewSet(APIView):
                 product['sort_order'] = int(sort_order)
                 data['products'].append(product)
 
+            # Skip empty cats, eg deals
+            if len(data['products'] == 0):
+                continue
+
             response.append(data)
 
         # what;s new will be in the beginning
