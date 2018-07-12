@@ -45,6 +45,7 @@ class ProductViewSet(APIView):
     # queryset = models.CatalogProductFlat1.objects.all()
     # serializer_class = serializers.CatalogProductFlat1Serializer
     def get(self, request):
+        DEALS_ID = 17
         store_id = self.request.GET['store_id']
 
         try:
@@ -101,7 +102,17 @@ class ProductViewSet(APIView):
 
                 # inject sort order into the product.
                 product['sort_order'] = int(sort_order)
-                data['products'].append(product)
+
+                # if a deal(spl price) is enabled, only then we push in products
+                # for DEALS category.
+                if category_id == DEALS_ID and product['special_price'] is None:
+                    continue
+                else:
+                    data['products'].append(product)
+
+            # Skip empty cats, eg deals
+            if len(data['products']) == 0:
+                continue
 
             response.append(data)
 

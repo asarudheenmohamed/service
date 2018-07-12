@@ -40,6 +40,10 @@ router.register(
     r'driver_trip',
     views.DriverTripViewSet,
     base_name='DrivertripViewSet')
+router.register(
+    r'update_sequence_number',
+    views.UpdateOrdersSequenceViewSet,
+    base_name='DrivertripViewSet')
 
 
 urlpatterns = [

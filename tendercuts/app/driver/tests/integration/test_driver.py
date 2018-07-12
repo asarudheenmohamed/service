@@ -10,6 +10,7 @@ import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.driver.models import DriverOrder, DriverPosition, OrderEvents
 from django.contrib.auth.models import User
+from app.core.models import SalesFlatOrder
 
 
 @pytest.mark.django_db
@@ -18,6 +19,15 @@ from django.contrib.auth.models import User
     'Driver sucessfully completes the order',
 )
 def test_driver_order_complete():
+    pass
+
+
+@pytest.mark.django_db
+@scenario(
+    'driver.feature',
+    'Driver Update a order sequence number',
+)
+def test_driver_update_order_sequence():
     pass
 
 
@@ -129,6 +139,27 @@ def order_complete(cache, mock_driver, auth_driver_rest, latitude, longitude):
     assert response.status_code == 201
 
 
+@then('driver update the sequence number for the B customer order')
+def order_sequence_number(cache, auth_driver_rest):
+    """test driver update order sequence number.
+    params:
+        auth_driver_rest (fixture) - user requests.
+
+    Asserts:
+        Checks the driver assigned order sequenced number
+    """
+    response = auth_driver_rest.post(
+        "/driver/update_sequence_number/",
+        {'order_id': cache['increment_id'],
+         'sequence_number': 2},
+        format='json')
+
+    order = SalesFlatOrder.objects.filter(
+        increment_id=cache['increment_id']).last()
+
+    assert order.sequence_number == 2
+
+
 @pytest.mark.django_db(transaction=True)
 @then('find the no of driver stat objects')
 def test_driver_stat(cache, auth_driver_rest):
@@ -145,6 +176,23 @@ def test_driver_stat(cache, auth_driver_rest):
         "/driver/driver_stat/", format='json')
     assert len(response.data['results']) == 0
     assert (response) is not None
+
+
+@given("B customer generate a new order and driver assigned the order at <latitude><longitude>")
+def test_generate_new_order(cache, auth_driver_rest, generate_new_order, latitude, longitude):
+    """A customer place a new order."""
+    generate_new_order.status = 'processing'
+    generate_new_order.save()
+    cache['increment_id'] = generate_new_order.increment_id
+    cache['store_id'] = generate_new_order.store_id
+    response = auth_driver_rest.post(
+        "/driver/assign/",
+        {'order_id': cache['increment_id'],
+         'store_id': cache['store_id'],
+         'latitude': latitude,
+         'longitude': longitude,
+         },
+        format='json')
 
 
 @given("check the driver's current location")
