@@ -13,3 +13,12 @@ Feature: Driver completes the order
 	    | store_id|latitude |longitude|status|message|
 	    |	 7    |12.965365|80.246106|True  |driver location updated successfully|
 
+    Scenario: Driver Update a order sequence number
+        Given A customer places an order
+        And a driver is assigned to the order at <latitude><longitude>
+        And B customer generate a new order and driver assigned the order at <latitude><longitude>
+        Then driver update the sequence number for the B customer order
+
+        Examples:
+        |latitude |longitude|
+        |12.965365|80.246106|

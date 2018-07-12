@@ -65,7 +65,7 @@ class TestDriverTripController:
             driver=mock_driver2,
             driver_position=driver_position1, status='completed')
 
-        return mock_driver2, mock_trip, order_events
+        return mock_driver1, mock_driver2, mock_trip, order_events
 
     @pytest.mark.django_db
     def test_driver_trip_create(self, django_user):
@@ -108,11 +108,11 @@ class TestDriverTripController:
             longitude=80.24094)
         # create a mock driver and mock trip
 
-        mock_driver, mock_trip, order_events = self.update_driver_position(
+        mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
             user_obj)
         with mock.patch.object(cache, 'get_key', mock.Mock(return_value=mock_trip.id)):
             driver_trip = trip.check_and_complete_trip(
-                mock_driver, driver_position)
+                mock_driver2, driver_position)
 
         assert driver_trip.trip_completed == True
 
@@ -129,7 +129,7 @@ class TestDriverTripController:
         trip = TripController(driver=user_obj)
 
         # create a mock driver and mock trip
-        mock_driver, mock_trip, order_events = self.update_driver_position(
+        mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
             user_obj)
         driver_trip = trip.compute_driver_trip_distance(mock_trip)
 
@@ -139,7 +139,7 @@ class TestDriverTripController:
         """test fetch trip order events."""
         user_obj = User.objects.get_or_create(
             username=django_user.username)[0]
-        mock_driver, mock_trip, order_events = self.update_driver_position(
+        mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
             user_obj)
         trip = TripController(driver=user_obj)
 
@@ -197,3 +197,35 @@ class TestDriverTripController:
              '13.0740751,80.2205546'], 1)
 
         assert distance == 4609
+
+    def test_update_sequence_number(self, django_user):
+        """Test order delivered sequence number.
+        params:
+            django_user (fixture) - django user obj.
+
+        """
+        user_obj = User.objects.get_or_create(
+            username=django_user.username)[0]
+        mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
+            user_obj)
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id__in=[
+                mock_driver1.increment_id,
+                mock_driver2.increment_id])
+
+        sequence_number = 1
+        for i in order_obj:
+            i.sequence_number = sequence_number
+            i.save()
+            sequence_number += 1
+
+        trip = TripController(driver=user_obj)
+        trip.update_sequence_number(order_obj[0].increment_id, 1)
+        order = SalesFlatOrder.objects.filter(
+            increment_id__in=[
+                mock_driver1.increment_id,
+                mock_driver2.increment_id]).values('sequence_number', 'increment_id')
+
+        assert int(order[0]['sequence_number']) == 2
+        assert int(order[1]['sequence_number']) == 1

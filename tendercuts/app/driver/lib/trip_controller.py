@@ -143,8 +143,41 @@ class TripController:
                 60 * 60 * 24)  # expired at 1 day
         # create driver trip
         trip.driver_order.add(order)
+        trip_driver_orders = trip.driver_order.all()
+
+        # update order sequence number
+        SalesFlatOrder.objects.filter(
+            increment_id=order.increment_id).update(
+            sequence_number=len(trip_driver_orders))
 
         return trip
+
+    def update_sequence_number(self, order_id, sequence_number):
+        """Update order sequence number for the given order id.
+
+        Params:
+            order_id(str): order increment_id
+            sequence_number(str): order sequence number
+
+        """
+        trip_obj = DriverTrip.objects.get(
+            driver_order__increment_id=order_id)
+        order_ids = list(
+            trip_obj.driver_order.all().values_list(
+                'increment_id', flat=True))
+
+        order_objects = SalesFlatOrder.objects.filter(
+            increment_id__in=order_ids,
+            sequence_number__gte=sequence_number)
+        order_ids = list(order_objects.values_list(
+            'increment_id', flat=True).order_by('sequence_number'))
+
+        # for the given order id moves to last index
+        order_ids.append(order_ids.pop(order_ids.index(order_id)))
+        for index, value in enumerate(order_ids, start=sequence_number):
+            order = order_objects.get(increment_id=value)
+            order.sequence_number = index
+            order.save()
 
     def fetch_driver_trip(self, driver):
         """Return a last 10 days driver trip."""
