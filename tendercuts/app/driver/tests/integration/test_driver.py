@@ -10,6 +10,7 @@ import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
 from app.driver.models import DriverOrder, DriverPosition, OrderEvents
 from django.contrib.auth.models import User
+from app.core.models import SalesFlatOrder
 
 
 @pytest.mark.django_db
@@ -156,7 +157,7 @@ def order_sequence_number(cache, auth_driver_rest):
     order = SalesFlatOrder.objects.filter(
         increment_id=cache['increment_id']).last()
 
-    assert order.sequence_number == 1
+    assert order.sequence_number == 2
 
 
 @pytest.mark.django_db(transaction=True)
@@ -178,7 +179,7 @@ def test_driver_stat(cache, auth_driver_rest):
 
 
 @given("B customer generate a new order and driver assigned the order at <latitude><longitude>")
-def test_generate_new_order(cache, generate_new_order):
+def test_generate_new_order(cache, auth_driver_rest, generate_new_order, latitude, longitude):
     """A customer place a new order."""
     generate_new_order.status = 'processing'
     generate_new_order.save()
