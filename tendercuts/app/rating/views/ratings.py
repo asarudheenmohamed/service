@@ -2,11 +2,13 @@
 
 import logging
 
-from rest_framework import renderers, mixins, status, viewsets
+from app.rating import tasks
+from app.rating.models import Rating, RatingTag
+from app.rating.serializer.serializers import (ProductratingSerializer,
+                                               ProductRatingTagSerializer)
+from rest_framework import mixins, renderers, status, viewsets
 from rest_framework.response import Response
-from app.rating.models import RatingTag, Rating
 
-from app.rating.serializer.serializers import ProductratingSerializer, ProductRatingTagSerializer
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,8 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         if serializer.is_valid():
             serializer.save()
+            if data['rating'] <= 3:
+                tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
             return Response(
                 {'status': True, 'message': 'Rating update successfully'}, status=status.HTTP_201_CREATED)
