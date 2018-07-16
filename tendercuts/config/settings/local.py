@@ -62,7 +62,7 @@ INTERNAL_IPS = (
 
 MAGENTO = {
     "url": "magento",
-    "port": 82,
+    "port": 80,
     "username": "admin",
     "password": "(ZvfP5$7F?Q3u\dq",
     "endpoint": "/index.php/api/xmlrpc/",
