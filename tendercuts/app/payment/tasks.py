@@ -11,7 +11,6 @@ from app.core.lib import order_controller as controller
 from app.core.lib import magento
 from app.core.lib.celery import TenderCutsTask
 from config.celery import app
-from app.driver import tasks
 
 logger = get_task_logger(__name__)
 
@@ -34,22 +33,8 @@ def cancel_payment_pending_orders():
     result = []
     for order in payment_pending_orders:
         inc_id = order.increment_id
-        order_controller = controller.OrderController(conn, order)
-        # check if the order is payubiz payment method
-        if order.is_payu:
-            from app.payment.lib.gateway.payu import Payu
-            if Payu().check_payment_status(inc_id):
-                order_controller.payment_success(
-                    is_comment='Payment verified from payubiz')
-                logger.info(
-                    'Payment verified from payubiz for this order: {}'.format(inc_id))
-
-                tasks.send_sms.delay(inc_id, 'payment_confirmation')
-
-                continue
-
         try:
-            order_controller.cancel()
+            controller.OrderController(conn, order).cancel()
             logger.info("cancelled the order {}".format(inc_id))
 
             result.append(inc_id)
