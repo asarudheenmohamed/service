@@ -171,7 +171,7 @@ class DriverController(object):
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
-            status=status)
+            status=status).order_by('-updated_at')[:10]
         logger.debug(
             'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
                 order_ids))
@@ -201,6 +201,17 @@ class DriverController(object):
 
         return order_obj
 
+    def update_order_completed_location(self, order_obj, lat, lon):
+        """Update order completed location like lat and lon.
+        params:
+         order_obj (obj):sale order object
+         lat (str):geolocation latitude
+         lon (lon):geolocation longitude
+
+        """
+        order_obj.shipping_address.all().update(
+            latitude=lat, longitude=lon)
+
     def complete_order(self, order_id, lat, lon):
         """Publish the message to the Mage queues.
 
@@ -217,6 +228,8 @@ class DriverController(object):
         controller = OrderController(self.conn, order_obj)
         controller.complete()
         # update customer current location
+        position_obj = self.update_order_completed_location(
+            order_obj, lat, lon)
         tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')

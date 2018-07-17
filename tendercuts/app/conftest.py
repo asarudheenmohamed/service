@@ -91,6 +91,15 @@ def generate_mock_order(request, mock_user):
     return order
 
 
+@pytest.fixture(scope="module")
+def generate_new_order(request, mock_user):
+    """Generates a new order.
+    """
+    order = GenerateOrder().generate_order(mock_user.entity_id)
+
+    return order
+
+
 @pytest.fixture(scope="session")
 def mock_user(request):
     """Generates a mock customer.
@@ -124,6 +133,15 @@ def referral_user(request):
     customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer
+
+
+@pytest.fixture
+def mock_django_user(auth_rest):
+    django_user = User.objects.get_or_create(
+        id=auth_rest.handler._force_user.id,
+        username=auth_rest.handler._force_user.username)[0]
+
+    return django_user
 
 
 @pytest.fixture

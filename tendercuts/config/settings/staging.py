@@ -72,7 +72,7 @@ INTERNAL_IPS = (
 
 CELERY_MAIL = {
     'sender_mail_id': "reports@tendercuts.in",
-    'received_mail_id': ["tech@tendercuts.in"]
+    'received_mail_id': ["varun@tendercuts.in", "asarudheen@tendercuts.in", "naveen@tendercuts.in"]
 }
 
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")

@@ -5,10 +5,12 @@ magento and python layer
 
 import logging
 
-from app.core.models.sales_order import SalesFlatOrderGrid
+from django.utils import timezone
+
+from app.core.models.sales_order import (SalesFlatOrderGrid,
+                                         SalesFlatOrderStatusHistory)
 
 from .magento import Connector
-from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +69,7 @@ class OrderController(object):
 
         return status
 
-    def payment_success(self):
+    def payment_success(self, is_comment=None):
         """If payment in successful, update status.
 
         1. Update status as "pending" for express
@@ -91,6 +93,17 @@ class OrderController(object):
         if getattr(self.order, "grid", None):
             self.order.grid.status = "pending"
             self.order.grid.save()
+
+        if is_comment:
+            # update order status history
+            SalesFlatOrderStatusHistory.objects.create(
+                parent=self.order,
+                status=status,
+                created_at=timezone.now(),
+                comment=is_comment,
+                is_customer_notified=1,
+                is_visible_on_front=1,
+                entity_name='order')
 
     def update_payment_status(self):
         """Update the payment_received flag.

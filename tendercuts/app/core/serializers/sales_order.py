@@ -9,7 +9,7 @@ class SalesOrderAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SalesFlatOrderAddress
         fields = ('fax', "street", "region", "city", 'postcode',
-                  "telephone", "email", "address_type")
+                  "telephone", "email", "address_type", "latitude", "longitude")
 
 
 class SalesFlatOrderItemSerializer(serializers.ModelSerializer):
@@ -49,6 +49,6 @@ class SalesOrderSerializer(serializers.ModelSerializer):
                   "grand_total", "updated_at", "payment",
                   "store_id", "shipping_address", "items",
                   "status", "order_now", "promised_delivery_time",
-                  "promised_delivery_time_dt","shipping_amount",
-                  "discount_amount","driver_name","driver_number"
+                  "promised_delivery_time_dt", "shipping_amount",
+                  "discount_amount", "driver_name", "driver_number"
                   )
