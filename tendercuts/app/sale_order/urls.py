@@ -12,6 +12,10 @@ router.register(r'orders',
                 base_name="SalesOrderViewSet")
 # router.register(r'product', views.ProductViewSet)#,
 # base_name='CatalogProductEntity')
+router.register(
+    r'quote_items',
+    views.QuoteItemViewSet,
+    base_name='QuoteItemViewSet')
 
 urlpatterns = [
     url(r'', include(router.urls)),
