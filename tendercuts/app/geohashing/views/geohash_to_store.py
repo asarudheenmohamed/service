@@ -10,17 +10,25 @@ from ..lib.geohash_controller import GeohashController
 
 class GeohashToStore(APIView):
     """
-    Params:
-    geohash,lat,lng
+    Converts geohash to store_id. If geohash doesn`t
+    work, then computes distance matrix for lat,lng
+    and returns the corresponding store_id.
 
-    url: geohash/store
+    Params:
+    geohash(strring)
+    lat(number)
+    lng(number)
+
+    Url: geohash/store
+
+    Response: {'status': True, "store_id": None}
     """  
     def post(self, request, format=None):
 
-        controller = GeohashController()
         geohash = request.data["geohash"]
         lat = request.data["lat"]
         lng = request.data["lng"]
+        controller = GeohashController()
         status = controller.get_store_id(geohash,lat,lng)
 
         return Response(status)

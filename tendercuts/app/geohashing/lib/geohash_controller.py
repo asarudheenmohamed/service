@@ -17,11 +17,17 @@ class GeohashController(object):
     def get_store_id(self, geohash, lat, lng):
         """
         Returns store id if geohash matches,
-        else triggers getStoreFromPathString() to 
+        else triggers get_store_by_distance_matrix() to 
         find store id from lat,lng
 
         Raises Exception when geohash,lat,lng doesn`t match
 
+        Params:
+        geohash(string)
+        lat(number)
+        lng(number)
+
+        Response: {'status': True, "store_id": None}
         """
         try:
             store_id = None
@@ -34,7 +40,7 @@ class GeohashController(object):
                 logger.info(
                     "no store found for this {} geohash, checking by lat,lng".format(geohash))
                 response = self.get_store_by_distance_matrix(
-                    lat, lng, "get_store_id")
+                    lat, lng)
                 return response
 
             store_warehouse_tc_map_obj = StockWarehouseTcMapViewGeohashRel.objects.filter(
@@ -66,17 +72,27 @@ class GeohashController(object):
 
         return response
 
-    def get_store_by_distance_matrix(self, lat, lng, mode):
+    def get_store_by_distance_matrix(self, lat, lng):
         """
         Looks up for store with lat and long,
-        returns store if available
+        returns store if available within 13kms
+
+        Params:
+        lat(number)
+        lng(number)
+
+        Response: {'status': True, "store_id": None}
         """
         origin = [str(lat)+","+str(lng)]
         stores = GmapLangandlatisLongandlatisStore.objects.all()
         destinations = list(map((lambda x: str(
             x.longandlatis.latitude) + "," + str(x.longandlatis.longitude)), stores))
+        logger.info("Hitting distance_matrix api")
+
         distance_matrix_output = gmaps.distance_matrix(
-            origin, destinations, "driving", "", "", "metric")
+            origin, destinations, mode="driving", units="metric")
+        
+        logger.info("Received distance_matrix output for customer lat,lng")
 
         if distance_matrix_output['status'] == 'OK':
             rows = distance_matrix_output['rows'][0]['elements']
