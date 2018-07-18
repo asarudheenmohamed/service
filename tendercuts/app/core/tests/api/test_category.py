@@ -22,5 +22,5 @@ class TestApiInventoryFetch(object):
             {"store_id": 1},
             format='json')
 
+        assert (response) is not None
         assert len(response.data) >= 6
-        assert "What's New" in response.data[0]['category']['name']
