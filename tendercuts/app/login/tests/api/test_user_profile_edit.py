@@ -1,13 +1,14 @@
 """Test User Profile Changes."""
 import pytest
 import random
+from app.core.lib.test import generate_customer
 
 
 @pytest.mark.django_db
 class TestUserProfileEdit:
     """Test user profile Edit."""
 
-    def test_profile_changes(self, rest, auth_rest, mock_user):
+    def test_profile_changes(self, rest):
         """Check test user profile changes.
 
         Params:
@@ -22,7 +23,10 @@ class TestUserProfileEdit:
             Check custermer username is equal to changing username
 
         """
-        data = {"email": mock_user.email, "password": "12345678"}
+        # generate a new customer
+        customer_data = generate_customer()
+
+        data = {"email": customer_data['email'], "password": "12345678"}
         response = rest.post("/user/login", data=data)
         assert response.status_code == 200
         assert response.json()['email'] == mock_user.email
