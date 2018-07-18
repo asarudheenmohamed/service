@@ -30,4 +30,4 @@ class TestAddress(object):
 
         assert (response) is not None
         assert response.data['results'][0]['entity'] == address_obj.entity_id
-        response.data['results'][0]['entity'] == address_obj.value
+        assert response.data['results'][0]['value'] == address_obj.value

@@ -9,7 +9,7 @@ router = DefaultRouter()
 # only viewset have to be registered!!
 router.register(r'store', views.StoreViewSet)
 router.register(
-    r'destinated_store',
+    r'designated_store',
     views.CustomerAddressVarcharViewSet,
     base_name='CustomerAddressVarcharViewSet')
 
