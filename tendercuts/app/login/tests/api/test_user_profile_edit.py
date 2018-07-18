@@ -29,7 +29,7 @@ class TestUserProfileEdit:
         data = {"email": customer_data['email'], "password": "12345678"}
         response = rest.post("/user/login", data=data)
         assert response.status_code == 200
-        assert response.json()['email'] == mock_user.email
+        assert response.json()['email'] == customer_data['email']
 
     @pytest.mark.parametrize("field_value,code", (
         ["Testuser", "firstname"],
