@@ -211,7 +211,7 @@ class TestDriverController:
         Asserts:
             Check mock location details is equal to generate_mock_order locations
         """
-        driver_details = CusbtomerSearchController.load_cache_basic_info(
+        driver_details = CustomerSearchController.load_cache_basic_info(
             mock_driver.entity_id)
         user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
         controller = DriverController(user)
