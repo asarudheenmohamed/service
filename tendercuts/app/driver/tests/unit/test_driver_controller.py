@@ -225,4 +225,4 @@ class TestDriverController:
             parent=generate_mock_order).last()
 
         assert order_address_obj.latitude == "12.965365"
-        assert generate_mock_order.longitude == "80.246106"
+        assert order_address_obj.longitude == "80.246106"
