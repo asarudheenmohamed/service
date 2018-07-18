@@ -15,6 +15,7 @@ from app.driver.lib.driver_controller import DriverController
 from app.driver.lib.trip_controller import TripController
 from app.driver.models import DriverOrder
 from app.driver.models.driver_order import DriverPosition
+from app.core.models.sales_order import SalesFlatOrderAddress
 
 
 @pytest.mark.django_db
