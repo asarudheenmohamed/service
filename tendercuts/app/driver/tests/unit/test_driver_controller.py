@@ -33,11 +33,13 @@ class TestDriverController:
         generate_mock_order.status = 'processing'
         generate_mock_order.save()
         controller = DriverController(django_user)
-        driver_order = controller.assign_order(
-            generate_mock_order.increment_id,
-            generate_mock_order.store_id,
-            12.965365,
-            80.246106)
+        with mock.patch.object(cache, 'get_key',
+                               mock.Mock(return_value=None)):
+            driver_order = controller.assign_order(
+                generate_mock_order.increment_id,
+                generate_mock_order.store_id,
+                12.965365,
+                80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
@@ -222,5 +224,5 @@ class TestDriverController:
         order_address_obj = SalesFlatOrderAddress.objects.filter(
             parent=generate_mock_order).last()
 
-        assert order_address_obj.latitude == 12.965365
-        assert generate_mock_order.longitude == 80.246106
+        assert order_address_obj.latitude == "12.965365"
+        assert generate_mock_order.longitude == "80.246106"
