@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from app.core.lib.controller import ProductsPriceController
 from app.core.models.product import CatalogProductFlat1
+from app.core.models.customer.address import CustomerAddressEntityVarchar
 
 from . import models as models
 from . import serializers as serializers
@@ -71,17 +72,17 @@ class ProductViewSet(APIView):
                 status=status.HTTP_400_BAD_REQUEST)
 
         categories_map = models.CatalogCategoryProduct.objects.all() \
-                .order_by("category_id").values_list()
+            .order_by("category_id").values_list()
         categories_map = itertools.groupby(categories_map, key=lambda x: x[0])
 
         # TODO: NEED TO MOVE IT TO CONSTANTS
         # Fetch only visible & active item
-        products = {p.entity_id: p for p in products.objects.all() 
-                if p.status == 1 and p.visibility == 4}
+        products = {p.entity_id: p for p in products.objects.all()
+                    if p.status == 1 and p.visibility == 4}
 
         # Fetch all categories
         category = {c.entity_id: c for c in category.objects.all()
-                if c.is_active == 1 and c.entity_id != 2}
+                    if c.is_active == 1 and c.entity_id != 2}
 
         response = []
         for category_id, records in categories_map:
@@ -105,7 +106,8 @@ class ProductViewSet(APIView):
 
                 # if a deal(spl price) is enabled, only then we push in products
                 # for DEALS category.
-                if category_id == DEALS_ID and product['special_price'] is None:
+                if category_id == DEALS_ID and product[
+                        'special_price'] is None:
                     continue
                 else:
                     data['products'].append(product)
@@ -135,8 +137,8 @@ class ProductViewSet(APIView):
         return Response(response)
 
 
-
 class CartAddApi(APIView):
+
     def post(self, request):
 
         product_id = self.request.data['product_id']
@@ -151,12 +153,34 @@ class CartAddApi(APIView):
 
 
 class CustomerDataApi(APIView):
+
     def get(self, request):
 
         user_id = self.request.query_params['user_id']
         data = models.Customer().get_data(user_id)
 
         return Response(data)
+
+
+class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
+    """This viewset automatically provides `list` and `detail` actions.
+
+    Enpoint to provide a list for AddressEntityVarchar
+
+    Params:
+     address_id(str): customer address entity id
+
+    """
+    serializer_class = serializers.CustomerAddressVarcharSerializer
+
+    def get_queryset(self):
+        """Return to the customer designated store objects."""
+        address_id = self.request.query_params['address_id']
+
+        queryset = CustomerAddressEntityVarchar.objects.filter(
+            attribute_id=231, entity_id=address_id)
+
+        return queryset
 
 
 class ProductPriceViewSet(APIView):
@@ -169,7 +193,7 @@ class ProductPriceViewSet(APIView):
 
     authentication_classes = ()
     permission_classes = ()
-    
+
     def get(self, request):
         """Get Products prices for current store.
 

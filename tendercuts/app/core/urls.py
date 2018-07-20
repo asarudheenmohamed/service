@@ -8,15 +8,20 @@ from rest_framework.authtoken import views as rest_framework_views
 router = DefaultRouter()
 # only viewset have to be registered!!
 router.register(r'store', views.StoreViewSet)
+router.register(
+    r'designated_store',
+    views.CustomerAddressVarcharViewSet,
+    base_name='CustomerAddressVarcharViewSet')
 
-# router.register(r'product', views.ProductViewSet)#, base_name='CatalogProductEntity')
+# router.register(r'product', views.ProductViewSet)#,
+# base_name='CatalogProductEntity')
 
 urlpatterns = [
-   url(r'', include(router.urls)),
-   url(r'product', views.ProductViewSet.as_view()),
-   url(r'cart/add/', views.CartAddApi.as_view()),
-   url(r'customer/', views.CustomerDataApi.as_view()),
-   url(r'price/', views.ProductPriceViewSet.as_view())
+    url(r'', include(router.urls)),
+    url(r'product', views.ProductViewSet.as_view()),
+    url(r'cart/add/', views.CartAddApi.as_view()),
+    url(r'customer/', views.CustomerDataApi.as_view()),
+    url(r'price/', views.ProductPriceViewSet.as_view())
 ]
 
 if settings.DEBUG:
