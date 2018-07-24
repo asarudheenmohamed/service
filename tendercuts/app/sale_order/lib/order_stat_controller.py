@@ -47,7 +47,8 @@ class OrderDataController(object):
             params = {
                 "increment_id": order.increment_id,
                 "created_at": str(order.created_at),
-                "total_amount": float(order.grand_total),
+                "medium": order.medium,
+                "grand_total": float(order.grand_total),
                 "subtotal_amount": float(order.subtotal),
                 "shipping_amount": float(order.shipping_amount),
                 "discount_amount": float(order.discount_amount),
@@ -73,12 +74,16 @@ class OrderDataController(object):
             logger.debug("To join the items list details to order details:{}")
 
             for item in order.items.all():
-                params.setdefault("product_list", []).append({
+                params.setdefault("items", []).append({
+                    "item_id":item.item_id,
+                    "name": item.name,
+                    "product_id":item.product_id,
+                    "description": item.description,
                     "sku": item.sku.strip(),
-                    "ordered_qty": float(item.qty_ordered),
+                    "qty_ordered": float(item.qty_ordered),
                     "weight": float(item.weight),
-                    "unit_price": float(item.price),
-                    "total_amount": float(item.row_total),
+                    "price": float(item.price),
+                    "row_total": float(item.row_total),
                     "discount_amount": float(item.discount_amount or 0)
 
                 })

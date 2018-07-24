@@ -13,9 +13,44 @@ from app.core.models.product import CatalogProductFlat1
 from . import models as models
 from . import serializers as serializers
 from .lib import magento as magento
+from app.core.models.customer.address import CustomerAddressEntityVarchar
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+
+
+class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+
+    Enpoint to provide a list for sales orders
+    """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+    serializer_class = serializers.CustomerAddressVarcharSerializer
+
+    def get_queryset(self):
+        address_id=self.request.query_params['address_id']
+        queryset = CustomerAddressEntityVarchar.objects.filter(
+            attribute__attribute_code="designated_store", entity_id=address_id)
+        return queryset
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):

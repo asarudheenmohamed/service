@@ -3,5 +3,6 @@ from .sales_order import SalesOrderSerializer, SalesFlatOrderItemSerializer, Sal
 from .store import StoreSerializer
 from .category import *
 from .product import *
+from .address import *
 
 from .otp import OtpSerializer
