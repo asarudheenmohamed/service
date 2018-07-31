@@ -1,11 +1,36 @@
 """Test User Profile Changes."""
 import pytest
 import random
+from app.core.lib.test import generate_customer
 
 
 @pytest.mark.django_db
 class TestUserProfileEdit:
     """Test user profile Edit."""
+
+    def test_profile_changes(self, rest):
+        """Check test user profile changes.
+
+        Params:
+        auth_rest(pytest fixture):user requests
+
+        returns:
+                this is return a user id request
+
+        Asserts:
+            Check response status code in equal to 200
+            Check custermer email id is equal to changing email id
+            Check custermer username is equal to changing username
+
+        """
+        # generate a new customer
+        customer_data = generate_customer()
+
+        data = {"email": customer_data['email'], "password": "12345678"}
+        response = rest.post("/user/login", data=data)
+        assert response.status_code == 200
+        assert response.json()['email'] == customer_data['email']
+
     @pytest.mark.parametrize("field_value,code", (
         ["Testuser", "firstname"],
         [("testuser{}@gmail.com".format(random.randint(1, 1000000))), "email"],
@@ -32,23 +57,3 @@ class TestUserProfileEdit:
             format='json')
         assert response.status_code == 200
         assert response.json()['status'] == True
-
-    def test_profile_changes(self, rest, auth_rest):
-        """Check test user profile changes.
-
-        Params:
-        auth_rest(pytest fixture):user requests
-
-        returns:
-                this is return a user id request
-
-        Asserts:
-            Check response status code in equal to 200
-            Check custermer email id is equal to changing email id
-            Check custermer username is equal to changing username
-
-        """
-        data = {"email": "mail@varun.xyz", "password": "qwerty123"}
-        response = rest.post("/user/login", data=data)
-        assert response.status_code == 200
-        assert response.json()['email'] == "mail@varun.xyz"

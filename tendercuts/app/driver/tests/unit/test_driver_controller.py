@@ -15,6 +15,7 @@ from app.driver.lib.driver_controller import DriverController
 from app.driver.lib.trip_controller import TripController
 from app.driver.models import DriverOrder
 from app.driver.models.driver_order import DriverPosition
+from app.core.models.sales_order import SalesFlatOrderAddress
 
 
 @pytest.mark.django_db
@@ -32,11 +33,13 @@ class TestDriverController:
         generate_mock_order.status = 'processing'
         generate_mock_order.save()
         controller = DriverController(django_user)
-        driver_order = controller.assign_order(
-            generate_mock_order.increment_id,
-            generate_mock_order.store_id,
-            12.965365,
-            80.246106)
+        with mock.patch.object(cache, 'get_key',
+                               mock.Mock(return_value=None)):
+            driver_order = controller.assign_order(
+                generate_mock_order.increment_id,
+                generate_mock_order.store_id,
+                12.965365,
+                80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
@@ -211,7 +214,7 @@ class TestDriverController:
         Asserts:
             Check mock location details is equal to generate_mock_order locations
         """
-        driver_details = CusbtomerSearchController.load_cache_basic_info(
+        driver_details = CustomerSearchController.load_cache_basic_info(
             mock_driver.entity_id)
         user = User.objects.get_or_create(username=mock_driver.dj_user_id)[0]
         controller = DriverController(user)
@@ -221,5 +224,5 @@ class TestDriverController:
         order_address_obj = SalesFlatOrderAddress.objects.filter(
             parent=generate_mock_order).last()
 
-        assert order_address_obj.latitude == 12.965365
-        assert generate_mock_order.longitude == 80.246106
+        assert order_address_obj.latitude == "12.965365"
+        assert order_address_obj.longitude == "80.246106"

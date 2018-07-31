@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'app.login',
     'app.sale_order',
     'app.inventory',
-    'app.payment'
+    'app.payment',
+    'app.geohashing',
+    'app.rating'
 ]
 
 REST_FRAMEWORK = {
@@ -248,6 +250,20 @@ MAIL_GATEWAY = {
     "TC_PASS": "D%6Byz6+no;Dhgv2"
 }
 
+
+FRESHDESK = {
+    "PASSWORD": "tendercuts1234",
+    "CC_EMAILS": ['liza@tendercuts.in'],
+    "KEY": "uoHER1yGfG9SAp7MXfb",
+    "TICKETS_CREATE": {
+        "ENDPOINT": "https://tendercuts.freshdesk.com/api/v2/tickets",
+        "PRIORITY": 1,
+        "STATUS": 2,
+        "SOURCE": 2,
+        "TYPE": "Internal Team",
+
+    }
+}
 
 GOOGLE_MAP_DISTANCE_API = {
     "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
