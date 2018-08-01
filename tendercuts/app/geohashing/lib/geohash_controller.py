@@ -1,11 +1,14 @@
 """Controller to process Geohash."""
 import logging
 import traceback
+
 import googlemaps
-from django.conf import settings
-from ..models.geocodes import TcMapViewGeohash, StockWarehouseTcMapViewGeohashRel
 from app.core.models.store import CoreStore, GmapLangandlatisLongandlatisStore
 from app.geohashing import tasks
+from django.conf import settings
+
+from ..models.geocodes import (StockWarehouseTcMapViewGeohashRel,
+                               TcMapViewGeohash)
 
 logger = logging.getLogger(__name__)
 
