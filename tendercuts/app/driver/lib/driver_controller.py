@@ -231,7 +231,10 @@ class DriverController(object):
         # update customer current location
         position_obj = self.update_order_completed_location(
             order_obj, lat, lon)
-        tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+
+        # ToDo commended a customer current location updated because location is not correct
+        #tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)
