@@ -3,11 +3,11 @@
   <component name="FacetManager">
     <facet type="django" name="Django">
       <configuration>
-        <option name="rootFolder" value="$MODULE_DIR$/tendercuts/app/otp" />
-        <option name="settingsModule" value="" />
-        <option name="manageScript" value="" />
+        <option name="rootFolder" value="$MODULE_DIR$/tendercuts" />
+        <option name="settingsModule" value="config/settings/local.py" />
+        <option name="manageScript" value="manage.py" />
         <option name="environment" value="&lt;map/&gt;" />
-        <option name="doNotUseTestRunner" value="false" />
+        <option name="doNotUseTestRunner" value="true" />
         <option name="trackFilePattern" value="migrations" />
       </configuration>
     </facet>

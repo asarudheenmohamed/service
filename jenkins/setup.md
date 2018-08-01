@@ -10,6 +10,12 @@ cat backup/v2.sql| docker exec  -i mage-db /usr/bin/mysql -u root --password=roo
 ```
 
 
+
+# import the odoo-db into container
+```bash 
+cat dump.sql | docker exec  -i tendercuts-erp-db /usr/bin/psql -U odoo -W tendercuts
+```
+
 # Import views  
 ```sql
 DROP FUNCTION IF EXISTS RUN_ALLOCATION_RULE;

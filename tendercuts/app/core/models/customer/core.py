@@ -29,7 +29,6 @@ class FlatAddress(object):
             for entity_id, group in grouper:
                 for eav in group:
                     address_dict[eav.attribute.attribute_code] = eav.value
-
             key_val = cache.generate_prefix_key(
                 cache.PREFIX_PINCODE, address_dict.get('postcode'))
             cache_value = cache.get_key(

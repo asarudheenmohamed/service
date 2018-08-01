@@ -7,7 +7,6 @@ CELERY_RESULT_BACKEND = 'amqp://guest:guest@rabbitmq:5672//'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -27,6 +26,15 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': 'mage-db',
         'PORT': '3306',
+    },
+
+    'erp': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tendercuts',
+        'USER': 'odoo',
+        'PASSWORD': 'odoo',
+        'HOST': 'odoo-db',
+        'PORT': '5432',
     }
 
     # Forwarding config
@@ -54,7 +62,7 @@ CACHES = {
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
     'rest_framework.renderers.JSONRenderer',)
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
-MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware", )
+MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware",)
 
 INTERNAL_IPS = (
     '127.0.0.1'
@@ -69,7 +77,6 @@ MAGENTO = {
     "servicepoint": "/index.php/servicelayer/",
     "proto": "http"
 }
-
 
 PAYMENT = {
     "SIMPL": {

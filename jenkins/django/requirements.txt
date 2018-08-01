@@ -22,6 +22,7 @@ googlemaps
 
 # sudo apt-get install libmysqlclient-dev
 MySQL-python
+psycopg2
 
 python-magento
 celery==4.0.2

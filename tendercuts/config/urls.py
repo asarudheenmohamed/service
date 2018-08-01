@@ -35,5 +35,6 @@ urlpatterns = [
     url(r'tcash/', include('app.tcash.urls')),
     url(r'otp/', include('app.otp.urls')),
     url(r'store_manager/', include('app.store_manager.urls')),
+    url(r'geohash/', include('app.geohashing.urls')),
     url(r'rating/', include('app.rating.urls'))
 ]

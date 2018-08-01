@@ -63,6 +63,21 @@ services:
     networks:
       - django
 
+  odoo-db:
+    image: postgres:9.5
+    container_name: tendercuts-erp-db
+    hostname: odoo-db
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=tendercuts
+    ports:
+      - "5433:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - django
+
   php:
     build: ./php
     container_name: magento
@@ -110,6 +125,7 @@ services:
 volumes:
   mysql-db:
   mage-db:
+  odoo-db-data:
 
 networks:
   django:
