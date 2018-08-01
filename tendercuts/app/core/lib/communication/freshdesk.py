@@ -33,11 +33,11 @@ class FreshDesk():
             "subject": subject,
             "description": description,
             "email": email,
-            "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"],
-            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"],
+            "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["HIGH"],
+            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["OPEN"],
             "cc_emails": settings.FRESHDESK["CC_EMAILS"],
             "phone": phone,
-            "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"],
+            "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PORTAL"],
             "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"]
         }
 
@@ -49,6 +49,50 @@ class FreshDesk():
                   settings.FRESHDESK["PASSWORD"]),
             headers=headers,
             data=json.dumps(data))
+
+        return response
+
+    def create_ticket_attachment(
+            self, attachment, subject, description, phone):
+        """Create Freshdesk attachment ticket.
+
+        params:
+            attachment(file): attachment
+            subject (int): ticket subject
+            description (str): ticket discription
+            email(str): Customer email
+            phone(str): Customer mobile number
+
+        Returns:
+            Ticket attachment created objects
+
+        """
+
+        data = {
+            "subject": subject,
+            "description": description,
+            "name": str(phone),
+            "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["LOW"],
+            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["CLOSED"],
+            "phone": phone,
+            "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PHONE"],
+            "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"]
+        }
+
+        multipart_data = [
+
+            ('attachments[]', (open(attachment))),
+        ]
+
+        response = requests.post(
+            settings.FRESHDESK["TICKETS_CREATE"]["ENDPOINT"],
+            auth=(settings.FRESHDESK["KEY"],
+                  settings.FRESHDESK["PASSWORD"]),
+            files=multipart_data,
+            data=data)
+
+        logger.info(
+            'Created Freshdesk desk attachment ticket for the customer:{}'.format(phone))
 
         return response
 
