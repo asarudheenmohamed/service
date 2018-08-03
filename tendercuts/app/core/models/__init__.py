@@ -11,3 +11,4 @@ from .category import *
 from .customer import *
 from .inventory import AitocCataloginventoryStockItem, GraminventoryLatest, Graminventory
 from .otp import OtpList
+from .cms import CmsPage

@@ -12,6 +12,10 @@ router.register(
     r'designated_store',
     views.CustomerAddressVarcharViewSet,
     base_name='CustomerAddressVarcharViewSet')
+router.register(
+    r'cms',
+    views.CmsViewSet,
+    base_name='CustomerAddressVarcharViewSet')
 
 # router.register(r'product', views.ProductViewSet)#,
 # base_name='CatalogProductEntity')
