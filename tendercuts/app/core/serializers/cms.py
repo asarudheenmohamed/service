@@ -4,7 +4,7 @@ from .. import models as models
 
 
 class CmsSerializer(serializers.ModelSerializer):
-	"""Serializer for the CmsPage Model."""
+    """Serializer for the CmsPage Model."""
     class Meta:
         model = models.CmsPage
         fields = "__all__"
