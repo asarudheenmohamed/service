@@ -101,6 +101,9 @@ class CatalogProductFlat(models.Model):
     weight_description = models.CharField(
         max_length=255, blank=True, null=True)
     spicy = models.IntegerField(blank=True, null=True)
+    gramsperunit = models.CharField(max_length=255, blank=True, null=True)
+    weight_from = models.CharField(max_length=255, blank=True, null=True)
+    weight_to = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         app_label = "magento"
@@ -198,4 +201,16 @@ class CatalogProductFlat18(CatalogProductFlat):
     class Meta:
         managed = False
         db_table = 'catalog_product_flat_18'
+        app_label = "magento"
+
+class CatalogProductFlat21(CatalogProductFlat):
+    class Meta:
+        managed = False
+        db_table = 'catalog_product_flat_21'
+        app_label = "magento"
+
+class CatalogProductFlat24(CatalogProductFlat):
+    class Meta:
+        managed = False
+        db_table = 'catalog_product_flat_24'
         app_label = "magento"

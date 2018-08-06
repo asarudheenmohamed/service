@@ -2,11 +2,11 @@ from rest_framework import serializers
 from .. import models as models
 from . import attribute
 
-PRODUCT_FIELDS = ('price', 'short_description', 'description', 'sku',
+PRODUCT_FIELDS = ('price','special_price', 'short_description', 'description', 'sku',
                   "thumb",
                   "weight_description", "gross_weight_description",
                   "visibility", "status", "uom", "name", "entity_id",
-                  "spicy"
+                  "spicy","gramsperunit","weight_from","weight_to"
                   )
 
 
@@ -81,4 +81,14 @@ class CatalogProductFlat16Serializer(serializers.ModelSerializer):
 class CatalogProductFlat18Serializer(serializers.ModelSerializer):
     class Meta:
         model = models.CatalogProductFlat18
+        fields = PRODUCT_FIELDS
+
+class CatalogProductFlat21Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogProductFlat21
+        fields = PRODUCT_FIELDS
+
+class CatalogProductFlat24Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogProductFlat24
         fields = PRODUCT_FIELDS
