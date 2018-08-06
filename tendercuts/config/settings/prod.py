@@ -42,7 +42,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tendercuts',
         'USER': 'odoo',
-        'PASSWORD': 'odoo',
+        'PASSWORD': 'q<X+:?4R]S-[',
         'HOST': 'odoo-db',
         'PORT': '5432',
     }
