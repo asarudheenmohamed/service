@@ -183,6 +183,17 @@ class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+class CmsViewSet(viewsets.ReadOnlyModelViewSet):
+    """A simple ViewSet for viewing Rating Tags.
+    """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
+
+    queryset = models.CmsPage.objects.all()
+    serializer_class = serializers.CmsSerializer
+
+
 class ProductPriceViewSet(APIView):
     """Endpoint to get product price details.
 

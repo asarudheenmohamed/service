@@ -6,3 +6,4 @@ from .product import *
 from .address import CustomerAddressVarcharSerializer
 
 from .otp import OtpSerializer
+from .cms import CmsSerializer
