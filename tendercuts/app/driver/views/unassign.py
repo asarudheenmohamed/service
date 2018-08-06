@@ -1,4 +1,4 @@
-"""Endpoint for  driver unassignment."""
+# """Endpoint for  driver unassignment."""
 
 import logging
 
@@ -34,8 +34,7 @@ class UnassignOrdersViewSet(viewsets.GenericViewSet):
 
         """
         unassign_order_id = self.request.data['order_id']
-        user_id = get_user_id(self.request)
-        controller = DriverController.driver_obj(user_id)
+        controller = DriverController(self.request.user)
         try:
             controller.unassign_order(unassign_order_id)
 

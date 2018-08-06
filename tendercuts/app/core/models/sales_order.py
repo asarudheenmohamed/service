@@ -422,13 +422,13 @@ class SalesFlatOrder(models.Model):
 
     store = models.ForeignKey(
         CoreStore, models.DO_NOTHING, blank=True, null=True)
-    store_id = models.IntegerField()
     # removing it till a time comes to integrate this
     # customer = models.ForeignKey('CustomerEntity', models.DO_NOTHING, blank=True, null=True)
     customer_id = models.IntegerField()
 
     # Replace these ID fields with models
     driver_id = models.IntegerField()
+
     # shipping_address_id = models.IntegerField(blank=True, null=True)
 
     # to_field by default points to the primay key
@@ -440,6 +440,10 @@ class SalesFlatOrder(models.Model):
     # driver = models.ForeignKey(DriverManagement, models.DO_NOTHING, blank=True, null=True)
 
     # shipping_address = models.ForeignKey(SalesFlatOrderAddress, models.DO_NOTHING, blank=True, null=True)
+
+    driver_name = models.CharField(max_length=25, blank=True, null=True)
+    driver_number = models.CharField(max_length=12, blank=True, null=True)
+    sequence_number = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -510,7 +514,7 @@ class SalesFlatOrder(models.Model):
             promised_time, '%b %d, %a %I:%M %p') if promised_time else ""
 
     @property
-    def remaing_time(self):
+    def remaining_time(self):
         """Return a remaining order time in that order."""
         promised_time = dateutil.parser.parse(self.promised_delivery_time)
         promised_time = promised_time.time()
@@ -520,8 +524,10 @@ class SalesFlatOrder(models.Model):
 
         return remaining_time
 
+    @property
     def promised_delivery_time_dt(self):
         promised_time = self.compute_delivery_time()
+
         return promised_time if promised_time else ""
 
 
@@ -705,10 +711,36 @@ class SalesFlatOrderItem(models.Model):
         max_digits=12, decimal_places=4, blank=True, null=True)
     customercredit_hidden_tax = models.DecimalField(
         max_digits=12, decimal_places=4, blank=True, null=True)
+    deliverydate = models.DateTimeField(blank=True, null=True)
+    deliveryslot = models.IntegerField(blank=True, null=True)
+    promisedeliverytime = models.CharField(
+        max_length=255, blank=True, null=True)
+    deliverytype = models.IntegerField(blank=True, null=True)
+    grams = models.DecimalField(
+        max_digits=12,
+        decimal_places=4,
+        blank=True,
+        null=True)
 
     class Meta:
         managed = False
         db_table = 'sales_flat_order_item'
+        app_label = "magento"
+
+
+class SalesFlatOrderStatusHistory(models.Model):
+    entity_id = models.AutoField(primary_key=True)
+    parent = models.ForeignKey('SalesFlatOrder', models.DO_NOTHING)
+    is_customer_notified = models.IntegerField(blank=True, null=True)
+    is_visible_on_front = models.SmallIntegerField()
+    comment = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=32, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    entity_name = models.CharField(max_length=32, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sales_flat_order_status_history'
         app_label = "magento"
 
 
@@ -741,6 +773,8 @@ class SalesFlatOrderAddress(models.Model):
     vat_request_date = models.TextField(blank=True, null=True)
     vat_request_success = models.SmallIntegerField(blank=True, null=True)
     giftregistry_item_id = models.IntegerField(blank=True, null=True)
+    latitude = models.CharField(max_length=255, blank=True, null=True)
+    longitude = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

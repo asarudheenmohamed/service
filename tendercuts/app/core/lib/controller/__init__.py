@@ -1,0 +1,1 @@
+from products_price_controller import ProductsPriceController

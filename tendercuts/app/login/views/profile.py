@@ -44,7 +44,7 @@ class UserDataFetch(APIView):
         """
         username = self.request.GET.get('email', None) or \
             self.request.GET.get('phone', None)
-        fields = ['reward_points', 'store_credit', 'address']
+        fields = ['reward_points', 'store_credit', 'address','default_shipping','default_billing']
 
         if username is None:
             raise exceptions.ValidationError("Invalid user")
@@ -61,8 +61,14 @@ class UserDataFetch(APIView):
                     "code": f,
                     "value": user._flat[f]
                 })
+        
+        except KeyError:
+            attributes.append({
+                "code": f,
+                "value": {}
+            })
 
-        except Exception as e:
+        except:
             exception = traceback.format_exc()
             logger.error("user {} tried to fetch data caused and exception {}".format(
                 username,

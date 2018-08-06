@@ -1,12 +1,11 @@
 from .base import *
 from .celeryconfig import *
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
+CELERY_RESULT_BACKEND = 'amqp://guest:guest@rabbitmq:5672//'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 
 DATABASES = {
     'default': {
@@ -14,7 +13,7 @@ DATABASES = {
         'NAME': 'services',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '3306',
 
     },
@@ -25,8 +24,17 @@ DATABASES = {
         'NAME': 'dbmaster',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'mage-db',
         'PORT': '3306',
+    },
+
+    'erp': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tendercuts',
+        'USER': 'odoo',
+        'PASSWORD': 'odoo',
+        'HOST': 'odoo-db',
+        'PORT': '5432',
     }
 
     # Forwarding config
@@ -37,34 +45,36 @@ DATABASES = {
     #         'PASSWORD': 'oochahwielai9mahDah3',
     #         'HOST': '127.0.0.1',
     #         'PORT': '3307',
-    #     }
+    #
 
 }
 
 CACHES = {
     'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
-    },
+    }
 }
 
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+    'rest_framework.renderers.JSONRenderer',)
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
-MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
+MIDDLEWARE += ("debug_panel.middleware.DebugPanelMiddleware",)
 
 INTERNAL_IPS = (
     '127.0.0.1'
 )
 
 MAGENTO = {
-    "url": "localhost",
+    "url": "magento",
     "port": 80,
     "username": "admin",
-    "password": "Tendercuts123!",
-    "endpoint": "/tendercuts-site/index.php/api/xmlrpc/",
-    "servicepoint": "/tendercuts-site/index.php/servicelayer/",
+    "password": "(ZvfP5$7F?Q3u\dq",
+    "endpoint": "/index.php/api/xmlrpc/",
+    "servicepoint": "/index.php/servicelayer/",
     "proto": "http"
 }
 
@@ -84,7 +94,7 @@ PAYMENT = {
         "id": "0F38CA55EAA0492987E8B5FB5635D223",
         "secret": "C8B21475421D4A14AE78A825344B7E65",
         "url": "https://sandbox.juspay.in/card/tokenize",
-        "return_url": "http://staging.tendercuts.in:82/payment/juspay",
+        "return_url": "http://localhost:8000/payment/juspay",
         "environment": "sandbox"
     },
     "PAYU": {

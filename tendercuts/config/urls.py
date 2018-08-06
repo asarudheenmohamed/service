@@ -20,7 +20,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
-# Uncomment the next two lines to enable the admin:
+    # Uncomment the next two lines to enable the admin:
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -33,5 +33,8 @@ urlpatterns = [
     url(r'inventory/', include('app.inventory.urls')),
     url(r'payment/', include('app.payment.urls')),
     url(r'tcash/', include('app.tcash.urls')),
-    url(r'otp/', include('app.otp.urls'))
+    url(r'otp/', include('app.otp.urls')),
+    url(r'store_manager/', include('app.store_manager.urls')),
+    url(r'geohash/', include('app.geohashing.urls')),
+    url(r'rating/', include('app.rating.urls'))
 ]

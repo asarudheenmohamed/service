@@ -1,7 +1,11 @@
 """End point for the send sms to the customer mobile number."""
+import logging
 import requests
 import sendotp
 from django.conf import settings
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 class OldSMS():
@@ -50,7 +54,7 @@ class SMS():
             settings.SMS_GATEWAY["KEY"],
             "")
 
-    def send(self, phnumber, message):
+    def send(self, phnumber, message, scheduled_time=None):
         """Send the message.
 
         params:
@@ -66,11 +70,12 @@ class SMS():
             "mobiles": phnumber,
             "message": message,
             "sender": settings.SMS_GATEWAY["SENDER_ID"],
-            "route": 4,
-            "country": 91
+            "route": settings.SMS_GATEWAY["ROUTE"],
+            "country": settings.SMS_GATEWAY["COUNTRY"],
+            "schtime": scheduled_time
         }
 
-        requests.get(
+        response = requests.get(
             settings.SMS_GATEWAY["ENDPOINT"],
             verify=False,
             params=data)
@@ -91,10 +96,14 @@ class SMS():
         """
         phnumber = "%s%s" % ("91", str(phnumber))
         self.otp.msg = message
+        logger.debug('Otp send for this number:{}'.format(phnumber))
         otp = self.otp.send(
             phnumber,
             settings.SMS_GATEWAY["SENDER_ID"],
             otp)
+
+        logger.info(
+            'Otp sent successfully for this number:{}'.format(phnumber))
 
     def retry_otp(self, phnumber, retry_mode):
         """Resend OTP.
@@ -115,6 +124,50 @@ class SMS():
             "mobile": phnumber,
             "retrytype": str(retry_mode),
         }
+
+        logger.debug(
+            'Otp send the {} method for this number:{}'.format(
+                retry_mode, phnumber))
         requests.get(
             settings.SMS_GATEWAY["RESENDPOINT"],
             params=data)
+
+        logger.info(
+            'Otp successfully sent {} method for this number:{}'.format(
+                retry_mode, phnumber))
+
+    def send_sms(self, phnumber, message):
+        """Send the sms via value first api.
+
+        params:
+            phnumber (int): Ph number to send
+            message (str): message
+
+        """
+        data = {
+            "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
+            "to": str(phnumber),
+            "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
+            "text": message
+        }
+
+        response = requests.get(settings.VALUE_FIRST_SMS_GATEWAY[
+            "ENDPOINT"], params=data)
+
+        return response
+
+    def send_scheduled_sms(self, scheduletime, phnumber, message):
+        data = {
+            "username": settings.VALUE_FIRST_SMS_GATEWAY["USERNAME"],
+            "password": settings.VALUE_FIRST_SMS_GATEWAY["PASSWORD"],
+            "to": str(phnumber),
+            "scheduletime": scheduletime,
+            "action": "UPDATE",
+            "guid": settings.VALUE_FIRST_SMS_GATEWAY["GUID"],
+            "from": settings.VALUE_FIRST_SMS_GATEWAY["FROM"],
+            "text": message
+        }
+
+        response = requests.get(settings.VALUE_FIRST_SMS_GATEWAY[
+            "ENDPOINT"], params=data)

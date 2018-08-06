@@ -5,6 +5,7 @@ Every payment GW should implement this class
 from app.core.lib.order_controller import OrderController
 from app.core import models as core_models
 from app.core.lib import exceptions as core_exceptions
+from app.driver import tasks
 
 import abc
 import logging
@@ -45,24 +46,39 @@ class AbstractGateway(object):
         """
         pass
 
-    def update_order_status(self, order_id):
-        """Update order.
+    def reconcile_transaction(self, payload):
+        """Triggered after sometime, mostly from webhooks or polling.
+        Optional method.
+
+        param:
+            payload (dict) response json from the gateway.
+
+        """
+        pass
+
+    def update_order_status(self, order_id, is_comment=None):
+        """Update order status to "pending" (success).
 
         params:
-            order (SaleFlatOrder): order
+            order (SaleFlatOrder| str): order
             payment_success (bool): boolean, indicating sucess from GW
 
         """
-        sale_order = core_models.SalesFlatOrder.objects.filter(
-            increment_id=order_id)
+        if isinstance(order_id, core_models.SalesFlatOrder):
+            sale_order = order_id
+        else:
+            sale_order = core_models.SalesFlatOrder.objects.filter(
+                increment_id=order_id)
 
-        if not sale_order:
-            raise core_exceptions.OrderNotFound()
+            if not sale_order:
+                raise core_exceptions.OrderNotFound()
 
-        order = OrderController(None, sale_order[0])
-        order.payment_success()
+            sale_order = sale_order.first()
 
-        return sale_order[0].status
+        order = OrderController(None, sale_order)
+        order.payment_success(is_comment)
+
+        return sale_order.status
 
     def verify_transaction(self, order_id, vendor_id):
         """Claim the transaction in the payment gateway.
@@ -77,6 +93,9 @@ class AbstractGateway(object):
         status = self.claim_payment(order_id, vendor_id)
         if status:
             # Claim on magento side
-            self.update_order_status(order_id)
+            self.update_order_status(
+                order_id, is_comment='Payment verified from juspay')
+        else:
+            tasks.send_sms.delay(order_id, 'payment_pending')
 
         return status

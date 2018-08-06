@@ -38,10 +38,19 @@ class RewardPointAmountApi(APIView):
         # Fetch existing order of the user
         sales_flat_obj = SalesFlatOrder.objects.values_list(
             'customer_id').filter(customer_id=user_id)
+        
         # Check if the new user id already refered by any other user.
         # as we don't want multiple referrals.
         reward_obj = MRewardsReferral.objects.filter(
             new_customer=CustomerEntity.objects.get(entity_id=user_id))
+ 
+        logger.info("{} has been refered by {} and has {} existing order and "
+            "{} reward objects".format(
+                user_id,
+                refered_user_id,
+                len(sales_flat_obj),
+                len(reward_obj)))
+
         if not sales_flat_obj and not reward_obj:
             reward_obj = reward_points_controller.RewardsPointController(
                 log=logger)
@@ -60,6 +69,10 @@ class RewardPointAmountApi(APIView):
                              'message': "100 Points has been credited to your TCuts Reward account"
                              ".You can use it of further orders."}
 
+        elif sales_flat_obj and not reward_obj:
+            response_data = {'status': False,
+                             'message': 'Referal rewards only applicable for new customer'}
+
         else:
             refered_user_basic_info = CustomerSearchController.load_basic_info(reward_obj[
                 0].customer.entity_id)
@@ -67,4 +80,4 @@ class RewardPointAmountApi(APIView):
                              'message': 'Already  you have be referred'
                              ' by your friend {}'.format(refered_user_basic_info[3])}
 
-        return Response(response_data,status=status.HTTP_201_CREATED)
+        return Response(response_data, status=status.HTTP_201_CREATED)

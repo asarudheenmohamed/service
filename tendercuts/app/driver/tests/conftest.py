@@ -5,29 +5,11 @@ from rest_framework.test import APIClient
 
 from app.core.lib.test import generate_customer
 from app.core.lib.user_controller import CustomerSearchController
+from app.driver.constants import DRIVER_GROUP
+from django.contrib.auth.models import User
 
 
-@pytest.fixture(scope="session")
-def mock_driver(request):
-    """Generate a mock customer.
-
-    @override the fixture
-
-    Uses pytest caching.
-
-    """
-    customer_id = request.config.cache.get("mock/driver", None)
-    if customer_id is None:
-        customer_data = generate_customer(group_id=6)
-        customer_id = customer_data['entity_id']
-        request.config.cache.set("mock/driver", customer_id)
-
-    customer = CustomerSearchController.load_by_id(customer_id)
-
-    return customer
-
-
-@pytest.fixture(scope="session")
+@pytest.fixture
 def auth_driver_rest(mock_driver):
     """Auth'd Api client to create requests."""
     from django.contrib.auth.models import User
@@ -37,3 +19,11 @@ def auth_driver_rest(mock_driver):
     client = APIClient()
     client.force_authenticate(user=user)
     return client
+
+
+@pytest.fixture
+def django_user(mock_driver):
+    django_user = User.objects.get_or_create(
+        username=mock_driver.dj_user_id)[0]
+
+    return django_user

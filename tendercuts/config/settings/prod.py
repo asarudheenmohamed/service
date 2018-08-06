@@ -1,8 +1,11 @@
 from .base import *
 from .celeryconfig import *
 
-CELERY_BROKER_URL = 'amqp://guest:guest@192.168.131.117:5672//'
-CELERY_RESULT_BACKEND = 'amqp://guest:guest@192.168.131.117:5672//'
+#CELERY_BROKER_URL = 'amqp://guest:guest@192.168.131.117:5672//'
+CELERY_BROKER_URL = "amqp://tcuser:4pH.%x^f-D21@192.168.131.117:5672//"
+
+# CELERY_RESULT_BACKEND = 'amqp://tcuser:4pH.%x^f-D21@192.168.131.117:5672//'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -34,6 +37,14 @@ DATABASES = {
         'HOST': 'dbmaster',
         'PORT': '3306',
 
+    },
+    'erp': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tendercuts',
+        'USER': 'odoo',
+        'PASSWORD': 'q<X+:?4R]S-[',
+        'HOST': 'odoo-db',
+        'PORT': '5432',
     }
 }
 
@@ -57,6 +68,10 @@ CACHES = {
     },
 }
 
+CELERY_MAIL = {
+    'sender_mail_id': "reports@tendercuts.in",
+    'received_mail_id': ["tech@tendercuts.in"]
+}
 
 PAYMENT = {
     "SIMPL": {

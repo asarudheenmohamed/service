@@ -1,0 +1,56 @@
+# virtualenv
+# virtualenvwrapper
+# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+# brew install chromedriver
+
+uwsgi
+django==1.10.6
+
+# Appcongi
+django_extensions
+djangorestframework==3.6.2
+django-cors-headers
+enum
+
+mock
+pytest==3.1.3
+pytest-django
+pytest-bdd
+pytest-xdist
+pytest-cov
+googlemaps
+
+# sudo apt-get install libmysqlclient-dev
+MySQL-python
+psycopg2
+
+python-magento
+celery==4.0.2
+redis
+django-redis
+requests
+django-debug-toolbar
+django-debug-panel
+flower==0.9.1
+juspay
+razorpay
+python-dateutil
+sendotp
+numpy
+pandas
+xlrd
+#paytm
+pycrypto
+requests-toolbelt
+
+
+
+# Devlopment:
+flake8
+pep8
+pydocstyle
+pylint
+splinter
+
+#pynotebook
+jupyter

@@ -2,7 +2,7 @@
 Verify transaction from juspay
 """
 
-from app.payment.lib.gateway import JusPayGateway, JuspayTransaction
+from app.payment.lib.gateway import JusPayGateway, JuspayTransaction, JuspayCustomer
 from app.payment.models import PaymentMode
 import uuid
 import juspay
@@ -12,17 +12,6 @@ import pytest
 @pytest.mark.django_db
 class TestJustPayGateway:
     """JP test cases for the controller."""
-
-    def test_payment_status(self, juspay_mock_order):
-        """Verify claim api.
-
-        Asserts:
-            if the status returned is true
-
-        """
-        gw = JusPayGateway()
-        status = gw.claim_payment(juspay_mock_order.increment_id, None)
-        assert status is False
 
     def test_fetch_payment_modes(self, mock_user):
         """Fetch payment modes.
@@ -54,18 +43,6 @@ class TestJustPayGateway:
 
         assert "ctkn" in token
 
-    def test_order_status(self, juspay_mock_order):
-        """Verify the get status API.
-
-        Asserts:
-            if the API is hit and we get a response.
-        """
-        # Hard-coded.
-        order_id = juspay_mock_order.increment_id
-
-        gw = JusPayGateway()
-        assert gw.check_payment_status(order_id) is False
-
 
 @pytest.mark.django_db
 class TestJuspayCustomerCreate():
@@ -79,17 +56,19 @@ class TestJuspayCustomerCreate():
             2. phone & mail
         """
 
-        juspay_gw = JusPayGateway()
+        juspay_gw = JuspayCustomer()
         cust = juspay_gw.get_or_create_customer(str(mock_user.entity_id))
 
-        assert cust.object_reference_id == "juspay_{}".format(mock_user.entity_id)
+        assert cust.object_reference_id == "juspay_{}".format(
+            mock_user.entity_id)
 
 
 @pytest.mark.django_db
 class TestJuspayCreateTransaction():
     """DEPRECATED NEEDS TO BE MOVED TO PYTEST BDD FOR EXISTING CARD"""
 
-    def _test_create_transaction_with_saved_card(self, juspay_mock_order, mock_user, juspay_dummy_card2):
+    def _test_create_transaction_with_saved_card(
+            self, juspay_mock_order, mock_user, juspay_dummy_card2):
         """Verify if create transaction with a saved card works.
 
         Asserts:

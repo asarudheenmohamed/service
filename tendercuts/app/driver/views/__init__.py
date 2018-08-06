@@ -5,3 +5,7 @@ from .fetch_order import FetchRelatedOrder
 from .driver_positions import DriverPositionViewSet
 from .driver_sms import DriverSmsViewSet
 from .driver_stat import DriverStatViewSet
+from .driver_trip import DriverTripViewSet
+from .version_control import VersionControl
+from .driver_online import *
+from .sequence import UpdateOrdersSequenceViewSet

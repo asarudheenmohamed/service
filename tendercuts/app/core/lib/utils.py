@@ -1,4 +1,6 @@
 """Core Utilities."""
+from app.core.models.customer import CustomerEntityVarchar
+from django.db.models import Q
 
 
 def get_user_id(request):

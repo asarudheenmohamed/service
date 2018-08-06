@@ -32,8 +32,8 @@ def juspay_dummy_card1():
     return PaymentMode(
         title="4242424242424242",
         pin="111",
-        expiry_year="2020",
-        expiry_month="10",
+        expiry_year="2021",
+        expiry_month="12",
         method="juspay",
         gateway_code="CARD")
 

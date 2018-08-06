@@ -3,18 +3,62 @@ import hashlib
 import random
 import string
 import uuid
-
-from django.db.models import Q
-
+import logging
+from django.db.models import Q, Sum
+from django.conf import settings
 from app.core.lib import cache
 from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
                                       FlatCustomer)
 
+logger = logging.getLogger(__name__)
+
 
 class CustomerSearchController(object):
     """Static method to find the customer data."""
+
+    @classmethod
+    def load_cache_basic_info(cls, entity_id):
+        """Return a driver basic information.
+
+        Params:
+            entity_id(list): user entity_id
+
+        Returns:
+            Returns the basic information from django cache (redis db) if it is avaiable
+            otherwise Fetch the data from CustomerEntityVarchar table and updated to django cache.
+            Django cache is a temporary storage here we have set 24 hours validation (60*60*24).
+
+        """
+        logger.debug(
+            'get driver information in django cache for that driver id:{}'.format(
+                entity_id))
+
+        # get driver basic info in django cache
+        user_details = cache.get_key(
+            entity_id, settings.CACHE_DEFAULT_VERSION)
+
+        if not user_details:
+            # fetch drive information from CustomerEntityVarchar model.
+            logger.debug(
+                "fetch user information in CustomerEntityVarchar model:{}".format(
+                    entity_id))
+
+            load_basic_info = cls.load_basic_info(entity_id)
+            user_details = {
+                'entity_id': load_basic_info[0],
+                'email': load_basic_info[1],
+                'phone': load_basic_info[2],
+                'name': load_basic_info[3]
+            }
+            cache.set_key(load_basic_info[0], user_details, 60 * 60 *
+                          24, settings.CACHE_DEFAULT_VERSION)
+            logger.info(
+                "get user information for the given entity id:{}".format(
+                    entity_id))
+
+        return user_details
 
     @classmethod
     def load_basic_info(cls, user_id):
@@ -30,16 +74,20 @@ class CustomerSearchController(object):
             A tuple of (userid, email, phone, name)
 
         """
-        query_set = CustomerEntityVarchar.objects                 \
-            .filter(attribute_id__in=[149, 5], entity_id=user_id) \
-            .order_by('-attribute_id')                             \
-            .values_list('entity', 'entity__email', 'value')
+        varchar_objects = CustomerEntityVarchar.objects.filter(
+            attribute_id__in=[
+                149, 5], entity_id=user_id).prefetch_related('entity__reward_point')
+
+        query_set = varchar_objects.order_by(
+            '-attribute_id').values_list('entity', 'entity__email', 'value')
 
         if not query_set:
-            raise CustomerNotFound
+            raise CustomerNotFound(
+                "No data found for customer: {}".format(user_id))
 
         flattened_data = []
         flattened_data.extend(query_set[0])
+
         # merge the name attribute also
         # first row second col
         flattened_data.append(query_set[1][2])
@@ -74,6 +122,7 @@ class CustomerSearchController(object):
         """
         query_set = CustomerEntityVarchar.objects.filter(
             Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
+
         if len(query_set) == 0:
 
             raise CustomerNotFound()
@@ -100,14 +149,33 @@ class CustomerSearchController(object):
                 "ints", "ints__attribute",
                 "addresses", "addresses__varchars",
                 "addresses__varchars__attribute",
-                "addresses__texts", "addresses__texts__attribute")
-
+                "addresses__texts", "addresses__texts__attribute",
+                "addresses__ints", "addresses__ints__attribute")
         if not customers:
             raise CustomerNotFound
 
         obj = FlatCustomer(customers[0])
 
         return obj
+
+    @classmethod
+    def get_django_username(cls, phone_number):
+        """Get Django username from user phone number.
+
+        Params:
+            phone_number: User phone number.
+
+        Returns:
+            Django username
+
+        """
+        try:
+            customer = CustomerEntityVarchar.objects.filter(
+                Q(attribute_id=149) & (Q(value=phone_number) | Q(entity__email=phone_number)))[0]
+        except:
+            raise CustomerNotFound()
+
+        return ("{}:{}".format("u", customer.entity_id))
 
 
 class CustomerController(object):

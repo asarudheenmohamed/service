@@ -2,14 +2,19 @@
 
 import logging
 
+from django.conf import settings
+from django.utils import timezone
+
 import app.core.lib.magento as mage
 from app.core.lib.communication import SMS
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
+from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
-
-from ..models import DriverOrder, DriverPosition, DriverStat, OrderEvents
+from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
+                      OrderEvents)
+from .trip_controller import TripController
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +33,26 @@ class DriverController(object):
         """Fetch Flatcustomer object by using user_id."""
         driver = CustomerSearchController.load_by_id(user_id)
         return cls(driver)
+
+    def update_driver_details(self, order_obj):
+        """Update driver name and driver number in sale order object.
+
+        params:
+           order_obj (obj): sale order object
+
+        """
+        user_id = get_mage_userid(self.driver)
+        # fetch driver basic info
+        driver_details = CustomerSearchController.load_cache_basic_info(
+            user_id)
+        order_obj.driver_number = driver_details['phone']
+        order_obj.driver_name = driver_details['name']
+
+        order_obj.save()
+
+        logger.info(
+            'The order:{} assigned driver details like driver name:{}, and driver number:{} updated'.format(
+                order_obj.increment_id, driver_details['name'], driver_details['phone']))
 
     def get_order_obj(self, order):
         """Get order object based on order id.
@@ -57,7 +82,14 @@ class DriverController(object):
             obj DriverOrder
 
         """
-        order_obj = self.get_order_obj(order)
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id=order, status='processing')
+        if not order_obj:
+            raise ValueError('Order object Does not exist')
+
+        order_obj = order_obj[0]
+        logger.debug(
+            'Fetched the order object of given order id:{}'.format(order))
 
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
@@ -65,25 +97,42 @@ class DriverController(object):
         elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
             raise ValueError('This order is already assigned')
 
+        try:
+            lat, lon = settings.STORE_LAT_LONG[int(store_id)]
+        except KeyError:
+            pass
+
         driver_object = DriverOrder.objects.create(
-            increment_id=order, driver_id=self.driver.entity_id)
+            increment_id=order, driver_user=self.driver)
+
+        # update driver name and driver number in sale order object
+        self.update_driver_details(order_obj)
 
         logger.info(
-            '{} this order assigned to the driver {}'.format(
-                order, self.driver.entity_id))
+            'The order:{} was assigned to the driver {}'.format(
+                order, self.driver.username))
 
         controller = OrderController(self.conn, order_obj)
         # the order move to out for delivery
         logger.info(
-            'This order:{} move to out for delivery.'.format(order))
+            'This order:{} will move to out for delivery.'.format(order))
 
         controller.out_delivery()
         # update current location for driver
-        position_obj = self.record_position(order, lat, lon)
+        position_obj = self.record_position(lat, lon)
 
-        self._record_events(position_obj, 'out_delivery')
+        logger.debug(
+            "updated the assigned order:{}'s lat:{} and lon:{} for the driver".format(
+                self.driver.username, lat, lon))
 
-        tasks.send_sms.delay(order)
+        self._record_events(driver_object, position_obj, 'out_delivery')
+
+        TripController(
+            driver=self.driver).check_and_create_trip(
+            driver_object, position_obj)
+
+        tasks.send_sms.delay(order, 'out_delivery')
+
         return driver_object
 
     def unassign_order(self, order):
@@ -105,7 +154,7 @@ class DriverController(object):
 
         logger.info(
             'The Driver {} unassigned to this order {}'.format(
-                self.driver.entity_id,
+                self.driver.username,
                 order))
 
     def fetch_orders(self, status):
@@ -116,16 +165,19 @@ class DriverController(object):
 
         """
         order_ids = DriverOrder.objects.filter(
-            driver_id=self.driver.entity_id) \
-            .values_list('increment_id', flat=True)
+            driver_user=self.driver,
+            created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
+            'increment_id',
+            flat=True)
 
-        logger.info(
-            'Fetch that {} Driver assigning {} state orders'.format(
-                self.driver.entity_id, status))
-
-        return SalesFlatOrder.objects.filter(
+        order_obj = SalesFlatOrder.objects.filter(
             increment_id__in=list(order_ids),
-            status=status)
+            status=status)[:10]
+        logger.debug(
+            'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
+                order_ids))
+
+        return order_obj
 
     def fetch_related_orders(self, order_end_id, store_id):
         """Return Sales Order objects.
@@ -138,16 +190,28 @@ class DriverController(object):
             [SalesFlatOrder]
 
         """
-        logger.info(
-            'Fetch related order for that order last id {} and store id {}'.format(
-                order_end_id, store_id))
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__endswith=order_end_id,
             store_id=store_id,
             status='processing')
 
+        logger.debug(
+            "Fetched the related orders for the store id:{} with order last digits".format(
+                store_id, order_end_id))
+
         return order_obj
+
+    def update_order_completed_location(self, order_obj, lat, lon):
+        """Update order completed location like lat and lon.
+        params:
+         order_obj (obj):sale order object
+         lat (str):geolocation latitude
+         lon (lon):geolocation longitude
+
+        """
+        order_obj.shipping_address.all().update(
+            latitude=lat, longitude=lon)
 
     def complete_order(self, order_id, lat, lon):
         """Publish the message to the Mage queues.
@@ -159,19 +223,34 @@ class DriverController(object):
 
         """
         logger.info("Complete this order {}".format(order_id))
-
         order_obj = self.get_order_obj(order_id)
-
+        driver_object = DriverOrder.objects.filter(
+            increment_id=order_id, driver_user=self.driver)
         controller = OrderController(self.conn, order_obj)
         controller.complete()
-        # send sms to customer
-        tasks.send_sms.delay(order_id)
-        tasks.driver_stat.delay(order_id)
-        # update current location for driver
-        position_obj = self.record_position(order_id, lat, lon)
-        self._record_events(position_obj, 'completed')
+        # update customer current location
+        position_obj = self.update_order_completed_location(
+            order_obj, lat, lon)
 
-    def record_position(self, order_id, lat, lon):
+        # ToDo commended a customer current location updated because location is not correct
+        #tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+
+        # send sms to customer
+        tasks.send_sms.delay(order_id, 'complete')
+        tasks.driver_stat.delay(order_id)
+
+        # update current location for driver
+        position_obj = self.record_position(lat, lon)
+        self._record_events(driver_object[0], position_obj, 'completed')
+
+        try:
+            TripController(driver=self.driver).check_and_complete_trip(
+                driver_object[0], position_obj)
+        except ValueError:
+            # Legacy handling
+            pass
+
+    def record_position(self, lat, lon):
         """Create a Driver current location latitude and longitude.
 
         Params:
@@ -183,23 +262,19 @@ class DriverController(object):
             Returns DriverPosition object
 
         """
-        order_obj = self.get_order_obj(order_id)
 
-        driver_obj = DriverOrder.objects.filter(
-            driver_id=self.driver.entity_id, increment_id=order_obj.increment_id)
-
-        if not driver_obj:
-            raise ValueError('This order is not assign to you.')
-
-        obj = DriverPosition.objects.create(
-            driver=driver_obj[0], latitude=lat, longitude=lon)
+        obj = DriverPosition(
+            driver_user=self.driver,
+            latitude=lat,
+            longitude=lon)
+        obj.save()
         logger.info(
-            "update the location, latitude and longitude for that driver {}".format(
-                obj.driver_id))
+            "updated driver:{}'s current latitude:{} and longitude:{}".format(
+                obj.driver_id, lat, lon))
 
         return obj
 
-    def _record_events(self, driver_position, status):
+    def _record_events(self, driver_object, driver_position, status):
         """Create a Driver current locations.
 
         Params:
@@ -211,11 +286,14 @@ class DriverController(object):
             Returns OrderEvents object
 
         """
+
         events_obj = OrderEvents.objects.create(
-            driver_position=driver_position, status=status)
+            driver=driver_object,
+            driver_position=driver_position,
+            status=status)
 
         logger.info(
-            "update the location and order status for that driver {}".format(
+            "updated the order events of the driver {}".format(
                 events_obj.driver_position.driver_id))
 
         return events_obj
@@ -232,6 +310,7 @@ class DriverController(object):
         """
         customer_id = self.get_order_obj(order_id).customer_id
         customer = CustomerSearchController.load_basic_info(customer_id)
+
         SMS().send(customer[2], 'I am in traffic, Sorry for the delay')
         status = True
 
@@ -244,6 +323,9 @@ class DriverController(object):
     def driver_stat_orders(self):
         """Returns a driver stat object."""
         driver_stat_obj = DriverStat.objects.filter(
-            driver_id=self.driver.entity_id)
+            driver_user=self.driver)
+        logger.info(
+            'Fetched the driver stat object for the driver:{}'.format(
+                self.driver))
 
         return driver_stat_obj

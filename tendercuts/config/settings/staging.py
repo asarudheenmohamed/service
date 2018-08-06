@@ -2,7 +2,7 @@ from .base import *
 from .celeryconfig import *
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-CELERY_RESULT_BACKEND = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,12 +28,20 @@ DATABASES = {
     },
     'magento': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'v3_1',
+        'NAME': 'v3_5',
         'USER': 'root',
         'PASSWORD': '!qazmlp)5',
         'HOST': 'localhost',
         'PORT': '3306',
 
+    },
+    'erp': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tendercuts',
+        'USER': 'odoo',
+        'PASSWORD': 'odoo',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -57,13 +65,22 @@ CACHES = {
     },
 }
 
+INTERNAL_IPS = (
+    '127.0.0.1'
+)
+
+
+CELERY_MAIL = {
+    'sender_mail_id': "reports@tendercuts.in",
+    'received_mail_id': ["varun@tendercuts.in", "asarudheen@tendercuts.in", "naveen@tendercuts.in"]
+}
+
 INSTALLED_APPS += ("debug_toolbar", "django_extensions")
 MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware", )
 
 INTERNAL_IPS = (
     '127.0.0.1'
 )
-
 
 PAYMENT = {
     "SIMPL": {

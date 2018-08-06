@@ -4,6 +4,7 @@ from app.payment.lib.gateway import RzpGateway
 
 @pytest.mark.django_db
 class TestRzpGateway:
+    @pytest.mark.skip(reason=None)
     def test_payment_status(self):
         """
         Asserts:

@@ -5,23 +5,37 @@ Just pay related API calls
 import logging
 import traceback
 import urllib
-import json
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from rest_framework import exceptions
-from rest_framework.response import Response
 from rest_framework import views, viewsets, mixins
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
-
+from rest_framework.decorators import api_view, permission_classes, \
+    authentication_classes
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-
-from ..lib import gateway as gw
 from .. import serializer
+from ..lib import gateway as gw
+from app.payment import tasks
+from datetime import datetime, timedelta
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+@api_view(['POST'])
+def juspay_webhook(request):
+    """Process webhook callbacks"""
+
+    # dirty hack
+    # TODO: Needs to be moved to django auth/groups.
+    if not request.user.groups.filter(name="Admin").exists():
+        return Response({'error': 'Unauthorized'}, status=401)
+
+    gateway = gw.JusPayGateway(log=logger)
+    gateway.reconcile_transaction(request.data)
+
+    return Response()
 
 
 @api_view(['GET'])
@@ -82,7 +96,8 @@ class JusPayApprovalCallBack(views.APIView):
                 "confirming payment for the order ID: {}".format(increment_id))
             status = gateway.update_order_status(increment_id)
             logger.info(
-                "confirmed payment for the order ID: {} with status {}".format(increment_id, status))
+                "confirmed payment for the order ID: {} with status {}".format(
+                    increment_id, status))
 
             return HttpResponseRedirect(reverse('juspay_done', request=request))
         except Exception as e:
@@ -97,6 +112,10 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
                            viewsets.GenericViewSet):
     """
     A viewset that provides default `list()` actions.
+
+    TODO: clean me, this shouldn't be a PaymentMethodViewSet, instead a
+    separate API. Making changes to this will break all existing customer
+    apps. So holding the changes for now.
     """
     serializer_class = serializer.PaymentModeSerializer
 
@@ -122,7 +141,12 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
         gateway = gw.JusPayGateway(log=logger)
         user_id = self.get_user_id()
 
-        return gateway.fetch_payment_modes(user_id)
+        # if wallets are requested then fetch
+        wallets = False
+        if "wallets" in self.request.GET:
+            wallets = True
+
+        return gateway.fetch_payment_modes(user_id, wallets=wallets)
 
     def create(self, request, *args, **kwargs):
         """
@@ -150,5 +174,6 @@ class PaymentMethodViewSet(mixins.ListModelMixin,
             "customer_email": transaction.customer_email,
             "customer_phone": transaction.customer_phone
         }
+        logger.debug("Sending back {}".format(data))
 
         return Response(data)

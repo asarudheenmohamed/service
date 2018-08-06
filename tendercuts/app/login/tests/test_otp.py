@@ -3,6 +3,7 @@ import pytest
 import redis
 from rest_framework.test import APIClient
 from django.conf import settings
+from app.core.lib import cache
 
 
 @pytest.mark.django_db
@@ -18,6 +19,7 @@ class TestOtp:
         """Test Otp send customer mobile number."""
         response = rest.get("/user/otp/9080804360/", format='json')
         assert not isinstance(response, type(None))
+
         assert response.data['mobile'] == "9080804360"
 
 
@@ -97,13 +99,13 @@ class TestOtpMethods:
         assert not isinstance(response, type(None))
         assert response.data['mobile'] == "9080804360"
 
-        redis_conn = redis.StrictRedis(**settings.REDIS)
-        otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9080804360"))
-
+        # redis_conn = redis.StrictRedis(**settings.REDIS)
+        # otp = redis_conn.get("{}:{}".format("FORGOT_OTP", "9080804360"))
+        otp = cache.get_key("{}:{}".format("FORGOT_OTP", "9080804360"))
         response = rest.get(
             "/user/forgot_password_otp/9080804360/", format='json')
         assert response.data['mobile'] == "9080804360"
-        otp1 = redis_conn.get("{}:{}".format("FORGOT_OTP", "9080804360"))
+        otp1 = cache.get_key("{}:{}".format("FORGOT_OTP", "9080804360"))
         assert otp == otp1
 
     def test_raise_error(self, rest):
@@ -112,9 +114,10 @@ class TestOtpMethods:
         Raises:
             customer Not found.
         """
-        with pytest.raises(Exception):
-            rest.get(
-                "/user/forgot_password_otp/9080804360111/", format='json')
+        response = rest.get(
+            "/user/forgot_password_otp/9080804360111/", format='json')
+
+        assert response.data['detail'] == "User does not exists"
 
 
 @pytest.mark.django_db
@@ -125,6 +128,5 @@ class TestUserFetch:
         """Test Fetch from user data."""
         response = auth_rest.get(
             "/user/fetch/?phone=9080804360", format='json')
-        print(response)
         assert not isinstance(response, type(None))
-        assert len(response.data['attribute']) == 3
+        assert response.status_code == 200

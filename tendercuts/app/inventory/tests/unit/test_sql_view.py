@@ -24,9 +24,9 @@ class TestDpInventory:
 
 
     @pytest.mark.parametrize("product_id,store_id,qty,forecast,expected_qty,expected_sch", [
-        (199, 4, 100, 100, 263, 263),  # fetch express and scheduled
-        (199, 4, 100, 0, 263, 0),  # fetch express
-        (199, 4, 0, 100, 0, 263),  # fetch express
+        (199, 4, 100, 100, 333, 333),  # fetch express and scheduled
+        (199, 4, 100, 0, 333, 0),  # fetch express
+        (199, 4, 0, 100, 0, 333),  # fetch express
     ])
     def test_express(self, product_id, store_id, qty, forecast, expected_qty, expected_sch):
         """Assert express inve"""
@@ -47,7 +47,7 @@ class TestDpInventory:
 
 
 @pytest.mark.django_db
-class TestOmniInventory:
+class _TestOmniInventory:
     """
     271 (Breast Raw mat) -> 199 (B.Boneless)
     199 -> 380 GPU
@@ -79,6 +79,7 @@ class TestOmniInventory:
 
         product_id, store_id, _, _ = child
         inv = GraminventoryLatest.objects.filter(product_id=product_id, store_id=store_id)
+
         assert len(inv) == 1
         assert inv[0].qty == expected_qty
         assert inv[0].scheduledqty == expected_sch

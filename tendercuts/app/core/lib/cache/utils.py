@@ -31,3 +31,15 @@ def get_key(key, version=settings.CACHE_DEFAULT_VERSION):
     cache_obj = cache.get(key, version=version)
 
     return cache_obj
+
+def delete_key(key, version=settings.CACHE_DEFAULT_VERSION):
+    """Nuke the key from the cache.
+
+    Params:
+    key(str): Location of the value
+
+    Returns: None
+    """
+    cache.delete(key, version=version)
+
+
