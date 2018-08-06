@@ -9,7 +9,7 @@ class CloudAgentCallback(viewsets.GenericViewSet):
     """Endpoint to freshdesk attachment ticket creation.
 
     EndPoint:
-        API: rating/rating_create/
+        API: rating/callback/
     """
 
     def create(self, request, *args, **kwargs):
