@@ -9,6 +9,7 @@ from app.core.lib.celery import TenderCutsTask
 from app.core.lib.communication import FreshDesk
 from app.rating.lib.rating_controller import RatingController
 from config.celery import app
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +78,19 @@ def create_fresh_desk_attachment_ticket(data):
     audio_file = data['AudioFile']
     doc = requests.get(audio_file)
     controller = FreshDesk()
-
+    if not audio_file:
+        controller.create_ticket_attachment(
+            None,
+            'CloudAgent:{} with {}'.format(
+                data["Type"],
+                data['CallerID']),
+            description,
+            data['CallerID'],
+            type_.get(
+                data["Type"]),
+            data["AgentID"],
+            data["Disposition"],
+            data['Comments'])
     # create a temp mp3 file
     with tempfile.NamedTemporaryFile(mode='wb', suffix='.mp3') as keyfile:
         with open(keyfile.name, 'wb') as fd:
@@ -88,7 +101,8 @@ def create_fresh_desk_attachment_ticket(data):
                     data['CallerID']))
             controller.create_ticket_attachment(
                 keyfile.name,
-                'CloudAgent:Inbounded Call with {}'.format(data['CallerID']),
+                'CloudAgent:{} with {}'.format(
+                    data["Type"], data['CallerID']),
                 description,
                 data['CallerID'],
                 type_.get(data["Type"]),
