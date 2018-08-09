@@ -36,9 +36,9 @@ class FreshDesk():
             "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["HIGH"],
             "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["OPEN"],
             "cc_emails": settings.FRESHDESK["CC_EMAILS"],
-            "phone": phone,
+            "phone": str(phone),
             "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PORTAL"],
-            "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"]
+            "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"],
         }
 
         headers = {"Content-Type": "application/json"}
@@ -53,7 +53,7 @@ class FreshDesk():
         return response
 
     def create_ticket_attachment(
-            self, attachment, subject, description, phone):
+            self, attachment, subject, description, phone, type_, answered_agent, disposition, commends):
         """Create Freshdesk attachment ticket.
 
         params:
@@ -68,28 +68,28 @@ class FreshDesk():
 
         """
 
-        data = {
-            "subject": subject,
-            "description": description,
-            "name": str(phone),
-            "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["LOW"],
-            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["CLOSED"],
-            "phone": phone,
-            "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PHONE"],
-            "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"]
+        multipart_data = {
+            'subject': (None, subject),
+            "phone": (None, str(phone)),
+            "name": (None, str(phone)),
+            'description': (None, description),
+            'status': (None, str(settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["CLOSED"])),
+            'priority': (None, str(settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["LOW"])),
+            'custom_fields[cf_disposition]': (None, disposition),
+            'custom_fields[voc]': (None, commends),
+            'custom_fields[cf_answered_agent]': (None, answered_agent),
+            'type': (None, str(type_)),
+            "source": (None, str(settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PHONE"]))
         }
-
-        multipart_data = [
-
-            ('attachments[]', (open(attachment))),
-        ]
+        if attachment:
+            multipart_data['attachments[]'] = open(attachment, 'rb')
 
         response = requests.post(
             settings.FRESHDESK["TICKETS_CREATE"]["ENDPOINT"],
             auth=(settings.FRESHDESK["KEY"],
                   settings.FRESHDESK["PASSWORD"]),
             files=multipart_data,
-            data=data)
+        )
 
         logger.info(
             'Created Freshdesk desk attachment ticket for the customer:{}'.format(phone))

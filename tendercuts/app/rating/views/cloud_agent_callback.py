@@ -11,6 +11,8 @@ class CloudAgentCallback(viewsets.GenericViewSet):
     EndPoint:
         API: rating/callback/
     """
+    authentication_classes = ()
+    permission_classes = ()
 
     def create(self, request, *args, **kwargs):
         """CloudAgent callback  endpoint.

@@ -254,12 +254,12 @@ MAIL_GATEWAY = {
 FRESHDESK = {
     "PASSWORD": "tendercuts1234",
     "CC_EMAILS": ['liza@tendercuts.in'],
-    "KEY": "uoHER1yGfG9SAp7MXfb",
+    "KEY": "UovHZV5Glhiw5YOHIP0Q",
     "TICKETS_CREATE": {
         "ENDPOINT": "https://tendercuts.freshdesk.com/api/v2/tickets",
-        "PRIORITY": 1,
-        "STATUS": 2,
-        "SOURCE": 2,
+        "PRIORITY": {'LOW': 1, "MEDIUM": 2, 'HIGH': 3, "URGENT": 4},
+        "STATUS": {'OPEN': 2, 'PENDING': 3, "RESOLVED": 4, "CLOSED": 5},
+        "SOURCE": {"EMAIL": 1, "PORTAL": 2, "PHONE": 3, "CHAT": 7},
         "TYPE": "Internal Team",
 
     }
