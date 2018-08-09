@@ -73,7 +73,7 @@ def create_fresh_desk_attachment_ticket(data):
     type_ = {"inbound": "Call Inbound", "outbound": "Call outbound"}
 
     description = "The start:{} and end time:{} of the conversation will be attached into a ticket  (audio, agent name:{})".format(data[
-        "StartTime"], data["EndTime"], data['CallerID'])
+        "StartTime"], data["EndTime"], data['AgentID'])
 
     audio_file = data['AudioFile']
     doc = requests.get(audio_file)
