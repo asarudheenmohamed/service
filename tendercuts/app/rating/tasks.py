@@ -91,6 +91,8 @@ def create_fresh_desk_attachment_ticket(data):
             data["Disposition"],
             data['Comments'])
 
+        return
+
     doc = requests.get(audio_file)
     # create a temp mp3 file
     with tempfile.NamedTemporaryFile(mode='wb', suffix='.mp3') as keyfile:
