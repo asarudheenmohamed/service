@@ -9,7 +9,7 @@ class CloudAgentCallback(viewsets.GenericViewSet):
     """Endpoint to freshdesk attachment ticket creation.
 
     EndPoint:
-        API: rating/callback/
+            API: rating/callback/
     """
     authentication_classes = ()
     permission_classes = ()
@@ -18,10 +18,10 @@ class CloudAgentCallback(viewsets.GenericViewSet):
         """CloudAgent callback  endpoint.
 
         Params:
-            CloudAgent Callback details
+                CloudAgent Callback details
 
         returns:
-            Response({status: bool, message: str})
+                Response({status: bool, message: str})
 
         """
 
