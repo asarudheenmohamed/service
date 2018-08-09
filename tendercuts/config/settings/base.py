@@ -254,7 +254,7 @@ MAIL_GATEWAY = {
 FRESHDESK = {
     "PASSWORD": "tendercuts1234",
     "CC_EMAILS": ['liza@tendercuts.in'],
-    "KEY": "uoHER1yGfG9SAp7MXfb",
+    "KEY": "UovHZV5Glhiw5YOHIP0Q",
     "TICKETS_CREATE": {
         "ENDPOINT": "https://tendercuts.freshdesk.com/api/v2/tickets",
         "PRIORITY": 1,
