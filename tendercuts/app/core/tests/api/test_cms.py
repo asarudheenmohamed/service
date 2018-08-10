@@ -19,8 +19,15 @@ class TestCms(object):
             Checks the response is not None
 
         """
-        response = rest.get("/core/cms/", format='json')
+        response = rest.get("/core/get_cms_footer/", format='json')
 
         assert (response) is not None
         assert response.status_code == 200
-        assert len(response.data['results']) != 0
+        assert len(response.data) != 0
+
+        response = rest.get(
+            "/core/cms/?title={}".format(response.data[0]['title']), format='json')
+
+        assert (response) is not None
+        assert response.status_code == 200
+        assert len(response.data) != 0
