@@ -76,7 +76,6 @@ def create_fresh_desk_attachment_ticket(data):
         "StartTime"], data["EndTime"], data['AgentID'])
 
     audio_file = data['AudioFile']
-    doc = requests.get(audio_file)
     controller = FreshDesk()
     if not audio_file:
         controller.create_ticket_attachment(
@@ -91,6 +90,10 @@ def create_fresh_desk_attachment_ticket(data):
             data["AgentID"],
             data["Disposition"],
             data['Comments'])
+
+        return
+
+    doc = requests.get(audio_file)
     # create a temp mp3 file
     with tempfile.NamedTemporaryFile(mode='wb', suffix='.mp3') as keyfile:
         with open(keyfile.name, 'wb') as fd:
