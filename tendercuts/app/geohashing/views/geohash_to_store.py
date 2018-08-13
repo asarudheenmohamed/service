@@ -36,7 +36,7 @@ class GeohashToStore(APIView):
         status = True
         try:
             store_id = controller.get_store_id(geohash, lat, lng)
-        except NoStoreFoundException
+        except NoStoreFoundException:
             status = False
 
         return Response({'status': status, "store_id": store_id})
