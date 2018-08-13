@@ -4,7 +4,7 @@ import logging
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from ..lib.geohash_controller import GeohashController
+from ..lib.geohash_controller import GeohashController, NoStoreFoundException
 
 
 class GeohashToStore(APIView):
@@ -32,6 +32,11 @@ class GeohashToStore(APIView):
         lng = request.data["lng"]
 
         controller = GeohashController()
-        status = controller.get_store_id(geohash, lat, lng)
+        store_id = None
+        status = True
+        try:
+            store_id = controller.get_store_id(geohash, lat, lng)
+        except NoStoreFoundException:
+            status = False
 
-        return Response(status)
+        return Response({'status': status, "store_id": store_id})
