@@ -16,6 +16,8 @@ from app.driver.lib.trip_controller import TripController
 from app.driver.models import DriverOrder
 from app.driver.models.driver_order import DriverPosition
 from app.core.models.sales_order import SalesFlatOrderAddress
+from app.core.models.customer.address import CustomerAddressEntity
+from app.core.models.entity import EavAttribute
 
 
 @pytest.mark.django_db
@@ -42,6 +44,36 @@ class TestDriverController:
                 80.246106)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
+
+    def test_check_customer_location(generate_mock_order):
+        """Assign driver test case.
+
+        Asserts:
+            1. If the driver is assigned
+
+        """
+
+        eav_attribute = EavAttribute.objects.get_or_create(
+            attribute_code='geohash')
+        shipping_address = generate_mock_order.shipping_address.all().last()
+        CustomerAddressEntityVarchar.objects.get_or_create(
+            attribute=eav_attribute,
+            entity_id=shipping_address.customer_address_id)
+        eav_latitude = EavAttribute.objects.filter(attribute_code='latitude')
+        eav_longitude = EavAttribute.objects.filter(attribute_code='longitude')
+
+        CustomerAddressEntityVarchar.objects.get_or_create(
+            attribute=eav_latitude,
+            entity_id=shipping_address.customer_address_id, value=12.965365)
+        CustomerAddressEntityVarchar.objects.get_or_create(
+            attribute=eav_longitude,
+            entity_id=shipping_address.customer_address_id, value=80.246106)
+
+        controller = DriverController(None)
+        response = controller._check_customer_location(
+            generate_mock_order, 12.965365, 80.246106)
+
+        assert response == True
 
     @pytest.mark.parametrize('store_id', [5, 8])
     def test_driver_order_assign_mismatch_store(
