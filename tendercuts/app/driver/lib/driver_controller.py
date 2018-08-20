@@ -6,12 +6,15 @@ from django.conf import settings
 from django.utils import timezone
 
 import app.core.lib.magento as mage
+import geopy.distance
 from app.core.lib.communication import SMS
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
+from app.core.models.customer.address import CustomerAddressEntity
 from app.driver import tasks
+
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
@@ -87,6 +90,7 @@ class DriverController(object):
             longitude: driver completed location longitude
         """
         shipping_address = order.shipping_address.all().last()
+
         address_obj = CustomerAddressEntity.objects.filter(
             entity_id=shipping_address.customer_address_id).last()
         address_varchar_obj = address_obj.varchars.filter(
@@ -95,10 +99,13 @@ class DriverController(object):
         if address_varchar_obj:
             address_texts_obj = address_obj.varchars.filter(
                 attribute__attribute_code__in=['latitude', 'longitude']).values('attribute__attribute_code', 'value')
+            address_texts_obj = {text_obj['attribute__attribute_code']: text_obj[
+                'value'] for text_obj in address_texts_obj}
 
-            return get_distance(latitude, longitude) < 0.5
+            return self._get_distance(latitude, longitude, address_texts_obj[
+                'latitude'], address_texts_obj['longitude']) < 0.5
 
-        return True
+        return False
 
     def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
@@ -266,7 +273,7 @@ class DriverController(object):
                     self.driver.username))
 
             raise ValueError(
-                'Please Order Complete customer nearest locations')
+                'Please Complete the order customer nearest locations')
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
