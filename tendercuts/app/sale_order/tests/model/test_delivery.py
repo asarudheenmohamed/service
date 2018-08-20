@@ -23,11 +23,6 @@ class TestDeliveryModel:
         assert == 19
         assert ExpressDelivery().cost == 49
 
-    def test_delivery_special_cost(self):
-        """Test deliver special cost."""
-        assert ScheduledDelivery().special_delivery_cost == 0
-        assert ExpressDelivery().special_delivery_cost is None
-
     def test_slots_available(self):
         """
         Verify slots availabilty

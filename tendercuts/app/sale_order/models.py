@@ -39,12 +39,6 @@ class ScheduledDelivery(Delivery):
     def cost(self):
         return 19
 
-    @property
-    def special_delivery_cost(self):
-        """Return the special delivery cost."""
-
-        return 0
-
     def is_slots_available(self):
         return True
 
@@ -72,14 +66,11 @@ class ScheduledDelivery(Delivery):
         return slots
 
     def serialize(self):
-        special_delivery_cost = self.special_delivery_cost
         data = {}
         data["name"] = "Scheduled Delivery"
         data["cost"] = self.cost
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = self.available_slots()
-        if special_delivery_cost is not None:
-            data["special_delivery_cost"] = self.special_delivery_cost
 
         return data
 
@@ -89,11 +80,6 @@ class ExpressDelivery(Delivery):
     @property
     def cost(self):
         return 49
-
-    @property
-    def special_delivery_cost(self):
-        """Return the special delivery cost."""
-        return None
 
     def time_in_range(self, start, end, x):
         """Return true if x is in the range [start, end]"""
@@ -113,8 +99,6 @@ class ExpressDelivery(Delivery):
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = []
 
-        if special_delivery_cost is not None:
-            data["special_delivery_cost"] = self.special_delivery_cost
         # Hack for the bug in mobile app
         if not self.is_slots_available():
             data = {}
