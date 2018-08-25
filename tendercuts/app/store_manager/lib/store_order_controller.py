@@ -57,7 +57,7 @@ class StoreOrderController(object):
 
         return sales_order_obj
 
-    def get_driver_location(self, driver_obj):
+    def get_driver_location(self, driver_id):
         """Fetch driver current location.
 
         Params:
@@ -68,10 +68,6 @@ class StoreOrderController(object):
 
         """
         driver_position_obj = DriverPosition.objects.filter(
-            driver_user=driver_obj).last()
-
-        logger.info(
-            "Fetch driver's current positions for that driver ids:{}".format(
-                driver_obj))
+            driver_user_id=driver_id).last()
 
         return driver_position_obj
