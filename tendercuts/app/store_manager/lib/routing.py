@@ -318,8 +318,49 @@ class ConsolePrinter():
 
 
 class RoutingController():
+
+    def format_output(self, routing, data, assignment):
+        """Format the routings into dicts."""
+        routes = []
+        time_dimension = routing.GetDimensionOrDie('Time')
+        for vehicle_id in xrange(data.num_vehicles):
+            # Depot
+            index = routing.Start(vehicle_id)
+
+            route = {'orders': [], 'km': 0}
+            while not routing.IsEnd(index):
+                # Get the next index.
+                index = assignment.Value(routing.NextVar(index))
+
+                if not data.cache.get(index, None):
+                    continue
+
+                node_index = routing.IndexToNode(index)
+                next_node_index = routing.IndexToNode(
+                    assignment.Value(routing.NextVar(index)))
+
+                route['km'] += manhattan_distance(
+                    data.locations[node_index],
+                    data.locations[next_node_index])
+                route['orders'].append(data.cache[index])
+
+            # Driver was not used, so skip it.
+            if not route:
+                continue
+
+            # Inject time finally.
+            time_var = time_dimension.CumulVar(index)
+            route['time'] = assignment.Value(time_var)
+            routes.append(route)
+
+        return routes
+
     def generate_optimal_routes(self, store_id):
-        """Entry point of the program"""
+        """Entry point of the program
+
+        :return
+            A list of dicts containing{orders, km, time}
+        """
         # Instantiate the data problem.
         data = RoutingData(store_id)
 
@@ -345,20 +386,6 @@ class RoutingController():
 
         # Solve the problem.
         assignment = routing.SolveWithParameters(search_parameters)
-        printer = ConsolePrinter(data, routing, assignment)
+        # printer = ConsolePrinter(data, routing, assignment)
 
-        routes = []
-        for vehicle_id in xrange(data.num_vehicles):
-            # Depot
-            index = routing.Start(vehicle_id)
-
-            route = []
-            while not routing.IsEnd(index):
-                index = assignment.Value(routing.NextVar(index))
-                if data.cache.get(index, None):
-                    route.append(data.cache[index])
-
-            if not route:
-                routes.append(route)
-
-        return routes
+        return self.format_output(routing, data, assignment)
