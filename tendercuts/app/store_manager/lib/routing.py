@@ -1,26 +1,25 @@
 """Endpoint to get optimum routing."""
 import logging
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from app.store_manager.lib import StoreDriverController
-from app.core.models import SalesFlatOrder
-
-from ..auth import StoreManagerAuthentication
 import pyproj as proj
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
-
-
+from app.core.models import SalesFlatOrder
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
+def manhattan_distance(position_1, position_2):
+    """Computes the Manhattan distance between two points"""
+    return (abs(position_1[0] - position_2[0]) +
+            abs(position_1[1] - position_2[1]))
+
+
 class Vehicle():
     """Stores the property of a driver"""
+
     def __init__(self):
         """Initializes the vehicle properties"""
         # 20 items
@@ -41,19 +40,24 @@ class Vehicle():
 
 class RoutingData:
     def __init__(self, store_id):
+        """
+        :param store_id: Store id for which we collect all the processing orders.
+        """
         self.orders = SalesFlatOrder.objects.filter(store_id=store_id, status='processing')[:11]
         self.orders = self.orders.prefetch_related('items', 'shipping_address')
+
+        # +1 to counter the depot location also
+        self.cache = {index + 1: order for index, order in enumerate(self.orders)}
         self.vehicle = Vehicle()
         self.num_vehicles = 8
 
+        # location for all orders.
         self.locations = self.prepare_locations()
         self.depot = 0
+        # Item counts for all orders
         self.demands = self.generate_demands()
+        # time window for all orders
         self.time_windows = self.generate_times()
-
-        logger.info(self.locations)
-        logger.info(self.demands)
-        logger.info(self.time_windows)
 
     @property
     def num_locations(self):
@@ -63,14 +67,20 @@ class RoutingData:
     @property
     def time_per_demand_unit(self):
         """Gets the time (in min) to load a demand"""
-        return 8 # 5 minutes/unit
+        return 8  # 5 minutes/unit
 
     def prepare_locations(self):
+        """Get all lat and lng and convert to cartesian
+        coordinates
+
+        :return:
+            A list of (x, y)
+        """
         locations = [(
-                order.shipping_address.all()[0].o_latitude,
-                order.shipping_address.all()[0].o_longitude)
+            order.shipping_address.all()[0].o_latitude,
+            order.shipping_address.all()[0].o_longitude)
             for order in self.orders]
-        
+
         locations = [
             (12.989885, 80.221038),
             (12.972565, 80.263893),
@@ -85,11 +95,11 @@ class RoutingData:
             (12.998304, 80.268419),
         ]
         # setup your projections
-        crs_wgs = proj.Proj(init='epsg:4326') # assuming you're using WGS84 geographic
-        crs_bng = proj.Proj(init='epsg:27700') # use a locally appropriate projected CRS
+        crs_wgs = proj.Proj(init='epsg:4326')  # assuming you're using WGS84 geographic
+        crs_bng = proj.Proj(init='epsg:27700')  # use a locally appropriate projected CRS
 
         locations = [proj.transform(crs_wgs, crs_bng, location[0], location[1])
-            for location in locations]
+                     for location in locations]
 
         depot = proj.transform(crs_wgs, crs_bng, '12.928171', '80.235877')
         locations.insert(0, depot)
@@ -97,12 +107,18 @@ class RoutingData:
         return locations
 
     def generate_demands(self):
+        """Count of all order items."""
         demands = [0]
         for order in self.orders:
             demands.append(len(order.items.all()))
         return demands
 
     def generate_times(self):
+        """Get the time remaining for all orders.
+
+        Note: If negative time is remaining, then the logic will
+        break so we keep a steady timing of 35 mins for orders.
+        """
         time_windows = [(0, 0)]
         for order in self.orders:
             time_remaining = 35 if order.remaining_time < 0 else order.remaining_time
@@ -110,13 +126,10 @@ class RoutingData:
 
         return time_windows
 
-def manhattan_distance(position_1, position_2):
-    """Computes the Manhattan distance between two points"""
-    return (abs(position_1[0] - position_2[0]) +
-            abs(position_1[1] - position_2[1]))
 
 class CreateDistanceEvaluator(object):
     """Creates callback to return distance between points."""
+
     def __init__(self, data):
         """Initializes the distance matrix."""
         self._distances = {}
@@ -137,8 +150,10 @@ class CreateDistanceEvaluator(object):
         """Returns the manhattan distance between the two nodes"""
         return self._distances[from_node][to_node]
 
+
 class CreateDemandEvaluator(object):
     """Creates callback to get demands at each location."""
+
     def __init__(self, data):
         """Initializes the demand array."""
         self._demands = data.demands
@@ -151,6 +166,7 @@ class CreateDemandEvaluator(object):
 
 class CreateTimeEvaluator(object):
     """Creates callback to get total times between locations."""
+
     @staticmethod
     def service_time(data, node):
         """Gets the service time for the specified location."""
@@ -186,15 +202,17 @@ class CreateTimeEvaluator(object):
         """Returns the total time between the two nodes"""
         return self._total_time[from_node][to_node]
 
+
 def add_capacity_constraints(routing, data, demand_evaluator):
     """Adds capacity constraint"""
     capacity = "Capacity"
     routing.AddDimension(
         demand_evaluator,
-        0, # null capacity slack
-        data.vehicle.capacity, # vehicle maximum capacity
-        True, # start cumul to zero
+        0,  # null capacity slack
+        data.vehicle.capacity,  # vehicle maximum capacity
+        True,  # start cumul to zero
         capacity)
+
 
 def add_time_window_constraints(routing, data, time_evaluator):
     """Add Global Span constraint"""
@@ -202,9 +220,9 @@ def add_time_window_constraints(routing, data, time_evaluator):
     horizon = 120
     routing.AddDimension(
         time_evaluator,
-        5, # allow waiting time
-        horizon, # maximum time per vehicle
-        False, # don't force start cumul to zero since we are giving TW to start nodes
+        5,  # allow waiting time
+        horizon,  # maximum time per vehicle
+        False,  # don't force start cumul to zero since we are giving TW to start nodes
         time)
     time_dimension = routing.GetDimensionOrDie(time)
     for location_idx, time_window in enumerate(data.time_windows):
@@ -219,8 +237,10 @@ def add_time_window_constraints(routing, data, time_evaluator):
         time_dimension.CumulVar(index).SetRange(data.time_windows[0][0], data.time_windows[0][1])
         routing.AddToAssignment(time_dimension.SlackVar(index))
 
+
 class ConsolePrinter():
     """Print solution to console"""
+
     def __init__(self, data, routing, assignment):
         """Initializes the printer"""
         self._data = data
@@ -296,31 +316,49 @@ class ConsolePrinter():
         logger.info('Total Distance of all routes: {0}m'.format(total_dist))
         logger.info('Total Time of all routes: {0}min'.format(total_time))
 
-########
-# Main #
-########
-def solver(store_id):
-    """Entry point of the program"""
-    # Instantiate the data problem.
-    data = RoutingData(store_id)
 
-    # Create Routing Model
-    routing = pywrapcp.RoutingModel(data.num_locations, data.num_vehicles, data.depot)
-    # Define weight of each edge
-    distance_evaluator = CreateDistanceEvaluator(data).distance_evaluator
-    routing.SetArcCostEvaluatorOfAllVehicles(distance_evaluator)
-    # Add Capacity constraint
-    demand_evaluator = CreateDemandEvaluator(data).demand_evaluator
-    add_capacity_constraints(routing, data, demand_evaluator)
-    # Add Time Window constraint
-    time_evaluator = CreateTimeEvaluator(data).time_evaluator
-    add_time_window_constraints(routing, data, time_evaluator)
+class RoutingController():
+    def generate_optimal_routes(self, store_id):
+        """Entry point of the program"""
+        # Instantiate the data problem.
+        data = RoutingData(store_id)
 
-    # Setting first solution heuristic (cheapest addition).
-    search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
-    search_parameters.first_solution_strategy = (
-        routing_enums_pb2.FirstSolutionStrategy.SAVINGS)
-    # Solve the problem.
-    assignment = routing.SolveWithParameters(search_parameters)
-    printer = ConsolePrinter(data, routing, assignment)
-    printer.printer()
+        # Create Routing Model
+        routing = pywrapcp.RoutingModel(data.num_locations, data.num_vehicles, data.depot)
+
+        # Define weight of each edge
+        distance_evaluator = CreateDistanceEvaluator(data).distance_evaluator
+        routing.SetArcCostEvaluatorOfAllVehicles(distance_evaluator)
+
+        # Add Capacity constraint
+        demand_evaluator = CreateDemandEvaluator(data).demand_evaluator
+        add_capacity_constraints(routing, data, demand_evaluator)
+
+        # Add Time Window constraint
+        time_evaluator = CreateTimeEvaluator(data).time_evaluator
+        add_time_window_constraints(routing, data, time_evaluator)
+
+        # Setting first solution heuristic (cheapest addition).
+        search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
+        search_parameters.first_solution_strategy = (
+            routing_enums_pb2.FirstSolutionStrategy.SAVINGS)
+
+        # Solve the problem.
+        assignment = routing.SolveWithParameters(search_parameters)
+        printer = ConsolePrinter(data, routing, assignment)
+
+        routes = []
+        for vehicle_id in xrange(data.num_vehicles):
+            # Depot
+            index = routing.Start(vehicle_id)
+
+            route = []
+            while not routing.IsEnd(index):
+                index = assignment.Value(routing.NextVar(index))
+                if data.cache.get(index, None):
+                    route.append(data.cache[index])
+
+            if not route:
+                routes.append(route)
+
+        return routes
