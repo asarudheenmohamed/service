@@ -35,15 +35,14 @@ class DriverLocationViewSet(viewsets.ReadOnlyModelViewSet):
             return driver_lat_lon(DriverLocation Object)
 
         """
-        phone_number = self.request.GET['phone_number']
+        driver_id = self.request.GET['driver_id']
         #  To get driver object
-        driver_obj = StoreOrderController.get_driver_obj(phone_number)
 
         logger.debug('To Get current location of driver:{}'.format(
-            driver_obj))
+            driver_id))
 
         controller = StoreOrderController()
-        driver_lat_lon = controller.get_driver_location(driver_obj)
+        driver_lat_lon = controller.get_driver_location(driver_id)
 
         # return as a list not an object
         return [driver_lat_lon]
