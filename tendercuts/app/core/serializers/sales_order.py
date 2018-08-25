@@ -49,9 +49,6 @@ class SalesOrderSerializer(serializers.ModelSerializer):
                   "grand_total", "updated_at", "payment",
                   "store_id", "shipping_address", "items",
                   "status", "order_now", "promised_delivery_time",
-                  "subtotal", "scheduled_date", "scheduled_slot",
-                  "deliverytype",
                   "promised_delivery_time_dt", "shipping_amount",
-                  "discount_amount", "driver_name", "driver_number",
-                  "sequence_number"
+                  "discount_amount", "driver_name", "driver_number", "sequence_number",
                   )

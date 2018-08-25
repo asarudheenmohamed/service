@@ -14,19 +14,11 @@ router.register(
     base_name='StoreOrderViewSet')
 
 router.register(
-    r'trips',
-    views.StoreTripViewSet,
-    base_name='StoreTripViewSet')
-
-
-router.register(
     r'driver_lat_lon',
     views.DriverLocationViewSet,
     base_name='DriverLocationViewSet')
 
 urlpatterns = [
-    url(r'', include(router.urls)),
+	url(r'', include(router.urls)),
     url(r'login', views.StoreManagerLoginApi.as_view()),
-    url(r'drivers', views.StoreDriverView.as_view()),
-    url(r'routing', views.StoreRoutingView.as_view()),
 ]

@@ -14,7 +14,6 @@ from app.core.models.customer.address import CustomerAddressEntityVarchar
 from . import models as models
 from . import serializers as serializers
 from .lib import magento as magento
-from rest_framework.decorators import list_route
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -184,27 +183,15 @@ class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class CmsViewSet(viewsets.GenericViewSet):
+class CmsViewSet(viewsets.ReadOnlyModelViewSet):
     """A simple ViewSet for viewing Rating Tags.
     """
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
     permission_classes = ()
-    
-    @list_route(methods=['get'])
-    def cm_title(self, request, pk=None):
-        """List the CMS titles."""
-        queryset = models.CmsPage.objects.filter(is_active=True).values('title', 'page_id')
-        return Response(queryset)
 
-    @list_route(methods=['get'])
-    def cms_page(self, request, pk=None):
-        """Returns the CMS page object for give title."""
-        page_id = self.request.query_params['page_id']
-        queryset = models.CmsPage.objects.filter(page_id=page_id)
-        serializer = serializers.CmsSerializer(queryset, many=True)
-
-        return Response(serializer.data)
+    queryset = models.CmsPage.objects.all()
+    serializer_class = serializers.CmsSerializer
 
 
 class ProductPriceViewSet(APIView):
