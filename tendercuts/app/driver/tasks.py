@@ -105,8 +105,8 @@ def set_checkout():
 
 @app.task(base=TenderCutsTask)
 def compute_order_eta(increment_id):
-    'Update the order ETA.'
+    """Update the order ETA."""
     from app.driver.lib.google_api_controller import GoogleApiController
-    order = SalesFlatOrder.objects.filter(increment_id=increment_id).first()
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id)
     controller = GoogleApiController(order)
     controller.compute_eta()

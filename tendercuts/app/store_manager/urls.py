@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'login', views.StoreManagerLoginApi.as_view()),
     url(r'drivers', views.StoreDriverView.as_view()),
     url(r'routing', views.StoreRoutingView.as_view()),
+    url(r'processing', views.OrderProcessingView.as_view()),
 ]

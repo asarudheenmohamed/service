@@ -62,7 +62,6 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
 
     def compute_order_eta(self, message):
         from app.driver import tasks
-
         tasks.compute_order_eta.delay(message['increment_id'])
 
     def handle_message(self, body, message):
