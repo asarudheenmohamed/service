@@ -67,7 +67,7 @@ class GoogleApiController(object):
         store_lat_and_lng = CoreStore.objects.filter(
             store_id=self.order.store_id).values(
             'location__longandlatis__longitude',
-            'location__longandlatis__latitude').last()
+            'location__longandlatis__latitude').first()
 
         origin = "{},{}".format(
             store_lat_and_lng['location__longandlatis__latitude'],
@@ -80,7 +80,7 @@ class GoogleApiController(object):
 
             # Try to get the eta using street address
             street = shipping_address.street
-            street = street.value.strip('\n')
+            street = street.split('\n')
 
             if len(street) <= 1:
                 destination = shipping_address.postcode
@@ -91,15 +91,15 @@ class GoogleApiController(object):
         directions = self.get_directions(origin, destination)
 
         legs = directions[0]['legs']
-        data['eta'] = legs[0]['duration']['value'] / 60
+        shipping_address.eta = legs[0]['duration']['value'] / 60
 
         # if original lat and lng is missing, then we use the data from
         # directions api.
         if not shipping_address.o_longitude:
-            data['o_latitude'] = legs[0]['end_location']['lat']
-            data['o_longitude'] = legs[0]['end_location']['lng']
+            shipping_address.o_latitude = legs[0]['end_location']['lat']
+            shipping_address.o_longitude = legs[0]['end_location']['lng']
 
-        shipping_address.update(**data)
+        shipping_address.save()
 
         self.logger.info('ETA time updated for the customer:{} order:{}'.format(
             self.order.customer_id, self.order.increment_id))

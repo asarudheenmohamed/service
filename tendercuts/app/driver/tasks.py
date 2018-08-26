@@ -10,7 +10,6 @@ from app.core.models import SalesFlatOrder
 from app.driver.models import DriverLoginLogout
 from config.celery import app
 from django.conf import settings
-from app.driver.lib.google_api_controller import GoogleApiController
 
 
 logger = logging.getLogger(__name__)
@@ -107,6 +106,7 @@ def set_checkout():
 @app.task(base=TenderCutsTask)
 def compute_order_eta(increment_id):
     'Update the order ETA.'
-    order = SalesFlatOrder.objects.filter(increment_id=increment_id)
+    from app.driver.lib.google_api_controller import GoogleApiController
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id).first()
     controller = GoogleApiController(order)
     controller.compute_eta()
