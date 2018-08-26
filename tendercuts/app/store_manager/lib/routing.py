@@ -342,15 +342,16 @@ class RoutingController():
                 route['km'] += manhattan_distance(
                     data.locations[node_index],
                     data.locations[next_node_index])
-                route['orders'].append(data.cache[index])
+                route['orders'].append(data.cache[index].increment_id)
 
             # Driver was not used, so skip it.
-            if not route:
+            if not route['orders']:
                 continue
 
             # Inject time finally.
             time_var = time_dimension.CumulVar(index)
             route['time'] = assignment.Value(time_var)
+            route['km'] = round(route['km'] / 1000, 2)
             routes.append(route)
 
         return routes
