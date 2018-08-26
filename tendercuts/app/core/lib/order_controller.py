@@ -27,10 +27,11 @@ class OrderController(object):
 
     def processing(self):
         """The order status pending to processing state."""
-        invoice_id = self.mage.api.sales_order_invoice.create(
-            {'invoiceIncrementId ': self.order.increment_id})
-        self.mage.api.sales_order_invoice.capture(
-            {'invoiceIncrementId ': invoice_id})
+        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(
+            [{'increment_id': self.order.increment_id}])
+        logger.info(
+            'This order:{} was changed to out for delivery'.format(
+                self.order.increment_id))
 
     def out_delivery(self):
         """The order status processing to out for delivery."""
