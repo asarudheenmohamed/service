@@ -1,5 +1,6 @@
 """Endpoint to get optimum routing."""
 import logging
+import datetime
 
 import pyproj as proj
 from ortools.constraint_solver import pywrapcp
@@ -43,7 +44,9 @@ class RoutingData:
         """
         :param store_id: Store id for which we collect all the processing orders.
         """
-        self.orders = SalesFlatOrder.objects.filter(store_id=store_id, status='processing')[:11]
+        today = format(datetime.date.today(), '%Y-%m-%d')
+        self.orders = SalesFlatOrder.objects.filter(store_id=store_id, status='processing', sale_date__gte=today)
+        logger.info(self.orders)
         self.orders = self.orders.prefetch_related('items', 'shipping_address')
 
         # +1 to counter the depot location also
@@ -76,12 +79,14 @@ class RoutingData:
         :return:
             A list of (x, y)
         """
-        locations = [(
-            order.shipping_address.all()[0].o_latitude,
-            order.shipping_address.all()[0].o_longitude)
-            for order in self.orders]
+       
+        locations = []
+        for order in self.orders:
+            shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
+            locations.append((shipping_address.o_latitude, shipping_address.o_longitude))
+        logger.info(locations)
 
-        locations = [
+        xlocations = [
             (12.989885, 80.221038),
             (12.972565, 80.263893),
             (12.98757, 80.251768),

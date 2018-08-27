@@ -14,6 +14,20 @@ from .magento import Connector
 
 logger = logging.getLogger(__name__)
 
+class OrdersController(object):
+    """
+    Update order status
+    """
+
+    def __init__(self, magento_conn):
+        super(OrdersController, self).__init__()
+        self.mage = magento_conn
+
+    def processing(self, orders):
+        """The order status pending to processing state."""
+        orders = [{'increment_id': order.increment_id} for order in orders]
+        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(orders)
+
 
 class OrderController(object):
     """

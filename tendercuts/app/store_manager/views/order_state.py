@@ -4,7 +4,7 @@ import logging
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.core.lib.order_controller import OrderController
+from app.core.lib.order_controller import OrdersController
 import app.core.lib.magento as mage
 from app.core.models import SalesFlatOrder
 
@@ -24,7 +24,7 @@ class OrderProcessingView(APIView):
 
     authentication_classes = (StoreManagerAuthentication,)
 
-    def get(self, request):
+    def post(self, request):
         """Get all active state trip objects.
 
         Input:
@@ -34,12 +34,18 @@ class OrderProcessingView(APIView):
             return store_data(DriverTrip Object)
 
         """
-        orders = request.GET['orders']
+        orders = request.data['orders']
         conn = mage.Connector()
 
+        controller = OrdersController(conn)
         orders = SalesFlatOrder.objects.filter(increment_id__in=orders)
+
+        filtered_orders = []
         for order in orders:
-            controller = OrderController(conn, order)
-            controller.processing()
+            if order.status in ['pending', 'scheduled_order']:
+                filtered_orders.append(order)
+
+        if filtered_orders:
+            controller.processing(filtered_orders)
 
         return Response({'status': True})

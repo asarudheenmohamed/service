@@ -9,7 +9,8 @@ class SalesOrderAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SalesFlatOrderAddress
         fields = ('fax', "street", "region", "city", 'postcode',
-                  "telephone", "email", "address_type", "latitude", "longitude")
+                  "telephone", "email", "address_type", "latitude", "longitude",
+                  "geohash", "eta", "o_latitude", "o_longitude")
 
 
 class SalesFlatOrderItemSerializer(serializers.ModelSerializer):
