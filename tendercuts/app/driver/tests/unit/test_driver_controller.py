@@ -54,33 +54,12 @@ class TestDriverController:
 
         """
 
-        eav_attribute = EavAttribute.objects.get_or_create(
-            attribute_code='geohash',
-            entity_type_id=2,
-            is_user_defined=1,
-            is_required=0,
-            is_unique=0)
-
         shipping_address = SalesFlatOrderAddress.objects.filter(
             customer_address_id__isnull=False).last()
-
-        # shipping_address = generate_mock_order.shipping_address.all().last()
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_attribute[0],
-            entity_id=shipping_address.customer_address_id,
-            value='tf31fqb',
-            entity_type_id=1)
-        eav_latitude = EavAttribute.objects.filter(
-            attribute_code='latitude').last()
-        eav_longitude = EavAttribute.objects.filter(
-            attribute_code='longitude').last()
-
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_latitude,
-            entity_id=shipping_address.customer_address_id, value=12.965365)
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_longitude,
-            entity_id=shipping_address.customer_address_id, value=80.246106)
+        shipping_address.geohash = "tf31fqb"
+        shipping_address.o_latitude = 12.965365
+        shipping_address.o_longitude = 80.246106
+        shipping_address.save()
 
         controller = DriverController(None)
         response = controller.is_nearby(
