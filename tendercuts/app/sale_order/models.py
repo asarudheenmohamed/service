@@ -37,7 +37,7 @@ class ScheduledDelivery(Delivery):
 
     @property
     def cost(self):
-        return 29
+        return 19
 
     def is_slots_available(self):
         return True
@@ -98,6 +98,7 @@ class ExpressDelivery(Delivery):
         data["cost"] = self.cost
         data["is_available"] = self.is_slots_available()
         data["available_slots"] = []
+
         # Hack for the bug in mobile app
         if not self.is_slots_available():
             data = {}
