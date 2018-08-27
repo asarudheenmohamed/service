@@ -14,6 +14,20 @@ from .magento import Connector
 
 logger = logging.getLogger(__name__)
 
+class OrdersController(object):
+    """
+    Update order status
+    """
+
+    def __init__(self, magento_conn):
+        super(OrdersController, self).__init__()
+        self.mage = magento_conn
+
+    def processing(self, orders):
+        """The order status pending to processing state."""
+        orders = [{'increment_id': order.increment_id} for order in orders]
+        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(orders)
+
 
 class OrderController(object):
     """
@@ -27,10 +41,11 @@ class OrderController(object):
 
     def processing(self):
         """The order status pending to processing state."""
-        invoice_id = self.mage.api.sales_order_invoice.create(
-            {'invoiceIncrementId ': self.order.increment_id})
-        self.mage.api.sales_order_invoice.capture(
-            {'invoiceIncrementId ': invoice_id})
+        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(
+            [{'increment_id': self.order.increment_id}])
+        logger.info(
+            'This order:{} was changed to out for delivery'.format(
+                self.order.increment_id))
 
     def out_delivery(self):
         """The order status processing to out for delivery."""

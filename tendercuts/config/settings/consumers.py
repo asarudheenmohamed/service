@@ -56,9 +56,13 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         from app.sale_order import tasks
 
         eta_time = datetime.utcnow() + timedelta(seconds=10)
-        #eta set the task excution time
+        # eta set the task excution time
         tasks.update_order_elapsed_time.apply_async(
             (message['increment_id'], message['status']), eta=eta_time)
+
+    def compute_order_eta(self, message):
+        from app.driver import tasks
+        tasks.compute_order_eta.delay(message['increment_id'])
 
     def handle_message(self, body, message):
         """RMQ callback for handling the message/payload."""
@@ -71,11 +75,11 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         online_order_callbacks = {
             'pending': [self._on_update_order_elapsed_time],
             'scheduled_order': [self._on_update_order_elapsed_time],
-            'processing': [self._on_update_order_elapsed_time],
+            'processing': [self._on_update_order_elapsed_time, self.compute_order_eta],
             'out_delivery': [self._on_update_order_elapsed_time],
             'complete': [self._on_update_order_elapsed_time],
-            'canceled':[self._on_update_order_elapsed_time,self._send_sms],
-            'closed':[self._on_update_order_elapsed_time]
+            'canceled': [self._on_update_order_elapsed_time, self._send_sms],
+            'closed': [self._on_update_order_elapsed_time]
         }
 
         # validations

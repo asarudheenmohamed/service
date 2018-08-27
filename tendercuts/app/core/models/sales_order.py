@@ -444,6 +444,7 @@ class SalesFlatOrder(models.Model):
     driver_name = models.CharField(max_length=25, blank=True, null=True)
     driver_number = models.CharField(max_length=12, blank=True, null=True)
     sequence_number = models.IntegerField(blank=True, null=True)
+    sale_date = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -773,8 +774,15 @@ class SalesFlatOrderAddress(models.Model):
     vat_request_date = models.TextField(blank=True, null=True)
     vat_request_success = models.SmallIntegerField(blank=True, null=True)
     giftregistry_item_id = models.IntegerField(blank=True, null=True)
+
     latitude = models.CharField(max_length=255, blank=True, null=True)
     longitude = models.CharField(max_length=255, blank=True, null=True)
+
+    o_latitude = models.CharField(max_length=255, blank=True, null=True)
+    o_longitude = models.CharField(max_length=255, blank=True, null=True)
+
+    geohash = models.CharField(max_length=255, blank=True, null=True)
+    eta = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

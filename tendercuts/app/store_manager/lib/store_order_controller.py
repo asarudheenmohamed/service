@@ -1,7 +1,10 @@
 """Returns assigned driver order obj and driver details based on store id."""
 import logging
+import datetime
 
 from django.contrib.auth.models import User
+from django.db.models import Q
+
 
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
@@ -47,9 +50,13 @@ class StoreOrderController(object):
             Returns all active order obj.
 
         """
+        today = format(datetime.date.today(), "%Y-%m-%d")
         sales_order_obj = SalesFlatOrder.objects.filter(
-            store__store_id=int(store_id)).exclude(
-            status__in=['canceled', 'complete', 'closed'])
+            Q(store__store_id=int(store_id)) &
+            Q(sale_date__gte=today) |
+            Q(created_at__gte=today)
+           ).exclude(
+            status__in=['canceled', 'closed'])
 
         logger.info(
             "fetched active state state order obj in store:{}".format(
@@ -57,7 +64,7 @@ class StoreOrderController(object):
 
         return sales_order_obj
 
-    def get_driver_location(self, driver_obj):
+    def get_driver_location(self, driver_id):
         """Fetch driver current location.
 
         Params:
@@ -68,10 +75,6 @@ class StoreOrderController(object):
 
         """
         driver_position_obj = DriverPosition.objects.filter(
-            driver_user=driver_obj).last()
-
-        logger.info(
-            "Fetch driver's current positions for that driver ids:{}".format(
-                driver_obj))
+            driver_user_id=driver_id).last()
 
         return driver_position_obj

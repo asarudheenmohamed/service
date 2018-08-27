@@ -101,3 +101,12 @@ def set_checkout():
         objs.select_related('driver').update(
             check_out=datetime.now().time().replace(
                 hour=23, minute=59, second=0, microsecond=0))
+
+
+@app.task(base=TenderCutsTask)
+def compute_order_eta(increment_id):
+    """Update the order ETA."""
+    from app.driver.lib.google_api_controller import GoogleApiController
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id)
+    controller = GoogleApiController(order)
+    controller.compute_eta()

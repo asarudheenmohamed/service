@@ -25,7 +25,9 @@ urlpatterns = [
     url(r'product', views.ProductViewSet.as_view()),
     url(r'cart/add/', views.CartAddApi.as_view()),
     url(r'customer/', views.CustomerDataApi.as_view()),
-    url(r'price/', views.ProductPriceViewSet.as_view())
+    url(r'price/', views.ProductPriceViewSet.as_view()),
+    #url(r'cms/', views.CmsViewSet.as_view({'get': 'retrieve'})),
+    #url(r'get_cms_footer/', views.CmsViewSet.as_view({'get': 'list'}))
 ]
 
 if settings.DEBUG:
