@@ -46,7 +46,7 @@ class TestDriverController:
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
-    def test_check_customer_location(self):
+    def test_is_nearby(self):
         """Assign driver test case.
 
         Asserts:
@@ -83,7 +83,7 @@ class TestDriverController:
             entity_id=shipping_address.customer_address_id, value=80.246106)
 
         controller = DriverController(None)
-        response = controller._check_customer_location(
+        response = controller.is_nearby(
             shipping_address.parent, 12.965365, 80.246106)
 
         assert response == True

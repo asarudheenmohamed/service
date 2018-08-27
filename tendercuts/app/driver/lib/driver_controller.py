@@ -81,7 +81,7 @@ class DriverController(object):
         """
         return geopy.distance.vincenty((dest_lat, dest_lng), (lat, lng)).km
 
-    def _check_customer_location(self, order, latitude, longitude):
+    def is_nearby(self, order, latitude, longitude):
         """Check the driver completed location is inside the customer geolocation radius.500m
 
         Params:
@@ -89,23 +89,12 @@ class DriverController(object):
             latitude: driver completed location latitude
             longitude: driver completed location longitude
         """
-        shipping_address = order.shipping_address.all().last()
+        shipping_address = order.shipping_address.all().first()
+        if not shipping_address.geohash:
+            return False
 
-        address_obj = CustomerAddressEntity.objects.filter(
-            entity_id=shipping_address.customer_address_id).last()
-        address_varchar_obj = address_obj.varchars.filter(
-            attribute__attribute_code='geohash')
-
-        if address_varchar_obj:
-            address_texts_obj = address_obj.varchars.filter(
-                attribute__attribute_code__in=['latitude', 'longitude']).values('attribute__attribute_code', 'value')
-            address_texts_obj = {text_obj['attribute__attribute_code']: text_obj[
-                'value'] for text_obj in address_texts_obj}
-
-            return self._get_distance(latitude, longitude, address_texts_obj[
-                'latitude'], address_texts_obj['longitude']) < 0.5
-
-        return False
+        return self._get_distance(
+            latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
     def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
@@ -267,7 +256,7 @@ class DriverController(object):
 
         # checks the driver completed location with in a customer geolocation
         # radius 500m
-        if not _check_customer_location(order_obj, lat, lon):
+        if not is_nearby(order_obj, lat, lon):
             logger.info(
                 "This driver:{} is trying to complete the order ahead of customer location".format(
                     self.driver.username))
