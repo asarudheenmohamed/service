@@ -4,7 +4,7 @@ import logging
 from rest_framework import viewsets
 
 from app.driver import serializer as driver_serializer
-from app.store_manager.lib import StoreTripController
+from app.store_manager.lib import StoreBaseController
 
 from ..auth import StoreManagerAuthentication
 
@@ -35,7 +35,7 @@ class StoreTripViewSet(viewsets.ReadOnlyModelViewSet):
         """
         store_id = self.request.GET['store_id']
 
-        controller = StoreTripController()
-        store_data = controller.get_trips(store_id)
+        controller = StoreBaseController(store_id)
+        store_data = controller.get_current_trips()
 
         return store_data

@@ -10,6 +10,8 @@ from django.utils import timezone
 from app.core.models.sales_order import (SalesFlatOrderGrid,
                                          SalesFlatOrderStatusHistory)
 
+from app.core.lib.communication import Mail
+
 from .magento import Connector
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,7 @@ class OrdersController(object):
         """The order status pending to processing state."""
         orders = [{'increment_id': order.increment_id} for order in orders]
         response_data = self.mage.api.tendercuts_order_apis.updateProcessing(orders)
+        logger.info(response_data)
 
 
 class OrderController(object):
@@ -49,11 +52,14 @@ class OrderController(object):
 
     def out_delivery(self):
         """The order status processing to out for delivery."""
-        response_data = self.mage.api.tendercuts_order_apis.updateOutForDelivery(
-            [{'increment_id': self.order.increment_id}])
-        logger.info(
-            'This order:{} was changed to out for delivery'.format(
-                self.order.increment_id))
+        try:
+           response_data = self.mage.api.tendercuts_order_apis.updateOutForDelivery(
+               [{'increment_id': self.order.increment_id}])
+           logger.info(
+              'This order:{} was changed to out for delivery'.format(
+                  self.order.increment_id))
+        except Exception as msg:
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",msg)
 
         response_data
 
@@ -63,9 +69,12 @@ class OrderController(object):
         reward and credit.
 
         """
-        response_data = self.mage.api.tendercuts_order_apis.completeOrders(
-            [{'increment_id': self.order.increment_id}])
-
+        try:
+           response_data = self.mage.api.tendercuts_order_apis.completeOrders(
+              [{'increment_id': self.order.increment_id}])
+        except Exception as msg:
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",msg)
+             
         return response_data
 
     def cancel(self):

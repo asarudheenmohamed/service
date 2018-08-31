@@ -6,7 +6,7 @@ import pyproj as proj
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
-from app.core.models import SalesFlatOrder
+from app.core.models import SalesFlatOrder, CoreStore
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class Vehicle():
     def __init__(self):
         """Initializes the vehicle properties"""
         # 20 items
-        self._capacity = 20
+        self._capacity = 30
         # Travel speed: 5km/h to convert in m/min
         self._speed = 30 * 60 / 3.6
 
@@ -44,6 +44,7 @@ class RoutingData:
         """
         :param store_id: Store id for which we collect all the processing orders.
         """
+        self.store_id = store_id
         today = format(datetime.date.today(), '%Y-%m-%d')
         self.orders = SalesFlatOrder.objects.filter(store_id=store_id, status='processing', sale_date__gte=today)
         logger.info(self.orders)
@@ -52,27 +53,21 @@ class RoutingData:
         # +1 to counter the depot location also
         self.cache = {index + 1: order for index, order in enumerate(self.orders)}
         self.vehicle = Vehicle()
-        self.num_vehicles = 8
+        self.num_vehicles = 20
 
-        # location for all orders.
-        self.locations = self.prepare_locations()
         self.depot = 0
+        # location for all orders.
+        self.time_windows, self.time_per_order, self.locations = self.prepare_location_data()
         # Item counts for all orders
         self.demands = self.generate_demands()
         # time window for all orders
-        self.time_windows = self.generate_times()
 
     @property
     def num_locations(self):
         """Gets number of locations"""
         return len(self.locations)
 
-    @property
-    def time_per_demand_unit(self):
-        """Gets the time (in min) to load a demand"""
-        return 8  # 5 minutes/unit
-
-    def prepare_locations(self):
+    def prepare_location_data(self):
         """Get all lat and lng and convert to cartesian
         coordinates
 
@@ -80,25 +75,30 @@ class RoutingData:
             A list of (x, y)
         """
        
+        time_windows = [(0, 0)]
+        time_per_order = [0]
         locations = []
+
+        # map to hold addresses, so that we can set the times to zero for 
+        # same addresses.
+        address_map = {}
         for order in self.orders:
             shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
+            
             locations.append((shipping_address.o_latitude, shipping_address.o_longitude))
-        logger.info(locations)
+            # time per order
+            if not address_map.get(shipping_address.customer_address_id, None):
+                # Flat 8 mins
+                time_per_order.append(8)
+                address_map[shipping_address.customer_address_id] = True
+            else:
+                time_per_order.append(0)
 
-        xlocations = [
-            (12.989885, 80.221038),
-            (12.972565, 80.263893),
-            (12.98757, 80.251768),
-            (12.91676, 80.263095),
-            (12.989989, 80.24147),
-            (12.980484, 80.271442),
-            (12.97396, 80.233544),
-            (12.913834, 80.23268),
-            (12.971158, 80.225461),
-            (12.999628, 80.264873),
-            (12.998304, 80.268419),
-        ]
+            # Time windows: if the order cannot be serviced, then we put in 30 mins for
+            # high prio.
+            time_remaining = 30 if order.remaining_time < shipping_address.eta else order.remaining_time
+            time_windows.append((0, time_remaining))
+
         # setup your projections
         crs_wgs = proj.Proj(init='epsg:4326')  # assuming you're using WGS84 geographic
         crs_bng = proj.Proj(init='epsg:27700')  # use a locally appropriate projected CRS
@@ -106,10 +106,17 @@ class RoutingData:
         locations = [proj.transform(crs_wgs, crs_bng, location[0], location[1])
                      for location in locations]
 
-        depot = proj.transform(crs_wgs, crs_bng, '12.928171', '80.235877')
+        store_lat_and_lng = CoreStore.objects.filter(
+            store_id=self.store_id).values(
+            'location__longandlatis__longitude',
+            'location__longandlatis__latitude').first()
+
+        depot = proj.transform(crs_wgs, crs_bng,
+            store_lat_and_lng['location__longandlatis__latitude'],
+            store_lat_and_lng['location__longandlatis__longitude'])
         locations.insert(0, depot)
 
-        return locations
+        return time_windows, time_per_order, locations
 
     def generate_demands(self):
         """Count of all order items."""
@@ -117,19 +124,6 @@ class RoutingData:
         for order in self.orders:
             demands.append(len(order.items.all()))
         return demands
-
-    def generate_times(self):
-        """Get the time remaining for all orders.
-
-        Note: If negative time is remaining, then the logic will
-        break so we keep a steady timing of 35 mins for orders.
-        """
-        time_windows = [(0, 0)]
-        for order in self.orders:
-            time_remaining = 35 if order.remaining_time < 0 else order.remaining_time
-            time_windows.append((0, time_remaining))
-
-        return time_windows
 
 
 class CreateDistanceEvaluator(object):
@@ -173,10 +167,10 @@ class CreateTimeEvaluator(object):
     """Creates callback to get total times between locations."""
 
     @staticmethod
-    def service_time(data, node):
+    def service_time(data, from_node, to_node):
         """Gets the service time for the specified location."""
         # return data.demands[node] * data.time_per_demand_unit
-        return data.time_per_demand_unit
+        return data.time_per_order[to_node]
 
     @staticmethod
     def travel_time(data, from_node, to_node):
@@ -200,7 +194,7 @@ class CreateTimeEvaluator(object):
                     self._total_time[from_node][to_node] = 0
                 else:
                     self._total_time[from_node][to_node] = int(
-                        self.service_time(data, from_node) +
+                        self.service_time(data, from_node, to_node) +
                         self.travel_time(data, from_node, to_node))
 
     def time_evaluator(self, from_node, to_node):
@@ -225,7 +219,7 @@ def add_time_window_constraints(routing, data, time_evaluator):
     horizon = 120
     routing.AddDimension(
         time_evaluator,
-        5,  # allow waiting time
+        3,  # allow waiting time
         horizon,  # maximum time per vehicle
         False,  # don't force start cumul to zero since we are giving TW to start nodes
         time)
@@ -392,6 +386,7 @@ class RoutingController():
 
         # Solve the problem.
         assignment = routing.SolveWithParameters(search_parameters)
+        logger.info("SOLVED and status was {}".format(assignment))
         # printer = ConsolePrinter(data, routing, assignment)
 
         return self.format_output(routing, data, assignment)

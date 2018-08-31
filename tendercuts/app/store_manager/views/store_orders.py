@@ -4,7 +4,7 @@ import logging
 from rest_framework import viewsets
 
 from app.core import serializers
-from app.store_manager.lib.store_order_controller import StoreOrderController
+from app.store_manager.lib import StoreBaseController
 
 from ..auth import StoreManagerAuthentication
 
@@ -38,7 +38,8 @@ class StoreOrderViewSet(viewsets.ReadOnlyModelViewSet):
         logger.debug('To Get driver order details of the store:{}'.format(
             store_id))
 
-        controller = StoreOrderController()
-        store_data = controller.store_orders(store_id)
+        controller = StoreBaseController(store_id)
+        store_data = controller.get_current_orders(['pending', 'scheduled_order',
+            'processing', 'out_delivery', 'complete'])
 
         return store_data

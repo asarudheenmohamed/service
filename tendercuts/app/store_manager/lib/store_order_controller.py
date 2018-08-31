@@ -40,29 +40,6 @@ class StoreOrderController(object):
 
         return driver_user_obj
 
-    def store_orders(self, store_id):
-        """Fetch active state order objects.
-
-        Params:
-            store_id(int): store id
-
-        Returns:
-            Returns all active order obj.
-
-        """
-        today = format(datetime.date.today(), "%Y-%m-%d")
-        sales_order_obj = SalesFlatOrder.objects.filter(
-            Q(store__store_id=int(store_id)) &
-            Q(sale_date__gte=today) |
-            Q(created_at__gte=today)
-           ).exclude(
-            status__in=['canceled', 'closed'])
-
-        logger.info(
-            "fetched active state state order obj in store:{}".format(
-                store_id))
-
-        return sales_order_obj
 
     def get_driver_location(self, driver_id):
         """Fetch driver current location.

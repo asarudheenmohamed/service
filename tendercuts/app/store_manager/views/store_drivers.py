@@ -4,7 +4,7 @@ import logging
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.store_manager.lib import StoreDriverController
+from app.store_manager.lib import StoreBaseController
 
 from ..auth import StoreManagerAuthentication
 
@@ -34,7 +34,7 @@ class StoreDriverView(APIView):
         """
         store_id = request.GET['store_id']
 
-        controller = StoreDriverController()
-        driver_data = controller.get_drivers(store_id)
+        controller = StoreBaseController(store_id)
+        driver_data = controller.get_current_drivers()
 
         return Response(driver_data)

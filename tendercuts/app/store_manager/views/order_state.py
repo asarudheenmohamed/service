@@ -37,6 +37,7 @@ class OrderProcessingView(APIView):
         orders = request.data['orders']
         conn = mage.Connector()
 
+        logger.info(orders)
         controller = OrdersController(conn)
         orders = SalesFlatOrder.objects.filter(increment_id__in=orders)
 
@@ -44,6 +45,7 @@ class OrderProcessingView(APIView):
         for order in orders:
             if order.status in ['pending', 'scheduled_order']:
                 filtered_orders.append(order)
+        logger.info(filtered_orders)
 
         if filtered_orders:
             controller.processing(filtered_orders)
