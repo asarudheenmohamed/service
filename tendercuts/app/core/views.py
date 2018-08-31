@@ -163,7 +163,7 @@ class CustomerDataApi(APIView):
         return Response(data)
 
 
-class CustomerAddressVarcharViewSet(viewsets.GenericViewSet):
+class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
     """This viewset automatically provides `list` and `detail` actions.
 
     Enpoint to provide a list for AddressEntityVarchar
@@ -190,11 +190,13 @@ class CmsViewSet(viewsets.GenericViewSet):
     # Opening the endpoint for anonymous browsing
     authentication_classes = ()
     permission_classes = ()
-    
+
     @list_route(methods=['get'])
     def cm_title(self, request, pk=None):
         """List the CMS titles."""
-        queryset = models.CmsPage.objects.filter(is_active=True).values('title', 'page_id')
+        queryset = models.CmsPage.objects.filter(
+            is_active=True).values(
+            'title', 'page_id')
         return Response(queryset)
 
     @list_route(methods=['get'])
