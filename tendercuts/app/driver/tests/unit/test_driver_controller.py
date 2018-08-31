@@ -2,22 +2,23 @@
 
 import time
 
-import mock
-import pytest
 from django.conf import settings
 from django.contrib.auth.models import User
 
 import app.core.lib.magento as mage
+import mock
+import pytest
 from app.core.lib import cache
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
+from app.core.models.customer.address import (CustomerAddressEntity,
+                                              CustomerAddressEntityVarchar)
+from app.core.models.entity import EavAttribute
+from app.core.models.sales_order import SalesFlatOrder, SalesFlatOrderAddress
 from app.driver.lib.driver_controller import DriverController
 from app.driver.lib.trip_controller import TripController
 from app.driver.models import DriverOrder
 from app.driver.models.driver_order import DriverPosition
-from app.core.models.sales_order import SalesFlatOrderAddress
-from app.core.models.customer.address import CustomerAddressEntity
-from app.core.models.entity import EavAttribute
 
 
 @pytest.mark.django_db
@@ -45,34 +46,23 @@ class TestDriverController:
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
-    def test_check_customer_location(generate_mock_order):
+    def test_is_nearby(generate_mock_order):
         """Assign driver test case.
 
         Asserts:
             1. If the driver is assigned
 
         """
-
-        eav_attribute = EavAttribute.objects.get_or_create(
-            attribute_code='geohash')
-        shipping_address = generate_mock_order.shipping_address.all().last()
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_attribute,
-            entity_id=shipping_address.customer_address_id)
-        eav_latitude = EavAttribute.objects.filter(attribute_code='latitude')
-        eav_longitude = EavAttribute.objects.filter(attribute_code='longitude')
-
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_latitude,
-            entity_id=shipping_address.customer_address_id, value=12.965365)
-        CustomerAddressEntityVarchar.objects.get_or_create(
-            attribute=eav_longitude,
-            entity_id=shipping_address.customer_address_id, value=80.246106)
+        shipping_address = SalesFlatOrderAddress.objects.filter(
+            customer_address_id__isnull=False).last()
+        shipping_address.geohash = "tf31fqb"
+        shipping_address.o_latitude = 12.965365
+        shipping_address.o_longitude = 80.246106
+        shipping_address.save()
 
         controller = DriverController(None)
-        response = controller._check_customer_location(
-            generate_mock_order, 12.965365, 80.246106)
-
+        response = controller.is_nearby(
+            shipping_address.parent, 12.965365, 80.246106)
         assert response == True
 
     @pytest.mark.parametrize('store_id', [5, 8])

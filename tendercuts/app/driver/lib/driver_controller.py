@@ -12,6 +12,7 @@ from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
+from app.core.models.customer.address import CustomerAddressEntity
 from app.driver import tasks
 
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
@@ -80,7 +81,7 @@ class DriverController(object):
         """
         return geopy.distance.vincenty((dest_lat, dest_lng), (lat, lng)).km
 
-    def _check_customer_location(self, order, latitude, longitude):
+    def is_nearby(self, order, latitude, longitude):
         """Check the driver completed location is inside the customer geolocation radius.500m
 
         Params:
@@ -88,19 +89,13 @@ class DriverController(object):
             latitude: driver completed location latitude
             longitude: driver completed location longitude
         """
-        shipping_address = order.shipping_address.all().last()
-        address_obj = CustomerAddressEntity.objects.filter(
-            entity_id=shipping_address.customer_address_id).last()
-        address_varchar_obj = address_obj.varchars.filter(
-            attribute__attribute_code='geohash')
 
-        if address_varchar_obj:
-            address_texts_obj = address_obj.varchars.filter(
-                attribute__attribute_code__in=['latitude', 'longitude']).values('attribute__attribute_code', 'value')
+        shipping_address = order.shipping_address.all().first()
+        if not shipping_address.geohash:
+            return False
 
-            return get_distance(latitude, longitude) < 0.5
-
-        return True
+        return self._get_distance(
+            latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
     def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
@@ -262,13 +257,14 @@ class DriverController(object):
 
         # checks the driver completed location with in a customer geolocation
         # radius 500m
-        if not _check_customer_location(order_obj, lat, lon):
+
+        if not is_nearby(order_obj, lat, lon):
             logger.info(
                 "This driver:{} is trying to complete the order ahead of customer location".format(
                     self.driver.username))
 
             raise ValueError(
-                'Please Order Complete customer nearest locations')
+                'Please Complete the order customer nearest locations')
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
@@ -279,7 +275,7 @@ class DriverController(object):
             order_obj, lat, lon)
 
         # ToDo commended a customer current location updated because location is not correct
-        #tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+        # tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
 
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
