@@ -39,8 +39,4 @@ class ProductsPriceController(object):
         products_df = pd.DataFrame(
             list(products), columns=columns).to_dict('records')
 
-        logger.info(
-            'Fetched the products prices:{} in store{}'.format(
-                products_df, store_id))
-
         return products_df
