@@ -6,12 +6,14 @@ from django.conf import settings
 from django.utils import timezone
 
 import app.core.lib.magento as mage
+from app.core.lib import cache
 from app.core.lib.communication import SMS
 from app.core.lib.order_controller import OrderController
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.driver import tasks
+
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
@@ -250,6 +252,13 @@ class DriverController(object):
             # Legacy handling
             pass
 
+    def _check_trip(self):
+        """Returns the current trip id for the giver driver user."""
+        key = '{}:{}'.format(TripController.PREFIX, self.driver.username)
+        trip_id = cache.get_key(key)
+
+        return trip_id
+
     def record_position(self, lat, lon):
         """Create a Driver current location latitude and longitude.
 
@@ -263,10 +272,14 @@ class DriverController(object):
 
         """
 
+        trip_id = self._check_trip()
+
         obj = DriverPosition(
             driver_user=self.driver,
             latitude=lat,
-            longitude=lon)
+            longitude=lon,
+            trip_id=trip_id)
+
         obj.save()
         logger.info(
             "updated driver:{}'s current latitude:{} and longitude:{}".format(

@@ -25,9 +25,19 @@ class DriverOrderSerializer(serializers.ModelSerializer):
         fields = ('driver_user', 'increment_id', 'created_at')
 
 
+class DriverPositionSerializer(serializers.ModelSerializer):
+    """Serializer for DriverPosition."""
+    class Meta:
+        """
+        """
+        model = DriverPosition
+        fields = ('latitude', 'longitude', 'driver_user', 'recorded_time')
+
+
 class DrivertripSerializer(serializers.ModelSerializer):
     """Serializer for DriverTrip."""
     driver_order = DriverOrderSerializer(many=True)
+    driver_position = DriverPositionSerializer(many=True)
 
     class Meta:
         """
@@ -39,13 +49,5 @@ class DrivertripSerializer(serializers.ModelSerializer):
             'km_travelled',
             'trip_created_time',
             'trip_ending_time',
-            'trip_completed')
-
-
-class DriverPositionSerializer(serializers.ModelSerializer):
-    """Serializer for DriverPosition."""
-    class Meta:
-        """
-        """
-        model = DriverPosition
-        fields = ('latitude', 'longitude', 'driver_user', 'recorded_time')
+            'trip_completed',
+            'driver_position')

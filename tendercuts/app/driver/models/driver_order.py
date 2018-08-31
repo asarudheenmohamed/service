@@ -25,7 +25,6 @@ class DriverOrder(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 
-
 class DriverTrip(models.Model):
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, blank=True, null=True)
@@ -69,7 +68,13 @@ class DriverTrip(models.Model):
 
 class DriverPosition(models.Model):
     """Driver Position model."""
+
     driver_user = models.ForeignKey(User, blank=True, null=True)
+    trip = models.ForeignKey(
+        DriverTrip,
+        blank=True,
+        null=True,
+        related_name="driver_position")
     driver_id = models.IntegerField(blank=True, null=True)
     latitude = models.FloatField(max_length=100)
     longitude = models.FloatField(max_length=100)
