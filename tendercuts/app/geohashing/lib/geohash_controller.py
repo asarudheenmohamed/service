@@ -134,14 +134,10 @@ class GeohashController(object):
         selectedStore, distance = stores_with_distance[0]
 
         if distance > self.DISTANCE_THRESHOLD * 1000:
-            logger.debug("found store:{} for customer but in very long distance {}".format(
-                selectedStore.longandlatis.storename, distance))
             raise NoStoreFoundException()
 
-        logger.info("found store:{} by distance_matrix for customer lat:{}, lng:{}".format(
-            selectedStore.longandlatis.storename, lat, lng))
-        msg = 'Geohash:{}, Latitude:{}, Longitude:{}, Store by distance matrix :{}'.format(
-                    geohash,lat,lng,selectedStore.longandlatis.storename)
+        msg = 'Geohash:{}, Latitude:{}, Longitude:{}, Store by distance matrix'.format(
+                    geohash, lat, lng)
 
         tasks.geohash_mail.delay(msg)
 
