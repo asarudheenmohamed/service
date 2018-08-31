@@ -140,8 +140,8 @@ class GeohashController(object):
 
         logger.info("found store:{} by distance_matrix for customer lat:{}, lng:{}".format(
             selectedStore.longandlatis.storename, lat, lng))
-        msg = 'Geohash:{}, Latitude:{}, Longitude:{}, Store by distance matrix :{}'.format(
-                    geohash,lat,lng,selectedStore.selectedStore.longandlatis.storename)
+        msg = 'Geohash:{}, Latitude:{}, Longitude:{}, Store by distance matrix'.format(
+                    geohash,lat,lng)
 
         tasks.geohash_mail.delay(msg)
 
