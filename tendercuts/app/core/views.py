@@ -192,11 +192,12 @@ class CmsViewSet(viewsets.GenericViewSet):
     permission_classes = ()
 
     @list_route(methods=['get'])
-    def cm_title(self, request, pk=None):
+    def cms_title(self, request, pk=None):
         """List the CMS titles."""
         queryset = models.CmsPage.objects.filter(
             is_active=True).values(
             'title', 'page_id')
+
         return Response(queryset)
 
     @list_route(methods=['get'])

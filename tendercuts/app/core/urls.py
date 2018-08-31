@@ -7,11 +7,15 @@ from rest_framework.authtoken import views as rest_framework_views
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
 # only viewset have to be registered!!
-router.register(r'store', views.StoreViewSet)
+router.register(r'store', views.StoreViewSet, base_name='StoreViewSet')
 router.register(
     r'designated_store',
     views.CustomerAddressVarcharViewSet,
     base_name='CustomerAddressVarcharViewSet')
+router.register(
+    r'cms',
+    views.CmsViewSet,
+    base_name='CmsViewSet')
 # router.register(r'product', views.ProductViewSet)#,
 # base_name='CatalogProductEntity')
 
@@ -21,8 +25,6 @@ urlpatterns = [
     url(r'cart/add/', views.CartAddApi.as_view()),
     url(r'customer/', views.CustomerDataApi.as_view()),
     url(r'price/', views.ProductPriceViewSet.as_view()),
-    url(r'cms/', views.CmsViewSet.as_view({'get': 'list'})),
-    url(r'get_cms_footer/', views.CmsViewSet.as_view({'get': 'retrieve'}))
 ]
 
 if settings.DEBUG:
