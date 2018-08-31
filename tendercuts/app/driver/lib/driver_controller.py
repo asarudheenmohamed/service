@@ -69,6 +69,39 @@ class DriverController(object):
 
         return order_obj[0]
 
+    def _get_distance(self, lat, lng, dest_lat, dest_lng):
+        """Compute crow flying distance between customer location and driver completed location.
+
+        :param warhouse_id: (stock.warehouse)
+        :param lat: (float)
+        :param lng: (float)
+
+        :return: (float) distance
+        """
+        return geopy.distance.vincenty((dest_lat, dest_lng), (lat, lng)).km
+
+    def _check_customer_location(self, order, latitude, longitude):
+        """Check the driver completed location is inside the customer geolocation radius.500m
+
+        Params:
+            order(obj): order object
+            latitude: driver completed location latitude
+            longitude: driver completed location longitude
+        """
+        shipping_address = order.shipping_address.all().last()
+        address_obj = CustomerAddressEntity.objects.filter(
+            entity_id=shipping_address.customer_address_id).last()
+        address_varchar_obj = address_obj.varchars.filter(
+            attribute__attribute_code='geohash')
+
+        if address_varchar_obj:
+            address_texts_obj = address_obj.varchars.filter(
+                attribute__attribute_code__in=['latitude', 'longitude']).values('attribute__attribute_code', 'value')
+
+            return get_distance(latitude, longitude) < 0.5
+
+        return True
+
     def assign_order(self, order, store_id, lat, lon):
         """Assign the order to the driver.
 
@@ -226,6 +259,17 @@ class DriverController(object):
         """
         logger.info("Complete this order {}".format(order_id))
         order_obj = self.get_order_obj(order_id)
+
+        # checks the driver completed location with in a customer geolocation
+        # radius 500m
+        if not _check_customer_location(order_obj, lat, lon):
+            logger.info(
+                "This driver:{} is trying to complete the order ahead of customer location".format(
+                    self.driver.username))
+
+            raise ValueError(
+                'Please Order Complete customer nearest locations')
+
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
         controller = OrderController(self.conn, order_obj)

@@ -6,6 +6,7 @@ import logging
 from rest_framework import generics, mixins, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import list_route
 
 from app.core.lib.controller import ProductsPriceController
 from app.core.models.product import CatalogProductFlat1
@@ -14,7 +15,6 @@ from app.core.models.customer.address import CustomerAddressEntityVarchar
 from . import models as models
 from . import serializers as serializers
 from .lib import magento as magento
-from rest_framework.decorators import list_route
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -163,7 +163,7 @@ class CustomerDataApi(APIView):
         return Response(data)
 
 
-class CustomerAddressVarcharViewSet(viewsets.ReadOnlyModelViewSet):
+class CustomerAddressVarcharViewSet(viewsets.GenericViewSet):
     """This viewset automatically provides `list` and `detail` actions.
 
     Enpoint to provide a list for AddressEntityVarchar
