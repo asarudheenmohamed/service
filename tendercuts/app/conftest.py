@@ -2,7 +2,7 @@
 Contains commons fixtures that needs to be shared accorss app
 """
 import pytest
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework.test import APIClient
 
 from app.core.lib.test import generate_customer
@@ -33,6 +33,7 @@ def auth_rest(mock_user):
 @pytest.fixture
 def serializer():
     """Helper class for for resolving API ."""
+
     class EavSerializer():
 
         @classmethod
@@ -72,6 +73,24 @@ def mock_driver(request):
 
     return customer
 
+
+@pytest.fixture(scope="session")
+@pytest.mark.django_db
+def mock_new_driver():
+    return User.objects.create_user(
+        username="test", email="test@test.com",
+        password='test')
+
+@pytest.fixture(scope="session")
+@pytest.mark.django_db
+def mock_sm():
+    user = User.objects.create_user(
+        username="test1", email="test@test.com",
+        password='test')
+    group, _ = Group.objects.get_or_create(name='Store Manager')
+    group.user_set.add(user)
+
+    return user
 
 @pytest.fixture(scope="module")
 def generate_mock_order(request, mock_user):
