@@ -4,3 +4,4 @@ from .customer_location import CustomerLocationController
 from .driver_stat_controller import DriverStatController
 from .driver_online_controller import DriverOnlineController
 from .google_api_controller import GoogleApiController
+from .new_trip_controller import DriverTripController
