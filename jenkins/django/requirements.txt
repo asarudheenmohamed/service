@@ -42,7 +42,7 @@ xlrd
 #paytm
 pycrypto
 requests-toolbelt
-
+geopy
 
 
 # Devlopment:
