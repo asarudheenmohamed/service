@@ -14,6 +14,7 @@ from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.core.models.customer.address import CustomerAddressEntity
 from app.driver import tasks
+import geopy.distance
 
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
@@ -90,10 +91,10 @@ class DriverController(object):
             longitude: driver completed location longitude
         """
 
-        shipping_address = order.shipping_address.all().first()
+        shipping_address = order.shipping_address.filter(address_type="shipping").last()
         if not shipping_address.geohash:
-            return False
-
+            return True
+        
         return self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
