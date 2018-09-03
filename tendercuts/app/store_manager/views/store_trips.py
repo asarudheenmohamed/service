@@ -1,7 +1,7 @@
 """Endpoint to get selected store driver orders."""
 import logging
 
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 
 from app.driver import serializer as driver_serializer
 from app.store_manager.lib import StoreBaseController
@@ -12,7 +12,7 @@ from ..auth import StoreManagerAuthentication
 logger = logging.getLogger(__name__)
 
 
-class StoreTripViewSet(viewsets.ReadOnlyModelViewSet):
+class StoreTripViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     """Endpoint to get all active trip objects.
 
     EndPoint:

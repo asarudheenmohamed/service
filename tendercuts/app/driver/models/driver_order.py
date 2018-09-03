@@ -34,6 +34,9 @@ class DriverTrip(models.Model):
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
     trip_completed = models.BooleanField(default=False)
+    auto_assigned = models.BooleanField(default=False)
+    # 0, 1, 2 -> created, started, finished
+    status = models.SmallIntegerField(default=0)
 
     @property
     def trip_starting_point(self):
