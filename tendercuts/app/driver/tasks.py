@@ -107,6 +107,6 @@ def set_checkout():
 def compute_order_eta(increment_id):
     """Update the order ETA."""
     from app.driver.lib.google_api_controller import GoogleApiController
-    order = SalesFlatOrder.objects.filter(increment_id=increment_id)
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id).last()
     controller = GoogleApiController(order)
     controller.compute_eta()
