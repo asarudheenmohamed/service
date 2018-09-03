@@ -259,13 +259,13 @@ class DriverController(object):
         # checks the driver completed location with in a customer geolocation
         # radius 500m
 
-        if not self.is_nearby(order_obj, lat, lon):
-            logger.info(
-                "This driver:{} is trying to complete the order ahead of customer location".format(
-                    self.driver.username))
+        #if not self.is_nearby(order_obj, lat, lon):
+        #    logger.info(
+        #        "This driver:{} is trying to complete the order ahead of customer location".format(
+        #            self.driver.username))
 
-            raise ValueError(
-                'Please Complete the order customer nearest locations')
+        #    raise ValueError(
+        #        'Please Complete the order customer nearest locations')
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
