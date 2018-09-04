@@ -18,14 +18,15 @@ class DriverOnlineController(object):
         super(DriverOnlineController, self).__init__()
         self.driver = driver
 
-    def driver_checkin(self):
+    def driver_checkin(self, store_id):
         """Create driver check_in object.
 
         Returns:
             Returns True
 
         """
-        DriverLoginLogout.objects.create(driver_id=self.driver.id)
+        DriverLoginLogout.objects.create(
+            driver_id=self.driver.id, store_id=store_id)
 
         logger.info("Created Check In detail for the driver :{}".format(
             self.driver))
