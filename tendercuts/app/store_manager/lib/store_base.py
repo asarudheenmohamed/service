@@ -58,10 +58,12 @@ class StoreBaseController(object):
         returns: DriveTrip[]
 
         """
-        driver_obj = DriverLoginLogout.objects.filter(
-            store_id=store_id).values_list(
-            'driver_user__username', flat=True)
-        user_ids = map(lambda driver: driver.split(":")[1], driver_obj)
+        driver_objs = DriverLoginLogout.objects.filter(
+            store_id=self.store_id).values_list(
+            'driver__username', flat=True)
+        user_ids = map(
+            lambda driver: driver.split(":")[1],
+            driver_objs)
 
         # load the basic info of the driver
         fields = CustomerEntityVarchar.objects.filter(
