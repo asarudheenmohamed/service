@@ -176,7 +176,7 @@ class GoogleApiController(object):
                     # send error message in tech support mail
                     Mail().send(
                         "reports@tendercuts.in",
-                        ["jira@tendercuts.atlassian.net"],
+                        ["jira@tendercuts.atlassian.net", "tech@tendercuts.in"],
                         "[INFO] Address resolution failed for customer",
                         message)
 
