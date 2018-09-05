@@ -49,7 +49,7 @@ requests-toolbelt
 flake8
 pep8
 pydocstyle
-pylint
+#pylint
 splinter
 
 #pynotebook
