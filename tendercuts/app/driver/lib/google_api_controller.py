@@ -152,7 +152,7 @@ class GoogleApiController(object):
         else:  # Non geohashed resolution.
             # fetch from cache if present.
             address_lat_lng = GoogleAddressLatLng.objects.filter(
-                address_id=shipping_address.parent_id)  # type: QuerySet[GoogleAddressLatLng]
+                address_id=shipping_address.customer_address_id)  # type: QuerySet[GoogleAddressLatLng]
 
             if address_lat_lng:
                 address_lat_lng = address_lat_lng.first()
@@ -163,12 +163,12 @@ class GoogleApiController(object):
                     lat, lng = self.resolve_address(
                         shipping_address.fax, shipping_address.street)
                     GoogleAddressLatLng.objects.create(
-                        address_id=shipping_address.parent_id,
+                        address_id=shipping_address.customer_address_id,
                         latitude=lat,
                         longitude=lng)
                 except Exception as msg:
                     message = 'Error for id: {} ({}: {}), message:{}'.format(
-                        shipping_address.parent_id,
+                        shipping_address.customer_address_id,
                         shipping_address.fax,
                         shipping_address.street,
                         repr(msg))
