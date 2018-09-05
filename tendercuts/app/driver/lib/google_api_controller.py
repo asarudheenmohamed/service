@@ -127,7 +127,7 @@ class GoogleApiController(object):
             logging.info('Resolving for {}'.format(street))
 
             try:
-                geocode = self.geocode(street)
+                geocode = self._geocode(street)
             except Exception as e:
                 logging.warning(str(e))
                 continue
