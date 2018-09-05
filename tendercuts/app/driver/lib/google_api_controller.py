@@ -4,9 +4,10 @@ import logging
 
 from django.conf import settings
 import googlemaps
+import geopy
 
-from app.core.models import SalesFlatOrder, SalesFlatOrderAddress
-from app.core.models.store import CoreStore
+from app.core.models import SalesFlatOrder, SalesFlatOrderAddress, CoreStore
+from app.driver.models import GoogleGeocode
 from app.core.lib.communication import Mail
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,86 @@ class GoogleApiController(object):
 
         return direction_obj
 
+    def _geocode(self, query):
+        """Triggers a query to geocode also stores the result for caching."""
+        data = GoogleGeocode.objects.filter(query=query)
+
+        if data:
+            return data.first()
+
+        result = self._api.geocode(query)
+        result = result[0]
+
+        if 'bounds' in result['geometry']:
+            vp = result['geometry']['bounds']
+        else:
+            vp = result['geometry']['viewport']
+
+        n1, e1, s1, w1 = \
+            vp['northeast']['lat'], vp['northeast']['lng'], vp[
+                'southwest']['lat'], vp['southwest']['lng']
+
+        height_ = geopy.distance.geodesic((n1, e1), (s1, e1)).km
+        width_ = geopy.distance.geodesic((s1, w1), (s1, e1)).km
+        area = (height_ * width_)
+        geo = result['geometry']
+
+        return GoogleGeocode.objects.create(
+            location_type=geo['location_type'],
+            latitude=geo['location']['lat'],
+            longitude=geo['location']['lng'],
+            area=area,
+            query=query
+        )
+
+    def resolve_address(self, fax, street):
+        """Tries to resolve the address to an approximate lat & lng."""
+
+        possibilities = []
+        components = street.split('\n')
+        user_entered = components[0]
+        google_addr = components[1] if len(components) > 2 else None
+
+        # Add fax
+        if fax and len(fax) > 0:
+            user_entered_address = "{}, {}".format(fax, user_entered)
+        else:
+            user_entered_address = user_entered
+
+        search_string = []
+        for street in reversed(user_entered_address.split(",")):
+            street = street.strip()
+            if not street:
+                continue
+
+            search_string.insert(0, street)
+
+            if google_addr:
+                street = "{}, {}".format(
+                    ",".join(search_string), google_addr)
+            else:
+                street = ",".join(search_string)
+
+            try:
+                geocode = self.geocode(street)
+            except:
+                continue
+
+            if geocode.area < 0.1:
+                possibilities.append(geocode)
+
+        return self._get_best_match(possibilities)
+
+    def _get_best_match(self, possibilities):
+        """Private method to get the best geocode data.
+        Currently we look for the last rooftop, geo center in this prio"""
+        for geocode in reversed(possibilities):  # type: GoogleGeocode
+            if geocode.location_type == 'ROOFTOP':
+                return geocode.latitude, geocode.longitude
+
+            if geocode.location_type == 'GEOMETRIC_CENTER':
+                return geocode.latitude, geocode.longitude
+
     def compute_eta(self):
         """Update eta for customer location to store location."""
 
@@ -74,20 +155,15 @@ class GoogleApiController(object):
             store_lat_and_lng['location__longandlatis__longitude'])
 
         if shipping_address.geohash:
-            destination = '{},{}'.format(
-                shipping_address.o_latitude, shipping_address.o_longitude)
+            lat = shipping_address.o_latitude
+            lng = shipping_address.o_longitude
         else:
+            # approx match
+            lat, lng = self.resolve_address(
+                shipping_address.fax, shipping_address.street)
 
-            # Try to get the eta using street address
-            street = shipping_address.street
-            street = street.split('\n')
+        destination = '{},{}'.format(lat, lng)
 
-            if len(street) <= 1:
-                destination = shipping_address.postcode
-            else:
-                destination = street[1]
-
-        data = {}
         directions = self.get_directions(origin, destination)
 
         legs = directions[0]['legs']
