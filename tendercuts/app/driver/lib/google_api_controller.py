@@ -177,6 +177,11 @@ class GoogleApiController(object):
                 # approx match
                 lat, lng = self.resolve_address(
                     shipping_address.fax, shipping_address.street)
+                GoogleAddressLatLng.objects.create(
+                    address_id=shipping_address.parent_id,
+                    latitude=lat,
+                    longitude=lng
+                )
 
         destination = '{},{}'.format(lat, lng)
 
