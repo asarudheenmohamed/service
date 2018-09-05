@@ -10,7 +10,6 @@ from django.db.models import QuerySet
 from app.core.models import SalesFlatOrder, SalesFlatOrderAddress, CoreStore
 from app.driver.models import GoogleGeocode, GoogleAddressLatLng
 from app.core.lib.communication import Mail
-from driver.models import GoogleAddressLatLng
 
 logger = logging.getLogger(__name__)
 
