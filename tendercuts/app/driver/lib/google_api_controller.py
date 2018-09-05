@@ -40,24 +40,8 @@ class GoogleApiController(object):
             return the google directions
 
           """
-        try:
-            direction_obj = self._api.directions(
-                origin=origin, destination=destination)
-
-            self.logger.info(
-                'Fetch the Google directions for the origin:{} to destination:{}'.format(
-                    origin, destination))
-
-        except Exception as msg:
-            message = 'Error:{}, origin:{},destination:{}'.format(
-                repr(msg), origin, destination)
-
-            # send error message in tech support mail
-            Mail().send(
-                "reports@tendercuts.in",
-                ["tech@tendercuts.in"],
-                "[CRITICAL] Error in Order ETA computation",
-                message)
+        direction_obj = self._api.directions(
+            origin=origin, destination=destination)
 
         return direction_obj
 
@@ -175,13 +159,26 @@ class GoogleApiController(object):
                 lat, lng = address_lat_lng.latitude, address_lat_lng.longitude
             else:
                 # approx match
-                lat, lng = self.resolve_address(
-                    shipping_address.fax, shipping_address.street)
-                GoogleAddressLatLng.objects.create(
-                    address_id=shipping_address.parent_id,
-                    latitude=lat,
-                    longitude=lng
-                )
+                try:
+                    lat, lng = self.resolve_address(
+                        shipping_address.fax, shipping_address.street)
+                    GoogleAddressLatLng.objects.create(
+                        address_id=shipping_address.parent_id,
+                        latitude=lat,
+                        longitude=lng)
+                except Exception as msg:
+                    message = 'Error for id: {} ({}: {}), message:{}'.format(
+                        shipping_address.parent_id,
+                        shipping_address.fax,
+                        shipping_address.street,
+                        repr(msg))
+
+                    # send error message in tech support mail
+                    Mail().send(
+                        "reports@tendercuts.in",
+                        ["jira@tendercuts.atlassian.net"],
+                        "[INFO] Address resolution failed for customer",
+                        message)
 
         destination = '{},{}'.format(lat, lng)
 
