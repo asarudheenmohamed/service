@@ -5,10 +5,12 @@ import logging
 from django.conf import settings
 import googlemaps
 import geopy
+from django.db.models import QuerySet
 
 from app.core.models import SalesFlatOrder, SalesFlatOrderAddress, CoreStore
-from app.driver.models import GoogleGeocode
+from app.driver.models import GoogleGeocode, GoogleAddressLatLng
 from app.core.lib.communication import Mail
+from driver.models import GoogleAddressLatLng
 
 logger = logging.getLogger(__name__)
 
@@ -164,10 +166,18 @@ class GoogleApiController(object):
         if shipping_address.geohash:
             lat = shipping_address.o_latitude
             lng = shipping_address.o_longitude
-        else:
-            # approx match
-            lat, lng = self.resolve_address(
-                shipping_address.fax, shipping_address.street)
+        else:  # Non geohashed resolution.
+            # fetch from cache if present.
+            address_lat_lng = GoogleAddressLatLng.objects.filter(
+                address_id=shipping_address.parent_id)  # type: QuerySet[GoogleAddressLatLng]
+
+            if address_lat_lng:
+                address_lat_lng = address_lat_lng.first()
+                lat, lng = address_lat_lng.latitude, address_lat_lng.longitude
+            else:
+                # approx match
+                lat, lng = self.resolve_address(
+                    shipping_address.fax, shipping_address.street)
 
         destination = '{},{}'.format(lat, lng)
 

@@ -13,3 +13,10 @@ class GoogleGeocode(models.Model):
     longitude = models.CharField(max_length=25)
     location_type = models.CharField(max_length=25)
     area = models.FloatField()
+
+class GoogleAddressLatLng(models.Model):
+    """Order Assigment model."""
+
+    address_id = models.IntegerField(db_index=True)
+    latitude = models.CharField(max_length=25)
+    longitude = models.CharField(max_length=25)
