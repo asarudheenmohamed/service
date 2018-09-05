@@ -65,6 +65,7 @@ class GoogleApiController(object):
         data = GoogleGeocode.objects.filter(query=query)
 
         if data:
+            logging.info("Got a cache hit for {}".format(query))
             return data.first()
 
         result = self._api.geocode(query)
@@ -84,6 +85,8 @@ class GoogleApiController(object):
         area = (height_ * width_)
         geo = result['geometry']
 
+        logging.info("Resolved {} to {}".format(query, area))
+
         return GoogleGeocode.objects.create(
             location_type=geo['location_type'],
             latitude=geo['location']['lat'],
@@ -92,11 +95,12 @@ class GoogleApiController(object):
             query=query
         )
 
-    def resolve_address(self, fax, street):
+    def resolve_address(self, fax, mage_street):
         """Tries to resolve the address to an approximate lat & lng."""
 
+        logging.info('Resolving for {} & {}'.format(fax, mage_street))
         possibilities = []
-        components = street.split('\n')
+        components = mage_street.split('\n')
         user_entered = components[0]
         google_addr = components[1] if len(components) > 2 else None
 
@@ -113,6 +117,7 @@ class GoogleApiController(object):
                 continue
 
             search_string.insert(0, street)
+            logging.info('Resolving for {}'.format(street))
 
             if google_addr:
                 street = "{}, {}".format(
