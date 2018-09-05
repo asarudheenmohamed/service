@@ -87,7 +87,7 @@ class GoogleApiController(object):
         possibilities = []
         components = mage_street.split('\n')
         user_entered = components[0]
-        google_addr = components[1] if len(components) > 2 else None
+        google_addr = components[1] if len(components) >= 2 else None
 
         # Add fax
         if fax and len(fax) > 0:
