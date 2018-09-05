@@ -117,7 +117,6 @@ class GoogleApiController(object):
                 continue
 
             search_string.insert(0, street)
-            logging.info('Resolving for {}'.format(street))
 
             if google_addr:
                 street = "{}, {}".format(
@@ -125,9 +124,12 @@ class GoogleApiController(object):
             else:
                 street = ",".join(search_string)
 
+            logging.info('Resolving for {}'.format(street))
+
             try:
                 geocode = self.geocode(street)
-            except:
+            except Exception as e:
+                logging.warning(str(e))
                 continue
 
             if geocode.area < 0.1:
