@@ -23,8 +23,23 @@ class SalesOrderDetailSet(viewsets.ReadOnlyModelViewSet):
     """
 
     # authentication_classes = (Ca,)
-    queryset = models.SalesFlatOrder.objects.all()
+    # queryset = models.SalesFlatOrder.objects.all()
     serializer_class = serializers.SalesOrderSerializer
 
+    def get_queryset(self):
+        try:
+            order_id = self.request.query_params['order_id']
+            # .select_related("driver")       \
+            queryset = models.SalesFlatOrder.objects \
+                           .filter(increment_id=order_id) \
+                           .exclude(status__in=['canceled', 'closed']) \
+                           .order_by('-created_at') \
+                           .prefetch_related("items") \
+                           .prefetch_related("payment") \
+                           .prefetch_related("shipping_address")
+        except KeyError:
+            queryset = []
+
+        return queryset
 
 
