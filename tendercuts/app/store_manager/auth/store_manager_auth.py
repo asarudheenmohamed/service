@@ -1,5 +1,6 @@
 """Authentication for store manager, only store manager will be auth'd."""
 import rest_framework.authentication
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class StoreManagerAuthentication(rest_framework.authentication.TokenAuthentication):
