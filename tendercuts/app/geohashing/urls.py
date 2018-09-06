@@ -10,5 +10,6 @@ router = DefaultRouter()
 
 urlpatterns = [
     url(r'', include(router.urls)),
-    url(r'store', views.GeohashToStore.as_view())
+    url(r'store_details', views.StoreDetailView.as_view()),
+    url(r'store', views.GeohashToStore.as_view()),
 ]
