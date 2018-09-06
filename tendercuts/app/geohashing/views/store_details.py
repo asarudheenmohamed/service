@@ -14,6 +14,9 @@ from rest_framework.renderers import JSONRenderer
 class StoreDetails(APIView):
     """/geohash/stores
     """
+    # Opening the endpoint for anonymous browsing
+    authentication_classes = ()
+    permission_classes = ()
 
     def get(self, request, format=None):
         """
