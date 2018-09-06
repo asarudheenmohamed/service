@@ -21,16 +21,13 @@ class SalesOrderDetailSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.SalesOrderSerializer
 
     def get_queryset(self):
-        try:
-            order_id = self.request.query_params['order_id']
-            # .select_related("driver")       \
-            queryset = models.SalesFlatOrder.objects \
-                .filter(increment_id=order_id) \
-                .order_by('-created_at') \
-                .prefetch_related("items") \
-                .prefetch_related("payment") \
-                .prefetch_related("shipping_address")
-        except KeyError:
-            queryset = []
+        order_id = self.request.query_params['order_id']
+        # .select_related("driver")       \
+        queryset = models.SalesFlatOrder.objects \
+            .filter(increment_id=order_id) \
+            .order_by('-created_at') \
+            .prefetch_related("items") \
+            .prefetch_related("payment") \
+            .prefetch_related("shipping_address")
 
         return queryset
