@@ -9,7 +9,7 @@ from . import views
 router = DefaultRouter()
 
 router.register(
-    r'sale_order',
+    r'sale_detail',
     views.SalesOrderDetailSet,
     base_name='SalesOrderDetailSet')
 
