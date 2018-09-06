@@ -32,4 +32,4 @@ class StoreDetails(APIView):
         store_data.update(
             StockWarehouseSerializer(instance=odoo_stores, many=True).data)
 
-        return Response(JSONRenderer().render(store_data))
+        return Response(store_data)
