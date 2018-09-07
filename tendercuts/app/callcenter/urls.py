@@ -13,11 +13,7 @@ router.register(
     views.SalesOrderDetailSet,
     base_name='SalesOrderDetailSet')
 
-router.register(
-    r'update_address',
-    views.UpdateAddressApi,
-    base_name='UpdateAddressApi')
-
 urlpatterns = [
     url(r'', include(router.urls)),
+    url(r'update_address', views.UpdateAddressApi.as_view()),
 ]
