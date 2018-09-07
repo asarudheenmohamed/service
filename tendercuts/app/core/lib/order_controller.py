@@ -6,8 +6,9 @@ magento and python layer
 import logging
 
 from django.utils import timezone
+from typing import Optional, Any
 
-from app.core.models.sales_order import (SalesFlatOrderGrid,
+from app.core.models.sales_order import (SalesFlatOrderGrid, SalesFlatOrder, SalesFlatOrderAddress
                                          SalesFlatOrderStatusHistory)
 
 from app.core.lib.communication import Mail
@@ -137,3 +138,42 @@ class OrderController(object):
         """
         self.order.payment_received = 1
         self.order.save()
+
+
+class OrderAddressController():
+
+    shipping_address = None  # type: SalesFlatOrderAddress
+    order = None  # type: SalesFlatOrder
+
+    def __init__(self, order):
+        self.order = order
+
+        self.shipping_address = self.order.shipping_address.all()\
+            .filter(address_type='shipping').first()
+
+    def update_address(self, geohash, lat, lng, street):
+        """Update the shipping address of the order
+
+        :param geohash:
+        :param lat:
+        :param lng:
+        :param street:
+        :return:
+        """
+        self.shipping_address.o_longitude = lng
+        self.shipping_address.o_latitude = lat
+        self.shipping_address.geohash = geohash
+
+        street_components = self.shipping_address.street.split('\n')
+        if len(street_components) < 2:
+            street_components.append(street)
+        else:
+            street_components[1] = street
+
+        self.shipping_address.street = '\n'.join(street_components)
+
+        self.shipping_address.save()
+
+        return
+
+

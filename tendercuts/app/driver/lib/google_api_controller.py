@@ -135,7 +135,7 @@ class GoogleApiController(object):
     def compute_eta(self):
         """Update eta for customer location to store location."""
 
-        shipping_address = self.order.shipping_address.all().last()  # type: SalesFlatOrderAddress
+        shipping_address = self.order.shipping_address.all().filter(address_type='shipping').first()   # type: SalesFlatOrderAddress
 
         store_lat_and_lng = CoreStore.objects.filter(
             store_id=self.order.store_id).values(

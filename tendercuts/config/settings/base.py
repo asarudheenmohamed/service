@@ -332,3 +332,11 @@ GROUPS = {
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
 }
+
+
+MAGE_ATTRS = {
+    'GEOHASH': 244,
+    'LATITUDE': 239,
+    'LONGITUDE': 237,
+    'STREET': 25
+}

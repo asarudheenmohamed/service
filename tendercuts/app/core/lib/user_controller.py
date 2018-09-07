@@ -4,13 +4,17 @@ import random
 import string
 import uuid
 import logging
-from django.db.models import Q, Sum
+
+from django.db.models import Q, Sum, QuerySet
 from django.conf import settings
+
 from app.core.lib import cache
 from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
-                                      FlatCustomer)
+                                      FlatCustomer, CustomerAddressEntityVarchar,
+                                      CustomerAddressEntityText, CustomerAddressEntity)
+from core.models import CustomerAddressEntityText
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +128,6 @@ class CustomerSearchController(object):
             Q(attribute_id=149) & (Q(value=username) | Q(entity__email=username)))
 
         if len(query_set) == 0:
-
             raise CustomerNotFound()
 
         customer = query_set[0]
@@ -144,13 +147,13 @@ class CustomerSearchController(object):
         """
         customers = CustomerEntity.objects.filter(entity_id=customer_id) \
             .prefetch_related(
-                "reward_point", "store_credit",
-                "varchars", "varchars__attribute",
-                "ints", "ints__attribute",
-                "addresses", "addresses__varchars",
-                "addresses__varchars__attribute",
-                "addresses__texts", "addresses__texts__attribute",
-                "addresses__ints", "addresses__ints__attribute")
+            "reward_point", "store_credit",
+            "varchars", "varchars__attribute",
+            "ints", "ints__attribute",
+            "addresses", "addresses__varchars",
+            "addresses__varchars__attribute",
+            "addresses__texts", "addresses__texts__attribute",
+            "addresses__ints", "addresses__ints__attribute")
         if not customers:
             raise CustomerNotFound
 
@@ -310,3 +313,66 @@ class CustomerController(object):
 
         if not dry_run:
             password_entity.save()
+
+
+class CustomerAddressController(object):
+
+    address = None  # type: CustomerAddressEntity
+
+    def __init__(self, address):
+        self.address = address
+
+    @property
+    def geohash_field(self):
+        return settings.MAGE_ATTRS['GEOHASH']
+
+    @property
+    def lat_field(self):
+        return settings.MAGE_ATTRS['LATITUDE']
+
+    @property
+    def lng_field(self):
+        return settings.MAGE_ATTRS['LONGITUDE']
+
+    @property
+    def street_field(self):
+        return settings.MAGE_ATTRS['STREET']
+
+    @property
+    def address_id(self):
+        return self.address.entity_id
+
+    def update_address(self, address_id, lat, lng, geohash, street):
+        varchars = CustomerAddressEntityVarchar.objects
+
+        geohash_row = varchars.filter(
+            entity=self.address_id, attribute=self.geohash_field).first()
+        geohash_row.value = geohash
+        geohash_row.save()
+
+        lat_row = varchars.filter(
+            entity=self.address_id, attribute=self.lat_field).first()
+        lat_row.value = lat
+        lat_row.save()
+
+        lng_row = varchars.filter(
+            entity=self.address_id, attribute=self.lng_field).first()
+        lng_row.value = lng
+        lng_row.save()
+
+        texts = CustomerAddressEntityText.objects
+        street_row = texts.filter(
+            entity=self.address_id, attribute=self.street_field).first()  # type: CustomerAddressEntityText
+
+        components = street_row.value.split('\n')  # type: list
+        if len(components) < 2:
+            components.append(street)
+        else:
+            components[1] = street
+
+        street_row.value = "\n".join(components)
+        street_row.save()
+
+        return
+
+
