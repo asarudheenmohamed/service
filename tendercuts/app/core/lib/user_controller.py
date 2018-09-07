@@ -13,8 +13,8 @@ from app.core.lib.communication import SMS
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
                                       FlatCustomer, CustomerAddressEntityVarchar,
-                                      CustomerAddressEntityText, CustomerAddressEntity)
-from core.models import CustomerAddressEntityText
+                                      CustomerAddressEntityText, CustomerAddressEntity,
+                                      CustomerAddressEntityText)
 
 logger = logging.getLogger(__name__)
 

@@ -6,9 +6,7 @@ magento and python layer
 import logging
 
 from django.utils import timezone
-from typing import Optional, Any
-
-from app.core.models.sales_order import (SalesFlatOrderGrid, SalesFlatOrder, SalesFlatOrderAddress
+from app.core.models.sales_order import (SalesFlatOrderGrid, SalesFlatOrder, SalesFlatOrderAddress,
                                          SalesFlatOrderStatusHistory)
 
 from app.core.lib.communication import Mail
