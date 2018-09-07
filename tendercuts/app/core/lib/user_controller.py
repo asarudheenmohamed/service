@@ -342,7 +342,7 @@ class CustomerAddressController(object):
     def address_id(self):
         return self.address.entity_id
 
-    def update_address(self, address_id, lat, lng, geohash, street):
+    def update_address(self, lat, lng, geohash, street):
         varchars = CustomerAddressEntityVarchar.objects
 
         geohash_row = varchars.filter(
