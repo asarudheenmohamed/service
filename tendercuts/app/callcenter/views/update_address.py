@@ -34,7 +34,7 @@ class UpdateAddressApi(views.APIView):
         order = models.SalesFlatOrder.objects.filter(
             increment_id=order_id).first()  # type: models.SalesFlatOrder
 
-        address = models.CustomerAddressEntity(parent_id=order.customer_id)
+        address = models.CustomerAddressEntity.objects.filter(parent_id=order.customer_id).first()
         # update the customer address first
         CustomerAddressController(address).update_address(
             geohash=geohash,
