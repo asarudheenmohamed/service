@@ -44,7 +44,7 @@ class UpdateAddressApi(views.APIView):
         )
 
         shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
-        OrderAddressController(shipping_address).update_address(
+        OrderAddressController(order).update_address(
             geohash=geohash,
             lat=lat,
             lng=lng,

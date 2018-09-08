@@ -344,8 +344,7 @@ class CustomerAddressController(object):
 
     def update_address(self, lat, lng, geohash, street):
         varchars = CustomerAddressEntityVarchar.objects.all()
-        import pdb
-        pdb.set_trace()
+        
         geohash_row = varchars.filter(
             entity_id=self.address_id, attribute_id=self.geohash_field).first()
         geohash_row.value = geohash
