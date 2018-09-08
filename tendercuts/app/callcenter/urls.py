@@ -16,4 +16,5 @@ router.register(
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'update_address', views.UpdateAddressApi.as_view()),
+    url(r'search_customer', views.SearchCustomerApi.as_view())
 ]
