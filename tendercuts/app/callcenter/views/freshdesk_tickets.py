@@ -1,6 +1,9 @@
 from rest_framework import views, response
 import dateutil.parser
 import requests
+import logging
+
+logger = logging.getLogger()
 
 REQUESTER_ID = {
     26000249534: 'Callcenter',
@@ -24,7 +27,7 @@ class FreshDeskTicketApi(views.APIView):
         user_id = self.request.query_params['email']
         response = requests.get(
             "https://tendercuts.freshdesk.com/api/v2/tickets?email={}&per_page=20".format(user_id),
-            auth=("uoHER1yGfG9SAp7MXfb", 'x'))
+            auth=("UovHZV5Glhiw5YOHIP0Q", 'x'))
 
         data = response.json()
         for rec in data:
