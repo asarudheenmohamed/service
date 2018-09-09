@@ -1,4 +1,5 @@
-from rest_framework import views, response
+from rest_framework import views
+from rest_framework.response import Response
 import dateutil.parser
 import requests
 import logging
@@ -45,4 +46,4 @@ class FreshDeskTicketApi(views.APIView):
             # construct url
             rec['url'] = "http://support.tendercuts.in/helpdesk/tickets/{}".format(rec[
                                                                                        'id'])
-        return response.Response(data)
+        return Response(data)
