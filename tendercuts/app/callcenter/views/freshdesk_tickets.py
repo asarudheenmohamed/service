@@ -1,7 +1,9 @@
-from rest_framework import views
-from rest_framework.response import Response
 import dateutil.parser
 import requests
+from rest_framework import views
+from rest_framework.response import Response
+
+from ..auth import CallCenterAuthentication
 
 REQUESTER_ID = {
     26000249534: 'Callcenter',
@@ -19,6 +21,7 @@ STATUS = {
 
 
 class FreshDeskTicketApi(views.APIView):
+    authentication_classes = (CallCenterAuthentication,)
 
     def get(self, request):
 

@@ -1,6 +1,8 @@
 import logging
 
 from rest_framework import viewsets
+from ..auth import CallCenterAuthentication
+
 
 from app.core import models
 from app.core import serializers
@@ -15,6 +17,7 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     # queryset = models.SalesFlatOrder.objects.all()
+    authentication_classes = (CallCenterAuthentication,)
     serializer_class = serializers.SalesOrderSerializer
 
     def get_queryset(self):

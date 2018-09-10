@@ -6,6 +6,7 @@ from rest_framework import views, response
 from app.core import models
 from app.core.lib.order_controller import OrderAddressController
 from app.core.lib.user_controller import CustomerAddressController
+from ..auth import CallCenterAuthentication
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 class UpdateAddressApi(views.APIView):
     """Update the customer's lat, lng and geohash details
     """
+    authentication_classes = (CallCenterAuthentication,)
 
     def post(self, request):
         """
