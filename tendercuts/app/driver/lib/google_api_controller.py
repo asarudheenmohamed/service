@@ -135,7 +135,8 @@ class GoogleApiController(object):
     def compute_eta(self):
         """Update eta for customer location to store location."""
 
-        shipping_address = self.order.shipping_address.all().filter(address_type='shipping').first()   # type: SalesFlatOrderAddress
+        shipping_address = self.order.shipping_address.all()
+        shipping_address = shipping_address.filter(address_type='shipping').first()   # type: SalesFlatOrderAddress
 
         store_lat_and_lng = CoreStore.objects.filter(
             store_id=self.order.store_id).values(
@@ -190,9 +191,9 @@ class GoogleApiController(object):
         # if original lat and lng is missing, then we use the data from
         # directions api.
         if not shipping_address.o_longitude:
-            shipping_address.o_latitude = legs[0]['end_location']['lat']
-            shipping_address.o_longitude = legs[0]['end_location']['lng']
-
+            logger.info("Info updating lat lng for {}".format(shipping_address.customer_address_id))
+            shipping_address.o_latitude = lat
+            shipping_address.o_longitude = lng
         shipping_address.save()
 
         self.logger.info('ETA time updated for the customer:{} order:{}'.format(
