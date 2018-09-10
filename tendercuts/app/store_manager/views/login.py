@@ -62,5 +62,5 @@ class StoreManagerLoginApi(APIView):
             'lastname': user.last_name,
             'email': user.email,
             'token': token.key,
-            'groups': [group.name for group in user.groups]
+            'groups': [group.name for group in user.groups.all()]
         })
