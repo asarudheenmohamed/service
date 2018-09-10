@@ -342,23 +342,51 @@ class CustomerAddressController(object):
     def address_id(self):
         return self.address.entity_id
 
+    # 94349
     def update_address(self, lat, lng, geohash, street):
         varchars = CustomerAddressEntityVarchar.objects.all()
         
         geohash_row = varchars.filter(
             entity_id=self.address_id, attribute_id=self.geohash_field).first()
-        geohash_row.value = geohash
-        geohash_row.save()
+        if geohash_row:
+            geohash_row.value = geohash
+            geohash_row.save()
+        else:
+            CustomerAddressEntityVarchar.objects.create({
+                'entity_type_id': 2,
+                'attribute_id': self.geohash_field,
+                'entity_id': self.address_id,
+                'value': geohash
+            })
 
         lat_row = varchars.filter(
             entity=self.address_id, attribute=self.lat_field).first()
-        lat_row.value = lat
-        lat_row.save()
+
+        if lat_row:
+            lat_row.value = lat
+            lat_row.save()
+        else:
+            CustomerAddressEntityVarchar.objects.create({
+                'entity_type_id': 2,
+                'attribute_id': self.lat_field,
+                'entity_id': self.address_id,
+                'value': lat
+            })
 
         lng_row = varchars.filter(
             entity=self.address_id, attribute=self.lng_field).first()
-        lng_row.value = lng
-        lng_row.save()
+
+        if lng_row:
+            lng_row.value = lng
+            lng_row.save()
+        else:
+            CustomerAddressEntityVarchar.objects.create({
+                'entity_type_id': 2,
+                'attribute_id': self.lng_field,
+                'entity_id': self.address_id,
+                'value': lng
+            })
+
 
         texts = CustomerAddressEntityText.objects
         street_row = texts.filter(
