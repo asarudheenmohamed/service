@@ -34,6 +34,23 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.StoreSerializer
 
 
+class CoreConfigDataViewSet(viewsets.ReadOnlyModelViewSet):
+    """Return the Store address querysets.
+    """
+    authentication_classes = ()
+    permission_classes = ()
+
+    serializer_class = serializers.CoreConfigDataSerializer
+
+    def get_queryset(self):
+        """Return to the store address objects."""
+
+        queryset = models.CoreConfigData.objects.filter(
+            path="general/store_information/address", scope="stores")
+
+        return queryset
+
+
 class ProductViewSet(APIView):
     """
     This viewset automatically provides `list` and `detail` actions.
