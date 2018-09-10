@@ -49,3 +49,10 @@ class NewDriverTripViewSet(viewsets.ReadOnlyModelViewSet):
         controller = DriverTripController(trip=trip)
 
         return Response({'status': True})
+
+    @decorators.detail_route(methods=['get'])
+    def get_current_trip(self, *args, **kwargs):
+        """Get or generate a driver trip."""
+        trip = self.get_object()
+
+        return trip
