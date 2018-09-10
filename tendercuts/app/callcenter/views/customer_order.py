@@ -1,7 +1,7 @@
 import logging
 
 from rest_framework import viewsets
-from ..auth import CallCenterAuthentication
+from ..auth import CallCenterPermission
 
 
 from app.core import models
@@ -17,7 +17,7 @@ class SalesOrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     # queryset = models.SalesFlatOrder.objects.all()
-    authentication_classes = (CallCenterAuthentication,)
+    permission_classes = (CallCenterPermission,)
     serializer_class = serializers.SalesOrderSerializer
 
     def get_queryset(self):

@@ -2,6 +2,7 @@
 
 import rest_framework.authentication
 from rest_framework import exceptions
+from rest_framework import permissions
 
 
 class CallCenterAuthentication(rest_framework.authentication.TokenAuthentication):
@@ -25,3 +26,21 @@ class CallCenterAuthentication(rest_framework.authentication.TokenAuthentication
             raise exceptions.AuthenticationFailed(detail="Invalid User")
 
         return user, token
+
+class CallCenterPermission(permissions.BasePermission):
+    """
+    Global permission check for callcenter group.
+    """
+
+    def has_permission(self, request, view):
+
+        user = request.user
+
+        if not user:
+            return False
+
+        if not user.groups.filter(name="Call Center").exists():
+            return False
+
+        return True
+

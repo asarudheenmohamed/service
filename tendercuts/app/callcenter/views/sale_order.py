@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from app.core import serializers
 from app.sale_order import models
 
-from ..auth import CallCenterAuthentication
+from ..auth import CallCenterPermission
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ class SalesOrderDetailSet(viewsets.ReadOnlyModelViewSet):
     Enpoint to provide a list for sales orders
     """
 
-    authentication_classes = (CallCenterAuthentication,)
+    permission_classes = (CallCenterPermission,)
     # authentication_classes = (Ca,)
     # queryset = models.SalesFlatOrder.objects.all()
     serializer_class = serializers.SalesOrderSerializer

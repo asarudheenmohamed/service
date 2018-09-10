@@ -5,7 +5,7 @@ import requests
 from rest_framework import views
 from rest_framework.response import Response
 
-from ..auth import CallCenterAuthentication
+from ..auth import CallCenterPermission
 
 logger = logging.getLogger()
 
@@ -25,7 +25,7 @@ STATUS = {
 
 
 class FreshDeskTicketApi(views.APIView):
-    authentication_classes = (CallCenterAuthentication,)
+    authentication_classes = (CallCenterPermission,)
 
     def get(self, request):
 

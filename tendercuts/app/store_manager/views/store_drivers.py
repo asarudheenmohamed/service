@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from app.store_manager.lib import StoreBaseController
 
-from ..auth import StoreManagerAuthentication
+from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class StoreDriverView(APIView):
 
     """
 
-    authentication_classes = (StoreManagerAuthentication,)
+    permission_classes = (StoreManagerPermission,)
 
     def get(self, request):
         """Get all active state trip objects.
