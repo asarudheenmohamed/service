@@ -352,12 +352,12 @@ class CustomerAddressController(object):
             geohash_row.value = geohash
             geohash_row.save()
         else:
-            CustomerAddressEntityVarchar.objects.create({
-                'entity_type_id': 2,
-                'attribute_id': self.geohash_field,
-                'entity_id': self.address_id,
-                'value': geohash
-            })
+            CustomerAddressEntityVarchar.objects.create(
+                entity_type_id=2,
+                attribute_id=self.geohash_field,
+                entity_id=self.address_id,
+                value=geohash
+            )
 
         lat_row = varchars.filter(
             entity=self.address_id, attribute=self.lat_field).first()
@@ -366,12 +366,12 @@ class CustomerAddressController(object):
             lat_row.value = lat
             lat_row.save()
         else:
-            CustomerAddressEntityVarchar.objects.create({
-                'entity_type_id': 2,
-                'attribute_id': self.lat_field,
-                'entity_id': self.address_id,
-                'value': lat
-            })
+            CustomerAddressEntityVarchar.objects.create(
+                entity_type_id=2,
+                attribute_id=self.lat_field,
+                entity_id=self.address_id,
+                value=lat
+            )
 
         lng_row = varchars.filter(
             entity=self.address_id, attribute=self.lng_field).first()
@@ -380,13 +380,12 @@ class CustomerAddressController(object):
             lng_row.value = lng
             lng_row.save()
         else:
-            CustomerAddressEntityVarchar.objects.create({
-                'entity_type_id': 2,
-                'attribute_id': self.lng_field,
-                'entity_id': self.address_id,
-                'value': lng
-            })
-
+            CustomerAddressEntityVarchar.objects.create(
+                entity_type_id=2,
+                attribute_id=self.lng_field,
+                entity_id=self.address_id,
+                value=lng
+            )
 
         texts = CustomerAddressEntityText.objects
         street_row = texts.filter(
