@@ -99,7 +99,7 @@ class DriverController(object):
         return self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
-    def assign_order(self, order, store_id, lat, lon):
+    def assign_order(self, order, store_id, lat, lon, trip_id):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
@@ -109,6 +109,7 @@ class DriverController(object):
             store_id (str): store id
             lat(int): Driver location latitude
             lon(lon): Driver location longitude
+            trip_id (int):Driver current trip id
 
         Returns:
             obj DriverOrder
@@ -134,8 +135,8 @@ class DriverController(object):
         except KeyError:
             pass
 
-        driver_object = DriverOrder.objects.create(
-            increment_id=order, driver_user=self.driver)
+        driver_object = DriverOrder.objects.get_or_create(
+            increment_id=order, driver_user=self.driver)[0]
 
         # update driver name and driver number in sale order object
         self.update_driver_details(order_obj)
@@ -150,6 +151,7 @@ class DriverController(object):
             'This order:{} will move to out for delivery.'.format(order))
 
         controller.out_delivery()
+
         # update current location for driver
         position_obj = self.record_position(lat, lon)
 
@@ -161,7 +163,7 @@ class DriverController(object):
 
         TripController(
             driver=self.driver).check_and_create_trip(
-            driver_object, position_obj)
+            driver_object, position_obj, trip_id)
 
         tasks.send_sms.delay(order, 'out_delivery')
 
@@ -261,13 +263,14 @@ class DriverController(object):
         order_obj.shipping_address.all().update(
             latitude=lat, longitude=lon)
 
-    def complete_order(self, order_id, lat, lon):
+    def complete_order(self, order_id, lat, lon, trip_id):
         """Publish the message to the Mage queues.
 
         Params:
             order_id (str): Increment ID
             lat(int): Driver location latitude
             lon(lon): Driver location longitude
+            trip_id(int): Driver current trip id
 
         """
         logger.info("Complete this order {}".format(order_id))
@@ -305,7 +308,7 @@ class DriverController(object):
 
         try:
             TripController(driver=self.driver).check_and_complete_trip(
-                driver_object[0], position_obj)
+                driver_object[0], position_obj, trip_id=trip_id)
         except ValueError:
             # Legacy handling
             pass

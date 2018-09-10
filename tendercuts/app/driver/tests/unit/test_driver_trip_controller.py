@@ -94,6 +94,18 @@ class TestDriverTripController:
 
         assert len(driver_trip.driver_order.all()) == 2
 
+        # test the new trip method
+        with mock.patch.object(cache, 'get_key', mock.Mock(return_value=None)):
+            mock_driver = DriverOrder.objects.create(
+                driver_user=user_obj, increment_id=2)
+            driver_trip = DriverTrip.objects.create(driver_user=user_obj)
+            driver_trip.driver_order.add(mock_driver)
+            driver_trip.save()
+            driver_trip = trip.check_and_create_trip(
+                mock_driver, driver_position.trip_id=driver_trip.id)
+
+        assert len(driver_trip.driver_order.all()) == 1
+
     @pytest.mark.django_db
     def test_driver_trip_complete(self, django_user):
         """Test driver trip complete.
@@ -113,6 +125,13 @@ class TestDriverTripController:
         with mock.patch.object(cache, 'get_key', mock.Mock(return_value=mock_trip.id)):
             driver_trip = trip.check_and_complete_trip(
                 mock_driver2, driver_position)
+
+        # test the new trip method complete
+        with mock.patch.object(cache, 'get_key', mock.Mock(return_value=None)):
+            driver_trip = trip.check_and_complete_trip(
+                mock_driver2, driver_position, trip_id=mock_trip.id)
+
+            assert len(driver_trip.driver_order.all()) == 2
 
         assert driver_trip.trip_completed == True
 
