@@ -343,10 +343,10 @@ class CustomerAddressController(object):
         return self.address.entity_id
 
     def update_address(self, lat, lng, geohash, street):
-        varchars = CustomerAddressEntityVarchar.objects
-
+        varchars = CustomerAddressEntityVarchar.objects.all()
+        
         geohash_row = varchars.filter(
-            entity=self.address_id, attribute=self.geohash_field).first()
+            entity_id=self.address_id, attribute_id=self.geohash_field).first()
         geohash_row.value = geohash
         geohash_row.save()
 
@@ -372,7 +372,3 @@ class CustomerAddressController(object):
 
         street_row.value = "\n".join(components)
         street_row.save()
-
-        return
-
-
