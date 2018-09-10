@@ -114,3 +114,10 @@ PAYMENT = {
         "environment": "Sandbox"
     }
 }
+
+MAGE_ATTRS = {
+    'GEOHASH': 245,
+    'LATITUDE': 239,
+    'LONGITUDE': 237,
+    'STREET': 25
+}

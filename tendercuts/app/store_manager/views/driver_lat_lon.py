@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from app.driver.serializer import serializers
 from app.store_manager.lib.store_order_controller import StoreOrderController
 
-from ..auth import StoreManagerAuthentication
+from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class DriverLocationViewSet(viewsets.ReadOnlyModelViewSet):
 
     """
 
-    authentication_classes = (StoreManagerAuthentication,)
+    permission_classes = (StoreManagerPermission,)
     serializer_class = serializers.DriverPositionSerializer
 
     def get_queryset(self):
