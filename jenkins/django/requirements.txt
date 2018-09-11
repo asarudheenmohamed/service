@@ -41,8 +41,6 @@ xlrd
 #paytm
 pycrypto
 requests-toolbelt
-pyproj
-ortools
 geopy
 
 
