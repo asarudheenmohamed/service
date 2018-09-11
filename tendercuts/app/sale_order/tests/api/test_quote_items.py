@@ -25,7 +25,7 @@ class TestQuoteItem:
         """
         response = auth_rest.get(
             "/sale_order/quote_items/", {
-                "store_id": generate_mock_order.store.entity_id, "customer_id": generate_mock_order.customer_id},
+                "store_id": generate_mock_order.store.store_id, "customer_id": generate_mock_order.customer_id},
             format='json')
         assert (response) is not None
         assert response.status_code == 200
