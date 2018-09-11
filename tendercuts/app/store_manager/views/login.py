@@ -49,7 +49,8 @@ class StoreManagerLoginApi(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed(detail="Invalid User")
 
-        if not user.groups.filter(name="Store Manager").exists():
+        backend_groups = ['Store Manager', 'Call Center']
+        if not user.groups.filter(name__in=backend_groups).exists():
             raise AuthenticationFailed(detail="Invalid User")
 
         token, created = Token.objects.get_or_create(user=user)
@@ -60,5 +61,6 @@ class StoreManagerLoginApi(APIView):
             'firstname': user.first_name,
             'lastname': user.last_name,
             'email': user.email,
-            'token': token.key
+            'token': token.key,
+            'groups': [group.name for group in user.groups.all()]
         })

@@ -1,1 +1,1 @@
-from .store_manager_auth import StoreManagerAuthentication
+from .store_manager_auth import StoreManagerAuthentication, StoreManagerPermission

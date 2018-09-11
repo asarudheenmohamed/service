@@ -14,6 +14,7 @@ from app.core.lib.utils import get_mage_userid
 from app.core.models import SalesFlatOrder
 from app.core.models.customer.address import CustomerAddressEntity
 from app.driver import tasks
+import geopy.distance
 
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
@@ -90,10 +91,10 @@ class DriverController(object):
             longitude: driver completed location longitude
         """
 
-        shipping_address = order.shipping_address.all().first()
+        shipping_address = order.shipping_address.filter(address_type="shipping").last()
         if not shipping_address.geohash:
-            return False
-
+            return True
+        
         return self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
@@ -258,13 +259,13 @@ class DriverController(object):
         # checks the driver completed location with in a customer geolocation
         # radius 500m
 
-        if not is_nearby(order_obj, lat, lon):
-            logger.info(
-                "This driver:{} is trying to complete the order ahead of customer location".format(
-                    self.driver.username))
+        #if not self.is_nearby(order_obj, lat, lon):
+        #    logger.info(
+        #        "This driver:{} is trying to complete the order ahead of customer location".format(
+        #            self.driver.username))
 
-            raise ValueError(
-                'Please Complete the order customer nearest locations')
+        #    raise ValueError(
+        #        'Please Complete the order customer nearest locations')
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)

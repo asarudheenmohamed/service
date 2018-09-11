@@ -4,9 +4,11 @@ import logging
 
 from django.conf import settings
 import googlemaps
+import geopy
+from django.db.models import QuerySet
 
-from app.core.models import SalesFlatOrder, SalesFlatOrderAddress
-from app.core.models.store import CoreStore
+from app.core.models import SalesFlatOrder, SalesFlatOrderAddress, CoreStore
+from app.driver.models import GoogleGeocode, GoogleAddressLatLng
 from app.core.lib.communication import Mail
 
 logger = logging.getLogger(__name__)
@@ -38,31 +40,103 @@ class GoogleApiController(object):
             return the google directions
 
           """
-        try:
-            direction_obj = self._api.directions(
-                origin=origin, destination=destination)
-
-            self.logger.info(
-                'Fetch the Google directions for the origin:{} to destination:{}'.format(
-                    origin, destination))
-
-        except Exception as msg:
-            message = 'Error:{}, origin:{},destination:{}'.format(
-                repr(msg), origin, destination)
-
-            # send error message in tech support mail
-            Mail().send(
-                "reports@tendercuts.in",
-                ["tech@tendercuts.in"],
-                "[CRITICAL] Error in Order ETA computation",
-                message)
+        direction_obj = self._api.directions(
+            origin=origin, destination=destination)
 
         return direction_obj
+
+    def _geocode(self, query):
+        """Triggers a query to geocode also stores the result for caching."""
+        data = GoogleGeocode.objects.filter(query=query)
+
+        if data:
+            logging.info("Got a cache hit for {}".format(query))
+            return data.first()
+
+        result = self._api.geocode(query)
+        result = result[0]
+
+        if 'bounds' in result['geometry']:
+            vp = result['geometry']['bounds']
+        else:
+            vp = result['geometry']['viewport']
+
+        n1, e1, s1, w1 = \
+            vp['northeast']['lat'], vp['northeast']['lng'], vp[
+                'southwest']['lat'], vp['southwest']['lng']
+
+        height_ = geopy.distance.geodesic((n1, e1), (s1, e1)).km
+        width_ = geopy.distance.geodesic((s1, w1), (s1, e1)).km
+        area = (height_ * width_)
+        geo = result['geometry']
+
+        logging.info("Resolved {} to {}".format(query, area))
+
+        return GoogleGeocode.objects.create(
+            location_type=geo['location_type'],
+            latitude=geo['location']['lat'],
+            longitude=geo['location']['lng'],
+            area=area,
+            query=query
+        )
+
+    def resolve_address(self, fax, mage_street):
+        """Tries to resolve the address to an approximate lat & lng."""
+
+        logging.info('Resolving for {} & {}'.format(fax, mage_street))
+        possibilities = []
+        components = mage_street.split('\n')
+        user_entered = components[0]
+        google_addr = components[1] if len(components) >= 2 else None
+
+        # Add fax
+        if fax and len(fax) > 0:
+            user_entered_address = "{}, {}".format(fax, user_entered)
+        else:
+            user_entered_address = user_entered
+
+        search_string = []
+        for street in reversed(user_entered_address.split(",")):
+            street = street.strip()
+            if not street:
+                continue
+
+            search_string.insert(0, street)
+
+            if google_addr:
+                street = "{}, {}".format(
+                    ",".join(search_string), google_addr)
+            else:
+                street = ",".join(search_string)
+
+            logging.info('Resolving for {}'.format(street))
+
+            try:
+                geocode = self._geocode(street)
+            except Exception as e:
+                logging.warning(str(e))
+                continue
+
+            if geocode.area < 0.1:
+                possibilities.append(geocode)
+
+        return self._get_best_match(possibilities)
+
+    def _get_best_match(self, possibilities):
+        """Private method to get the best geocode data.
+        Currently we look for the last rooftop, geo center in this prio"""
+        for geocode in reversed(possibilities):  # type: GoogleGeocode
+            if geocode.location_type == 'ROOFTOP':
+                return geocode.latitude, geocode.longitude
+
+            if geocode.location_type == 'GEOMETRIC_CENTER':
+                return geocode.latitude, geocode.longitude
 
     def compute_eta(self):
         """Update eta for customer location to store location."""
 
-        shipping_address = self.order.shipping_address.all().last()  # type: SalesFlatOrderAddress
+        shipping_address = self.order.shipping_address.all()
+        shipping_address = shipping_address.filter(address_type='shipping').first()   # type: SalesFlatOrderAddress
 
         store_lat_and_lng = CoreStore.objects.filter(
             store_id=self.order.store_id).values(
@@ -74,20 +148,41 @@ class GoogleApiController(object):
             store_lat_and_lng['location__longandlatis__longitude'])
 
         if shipping_address.geohash:
-            destination = '{},{}'.format(
-                shipping_address.o_latitude, shipping_address.o_longitude)
-        else:
+            lat = shipping_address.o_latitude
+            lng = shipping_address.o_longitude
+        else:  # Non geohashed resolution.
+            # fetch from cache if present.
+            address_lat_lng = GoogleAddressLatLng.objects.filter(
+                address_id=shipping_address.customer_address_id)  # type: QuerySet[GoogleAddressLatLng]
 
-            # Try to get the eta using street address
-            street = shipping_address.street
-            street = street.split('\n')
-
-            if len(street) <= 1:
-                destination = shipping_address.postcode
+            if address_lat_lng:
+                address_lat_lng = address_lat_lng.first()
+                lat, lng = address_lat_lng.latitude, address_lat_lng.longitude
             else:
-                destination = street[1]
+                # approx match
+                try:
+                    lat, lng = self.resolve_address(
+                        shipping_address.fax, shipping_address.street)
+                    GoogleAddressLatLng.objects.create(
+                        address_id=shipping_address.customer_address_id,
+                        latitude=lat,
+                        longitude=lng)
+                except Exception as msg:
+                    message = 'Error for id: {} ({}: {}), message:{}'.format(
+                        shipping_address.customer_address_id,
+                        shipping_address.fax,
+                        shipping_address.street,
+                        repr(msg))
 
-        data = {}
+                    # send error message in tech support mail
+                    Mail().send(
+                        "reports@tendercuts.in",
+                        ["jira@tendercuts.atlassian.net", "tech@tendercuts.in"],
+                        "[INFO] Address resolution failed for customer",
+                        message)
+
+        destination = '{},{}'.format(lat, lng)
+
         directions = self.get_directions(origin, destination)
 
         legs = directions[0]['legs']
@@ -96,9 +191,9 @@ class GoogleApiController(object):
         # if original lat and lng is missing, then we use the data from
         # directions api.
         if not shipping_address.o_longitude:
-            shipping_address.o_latitude = legs[0]['end_location']['lat']
-            shipping_address.o_longitude = legs[0]['end_location']['lng']
-
+            logger.info("Info updating lat lng for {}".format(shipping_address.customer_address_id))
+            shipping_address.o_latitude = lat
+            shipping_address.o_longitude = lng
         shipping_address.save()
 
         self.logger.info('ETA time updated for the customer:{} order:{}'.format(

@@ -98,6 +98,7 @@ class RoutingData:
             # high prio.
             time_remaining = 30 if order.remaining_time < shipping_address.eta else order.remaining_time
             time_windows.append((0, time_remaining))
+        logger.info(locations)
 
         # setup your projections
         crs_wgs = proj.Proj(init='epsg:4326')  # assuming you're using WGS84 geographic

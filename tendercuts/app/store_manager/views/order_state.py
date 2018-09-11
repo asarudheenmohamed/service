@@ -8,7 +8,7 @@ from app.core.lib.order_controller import OrdersController
 import app.core.lib.magento as mage
 from app.core.models import SalesFlatOrder
 
-from ..auth import StoreManagerAuthentication
+from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class OrderProcessingView(APIView):
 
     """
 
-    authentication_classes = (StoreManagerAuthentication,)
+    permission_classes = (StoreManagerPermission,)
 
     def post(self, request):
         """Get all active state trip objects.

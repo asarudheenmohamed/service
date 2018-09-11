@@ -2,7 +2,6 @@
 # virtualenvwrapper
 # sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
 # brew install chromedriver
-
 uwsgi
 django==1.10.6
 
@@ -14,15 +13,15 @@ enum
 
 mock
 pytest==3.1.3
-pytest-django
-pytest-bdd
+pytest-django==3.1.2
+pytest-bdd==2.18.2
 pytest-xdist
 pytest-cov
 googlemaps
 
 # sudo apt-get install libmysqlclient-dev
 MySQL-python
-psycopg2
+psycopg2==2.7.5
 
 python-magento
 celery==4.0.2
@@ -37,20 +36,24 @@ razorpay
 python-dateutil
 sendotp
 numpy
-pandas
+pandas==0.20.2
 xlrd
 #paytm
 pycrypto
 requests-toolbelt
 pyproj
 ortools
+geopy
+
 
 # Devlopment:
+#pylint
 flake8
 pep8
 pydocstyle
-#pylint
 splinter
 
 #pynotebook
-jupyter
+jupyter==1.0.0
+ortools==6.8.5452
+pyproj==1.9.5.1

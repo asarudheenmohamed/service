@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from app.core import serializers
 from app.store_manager.lib import StoreBaseController
 
-from ..auth import StoreManagerAuthentication
+from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class StoreOrderViewSet(viewsets.ReadOnlyModelViewSet):
 
     """
 
-    authentication_classes = (StoreManagerAuthentication,)
+    permission_classes = (StoreManagerPermission,)
     serializer_class = serializers.SalesOrderSerializer
 
     def get_queryset(self):

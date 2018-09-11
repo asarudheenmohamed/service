@@ -1,5 +1,7 @@
 """Authentication for store manager, only store manager will be auth'd."""
 import rest_framework.authentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework import permissions
 
 
 class StoreManagerAuthentication(rest_framework.authentication.TokenAuthentication):
@@ -23,3 +25,23 @@ class StoreManagerAuthentication(rest_framework.authentication.TokenAuthenticati
             raise AuthenticationFailed(detail="Invalid User")
 
         return user, token
+
+
+class StoreManagerPermission(permissions.BasePermission):
+    """
+    Global permission check for blacklisted IPs.
+    """
+
+    def has_permission(self, request, view):
+
+        user = request.user
+
+        if not user:
+            return False
+
+        if not user.groups.filter(name="Store Manager").exists():
+            return False
+
+        return True
+
+
