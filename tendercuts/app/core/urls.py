@@ -16,6 +16,11 @@ router.register(
     r'cms',
     views.CmsViewSet,
     base_name='CmsViewSet')
+router.register(
+    r'store_address',
+    views.CoreConfigDataViewSet,
+    base_name='StoreViewSet')
+
 # router.register(r'product', views.ProductViewSet)#,
 # base_name='CatalogProductEntity')
 

@@ -102,3 +102,17 @@ class LocationPincodePincodeStore(models.Model):
         db_table = 'location_pincode_pincode_store'
         unique_together = (('pincode_id', 'store_id'),)
         app_label = 'magento'
+
+
+class CoreConfigData(models.Model):
+    config_id = models.AutoField(primary_key=True)
+    scope = models.CharField(max_length=8)
+    scope_id = models.IntegerField()
+    path = models.CharField(max_length=255)
+    value = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'core_config_data'
+        unique_together = (('scope', 'scope_id', 'path'),)
+        app_label = 'magento'
