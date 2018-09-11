@@ -40,7 +40,7 @@ def fetch_all_rating_tags(cache, auth_rest):
     rating_tags = auth_rest.get(
         "/rating/rating_tags/", format='json')
     rating_tag_ids = []
-    for rating_tag in rating_tags['results']:
+    for rating_tag in rating_tags.data['results']:
         rating_tag_ids.append(rating_tag['id'])
     cache['rating_tag_ids'] = rating_tag_ids
 

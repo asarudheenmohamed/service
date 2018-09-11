@@ -29,11 +29,12 @@ class TestRatingController:
         user_obj = User.objects.get_or_create(
             username=mock_user.dj_user_id)[0]
 
-        Rating.objects.create(
+        rating = Rating.objects.create(
             user=user_obj,
             comments='product is bad',
-            rating=2,
-            rating_tag=tag_obj)
+            rating=2)
+        rating.rating_tag.add(tag_obj)
+        rating.save()
 
         responce = RatingController(
             generate_mock_order.increment_id).create_fresh_desk_ticket()
