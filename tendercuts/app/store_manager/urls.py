@@ -24,6 +24,11 @@ router.register(
     views.DriverLocationViewSet,
     base_name='DriverLocationViewSet')
 
+router.register(
+    r'inv_request',
+    views.StoreInventoryRequestApi,
+    base_name='StoreInventoryRequestApi')
+
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'login', views.StoreManagerLoginApi.as_view()),
