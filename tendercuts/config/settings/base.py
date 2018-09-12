@@ -290,6 +290,14 @@ ORDER_MEDIUM = {
     'POS': 4
 }
 
+CUT_OFF = {
+    52: 3,
+    53: 3,
+    54: 1.5,
+    55: 3,
+    56: 3,
+}
+
 SMS_TEMPLATES = {
     'payment_pending_to_cancel': 'your order #{} has been Cancelled.',
     'canceled': 'Dear Customer Your Order No.#{}. has been Cancelled. We are sorry to have missed you this time. Do call us again for fresh, juicy and tender choices from Tender Cuts. Looking forward to serving you! Tendercuts.in',
@@ -332,4 +340,3 @@ GROUPS = {
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
 }
-
