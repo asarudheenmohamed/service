@@ -19,10 +19,12 @@ class TestAddress(object):
             Checks the mock address id
 
         """
-        address_obj = CustomerAddressEntityVarchar.objects.all().last()
+        address_obj = CustomerAddressEntityVarchar.objects.filter(
+            attribute_id=231).last()
         address_obj.value = 'tambaram'
         address_obj.save()
-
+        import pdb
+        pdb.set_trace()
         response = auth_rest.get(
             "/core/designated_store/",
             {"address_id": address_obj.entity_id},
