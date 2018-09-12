@@ -24,7 +24,7 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
     serializer_class = InventoryRequestSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data['triggered_by'] = request.user
+        request.data['triggered_by'] = request.user.id
         return super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
     def get_queryset(self):
