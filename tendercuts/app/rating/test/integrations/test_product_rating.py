@@ -66,7 +66,7 @@ def customer_create_a_rating(cache, auth_rest, comments, rating):
 
     assert (response) is not None
     assert response.status_code == 201
-    assert str(response.data['status']) == True
+    assert response.data['status'] == True
 
 
 @then('Cross check review rating <comments>')

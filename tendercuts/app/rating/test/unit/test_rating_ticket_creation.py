@@ -30,6 +30,7 @@ class TestRatingController:
             username=mock_user.dj_user_id)[0]
 
         rating = Rating.objects.create(
+            increment_id=generate_mock_order.increment_id,
             customer=user_obj,
             comments='product is bad',
             rating=2)
