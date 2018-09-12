@@ -19,14 +19,15 @@ class TestCms(object):
             Checks the response is not None
 
         """
-        response = rest.get("/core/cms/cms_title", format='json')
-
+        response = rest.get("/core/cms/cms_title/", format='json')
+        import pdb
+        pdb.set_trace()
         assert (response) is not None
         assert response.status_code == 200
         assert len(response.data) != 0
 
         response = rest.get(
-            "/core/cms/cms_page?page_id={}".format(response.data[0]['page_id']), format='json')
+            "/core/cms/cms_page/?page_id={}".format(response.data[0]['page_id']), format='json')
 
         assert (response) is not None
         assert response.status_code == 200

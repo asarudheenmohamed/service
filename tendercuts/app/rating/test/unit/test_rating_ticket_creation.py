@@ -30,7 +30,7 @@ class TestRatingController:
             username=mock_user.dj_user_id)[0]
 
         rating = Rating.objects.create(
-            user=user_obj,
+            customer=user_obj,
             comments='product is bad',
             rating=2)
         rating.rating_tag.add(tag_obj)
