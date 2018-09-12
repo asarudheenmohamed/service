@@ -20,8 +20,6 @@ class TestCms(object):
 
         """
         response = rest.get("/core/cms/cms_title/", format='json')
-        import pdb
-        pdb.set_trace()
         assert (response) is not None
         assert response.status_code == 200
         assert len(response.data) != 0
