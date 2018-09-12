@@ -26,7 +26,7 @@ class InventoryRequest(models.Model):
     """Model for inventory request"""
     created_time = models.DateTimeField(default=timezone.now)
     product_id = models.IntegerField(blank=True, null=True)
-    type = models.IntegerField(blank=True, null=True)
+    store_id = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     triggered_by = models.ForeignKey(User)
     approved_by = models.ForeignKey(User)
