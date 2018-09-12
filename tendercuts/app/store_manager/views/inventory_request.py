@@ -23,6 +23,10 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
     permission_classes = (StoreManagerPermission,)
     serializer_class = InventoryRequestSerializer
 
+    def create(self, request, *args, **kwargs):
+        request.data['triggered_by'] = request.user
+        return super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
+
     def get_queryset(self):
         """Get all active state trip objects.
 
