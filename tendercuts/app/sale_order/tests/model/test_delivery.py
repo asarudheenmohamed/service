@@ -20,7 +20,6 @@ class TestDeliveryModel:
         """
         Verify delivery cost
         """
-        assert == 19
         assert ExpressDelivery().cost == 49
 
     def test_slots_available(self):
@@ -45,8 +44,16 @@ class TestDeliveryModel:
         """
         delivery = ScheduledDelivery()
         now = datetime.datetime.now(tz=delivery.tz)
+        dt_now = now.replace(hour=9, minute=0)
+        slots = delivery.available_slots(now=dt_now)
+
+        today = [s for s in slots if s['date']
+                 == str(datetime.date.today())][0]
+        assert len(slots) == 2
+        assert len(today['times']) == 3
 
         dt_now = now.replace(hour=12)
+
         slots = delivery.available_slots(now=dt_now)
 
         today = [s for s in slots if s['date']

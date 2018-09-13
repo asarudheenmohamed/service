@@ -1,4 +1,5 @@
 from app.core.models import SalesFlatOrder
+from django.conf import settings
 
 import abc
 import datetime
@@ -23,7 +24,6 @@ class Delivery:
 
 class ScheduledDelivery(Delivery):
     DAYS = 2
-    CUT_OFF = 3  # hours
     SLOTS = [
         (datetime.time(7, 0, 0), {"ddate_id": 52, "interval": "7:00 - 9:00"}),
         (datetime.time(9, 0, 0), {"ddate_id": 53, "interval": "9:00 - 11:00"}),
@@ -54,10 +54,10 @@ class ScheduledDelivery(Delivery):
                 slot_cutoff = date.replace(
                     hour=time.hour,
                     minute=time.minute)
-
                 seconds_left = (slot_cutoff - now).total_seconds()
 
-                if seconds_left > 3600 * self.CUT_OFF:
+                if int(seconds_left) > 3600 * \
+                        int(settings.CUT_OFF[slot_desc['ddate_id']]):
                     slots[format(date, "%Y-%m-%d")].append(slot_desc)
 
         slots = [{"date": date, "times": times}
