@@ -55,9 +55,9 @@ class ScheduledDelivery(Delivery):
                     hour=time.hour,
                     minute=time.minute)
                 seconds_left = (slot_cutoff - now).total_seconds()
+                cut_off = settings.CUT_OFF[slot_desc['ddate_id']]
 
-                if int(seconds_left) > 3600 * \
-                        int(settings.CUT_OFF[slot_desc['ddate_id']]):
+                if int(seconds_left) > 3600 * cut_off:
                     slots[format(date, "%Y-%m-%d")].append(slot_desc)
 
         slots = [{"date": date, "times": times}
