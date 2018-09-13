@@ -36,7 +36,15 @@ class UpdateAddressApi(views.APIView):
         order = models.SalesFlatOrder.objects.filter(
             increment_id=order_id).first()  # type: models.SalesFlatOrder
 
-        address = models.CustomerAddressEntity.objects.filter(parent_id=order.customer_id).first()
+        shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
+        OrderAddressController(order).update_address(
+            geohash=geohash,
+            lat=lat,
+            lng=lng,
+            street=street
+        )
+        
+        address = models.CustomerAddressEntity.objects.filter(entity_id=shipping_address.customer_address_id).first()
         # update the customer address first
         CustomerAddressController(address).update_address(
             geohash=geohash,
@@ -45,12 +53,5 @@ class UpdateAddressApi(views.APIView):
             street=street
         )
 
-        shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
-        OrderAddressController(order).update_address(
-            geohash=geohash,
-            lat=lat,
-            lng=lng,
-            street=street
-        )
 
         return response.Response({'status': True})

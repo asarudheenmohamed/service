@@ -168,7 +168,8 @@ class GoogleApiController(object):
                         latitude=lat,
                         longitude=lng)
                 except Exception as msg:
-                    message = 'Error for id: {} ({}: {}), message:{}'.format(
+                    message = 'Error for {} id: {} ({}: {}), message:{}'.format(
+                        self.order.increment_id,
                         shipping_address.customer_address_id,
                         shipping_address.fax,
                         shipping_address.street,
