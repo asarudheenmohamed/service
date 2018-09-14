@@ -34,6 +34,8 @@ class FlockAppApi(APIView):
 
         return
 
+    def get(self, request):
+        return
 
 
 
