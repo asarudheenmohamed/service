@@ -2,9 +2,8 @@
 
 import logging
 
-from rest_framework import viewsets, decorators
+from rest_framework import viewsets, renderers, decorators
 from rest_framework.response import Response
-
 from app.driver import serializer
 from app.driver.lib.new_trip_controller import DriverTripController
 from ..auth import DriverAuthentication
@@ -20,11 +19,12 @@ class NewDriverTripViewSet(viewsets.ReadOnlyModelViewSet):
     /driver/trip/current/start -> begin trip.
 
     """
-    authentication_classes = (DriverAuthentication,)
+    # authentication_classes = (DriverAuthentication,)
     serializer_class = serializer.DrivertripSerializer
 
     def get_queryset(self):
         """Override to retrieve the current driver's trip"""
+
         trips = DriverTripController.get_completed_trips(
             self.request.user)
 
@@ -36,23 +36,19 @@ class NewDriverTripViewSet(viewsets.ReadOnlyModelViewSet):
 
         return trip
 
-    @decorators.detail_route(methods=['get'])
-    def start(self, *args, **kwargs):
+    @decorators.list_route(methods=['get'])
+    def start(self, request, *args, **kwargs):
+        """Start the driver trip."""
+
         trip = self.get_object()
         DriverTripController(trip=trip).start_trip()
 
         return Response({'status': True})
 
-    @decorators.detail_route(methods=['get'])
-    def pending_orders(self, *args, **kwargs):
-        trip = self.get_object()
-        controller = DriverTripController(trip=trip)
-
-        return Response({'status': True})
-
-    @decorators.detail_route(methods=['get'])
-    def get_current_trip(self, *args, **kwargs):
+    @decorators.list_route(methods=['get'])
+    def get_current_trip(self, request, *args, **kwargs):
         """Get or generate a driver trip."""
         trip = self.get_object()
+        serializers = serializer.DrivertripSerializer(trip)
 
-        return trip
+        return Response(serializers.data)
