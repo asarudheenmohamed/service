@@ -11,6 +11,16 @@ from app.core.models import UserProfile
 logger = logging.getLogger()
 
 
+def verify_token(token):
+    """Helper method to validate the token from flock"""
+    resp = jwt.decode(
+        token,
+        settings.FLOCK_AUTH['APP_SECRET'],
+        settings.FLOCK_AUTH['APP_SECRET'])
+
+    return resp
+
+
 class FlockAuthentication(rest_framework.authentication.BaseAuthentication):
     """Storemanagerauthication with group check."""
 
@@ -27,10 +37,7 @@ class FlockAuthentication(rest_framework.authentication.BaseAuthentication):
         """
         token = request.data['flockEventToken']
 
-        resp = jwt.decode(
-            token,
-            settings.FLOCK_AUTH['APP_SECRET'],
-            settings.FLOCK_AUTH['APP_SECRET'])
+        resp = verify_token(token)
 
         if resp['appId'] != settings.FLOCK_AUTH['APP_ID']:
             raise AuthenticationFailed(detail="Invalid User")

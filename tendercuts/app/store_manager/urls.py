@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'routing', views.StoreRoutingView.as_view()),
     url(r'processing', views.OrderProcessingView.as_view()),
     url(r'flock_auth', views.StoreManagerFlockApi.as_view()),
+    url(r'flock_app', views.FlockAppApi.as_view()),
 ]
