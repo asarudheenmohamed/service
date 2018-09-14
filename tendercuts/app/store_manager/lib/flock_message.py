@@ -17,10 +17,10 @@ class InventoryFlockMessageController(object):
     Update order status
     """
     PUBLISH_TEMPLATE = """<flockml>
-        {user} has request the product: {product} to be marked as out of stock <br/>
+        has request the product: {product} to be marked as out of stock <br/>
         Note: This will be auto approved, in the next 15 mins<br/>
-        <action id="{id}-0" type="sendEvent" url="{url}"">Approve</action>
-        <action id="{id}-1" type="sendEvent" url="{url}"">Reject</action>
+        <b><action id="{id}-0" type="sendEvent" url="{url}">Approve</action></b>
+        <b><action id="{id}-1" type="sendEvent" url="{url}">Reject</action></b>
         </flockml>"""
 
     def __init__(self):
@@ -32,14 +32,13 @@ class InventoryFlockMessageController(object):
         :type request: InventoryRequest
         """
         template = self.PUBLISH_TEMPLATE.format(
-            user=request.triggered_by.first_name,
             product=request.product_name,
             id=request.id,
             url=settings.FLOCK_ENDPOINTS['APPROVE_INV_REQ']
         )
 
-        Flock().send_flockml(
-            settings.GROUPS['scrum'], template, 'OoS Request', '')
+        Flock().send_flockml('SCRUM', template, 'OoS Request', '',
+            send_as=request.triggered_by.first_name)
 
 
 

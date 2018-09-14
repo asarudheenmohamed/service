@@ -19,7 +19,6 @@ class StoreManagerFlockApi(APIView):
     """
 
     authentication_classes = (FlockAuthentication,)
-    permission_classes = ()
 
     def post(self, request, format=None):
         """auth endpoint.
@@ -39,7 +38,7 @@ class StoreManagerFlockApi(APIView):
 
         """
         user = self.request.user
-        token = Token.objects.get(user=user)
+        token, _ = Token.objects.get_or_create(user=user)
 
         return Response({
             'firstname': user.first_name,

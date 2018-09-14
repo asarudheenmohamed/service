@@ -38,7 +38,7 @@ class Flock():
 
         resp.raise_for_status()
 
-    def send_flockml(self, group_name, products, title, description):
+    def send_flockml(self, group_name, products, title, description, send_as=None):
         """Send flockml message.
 
         params:
@@ -64,6 +64,9 @@ class Flock():
                     }
                 ]
             }
+
+        if send_as:
+            data['sendAs'] = {'name': send_as}
 
         resp = requests.post(
         "https://api.flock.co/v1/chat.sendMessage/", data=json.dumps(data))

@@ -27,7 +27,10 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
     def create(self, request, *args, **kwargs):
         request.data['triggered_by'] = request.user.id
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
-        InventoryFlockMessageController().publish_request(inv_request)
+
+        # extract and get the inv reuqest obj.
+        inv_request_obj = InventoryRequest.objects.filter(id=inv_request.data['id']).first()
+        InventoryFlockMessageController().publish_request(inv_request_obj)
 
         return inv_request
 
