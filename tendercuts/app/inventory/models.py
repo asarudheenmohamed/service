@@ -14,8 +14,6 @@ class NotifyCustomer(models.Model):
 
     customer = models.ForeignKey(User)
     product_id = models.IntegerField(blank=True, null=True)
-    product_name = models.CharField(max_length=300, blank=True, null=True)
-    sku = models.CharField(max_length=300, blank=True, null=True)
     store_id = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     expire_at = models.DateTimeField(
@@ -28,6 +26,8 @@ class InventoryRequest(models.Model):
     """Model for inventory request"""
     created_time = models.DateTimeField(default=timezone.now)
     product_id = models.IntegerField(blank=True, null=True)
+    product_name = models.CharField(max_length=300, blank=True, null=True)
+    sku = models.CharField(max_length=300, blank=True, null=True)
     store_id = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     triggered_by = models.ForeignKey(User, related_name='triggered_by')

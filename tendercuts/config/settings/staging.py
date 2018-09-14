@@ -121,3 +121,7 @@ MAGE_ATTRS = {
     'LONGITUDE': 237,
     'STREET': 25
 }
+
+FLOCK_ENDPOINTS = {
+    'APPROVE_INV_REQ': 'https://staging.tendercuts.in:82/store_manager/inv_request/approve'
+}

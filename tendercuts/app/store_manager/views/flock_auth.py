@@ -1,23 +1,24 @@
 """Endpoint for store manager flock auth."""
 import logging
-import jwt
 
-from django.conf import settings
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.core.models import UserProfile
+from app.core.auth import FlockAuthentication
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
 class StoreManagerFlockApi(APIView):
-    """Enpoint that logs in user."""
+    """Enpoint that logs in user using the data in flock event.
 
-    authentication_classes = ()
+    We first verify if the token is correctly signed, from that we
+    do a search of our user profile to find the django user accordingly.
+    """
+
+    authentication_classes = (FlockAuthentication,)
     permission_classes = ()
 
     def post(self, request, format=None):
@@ -37,24 +38,8 @@ class StoreManagerFlockApi(APIView):
             bool
 
         """
-        token = self.request.data['flockEventToken']
-
-        resp = jwt.decode(
-            token,
-            settings.FLOCK_AUTH['APP_SECRET'],
-            settings.FLOCK_AUTH['APP_SECRET'])
-
-        if resp['appId'] != settings.FLOCK_AUTH['APP_ID']:
-            raise AuthenticationFailed(detail="Invalid User")
-
-        user_profile = UserProfile.objects.filter(flock_id=resp['userId'])
-
-        if not user_profile:
-            raise AuthenticationFailed(detail="Invalid User")
-
-        user_profile = user_profile.first()
-        user = user_profile.user  # type User
-        token, created = Token.objects.get_or_create(user=user)
+        user = self.request.user
+        token = Token.objects.get(user=user)
 
         return Response({
             'firstname': user.first_name,

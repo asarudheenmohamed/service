@@ -6,6 +6,7 @@ from rest_framework import viewsets, mixins
 
 from app.inventory.models import InventoryRequest
 from app.inventory.serializers import InventoryRequestSerializer
+from app.store_manager.lib import InventoryFlockMessageController
 from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
@@ -25,7 +26,10 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
 
     def create(self, request, *args, **kwargs):
         request.data['triggered_by'] = request.user.id
-        return super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
+        inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
+        InventoryFlockMessageController().publish_request(inv_request)
+
+        return inv_request
 
     def get_queryset(self):
         """Get all active state trip objects.
