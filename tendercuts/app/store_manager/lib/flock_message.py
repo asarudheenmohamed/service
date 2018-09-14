@@ -19,15 +19,23 @@ class InventoryFlockMessageController(object):
     PUBLISH_TEMPLATE = """<flockml>
         {user} has request the product: {product} to be marked as out of stock <br/>
         Note: This will be auto approved, in the next 15 mins<br/>
-        <action id="{id}-0" type="sendEvent" url="{url}"">Approve</action>
-        <action id="{id}-1" type="sendEvent" url="{url}"">Reject</action>
+        <action id="{id}-1" type="sendEvent" url="{url}"">Approve</action>
+        <action id="{id}-2" type="sendEvent" url="{url}"">Reject</action>
+        </flockml>"""
+
+    SUCCESS_TEMPLATE = """<flockml>
+        The product: {product} has been marked as out of stock <br/>
+        </flockml>"""
+
+    FAILED_TEMPLATE = """<flockml>
+        FAILED: The product: {product} has not been marked as out of stock <br/>
         </flockml>"""
 
     def __init__(self):
         pass
 
     def publish_request(self, request):
-        """
+        """Publish the inventory change request in the flock group
 
         :type request: InventoryRequest
         """
@@ -41,6 +49,31 @@ class InventoryFlockMessageController(object):
         Flock().send_flockml(
             settings.GROUPS['scrum'], template, 'OoS Request', '')
 
+    def publish_respone(self, request, success=True):
+        """Publish the inventory change request in the flock group
 
+        :type request: InventoryRequest
+        """
+        template = self.SUCCESS_TEMPLATE if success else self.FAILED_TEMPLATE
+        Flock().send_flockml(
+            settings.GROUPS['scrum'],
+            template.format(product=request.product_name),
+            'OoS Request', '')
 
+    def process_response(self, response):
+        """Process the response from flock user interaction
+        https://docs.flock.com/display/flockos/client.flockmlAction
 
+        :type request: InventoryRequest
+        :param requst:
+        :return:
+        """
+
+        # 0 -? approved, 1- rejected
+        inv_request_id, action = response['actionId'].split("-")
+        request = InventoryRequest.objects.get(pk=inv_request_id)
+        request.status = action
+        request.save()
+        # Inventory Processing code here
+
+        self.publish_respone(request, success=True)

@@ -7,3 +7,4 @@ from .driver_lat_lon import DriverLocationViewSet
 from .order_state import OrderProcessingView
 from .inventory_request import StoreInventoryRequestApi
 from .flock_auth import StoreManagerFlockApi
+from .flock_app import FlockAppApi

@@ -32,4 +32,5 @@ class InventoryRequest(models.Model):
     qty = models.IntegerField(blank=True, null=True)
     triggered_by = models.ForeignKey(User, related_name='triggered_by')
     approved_by = models.ForeignKey(User, blank=True, null=True, related_name='approved_by')
-    is_done = models.BooleanField(default=False)
+    # 0 -> Pending, 1 -> Approved, 2 - Rejected
+    status = models.SmallIntegerField(default=False)
