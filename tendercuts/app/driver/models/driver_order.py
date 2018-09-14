@@ -109,3 +109,4 @@ class DriverLoginLogout(models.Model):
     date = models.DateField(default=datetime.date.today)
     check_in = models.TimeField(auto_now=True)
     check_out = models.TimeField(blank=True, null=True)
+    store_id = models.IntegerField(blank=True, null=True)

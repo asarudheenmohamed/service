@@ -105,9 +105,11 @@ class TripController:
 
         return True
 
-    def check_and_create_trip(self, order, driver_position):
+    def check_and_create_trip(self, order, driver_position, trip_id=None):
         """Check if a trip is available or generates a TRIP.
-        :param order:(DriverObject): Driver object
+        param :
+            order:(DriverObject): Driver object
+            trip_id(int):auto generated trip id
 
         :return: DriverTrip
         """
@@ -129,7 +131,7 @@ class TripController:
                 # re-run the logic
                 return self.check_and_create_trip(order, driver_position)
 
-        else:
+        elif trip_id is None:
             self.log.debug("Creating a new trip for the driver {}".format(
                 order.driver_id))
             trip = DriverTrip.objects.create(driver_user=self.driver)
@@ -141,7 +143,11 @@ class TripController:
                 trip_starting_point,
                 str(driver_position),
                 60 * 60 * 24)  # expired at 1 day
-        # create driver trip
+        else:
+            # Get the driver current auto generated trip object
+            trip = DriverTrip.objects.get(pk=trip_id)
+
+        # add driver trip assign orders
         trip.driver_order.add(order)
         trip_driver_orders = trip.driver_order.all()
 
@@ -187,26 +193,33 @@ class TripController:
 
         return driver_trip
 
-    def check_and_complete_trip(self, order, driver_position):
+    def check_and_complete_trip(self, order, driver_position, trip_id=None):
         """Check if a trip is available and completes a TRIP.
-        :param order:(DriverObject): Driver object
+        :param
+            order:(DriverObject): Driver object
+            trip_id(int): Auto generated trip_id
 
-        :return: none
+        :return: trip object
         """
 
         key = self._get_key()
+        if trip_id:
+            trip = trip_id
+        else:
+            # get current trip
+            trip = cache.get_key(key)
 
-        # get current trip
-        trip = cache.get_key(key)
         # fail if a trip is not found.
         if not trip:
             raise ValueError("Trip error not found for order id {}".format(
                 order.increment_id))
 
-        trip = DriverTrip.objects.get(pk=cache.get_key(key))
+        trip = DriverTrip.objects.get(pk=trip)
 
         if self._can_complete_trip(trip):
             self._complete_trip(trip)
+            if trip_id:
+                return trip
             # delete the key
             cache.delete_key(key)
 
@@ -217,6 +230,7 @@ class TripController:
                 trip_ending_point,
                 str(driver_position),
                 60 * 60 * 24)  # expired at 1 day
+
         return trip
 
     def fetch_order_events(self, trip):
