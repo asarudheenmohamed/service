@@ -1,6 +1,10 @@
+import logging
+
 from rest_framework.views import APIView
 from app.core.auth import verify_token
 from app.store_manager.lib import InventoryFlockMessageController
+
+logger = logging.getLogger()
 
 class FlockAppApi(APIView):
     """
@@ -17,6 +21,7 @@ class FlockAppApi(APIView):
 
     def post(self, request):
         event_name = self.request.data['name']
+        logger.info('GOT {}'.format(self.request.data))
 
         if event_name not in ['client.flockmlAction']:
             return
