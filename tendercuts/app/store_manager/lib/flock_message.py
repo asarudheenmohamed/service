@@ -60,7 +60,7 @@ class InventoryFlockMessageController(object):
             template.format(product=request.product_name),
             'OoS Request', '')
 
-    def process_response(self, response):
+    def process_action(self, action_data):
         """Process the response from flock user interaction
         https://docs.flock.com/display/flockos/client.flockmlAction
 
@@ -70,7 +70,7 @@ class InventoryFlockMessageController(object):
         """
 
         # 0 -? approved, 1- rejected
-        inv_request_id, action = response['actionId'].split("-")
+        inv_request_id, action = action_data['actionId'].split("-")
         request = InventoryRequest.objects.get(pk=inv_request_id)
         request.status = action
         request.save()
