@@ -22,7 +22,7 @@ router.register(
 router.register(
     r'driver_lat_lon',
     views.DriverLocationViewSet,
-    base_name='DriverLocationViewSet')
+    base_name='DriverLocationViewcSet')
 
 router.register(
     r'inv_request',
@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'drivers', views.StoreDriverView.as_view()),
     url(r'routing', views.StoreRoutingView.as_view()),
     url(r'processing', views.OrderProcessingView.as_view()),
+    url(r'flock_auth', views.StoreManagerFlockApi.as_view()),
 ]

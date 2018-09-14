@@ -6,3 +6,4 @@ from .routing import StoreRoutingView
 from .driver_lat_lon import DriverLocationViewSet
 from .order_state import OrderProcessingView
 from .inventory_request import StoreInventoryRequestApi
+from .flock_auth import StoreManagerFlockApi
