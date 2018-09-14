@@ -30,6 +30,6 @@ class InventoryRequest(models.Model):
     product_id = models.IntegerField(blank=True, null=True)
     store_id = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
-    triggered_by = models.CharField(blank=False, null=False, max_length=300)
-    approved_by = models.CharField(blank=True, null=True, max_length=300)
+    triggered_by = models.ForeignKey(User, related_name='triggered_by')
+    approved_by = models.ForeignKey(User, blank=True, null=True, related_name='approved_by')
     is_done = models.BooleanField(default=False)
