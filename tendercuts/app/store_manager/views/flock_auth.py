@@ -47,7 +47,9 @@ class StoreManagerFlockApi(APIView):
         if resp['appId'] != settings.FLOCK_AUTH['APP_ID']:
             raise AuthenticationFailed(detail="Invalid User")
 
-        user_profile = UserProfile.objects.filter(flock_id=resp['userId'])
+        logger.info('Logging in using flock id: {}'.format(resp['userId']))
+        userId = resp['userId'].split(":")[1]
+        user_profile = UserProfile.objects.filter(flock_id=userId)
 
         if not user_profile:
             raise AuthenticationFailed(detail="Invalid User")
