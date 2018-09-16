@@ -67,6 +67,7 @@ class Graminventory(models.Model):
         app_label = "magento"
 
 class GraminventoryLatest(models.Model):
+    """View"""
     id = models.CharField(max_length=22, blank=True, null=True)
     # product_id = models.IntegerField()
     product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING)

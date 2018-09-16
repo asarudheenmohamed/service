@@ -7,28 +7,29 @@ import logging
 
 from app.inventory.models import InventoryRequest
 from app.core.lib.communication import Flock
+from app.core.models import Graminventory
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
-class InventoryFlockMessageController(object):
+class InventoryFlockAppController(object):
     """
     Update order status
     """
     PUBLISH_TEMPLATE = """<flockml>
-        has request the product: {product} to be marked as out of stock at {store}<br/>
+        has request the product: {product} to be marked as out of stock at store: {store}<br/>
         Note: This will be auto approved, in the next 15 mins<br/>
         <b><action id="{id}-1" type="sendEvent">Approve</action></b><br/>
         <b><action id="{id}-2" type="sendEvent">Reject</action></b><br/>
         </flockml>"""
 
     SUCCESS_TEMPLATE = """<flockml>
-        The product: {product} has been marked as out of stock <br/>
+        The product: {product} has been marked as out of stock at store {store}<br/>
         </flockml>"""
 
     FAILED_TEMPLATE = """<flockml>
-        FAILED: The product: {product} has not been marked as out of stock <br/>
+        FAILED: The product: {product} has not been marked as out of stock at store  {store}<br/>
         </flockml>"""
 
     def __init__(self):
@@ -61,7 +62,7 @@ class InventoryFlockMessageController(object):
         template = self.SUCCESS_TEMPLATE if success else self.FAILED_TEMPLATE
         self.flock.send_flockml(
             'SCRUM',
-            template.format(product=request.product_name),
+            template.format(product=request.product_name, store=request.store_name),
             'OoS Request', '')
 
     def process_action(self, action_data):
@@ -76,8 +77,22 @@ class InventoryFlockMessageController(object):
         # 0 -? approved, 1- rejected
         inv_request_id, action = action_data['actionId'].split("-")
         request = InventoryRequest.objects.get(pk=inv_request_id)
+        # Inventory Processing code here
+        inv = Graminventory.objects.filter(
+            product_id=request.product_id,
+            store_id=request.store_id
+        )
+
+        if not inv:
+            self.publish_respone(request, success=False)
+            return
+
+        inv = inv.first()
+        inv.qty = request.qty
+        inv.save()
+
+        # update status
         request.status = action
         request.save()
-        # Inventory Processing code here
 
         self.publish_respone(request, success=True)
