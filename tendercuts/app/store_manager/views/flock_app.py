@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from app.core.auth import verify_token
-from app.store_manager.lib import InventoryFlockMessageController
+from app.store_manager.lib import InventoryFlockAppController
 
 logger = logging.getLogger()
 
@@ -19,7 +19,7 @@ class FlockAppApi(APIView):
     permission_classes = ()
 
     def handle_actions(self, action_data):
-        InventoryFlockMessageController().process_action(action_data)
+        InventoryFlockAppController().process_action(action_data)
 
     def post(self, request):
         logger.info('GOT {}'.format(self.request.data))

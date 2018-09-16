@@ -6,7 +6,7 @@ from rest_framework import viewsets, mixins
 
 from app.inventory.models import InventoryRequest
 from app.inventory.serializers import InventoryRequestSerializer
-from app.store_manager.lib import InventoryFlockMessageController
+from app.store_manager.lib import InventoryFlockAppController
 from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
@@ -30,7 +30,7 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
 
         # extract and get the inv reuqest obj.
         inv_request_obj = InventoryRequest.objects.filter(id=inv_request.data['id']).first()
-        InventoryFlockMessageController().publish_request(inv_request_obj)
+        InventoryFlockAppController().publish_request(inv_request_obj)
 
         return inv_request
 
