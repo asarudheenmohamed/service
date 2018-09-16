@@ -7,7 +7,7 @@ from rest_framework import viewsets, mixins
 from app.inventory.models import InventoryRequest
 from app.inventory.serializers import InventoryRequestSerializer
 from app.store_manager.lib import InventoryFlockAppController
-from ..auth import StoreManagerPermission
+from ..auth import StoreManagerPermission, InventoryManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -50,6 +50,30 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
         requests = InventoryRequest.objects.filter(
             triggered_by=user,
             created_time__gt=today
+        )
+
+        return requests
+
+
+class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
+    """Endpoint to get all active trip objects.
+
+    EndPoint:
+        GET & PUT: store_manager/pending_inv_requests/
+              PUT: store_manager/pending_inv_requests/<id>
+
+    """
+
+    permission_classes = (InventoryManagerPermission,)
+    serializer_class = InventoryRequestSerializer
+
+    def get_queryset(self):
+        """Get all active inventory requests.
+        """
+        today = datetime.date.today()
+        requests = InventoryRequest.objects.filter(
+            created_time__gt=today,
+            status=InventoryRequest.Status.CREATED
         )
 
         return requests

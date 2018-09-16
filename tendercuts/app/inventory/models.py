@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import pytz
 from django.contrib.auth.models import User
+from enum import Enum
 from django.db import models
 from django.utils import timezone
 
@@ -23,6 +24,12 @@ class NotifyCustomer(models.Model):
 
 
 class InventoryRequest(models.Model):
+
+    class Status(Enum):
+        CREATED = 0
+        APPROVED = 1
+        REJECTED = 2
+
     """Model for inventory request"""
     created_time = models.DateTimeField(default=timezone.now)
 

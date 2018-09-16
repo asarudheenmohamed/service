@@ -29,6 +29,13 @@ router.register(
     views.StoreInventoryRequestApi,
     base_name='StoreInventoryRequestApi')
 
+# Get the list of pending apis and move them thro' approval
+# process.
+router.register(
+    r'pending_inv_request',
+    views.StoreInventoryApprovalApi,
+    base_name='StoreInventoryApprovalApi')
+
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'login', views.StoreManagerLoginApi.as_view()),
