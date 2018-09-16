@@ -1,6 +1,8 @@
 import logging
 
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from app.core.auth import verify_token
 from app.store_manager.lib import InventoryFlockMessageController
 
@@ -20,11 +22,11 @@ class FlockAppApi(APIView):
         InventoryFlockMessageController().process_action(action_data)
 
     def post(self, request):
-        event_name = self.request.data['name']
         logger.info('GOT {}'.format(self.request.data))
+        event_name = self.request.data['name']
 
         if event_name not in ['client.flockmlAction']:
-            return
+            return Response(status=status.HTTP_200_OK)
 
         token = request.META.get('X-Flock-Event-Token')
         resp = verify_token(token)
@@ -32,10 +34,10 @@ class FlockAppApi(APIView):
         # TODO clean up code here to handle multiple events
         self.handle_actions(self.request.data)
 
-        return
+        return Response(status=status.HTTP_200_OK)
 
     def get(self, request):
-        return
+        return Response(status=status.HTTP_200_OK)
 
 
 

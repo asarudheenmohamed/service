@@ -13,12 +13,17 @@ logger = logging.getLogger()
 
 def verify_token(token):
     """Helper method to validate the token from flock"""
-    resp = jwt.decode(
-        token,
-        settings.FLOCK_AUTH['APP_SECRET'],
-        settings.FLOCK_AUTH['APP_SECRET'])
+    try:
+        resp = jwt.decode(
+            token,
+            settings.FLOCK_AUTH['APP_SECRET'],
+            settings.FLOCK_AUTH['APP_SECRET'])
 
-    return resp
+        return resp
+    
+    # bad, we just catch any exception and return None
+    except Exception:
+        return None
 
 
 class FlockAuthentication(rest_framework.authentication.BaseAuthentication):

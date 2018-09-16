@@ -103,8 +103,8 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)
         status = self.request.query_params['status']
-        trip_id = self.request.data.get('trip_id', None)
-
+        trip_id = self.request.query_params.get('trip_id', None)
+        logger.info('iddddddddddddddddddddddddddddddddddddddddddd {}'.format(trip_id))
         logger.info(
             'To fetch the Driver:{} assigning {} state orders'.format(
                 user_id, status))

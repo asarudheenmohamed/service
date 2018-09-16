@@ -29,7 +29,7 @@ class DriverCheckIn(APIView):
             Response({'status':status})
 
         """
-        store_id = self.request.data.get('store_id', None)
+        store_id = self.request.GET.get('store_id', None)
         logger.info("To Create Check In record for the driver :{}".format(
             self.request.user))
 

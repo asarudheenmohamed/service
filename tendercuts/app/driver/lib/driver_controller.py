@@ -199,11 +199,11 @@ class DriverController(object):
 
         """
         if trip_id:
-            trip_orders = DriverTrip.objects.filter(
+            order_ids = DriverTrip.objects.filter(
                 id=trip_id).values_list(
                 'driver_order__increment_id', flat=True)
             order_obj = SalesFlatOrder.objects.filter(
-                increment_id__in=list(trip_orders),
+                increment_id__in=list(order_ids),
                 status='out_delivery')
         else:
             order_ids = DriverOrder.objects.filter(

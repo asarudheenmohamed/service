@@ -68,6 +68,7 @@ class TripController:
             self.log.info("Completing the trip for driver {}".format(trip.id))
             trip.trip_completed = True
             trip.trip_ending_time = timezone.now()
+            trip.status = 2
             trip.save()
             self.compute_driver_trip_distance(trip)
         else:
@@ -105,7 +106,7 @@ class TripController:
 
         return True
 
-    def check_and_create_trip(self, order, driver_position, trip_id=None):
+    def check_and_create_trip(self, order, driver_position, trip_id):
         """Check if a trip is available or generates a TRIP.
         param :
             order:(DriverObject): Driver object
@@ -129,7 +130,7 @@ class TripController:
                 # delete the key
                 cache.delete_key(key)
                 # re-run the logic
-                return self.check_and_create_trip(order, driver_position)
+                return self.check_and_create_trip(order, driver_position,trip_id)
 
         elif trip_id is None:
             self.log.debug("Creating a new trip for the driver {}".format(

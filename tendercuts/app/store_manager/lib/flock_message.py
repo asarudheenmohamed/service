@@ -17,10 +17,10 @@ class InventoryFlockMessageController(object):
     Update order status
     """
     PUBLISH_TEMPLATE = """<flockml>
-        has request the product: {product} to be marked as out of stock <br/>
+        has request the product: {product} to be marked as out of stock at {store}<br/>
         Note: This will be auto approved, in the next 15 mins<br/>
-        <b><action id="{id}-0" type="sendEvent" >Approve</action></b>
-        <b><action id="{id}-1" type="sendEvent" >Reject</action></b>
+        <b><action id="{id}-1" type="sendEvent">Approve</action></b><br/>
+        <b><action id="{id}-2" type="sendEvent">Reject</action></b><br/>
         </flockml>"""
 
     SUCCESS_TEMPLATE = """<flockml>
@@ -34,6 +34,10 @@ class InventoryFlockMessageController(object):
     def __init__(self):
         pass
 
+    @property
+    def flock(self):
+        return Flock("INV")
+
     def publish_request(self, request):
         """Publish the inventory change request in the flock group
 
@@ -41,12 +45,13 @@ class InventoryFlockMessageController(object):
         """
         template = self.PUBLISH_TEMPLATE.format(
             product=request.product_name,
+            store=request.store_name,
             id=request.id,
             url=settings.FLOCK_ENDPOINTS['APPROVE_INV_REQ']
         )
 
-        Flock().send_flockml('SCRUM', template, 'OoS Request', '',
-            send_as=request.triggered_by.first_name)
+        self.flock.send_flockml('SCRUM', template, 'OoS Request', '',
+            send_as=request.triggered_by.username)
 
     def publish_respone(self, request, success=True):
         """Publish the inventory change request in the flock group
@@ -54,8 +59,8 @@ class InventoryFlockMessageController(object):
         :type request: InventoryRequest
         """
         template = self.SUCCESS_TEMPLATE if success else self.FAILED_TEMPLATE
-        Flock().send_flockml(
-            settings.GROUPS['scrum'],
+        self.flock.send_flockml(
+            'SCRUM',
             template.format(product=request.product_name),
             'OoS Request', '')
 

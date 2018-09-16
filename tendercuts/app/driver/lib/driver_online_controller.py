@@ -28,8 +28,8 @@ class DriverOnlineController(object):
         DriverLoginLogout.objects.create(
             driver_id=self.driver.id, store_id=store_id)
 
-        logger.info("Created Check In detail for the driver :{}".format(
-            self.driver))
+        logger.info("Created Check In detail for the driver :{},{}".format(
+            self.driver,store_id))
 
         return True
 

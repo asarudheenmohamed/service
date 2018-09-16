@@ -8,15 +8,24 @@ from django.conf import settings
 class Flock():
     """To send the flock message."""
 
-    # USER_TOKEN = "30b4de1e-bc62-4165-ad84-601f33e4c68e"
+    # https://api.flock.co/v1/groups.list?token=30b4de1e-bc62-4165-ad84-601f33e4c68e
     # Minion
+    #USER_ID = 'u:ocpmpmrrrfh03coc'
+    USER_ID = 'u:tbbbgbtz86ub464t'
     USER_TOKEN = "a5e7f77b-a005-4134-affa-3a01da13cb42"
 
-    # https://api.flock.co/v1/groups.list?token=30b4de1e-bc62-4165-ad84-601f33e4c68e
+    APP_TOKENS = {
+        'BOT': "83887789-de6c-4f04-8bcb-163a36db40d6",
+        'INV': "24f34091-317a-49a9-803b-3f3c08e0b8ce"
+    }
 
-    def __init__(self):
+    def __init__(self, app='bot'):
         """constructor."""
-        pass
+        self.app = app
+
+    @property
+    def app_token(self):
+        return self.APP_TOKENS[self.app]
 
     def send(self, group_name, message):
         """Send flock message.
@@ -29,10 +38,11 @@ class Flock():
             Error in case of bad/invalid request
 
         """
-        url = "https://api.flock.co/v1/chat.sendMessage?to={}&text={}&token={}".format(
+        url = "https://api.flock.co/v1/chat.sendMessage?to={}&text={}&token={}&onBehalfOf={}".format(
             settings.GROUPS[group_name],
             message,
-            self.USER_TOKEN)
+            self.app_token,
+            self.USER_ID)
 
         resp = requests.get(url)
 
@@ -52,8 +62,9 @@ class Flock():
 
         """
         data = {
-                "token": self.USER_TOKEN,
+                "token": self.app_token,
                 "to": settings.GROUPS[group_name],
+                "onBehalfOf": self.USER_ID,
                 "attachments": [
                     {
                         "title": title,
