@@ -53,6 +53,11 @@ app.conf.beat_schedule = {
        'task': 'app.payment.tasks.cancel_payment_pending_orders',
        'schedule': crontab(minute='*/5')
     },
+
+    'every-fifteen-min-payment': {
+        'task': 'app.store_manager.tasks.mark_out_of_stock',
+        'schedule': crontab(minute='*/15')
+    },
 }
 
 queues = [
