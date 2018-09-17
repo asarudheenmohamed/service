@@ -3,14 +3,13 @@
 from __future__ import unicode_literals
 
 import datetime
-import itertools
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from enum import Enum
 
 from app.core.lib import cache
-from django.contrib.auth.models import User
 
 
 class DriverOrder(models.Model):
@@ -26,6 +25,11 @@ class DriverOrder(models.Model):
 
 
 class DriverTrip(models.Model):
+    class Status(Enum):
+        CREATED = 0
+        STARTED = 1
+        COMPLETED = 2
+
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_order = models.ManyToManyField(DriverOrder)
@@ -33,6 +37,7 @@ class DriverTrip(models.Model):
     km_travelled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
+    # Deprecated!gT
     trip_completed = models.BooleanField(default=False)
     auto_assigned = models.BooleanField(default=False)
     # 0, 1, 2 -> created, started, finished

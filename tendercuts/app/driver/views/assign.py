@@ -1,7 +1,6 @@
 """Endpoint for  driver assignment."""
 
 import logging
-
 from rest_framework import renderers, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -10,6 +9,8 @@ from app.core import serializers
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
 from app.driver.lib.driver_controller import DriverController
+from app.driver.models import DriverTrip
+
 
 from ..auth import DriverAuthentication
 
@@ -79,8 +80,14 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         lon = self.request.data['longitude']
         trip_id = self.request.data.get('trip_id', None)
 
-        controller = DriverController(self.request.user)
+        # only if the trip is started the user should be able to
+        # complete
+        trip = DriverTrip.objects.get(pk=trip_id)
 
+        if trip.status != DriverTrip.Status.STARTED:
+            return Response({'status': False}, status=status.HTTP_403_FORBIDDEN)
+
+        controller = DriverController(self.request.user)
         controller.complete_order(order_id, lat, lon, trip_id)
 
         logger.info("{} this order completed successfully".format(order_id))
