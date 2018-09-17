@@ -32,6 +32,7 @@ class UpdateAddressApi(views.APIView):
         lng = self.request.data['lng']
         geohash = self.request.data['geohash']
         street = self.request.data['street']
+        pincode = self.request.data.get('pincode', None)
 
         order = models.SalesFlatOrder.objects.filter(
             increment_id=order_id).first()  # type: models.SalesFlatOrder
@@ -42,7 +43,8 @@ class UpdateAddressApi(views.APIView):
             geohash=geohash,
             lat=lat,
             lng=lng,
-            street=street
+            street=street,
+            pincode=pincode
         )
 
         shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
@@ -50,7 +52,8 @@ class UpdateAddressApi(views.APIView):
             geohash=geohash,
             lat=lat,
             lng=lng,
-            street=street
+            street=street,
+            pincode=pincode
         )
 
         return response.Response({'status': True})

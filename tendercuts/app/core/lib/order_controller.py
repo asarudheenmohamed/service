@@ -149,7 +149,7 @@ class OrderAddressController():
         self.shipping_address = self.order.shipping_address.all()\
             .filter(address_type='shipping').first()
 
-    def update_address(self, geohash, lat, lng, street):
+    def update_address(self, geohash, lat, lng, street, pincode):
         """Update the shipping address of the order
 
         :param geohash:
@@ -161,6 +161,9 @@ class OrderAddressController():
         self.shipping_address.o_longitude = lng
         self.shipping_address.o_latitude = lat
         self.shipping_address.geohash = geohash
+
+        if pincode:
+            self.shipping_address.postcode = pincode
 
         street_components = self.shipping_address.street.split('\n')
         if len(street_components) < 2:

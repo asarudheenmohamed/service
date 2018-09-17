@@ -110,7 +110,8 @@ MAGE_ATTRS = {
     'GEOHASH': 244,
     'LATITUDE': 239,
     'LONGITUDE': 237,
-    'STREET': 25
+    'STREET': 25,
+    'PINCODE': 30
 }
 
 FLOCK_ENDPOINTS = {
