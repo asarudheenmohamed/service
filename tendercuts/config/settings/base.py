@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'app.inventory',
     'app.payment',
     'app.geohashing',
-    'app.rating'
+    'app.rating',
+    'app.store_manager',
+    'app.callcenter'
 ]
 
 REST_FRAMEWORK = {
