@@ -89,6 +89,6 @@ class CheckStatus(APIView):
             self.request.user))
 
         controller = DriverOnlineController(self.request.user)
-        status = controller.driver_status()
+        status, store_id = controller.driver_status()
 
-        return Response({'status': status})
+        return Response({'status': status, 'store_id': store_id})

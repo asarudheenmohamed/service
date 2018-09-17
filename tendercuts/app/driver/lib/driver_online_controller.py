@@ -4,6 +4,7 @@ import datetime
 import logging
 
 from django.utils import timezone
+from typing import Optional, Any
 
 from ..models import DriverLoginLogout
 
@@ -68,14 +69,14 @@ class DriverOnlineController(object):
         obj = DriverLoginLogout.objects.filter(
             driver=self.driver.id,
             date=datetime.date.today(),
-            check_out__isnull=True).last()
+            check_out__isnull=True).last()  # type: DriverLoginLogout
 
         logger.debug("Set driver: {} online status".format(self.driver))
 
         if obj:
-            status = True
+            status = (True, obj.store_id)
         else:
-            status = False
+            status = (False, None)
 
         logger.info("Checked online status for the driver :{}".format(
             self.driver))
