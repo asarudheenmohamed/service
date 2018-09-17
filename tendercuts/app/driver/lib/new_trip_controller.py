@@ -28,6 +28,8 @@ class DriverTripController(object):
 
             if len(orders) != 0:
                 return trip
+            else:
+                trip.status = cls.TRIP_COMPLETE
 
         return DriverTrip.objects.create(
             driver_user=user, status=cls.TRIP_CREATED)
