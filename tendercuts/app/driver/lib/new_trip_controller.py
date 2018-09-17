@@ -1,4 +1,5 @@
 from app.driver.models import DriverTrip
+from app.core.models import SalesFlatOrder
 
 
 class DriverTripController(object):
@@ -18,7 +19,15 @@ class DriverTripController(object):
             status__in=[cls.TRIP_CREATED, cls.TRIP_PROGRESS])
 
         if len(trip) > 0:
-            return trip.first()
+            trip = trip.first()
+            # check if the trip has been completed via external (mage, external)
+            order_ids = trip.driver_order.values_list('increment_id', flat=True)
+            orders = SalesFlatOrder.objects\
+                .filter(increment_id__in=list(order_ids), status__in=['out_delivery', 'processing']) \
+                .values_list('increment_id', 'status')
+
+            if len(orders) != 0:
+                return trip
 
         return DriverTrip.objects.create(
             driver_user=user, status=cls.TRIP_CREATED)

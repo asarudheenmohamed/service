@@ -3,9 +3,6 @@
 import datetime
 import logging
 
-from django.utils import timezone
-from typing import Optional, Any
-
 from ..models import DriverLoginLogout
 
 logger = logging.getLogger(__name__)
@@ -30,7 +27,7 @@ class DriverOnlineController(object):
             driver_id=self.driver.id, store_id=store_id)
 
         logger.info("Created Check In detail for the driver :{},{}".format(
-            self.driver,store_id))
+            self.driver, store_id))
 
         return True
 
