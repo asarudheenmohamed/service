@@ -73,7 +73,7 @@ class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelV
         today = datetime.date.today()
         requests = InventoryRequest.objects.filter(
             created_time__gt=today,
-            status=InventoryRequest.Status.CREATED
+            status=InventoryRequest.Status.CREATED.value
         )
 
         return requests

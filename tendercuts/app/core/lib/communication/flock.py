@@ -48,12 +48,12 @@ class Flock():
 
         resp.raise_for_status()
 
-    def send_flockml(self, group_name, products, title, description, send_as=None):
+    def send_flockml(self, group_name, flockml, title, description, send_as=None):
         """Send flockml message.
 
         params:
             group_name (unicode): group token
-            products (str): products
+            flockml (str): flockml
             title (str): title
             description(str): description
 
@@ -65,15 +65,7 @@ class Flock():
                 "token": self.app_token,
                 "to": settings.GROUPS[group_name],
                 "onBehalfOf": self.USER_ID,
-                "attachments": [
-                    {
-                        "title": title,
-                        "description": description,
-                        "views": {
-                            "flockml": products
-                        }
-                    }
-                ]
+                "flockml": flockml
             }
 
         if send_as:
