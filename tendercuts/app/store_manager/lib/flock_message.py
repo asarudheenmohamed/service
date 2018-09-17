@@ -17,20 +17,14 @@ class InventoryFlockAppController(object):
     """
     Update order status
     """
-    PUBLISH_TEMPLATE = """<flockml>
-        has request the product: {product} to be marked as out of stock at store: {store}<br/>
-        Note: This will be auto approved, in the next 15 mins<br/>
-        <b><action id="{id}-1" type="sendEvent">Approve</action></b><br/>
-        <b><action id="{id}-2" type="sendEvent">Reject</action></b><br/>
-        </flockml>"""
+    PUBLISH_TEMPLATE = """<flockml>has requested the product: <b>{product}</b> to be marked as out of stock at store: <b>{store}</b>.
+Note: This will be auto approved, in the next 15 mins
+<b><action id="{id}-1" type="sendEvent">Approve</action></b>
+<b><action id="{id}-2" type="sendEvent">Reject</action></b></flockml>"""
 
-    SUCCESS_TEMPLATE = """<flockml>
-        The product: {product} has been marked as out of stock at store {store}<br/>
-        </flockml>"""
+    SUCCESS_TEMPLATE = """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>"""
 
-    FAILED_TEMPLATE = """<flockml>
-        FAILED: The product: {product} has not been marked as out of stock at store  {store}<br/>
-        </flockml>"""
+    FAILED_TEMPLATE = """<flockml><b>FAILED:</b> The product: <b>{product}</b> has not been marked as out of stock at store  <b>{store}</b></flockml>"""
 
     def __init__(self):
         pass
