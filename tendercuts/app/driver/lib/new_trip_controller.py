@@ -20,15 +20,21 @@ class DriverTripController(object):
 
         if len(trip) > 0:
             trip = trip.first()
-            # check if the trip has been completed via external (mage, external)
             order_ids = trip.driver_order.values_list('increment_id', flat=True)
+
+            # if there are no orders in the trip, it means this is a new tip
+            if len(order_ids) == 0:
+                return trip
+
             orders = SalesFlatOrder.objects\
-                .filter(increment_id__in=list(order_ids), status__in=['out_delivery', 'processing']) \
+                .filter(increment_id__in=list(order_ids),
+                        status__in=['out_delivery', 'processing']) \
                 .values_list('increment_id', 'status')
 
             if len(orders) != 0:
                 return trip
             else:
+                # check if the trip has been completed via external (mage, external)
                 trip.status = cls.TRIP_COMPLETE
                 trip.save()
 
