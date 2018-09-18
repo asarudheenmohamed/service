@@ -31,7 +31,7 @@ class FetchRelatedOrder(viewsets.ReadOnlyModelViewSet):
         """Return a query set containing sale order of the driver."""
         order_end_id = self.request.GET.get('order_id')
         store_id = self.request.GET.get('store_id')
-        trip_id = self.request.data.get('trip_id', None)
+        trip_id = self.request.GET.get('trip_id', None)
 
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)

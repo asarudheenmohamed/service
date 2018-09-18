@@ -127,8 +127,10 @@ class DriverController(object):
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
-            raise ValueError('This order is already assigned')
+        elif not trip_id: 
+            driver_order=DriverOrder.objects.filter(increment_id=order_obj.increment_id)
+            if not driver_order:
+                raise ValueError('This order is already assigned')
 
         try:
             lat, lon = settings.STORE_LAT_LONG[int(store_id)]
