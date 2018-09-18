@@ -30,7 +30,7 @@ class GoogleApiController(object):
             key=settings.GOOGLE_MAP_DISTANCE_API['KEY'])
         self.logger = logger
 
-    def get_directions(self, origin, destination):
+    def get_directions(self, origin, destination, waypoints=None):
         """Fetch the directions for the origin to destination.
 
         Args:
@@ -41,7 +41,7 @@ class GoogleApiController(object):
 
           """
         direction_obj = self._api.directions(
-            origin=origin, destination=destination)
+            origin=origin, destination=destination, waypoints=waypoints)
 
         return direction_obj
 
@@ -136,7 +136,8 @@ class GoogleApiController(object):
         """Update eta for customer location to store location."""
 
         shipping_address = self.order.shipping_address.all()
-        shipping_address = shipping_address.filter(address_type='shipping').first()   # type: SalesFlatOrderAddress
+        shipping_address = shipping_address.filter(
+            address_type='shipping').first()   # type: SalesFlatOrderAddress
 
         store_lat_and_lng = CoreStore.objects.filter(
             store_id=self.order.store_id).values(
@@ -191,7 +192,9 @@ class GoogleApiController(object):
         # if original lat and lng is missing, then we use the data from
         # directions api.
         if not shipping_address.o_longitude:
-            logger.info("Info updating lat lng for {}".format(shipping_address.customer_address_id))
+            logger.info(
+                "Info updating lat lng for {}".format(
+                    shipping_address.customer_address_id))
             shipping_address.o_latitude = lat
             shipping_address.o_longitude = lng
         shipping_address.save()

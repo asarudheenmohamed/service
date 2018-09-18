@@ -161,9 +161,13 @@ class DriverController(object):
 
         self._record_events(driver_object, position_obj, 'out_delivery')
 
-        TripController(
-            driver=self.driver).check_and_create_trip(
-            driver_object, position_obj, trip_id)
+        if trip_id:
+            trip = DriverTrip.objects.filter(pk=trip_id)
+            DriverTripController(trip).create_sequence_number()
+        else:
+            TripController(
+                driver=self.driver).check_and_create_trip(
+                driver_object, position_obj)
 
         tasks.send_sms.delay(order, 'out_delivery')
 
@@ -305,13 +309,16 @@ class DriverController(object):
         # update current location for driver
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
-
-        try:
-            TripController(driver=self.driver).check_and_complete_trip(
-                driver_object[0], position_obj, trip_id=trip_id)
-        except ValueError:
-            # Legacy handling
-            pass
+        if trip_id:
+            trip = DriverTrip.objects.filter(pk=trip_id)
+            DriverTripController(trip).check_and_complete_trip()
+        else:
+            try:
+                TripController(driver=self.driver).check_and_complete_trip(
+                    driver_object[0], position_obj, trip_id=trip_id)
+            except ValueError:
+                # Legacy handling
+                pass
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""
