@@ -51,8 +51,6 @@ class StoreBaseController(object):
 
     def get_current_drivers(self):
         """Get the currently active drivers.
-           VERY HACKY
-        TODO: Needs to be refactored once we move driver auth into django directly.
 
         :params store_id(int): Store id
         returns: DriveTrip[]
