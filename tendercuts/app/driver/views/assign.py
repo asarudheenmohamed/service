@@ -26,7 +26,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         API: driver/assign/complete
 
     """
-    authentication_classes = (DriverAuthentication,)
+    # authentication_classes = (DriverAuthentication,)
 
     def create(self, request, *args, **kwargs):
         """Driver assignment  endpoint.
@@ -82,10 +82,11 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         # only if the trip is started the user should be able to
         # complete
-        trip = DriverTrip.objects.get(pk=trip_id)
-
-        if trip.status != DriverTrip.Status.STARTED:
-            return Response({'status': False}, status=status.HTTP_403_FORBIDDEN)
+        if trip_id:
+            trip = DriverTrip.objects.get(pk=trip_id)
+            if trip.status != DriverTrip.Status.STARTED.value:
+                return Response({'status': False},
+                                status=status.HTTP_403_FORBIDDEN)
 
         controller = DriverController(self.request.user)
         controller.complete_order(order_id, lat, lon, trip_id)
@@ -111,7 +112,6 @@ class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
         driver = CustomerSearchController.load_by_id(user_id)
         status = self.request.query_params['status']
         trip_id = self.request.query_params.get('trip_id', None)
-        logger.info('iddddddddddddddddddddddddddddddddddddddddddd {}'.format(trip_id))
         logger.info(
             'To fetch the Driver:{} assigning {} state orders'.format(
                 user_id, status))
