@@ -13,7 +13,7 @@ from app.core.lib.communication import Mail
 from app.core.models import SalesFlatOrder
 from app.driver.models.driver_order import (DriverPosition, DriverTrip,
                                             OrderEvents)
-from app.driver.lib import DriverTripController
+from app.driver.lib.new_trip_controller import DriverTripController
 
 
 class TripController:

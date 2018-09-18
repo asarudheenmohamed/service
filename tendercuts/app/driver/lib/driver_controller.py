@@ -20,6 +20,8 @@ from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
 
+from app.driver.lib.new_trip_controller import DriverTripController
+
 logger = logging.getLogger(__name__)
 
 
@@ -317,7 +319,7 @@ class DriverController(object):
         else:
             try:
                 TripController(driver=self.driver).check_and_complete_trip(
-                    driver_object[0], position_obj, trip_id=trip_id)
+                    driver_object[0], position_obj)
             except ValueError:
                 # Legacy handling
                 pass
