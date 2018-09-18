@@ -58,7 +58,7 @@ class OrderController(object):
               'This order:{} was changed to out for delivery'.format(
                   self.order.increment_id))
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",msg)
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",repr(msg))
 
         response_data
 
@@ -72,7 +72,7 @@ class OrderController(object):
            response_data = self.mage.api.tendercuts_order_apis.completeOrders(
               [{'increment_id': self.order.increment_id}])
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",msg)
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",repr(msg))
              
         return response_data
 
