@@ -42,6 +42,8 @@ xlrd
 pycrypto
 requests-toolbelt
 geopy
+# needed for flock auth
+pyjwt
 
 
 # Devlopment:

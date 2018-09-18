@@ -31,6 +31,8 @@ class FetchRelatedOrder(viewsets.ReadOnlyModelViewSet):
         """Return a query set containing sale order of the driver."""
         order_end_id = self.request.GET.get('order_id')
         store_id = self.request.GET.get('store_id')
+        trip_id = self.request.GET.get('trip_id', None)
+
         user_id = get_user_id(self.request)
         driver = CustomerSearchController.load_by_id(user_id)
 
@@ -38,6 +40,7 @@ class FetchRelatedOrder(viewsets.ReadOnlyModelViewSet):
             "Fetch related order for the store id:{} with order id's last digits {}".format(store_id, order_end_id))
 
         controller = DriverController(driver)
-        order_obj = controller.fetch_related_orders(order_end_id, store_id)
+        order_obj = controller.fetch_related_orders(
+            order_end_id, store_id, trip_id=trip_id)
 
         return order_obj

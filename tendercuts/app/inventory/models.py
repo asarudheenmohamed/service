@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import pytz
 from django.contrib.auth.models import User
+from enum import Enum
 from django.db import models
 from django.utils import timezone
 
@@ -20,3 +21,27 @@ class NotifyCustomer(models.Model):
         default=timezone.now().replace(
             hour=20, minute=0, second=0, microsecond=0, tzinfo=pytz.utc))
     is_notified = models.BooleanField(default=False)
+
+
+class InventoryRequest(models.Model):
+
+    class Status(Enum):
+        CREATED = 0
+        APPROVED = 1
+        REJECTED = 2
+
+    """Model for inventory request"""
+    created_time = models.DateTimeField(default=timezone.now)
+
+    product_id = models.IntegerField(blank=False)
+    product_name = models.CharField(max_length=300, blank=False)
+    sku = models.CharField(max_length=300, blank=False)
+
+    store_id = models.IntegerField(blank=False)
+    store_name = models.CharField(max_length=300, blank=False)
+
+    qty = models.IntegerField(blank=False)
+    triggered_by = models.ForeignKey(User, related_name='triggered_by')
+    approved_by = models.ForeignKey(User, blank=True, null=True, related_name='approved_by')
+    # 0 -> Pending, 1 -> Approved, 2 - Rejected
+    status = models.SmallIntegerField(default=False)

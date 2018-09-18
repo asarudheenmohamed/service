@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'app.inventory',
     'app.payment',
     'app.geohashing',
-    'app.rating'
+    'app.rating',
+    'app.store_manager',
+    'app.callcenter'
 ]
 
 REST_FRAMEWORK = {
@@ -332,4 +334,11 @@ GROUPS = {
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
 }
+
+FLOCK_AUTH = {
+    'APP_ID': '293d68bb-7307-4774-8644-c962eebefcd8',
+    'APP_SECRET': '7cffbef4-f106-46db-a410-a8b88528a9af',
+    'ALGO': ['HS256']
+}
+
 

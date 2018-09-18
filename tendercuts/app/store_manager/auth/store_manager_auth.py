@@ -44,4 +44,21 @@ class StoreManagerPermission(permissions.BasePermission):
 
         return True
 
+class InventoryManagerPermission(permissions.BasePermission):
+    """
+    Global permission check for inventory manager.
+    """
+
+    def has_permission(self, request, view):
+
+        user = request.user
+
+        if not user:
+            return False
+
+        if not user.groups.filter(name="Inventory Manager").exists():
+            return False
+
+        return True
+
 
