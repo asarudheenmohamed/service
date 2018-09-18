@@ -51,8 +51,6 @@ class StoreBaseController(object):
 
     def get_current_drivers(self):
         """Get the currently active drivers.
-           VERY HACKY
-        TODO: Needs to be refactored once we move driver auth into django directly.
 
         :params store_id(int): Store id
         returns: DriveTrip[]
@@ -61,6 +59,7 @@ class StoreBaseController(object):
         driver_objs = DriverLoginLogout.objects.filter(
             store_id=self.store_id).values_list(
             'driver__username', flat=True)
+
         user_ids = map(
             lambda driver: driver.split(":")[1],
             driver_objs)
@@ -76,6 +75,6 @@ class StoreBaseController(object):
             attr_name = attr_map[attr.attribute_id]
 
             data[attr.entity_id][attr_name] = attr.value
-            data[attr.entity_id]['driver_user'] = user_ids[attr.entity_id]
+            data[attr.entity_id]['driver_user'] = user_ids[str(attr.entity_id)]
 
         return list(data.values())

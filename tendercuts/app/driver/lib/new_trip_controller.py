@@ -20,23 +20,15 @@ class DriverTripController(object):
 
         if len(trip) > 0:
             trip = trip.first()
-            order_ids = trip.driver_order.values_list('increment_id', flat=True)
 
-            # if there are no orders in the trip, it means this is a new tip
-            if len(order_ids) == 0:
-                return trip
+            controller = cls(trip)  # type: DriverTripController
 
-            orders = SalesFlatOrder.objects\
-                .filter(increment_id__in=list(order_ids),
-                        status__in=['out_delivery', 'processing']) \
-                .values_list('increment_id', 'status')
-
-            if len(orders) != 0:
-                return trip
-            else:
+            if controller.is_trip_stale():
                 # check if the trip has been completed via external (mage, external)
                 trip.status = cls.TRIP_COMPLETE
                 trip.save()
+            else:
+                return trip
 
         return DriverTrip.objects.create(
             driver_user=user, status=cls.TRIP_CREATED)
@@ -59,3 +51,27 @@ class DriverTripController(object):
         """Begins the trip"""
         self.trip.status = 1
         self.trip.save()
+
+    def is_trip_stale(self):
+        """A trip is considered stale, if all orders in the trip are in one
+        of the termination states
+
+        :return: bool
+        """
+        order_ids = self.trip.driver_order.values_list('increment_id', flat=True)
+
+        # if there are no orders in the trip, it means this is a new tip
+        if len(order_ids) == 0:
+            return False
+
+        orders = SalesFlatOrder.objects \
+            .filter(increment_id__in=list(order_ids),
+                    status__in=['cancelled', 'closed', 'complete']) \
+            .values_list('increment_id', 'status')
+
+        # if all orders in the trip are in closing states, then we
+        # consider it as stale state
+        if len(orders) == len(order_ids):
+            return True
+
+        return False
