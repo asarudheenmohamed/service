@@ -32,6 +32,7 @@ class FlockAppApi(APIView):
         flock_msg_controller = InventoryFlockAppController(request)
 
         if action == 0:
+            message = ""
             req_controller.approve()
             flock_msg_controller.publish_response('APPROVED')
         else:
