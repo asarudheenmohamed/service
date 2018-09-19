@@ -109,6 +109,36 @@ def test__get_way_points(django_user):
 
 
 @pytest.mark.django_db
+def test_add_driver_orders_and_sequence_number(django_user):
+    """Test trip id based driver order update method and sequence number update.
+    Assert:
+     Checks the trip assign order
+    """
+    # mock order id
+    increment_id = SalesFlatOrder.objects.all().last().increment_id
+
+    user_obj = User.objects.get_or_create(
+        username=django_user.username)[0]
+
+    driver_order = DriverOrder.objects.create(
+        driver_user=user_obj,
+        increment_id=increment_id)
+    trip = DriverTrip.objects.create(driver_user=user_obj)
+
+    controller = DriverTripController(trip)
+    controller.add_driver_orders_and_sequence_number(driver_order)
+
+    trip = DriverTrip.objects.get(driver_user=user_obj)
+
+    assert trip.driver_order.all().last() == driver_order
+
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id).last()
+
+    # checks the order sequence number
+    assert order.sequence_number == 1
+
+
+@pytest.mark.django_db
 def test_compute_driver_trip_distance(django_user):
     """Test compute driver trip distance.
 

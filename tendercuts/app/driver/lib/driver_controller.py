@@ -129,8 +129,9 @@ class DriverController(object):
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif not trip_id: 
-            driver_order=DriverOrder.objects.filter(increment_id=order_obj.increment_id)
+        elif not trip_id:
+            driver_order = DriverOrder.objects.filter(
+                increment_id=order_obj.increment_id)
             if not driver_order:
                 raise ValueError('This order is already assigned')
 
@@ -166,8 +167,9 @@ class DriverController(object):
         self._record_events(driver_object, position_obj, 'out_delivery')
 
         if trip_id:
-            trip = DriverTrip.objects.filter(pk=trip_id).last()
-            DriverTripController(trip).create_sequence_number()
+            controller = DriverTripController.trip_obj(
+                trip_id).add_driver_orders_and_sequence_number()
+
         else:
             TripController(
                 driver=self.driver).check_and_create_trip(
@@ -304,7 +306,8 @@ class DriverController(object):
             order_obj, lat, lon)
 
         # ToDo commended a customer current location updated because location is not correct
-        # tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+        # tasks.customer_current_location.delay(order_obj.customer_id, lat,
+        # lon)
 
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
@@ -313,9 +316,10 @@ class DriverController(object):
         # update current location for driver
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
+
         if trip_id:
-            trip = DriverTrip.objects.filter(pk=trip_id).last()
-            DriverTripController(trip).check_and_complete_trip()
+            controller = DriverTripController.trip_obj(
+                trip_id).check_and_complete_trip()
         else:
             try:
                 TripController(driver=self.driver).check_and_complete_trip(

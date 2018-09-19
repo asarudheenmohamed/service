@@ -66,8 +66,12 @@ class DriverTripController(object):
             self.trip.save()
             self.compute_driver_trip_distance()
 
-    def create_sequence_number(self):
+    def add_driver_orders_and_sequence_number(self, driver_order):
         """create sequence number for the driver assigned order."""
+        if not self.trip.auto_assigned:
+            self.trip = self.trip.driver_order.add(driver_order)
+            self.trip.save()
+
         order_ids = list(
             self.trip.driver_order.all().values_list(
                 'increment_id', flat=True))
@@ -216,3 +220,9 @@ class DriverTripController(object):
         """Begins the trip"""
         self.trip.status = 1
         self.trip.save()
+
+    @classmethod
+    def trip_obj(cls, trip_id):
+        """Fetch DriverTrip object."""
+        trip = DriverTrip.objects.filter(pk=trip_id).last()
+        return cls(trip)
