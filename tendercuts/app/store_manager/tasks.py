@@ -22,7 +22,11 @@ def mark_out_of_stock():
     end = datetime.datetime.now() - datetime.timedelta(minutes=15)
 
     requests = InventoryRequest.objects.filter(
-        created_time__gt=start, created_time__lte=end)
+        created_time__gt=start,
+        created_time__lte=end,
+        status__in=InventoryRequest.Status.CREATED.value
+    )
+
 
     for request in requests:  # type: InventoryRequest
 
