@@ -4,6 +4,7 @@ from app.driver.lib.google_api_controller import GoogleApiController
 from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
                                OrderEvents)
 
+
 class DriverTripController(object):
     """New version of trip controller without the caching."""
     trip = None  # type: DriverTrip
@@ -53,7 +54,8 @@ class DriverTripController(object):
 
         """
         # check if all orders are complete.
-        order_ids = self.trip.driver_order.values_list('increment_id', flat=True)
+        order_ids = self.trip.driver_order.values_list(
+            'increment_id', flat=True)
 
         orders = SalesFlatOrder.objects.filter(increment_id__in=list(order_ids),
                                                status__in=['out_delivery', 'processing']) \
@@ -103,7 +105,7 @@ class DriverTripController(object):
         order_ids.append(order_ids.pop(order_ids.index(order_id)))
         for index, value in enumerate(order_ids, start=sequence_number):
             order = order_objects.get(increment_id=value)
-            # order.sequence_number = index
+            order.sequence_number = index
             order.save()
 
     def _get_way_points(self, trip_starting_time,
