@@ -166,7 +166,7 @@ class DriverController(object):
         self._record_events(driver_object, position_obj, 'out_delivery')
 
         if trip_id:
-            trip = DriverTrip.objects.filter(pk=trip_id)
+            trip = DriverTrip.objects.filter(pk=trip_id).last()
             DriverTripController(trip).create_sequence_number()
         else:
             TripController(
@@ -314,7 +314,7 @@ class DriverController(object):
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
         if trip_id:
-            trip = DriverTrip.objects.filter(pk=trip_id)
+            trip = DriverTrip.objects.filter(pk=trip_id).last()
             DriverTripController(trip).check_and_complete_trip()
         else:
             try:
