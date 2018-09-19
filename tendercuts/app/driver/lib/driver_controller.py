@@ -168,7 +168,7 @@ class DriverController(object):
 
         if trip_id:
             controller = DriverTripController.trip_obj(
-                trip_id).add_driver_orders_and_sequence_number()
+                trip_id).add_driver_orders_and_sequence_number(driver_object)
 
         else:
             TripController(

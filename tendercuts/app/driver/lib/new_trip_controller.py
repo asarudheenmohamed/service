@@ -69,7 +69,7 @@ class DriverTripController(object):
     def add_driver_orders_and_sequence_number(self, driver_order):
         """create sequence number for the driver assigned order."""
         if not self.trip.auto_assigned:
-            self.trip = self.trip.driver_order.add(driver_order)
+            self.trip.driver_order.add(driver_order)
             self.trip.save()
 
         order_ids = list(
