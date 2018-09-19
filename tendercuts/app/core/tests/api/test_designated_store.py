@@ -23,8 +23,6 @@ class TestAddress(object):
             attribute_id=231).last()
         address_obj.value = 'tambaram'
         address_obj.save()
-        import pdb
-        pdb.set_trace()
         response = auth_rest.get(
             "/core/designated_store/",
             {"address_id": address_obj.entity_id},
