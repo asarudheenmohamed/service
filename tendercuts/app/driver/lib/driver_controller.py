@@ -20,6 +20,8 @@ from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
 
+from app.driver.lib.new_trip_controller import DriverTripController
+
 logger = logging.getLogger(__name__)
 
 
@@ -127,8 +129,11 @@ class DriverController(object):
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
-            raise ValueError('This order is already assigned')
+        elif not trip_id:
+            driver_order = DriverOrder.objects.filter(
+                increment_id=order_obj.increment_id)
+            if not driver_order:
+                raise ValueError('This order is already assigned')
 
         try:
             lat, lon = settings.STORE_LAT_LONG[int(store_id)]
@@ -161,9 +166,14 @@ class DriverController(object):
 
         self._record_events(driver_object, position_obj, 'out_delivery')
 
-        TripController(
-            driver=self.driver).check_and_create_trip(
-            driver_object, position_obj, trip_id)
+        if trip_id:
+            controller = DriverTripController.trip_obj(
+                trip_id).add_driver_orders_and_sequence_number(driver_object)
+
+        else:
+            TripController(
+                driver=self.driver).check_and_create_trip(
+                driver_object, position_obj)
 
         tasks.send_sms.delay(order, 'out_delivery')
 
@@ -296,7 +306,8 @@ class DriverController(object):
             order_obj, lat, lon)
 
         # ToDo commended a customer current location updated because location is not correct
-        # tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+        # tasks.customer_current_location.delay(order_obj.customer_id, lat,
+        # lon)
 
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
@@ -306,12 +317,16 @@ class DriverController(object):
         position_obj = self.record_position(lat, lon)
         self._record_events(driver_object[0], position_obj, 'completed')
 
-        try:
-            TripController(driver=self.driver).check_and_complete_trip(
-                driver_object[0], position_obj, trip_id=trip_id)
-        except ValueError:
-            # Legacy handling
-            pass
+        if trip_id:
+            controller = DriverTripController.trip_obj(
+                trip_id).check_and_complete_trip()
+        else:
+            try:
+                TripController(driver=self.driver).check_and_complete_trip(
+                    driver_object[0], position_obj)
+            except ValueError:
+                # Legacy handling
+                pass
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""

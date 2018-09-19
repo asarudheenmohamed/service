@@ -56,17 +56,19 @@ class StoreBaseController(object):
         returns: DriveTrip[]
 
         """
+        # tuple of mage_id, dj_id
         driver_objs = DriverLoginLogout.objects.filter(
             store_id=self.store_id).values_list(
-            'driver__username', flat=True)
-
-        user_ids = map(
-            lambda driver: driver.split(":")[1],
-            driver_objs)
+            'driver__username', 'driver_id')
+        
+        user_ids = {}
+        for mage_id, dj_id in driver_objs:
+            entity_id = mage_id.split(":")[1]
+            user_ids[int(entity_id)] = dj_id
 
         # load the basic info of the driver
         fields = CustomerEntityVarchar.objects.filter(
-            attribute_id__in=[149, 5], entity_id__in=user_ids)
+            attribute_id__in=[149, 5], entity_id__in=user_ids.keys())
 
         data = collections.defaultdict(dict)
 
@@ -75,6 +77,7 @@ class StoreBaseController(object):
             attr_name = attr_map[attr.attribute_id]
 
             data[attr.entity_id][attr_name] = attr.value
-            data[attr.entity_id]['driver_user'] = user_ids[str(attr.entity_id)]
+            data[attr.entity_id]['driver_user'] = attr.entity_id
+            data[attr.entity_id]['id'] = user_ids[attr.entity_id]
 
         return list(data.values())

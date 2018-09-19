@@ -56,7 +56,7 @@ app.conf.beat_schedule = {
 
     'every-fifteen-min-payment': {
         'task': 'app.store_manager.tasks.mark_out_of_stock',
-        'schedule': crontab(minute='*/15')
+        'schedule': crontab(minute='*/5')
     },
 }
 
