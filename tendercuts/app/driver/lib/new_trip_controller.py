@@ -1,6 +1,8 @@
 from app.driver.models import DriverTrip
 from app.core.models import SalesFlatOrder
 from app.driver.lib.google_api_controller import GoogleApiController
+from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
+                               OrderEvents)
 
 
 class DriverTripController(object):
@@ -185,7 +187,7 @@ class DriverTripController(object):
             directions = GoogleApiController(None).get_directions(
                 starting_points, destination_point, waypoints=waypoints)
 
-            distance = directions[0]['legs']['distance']['value']
+            distance = directions[0]['legs'][0]['distance']['value']
 
             km_travelled += distance
 
