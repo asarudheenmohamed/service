@@ -1,5 +1,14 @@
+from datetime import datetime
+
+from django.contrib.auth.models import User
+
 import pytest
+from app.core.lib import cache
+from app.core.models import SalesFlatOrder
 from app.driver.lib import DriverTripController
+from app.driver.lib.trip_controller import TripController
+from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
+                               OrderEvents)
 
 
 @pytest.mark.django_db
@@ -28,10 +37,10 @@ def test_completed_trips(mock_new_driver):
     assert len(trips) == 1
 
 
-def update_driver_position(self, django_user):
+def update_driver_position(django_user):
     """Create mock driver and mock trip."""
     user_obj = User.objects.get_or_create(
-        username=django_user.username)[0]
+        username="asar")[0]
 
     order_object = SalesFlatOrder.objects.filter(status='processing')[:2]
 
@@ -77,7 +86,8 @@ def update_driver_position(self, django_user):
     return mock_driver1, mock_driver2, mock_trip, order_events
 
 
-def test__get_way_points(self, django_user):
+@pytest.mark.django_db
+def test__get_way_points(django_user):
     """Test driver way points."""
     starting_time = datetime.now()
     user_obj = User.objects.get_or_create(
@@ -93,13 +103,43 @@ def test__get_way_points(self, django_user):
         driver_position=driver_position)
 
     driver_order_events = controller._get_way_points(
-        starting_time, [order_events], django_user)
+        starting_time, [order_events], user_obj)
 
     assert driver_order_events[0] == '11.24525,80.22222'
 
 
 @pytest.mark.django_db
-def test_compute_driver_trip_distance(self, django_user):
+def test_add_driver_orders_and_sequence_number(django_user):
+    """Test trip id based driver order update method and sequence number update.
+    Assert:
+     Checks the trip assign order
+    """
+    # mock order id
+    increment_id = SalesFlatOrder.objects.all().last().increment_id
+
+    user_obj = User.objects.get_or_create(
+        username=django_user.username)[0]
+
+    driver_order = DriverOrder.objects.create(
+        driver_user=user_obj,
+        increment_id=increment_id)
+    trip = DriverTrip.objects.create(driver_user=user_obj)
+
+    controller = DriverTripController(trip)
+    controller.add_driver_orders_and_sequence_number(driver_order)
+
+    trip = DriverTrip.objects.get(driver_user=user_obj)
+
+    assert trip.driver_order.all().last() == driver_order
+
+    order = SalesFlatOrder.objects.filter(increment_id=increment_id).last()
+
+    # checks the order sequence number
+    assert order.sequence_number == 1
+
+
+@pytest.mark.django_db
+def test_compute_driver_trip_distance(django_user):
     """Test compute driver trip distance.
 
     Assarts:
@@ -110,16 +150,17 @@ def test_compute_driver_trip_distance(self, django_user):
         username=django_user.username)[0]
 
     # create a mock driver and mock trip
-    mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
+    mock_driver1, mock_driver2, mock_trip, order_events = update_driver_position(
         user_obj)
 
     trip = DriverTripController(mock_trip)
-    driver_trip = trip.compute_driver_trip_distance(mock_trip)
+    driver_trip = trip.compute_driver_trip_distance()
 
     assert (5500 < mock_trip.km_travelled < 5600)
 
 
-def test_update_sequence_number(self, django_user):
+@pytest.mark.django_db
+def test_update_sequence_number(django_user):
     """Test order delivered sequence number.
     params:
         django_user (fixture) - django user obj.
@@ -127,7 +168,7 @@ def test_update_sequence_number(self, django_user):
     """
     user_obj = User.objects.get_or_create(
         username=django_user.username)[0]
-    mock_driver1, mock_driver2, mock_trip, order_events = self.update_driver_position(
+    mock_driver1, mock_driver2, mock_trip, order_events = update_driver_position(
         user_obj)
 
     order_obj = SalesFlatOrder.objects.filter(

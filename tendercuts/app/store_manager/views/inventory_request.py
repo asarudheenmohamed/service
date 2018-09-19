@@ -30,7 +30,7 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
 
         # extract and get the inv reuqest obj.
         inv_request_obj = InventoryRequest.objects.filter(id=inv_request.data['id']).first()
-        InventoryFlockAppController().publish_request(inv_request_obj)
+        InventoryFlockAppController(inv_request).publish_request()
 
         return inv_request
 

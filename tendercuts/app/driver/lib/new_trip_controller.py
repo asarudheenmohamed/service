@@ -1,6 +1,8 @@
 from app.driver.models import DriverTrip
 from app.core.models import SalesFlatOrder
 from app.driver.lib.google_api_controller import GoogleApiController
+from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
+                               OrderEvents)
 
 
 class DriverTripController(object):
@@ -52,21 +54,26 @@ class DriverTripController(object):
 
         """
         # check if all orders are complete.
-        order_ids = trip.driver_order.values_list('increment_id', flat=True)
+        order_ids = self.trip.driver_order.values_list(
+            'increment_id', flat=True)
 
         orders = SalesFlatOrder.objects.filter(increment_id__in=list(order_ids),
                                                status__in=['out_delivery', 'processing']) \
             .values_list('increment_id', 'status')
 
         if not orders:
-            trip.status = self.TRIP_COMPLETE
-            trip.save()
+            self.trip.status = self.TRIP_COMPLETE
+            self.trip.save()
             self.compute_driver_trip_distance()
 
-    def create_sequence_number(self):
+    def add_driver_orders_and_sequence_number(self, driver_order):
         """create sequence number for the driver assigned order."""
+        if not self.trip.auto_assigned:
+            self.trip.driver_order.add(driver_order)
+            self.trip.save()
+
         order_ids = list(
-            trip_obj.driver_order.all().values_list(
+            self.trip.driver_order.all().values_list(
                 'increment_id', flat=True))
 
         order_objects = SalesFlatOrder.objects.filter(
@@ -74,8 +81,8 @@ class DriverTripController(object):
 
         for index, value in enumerate(order_ids, start=1):
             # update order sequence number
-            order.sequence_number = index
             order = order_objects.get(increment_id=value)
+            order.sequence_number = index
             order.save()
 
     def update_sequence_number(self, order_id, sequence_number):
@@ -102,7 +109,7 @@ class DriverTripController(object):
         order_ids.append(order_ids.pop(order_ids.index(order_id)))
         for index, value in enumerate(order_ids, start=sequence_number):
             order = order_objects.get(increment_id=value)
-            # order.sequence_number = index
+            order.sequence_number = index
             order.save()
 
     def _get_way_points(self, trip_starting_time,
@@ -185,7 +192,7 @@ class DriverTripController(object):
             directions = GoogleApiController(None).get_directions(
                 starting_points, destination_point, waypoints=waypoints)
 
-            distance = directions[0]['legs']['distance']['value']
+            distance = directions[0]['legs'][0]['distance']['value']
 
             km_travelled += distance
 
@@ -213,3 +220,9 @@ class DriverTripController(object):
         """Begins the trip"""
         self.trip.status = 1
         self.trip.save()
+
+    @classmethod
+    def trip_obj(cls, trip_id):
+        """Fetch DriverTrip object."""
+        trip = DriverTrip.objects.filter(pk=trip_id).last()
+        return cls(trip)

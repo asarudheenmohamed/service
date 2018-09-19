@@ -5,7 +5,7 @@ import logging
 from app.core import serializers
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_user_id
-from app.driver.lib.trip_controller import TripController
+from app.driver.lib.new_trip_controller import DriverTripController
 from rest_framework import renderers, status, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -40,7 +40,7 @@ class UpdateOrdersSequenceViewSet(viewsets.GenericViewSet):
         sequence_number = self.request.data['sequence_number']
 
         driver = self.request
-        controller = TripController(driver.user)
+        controller = DriverTripController(driver.user)
 
         try:
             controller.update_sequence_number(order_id, sequence_number)
