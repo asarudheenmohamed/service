@@ -26,7 +26,8 @@ Note: This will be auto approved, in the next 15 mins
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
         'REJECTED': """<flockml><b>REJECTED:</b> The product: <b>{product}</b> request has been rejected at <b>{store}</b></flockml>""",
         'FAILED': """<flockml><b>FAILED:</b> The product: <b>{product}</b> has not been marked as out of stock at store  <b>{store}</b></flockml>""",
-        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b> automatically</flockml>"""
+        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b> automatically</flockml>""",
+        'FINISHED': """<flockml><b>ALREADY COMPLETE:</b> The product: <b>{product}</b> request at store <b>{store}</b> has already been completed.</flockml>"""
     }
 
     def __init__(self, request):
