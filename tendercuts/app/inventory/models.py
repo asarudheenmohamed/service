@@ -30,6 +30,10 @@ class InventoryRequest(models.Model):
         APPROVED = 1
         REJECTED = 2
 
+    class INV_TYPE(Enum):
+        TODAY = 0
+        TOMO  = 1
+
     """Model for inventory request"""
     created_time = models.DateTimeField(default=timezone.now)
 
@@ -40,8 +44,28 @@ class InventoryRequest(models.Model):
     store_id = models.IntegerField(blank=False)
     store_name = models.CharField(max_length=300, blank=False)
 
+    type = models.SmallIntegerField(blank=False)
     qty = models.IntegerField(blank=False)
     triggered_by = models.ForeignKey(User, related_name='triggered_by')
     approved_by = models.ForeignKey(User, blank=True, null=True, related_name='approved_by')
     # 0 -> Pending, 1 -> Approved, 2 - Rejected
-    status = models.SmallIntegerField(default=False)
+    status = models.SmallIntegerField(default=0)
+
+
+class Inventorylog(models.Model):
+    inventorylogid = models.AutoField(primary_key=True)
+    sku = models.CharField(max_length=255, blank=True, null=True)
+    relatedto = models.CharField(max_length=255, blank=True, null=True)
+    createdat = models.DateTimeField(blank=True, null=True)
+    message = models.CharField(max_length=255, blank=True, null=True)
+    adminuser = models.CharField(max_length=255, blank=True, null=True)
+    revert = models.CharField(max_length=255, blank=True, null=True)
+    stockupdatedfrom = models.CharField(max_length=255, blank=True, null=True)
+    stockupdatedto = models.CharField(max_length=255, blank=True, null=True)
+    store_id = models.CharField(max_length=255, blank=True, null=True)
+    type_of_qty = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        app_label = "magento"
+        db_table = 'inventorylog'
