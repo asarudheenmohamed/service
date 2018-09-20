@@ -24,16 +24,19 @@ def test_get_or_create_trip(mock_new_driver):
 @pytest.mark.django_db
 def test_completed_trips(mock_new_driver):
     """Verify if we can retrieve completed trips"""
-    trip = DriverTripController.get_or_create_trip(mock_new_driver)
+    user_obj = User.objects.get_or_create(
+        username=mock_new_driver.username)[0]
+
+    trip = DriverTripController.get_or_create_trip(user_obj)
     assert trip.status == 0
 
-    trips = DriverTripController.get_completed_trips(mock_new_driver)
+    trips = DriverTripController.get_completed_trips(user_obj)
     assert len(trips) == 0
 
     trip.status = 2
     trip.save()
 
-    trips = DriverTripController.get_completed_trips(mock_new_driver)
+    trips = DriverTripController.get_completed_trips(user_obj)
     assert len(trips) == 1
 
 

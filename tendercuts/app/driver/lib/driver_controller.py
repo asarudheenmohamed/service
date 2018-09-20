@@ -132,7 +132,7 @@ class DriverController(object):
         elif not trip_id:
             driver_order = DriverOrder.objects.filter(
                 increment_id=order_obj.increment_id)
-            if not driver_order:
+            if driver_order:
                 raise ValueError('This order is already assigned')
 
         try:
@@ -158,7 +158,7 @@ class DriverController(object):
         controller.out_delivery()
 
         # update current location for driver
-        position_obj = self.record_position(lat, lon)
+        position_obj = self.record_position(lat, lon, trip_id)
 
         logger.debug(
             "updated the assigned order:{}'s lat:{} and lon:{} for the driver".format(
@@ -314,7 +314,7 @@ class DriverController(object):
         tasks.driver_stat.delay(order_id)
 
         # update current location for driver
-        position_obj = self.record_position(lat, lon)
+        position_obj = self.record_position(lat, lon, trip_id)
         self._record_events(driver_object[0], position_obj, 'completed')
 
         if trip_id:
@@ -335,7 +335,7 @@ class DriverController(object):
 
         return trip_id
 
-    def record_position(self, lat, lon):
+    def record_position(self, lat, lon, trip_id=None):
         """Create a Driver current location latitude and longitude.
 
         Params:
@@ -347,9 +347,8 @@ class DriverController(object):
             Returns DriverPosition object
 
         """
-
-        trip_id = self._check_trip()
-
+        if not trip_id:
+            trip_id = self._check_trip()
         obj = DriverPosition(
             driver_user=self.driver,
             latitude=lat,

@@ -85,7 +85,7 @@ class TestDriverController:
                 generate_mock_order.increment_id,
                 generate_mock_order.store_id,
                 12.965365,
-                80.246106)
+                80.246106, None)
         driver_position = DriverPosition.objects.filter(
             driver_user=django_user).last()
 
@@ -182,7 +182,7 @@ class TestDriverController:
         # test record position
         response = controller.record_position(
             12.965365,
-            80.246106)
+            80.246106, None)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106

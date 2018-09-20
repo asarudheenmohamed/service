@@ -22,7 +22,7 @@ class TestDriverOnlineController:
             username=mock_driver.dj_user_id)[0]
 
         controller = DriverOnlineController(user_obj)
-        status = controller.driver_checkin()
+        status = controller.driver_checkin(store_id=1)
 
         obj = DriverLoginLogout.objects.all().last()
 
@@ -43,7 +43,7 @@ class TestDriverOnlineController:
 
         controller = DriverOnlineController(user_obj)
         # create the check_in object with blank check_out time
-        controller.driver_checkin()
+        controller.driver_checkin(store_id=1)
         # update the check_out time for the created object
         status = controller.driver_checkout()
 
@@ -63,15 +63,15 @@ class TestDriverOnlineController:
 
         controller = DriverOnlineController(user_obj)
         # create object with blank check_out time
-        controller.driver_checkin()
+        controller.driver_checkin(store_id=1)
         # blank check_out time, so now driver is in online
         status = controller.driver_status()
 
-        assert status is True
+        assert status[0] is True
 
         # update check_out time for created object
         controller.driver_checkout()
         # check_out updated, therefore now driver is in offline
         status = controller.driver_status()
 
-        assert status is False
+        assert status[0] is False
