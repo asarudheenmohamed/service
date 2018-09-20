@@ -17,10 +17,9 @@ class InventoryFlockAppController(object):
     """
     Update order status
     """
-    PUBLISH_TEMPLATE = """<flockml>has requested the product: <b>{product}</b> to be marked as out of stock at store: <b>{store}</b>.
-Note: This will be auto approved, in the next 15 mins
-<b><action id="{id}-1" type="sendEvent">Approve</action></b>
-<b><action id="{id}-2" type="sendEvent">Reject</action></b></flockml>"""
+    PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b><br/>.
+{{products}}
+Note: This will be auto approved, in the next 15 mins</flockml>"""
 
     TEMPLATES = {
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
@@ -31,11 +30,22 @@ Note: This will be auto approved, in the next 15 mins
     }
 
     def __init__(self, request):
-        self.request = request
+        if not isinstance(request, list):
+            self.request = [request]
+        else:
+            self.request = request
 
     @property
     def flock(self):
         return Flock("INV")
+
+    def _construct_message(self):
+        message = ""
+        template = "{product} - {qty}<br/>"
+        for request in self.request: # type: InventoryRequest
+            message += template.format(request.product_name, request.qty)
+
+        return message
 
     def publish_request(self):
         """Publish the inventory change request in the flock group
@@ -45,10 +55,13 @@ Note: This will be auto approved, in the next 15 mins
         if not getattr(settings, 'FLOCK_ENDPOINTS', None):
             return
 
+        sample = self.request[0] #  type: InventoryRequest
+        inventory_type = "Today" if sample.type == InventoryRequest.INV_TYPE.TODAY.value \
+            else "Tomorrow"
         template = self.PUBLISH_TEMPLATE.format(
-            product=self.request.product_name,
-            store=self.request.store_name,
-            id=self.request.id,
+            products=self._construct_message(),
+            type=inventory_type,
+            store=sample.store_name,
             url=settings.FLOCK_ENDPOINTS['APPROVE_INV_REQ']
         )
 
