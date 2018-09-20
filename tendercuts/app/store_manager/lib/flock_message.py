@@ -33,7 +33,7 @@ class InventoryFlockAppController(object):
         if not isinstance(request, collections.Iterable):
             self.request = [request]
         else:
-            self.request = request
+            self.request = list(request)
 
     @property
     def flock(self):
@@ -57,7 +57,7 @@ class InventoryFlockAppController(object):
         if not getattr(settings, 'FLOCK_ENDPOINTS', None):
             return
 
-        sample = self.request[0] #  type: InventoryRequest
+        sample = self.request #  type: InventoryRequest
         inventory_type = "Today" if sample.type == InventoryRequest.INV_TYPE.TODAY.value \
             else "Tomorrow"
         template = self.PUBLISH_TEMPLATE.format(
