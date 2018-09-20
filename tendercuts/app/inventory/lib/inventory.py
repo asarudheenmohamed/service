@@ -56,11 +56,11 @@ class InventoryController:
 
         if request.type == InventoryRequest.INV_TYPE.TODAY.value:
             old_qty = self.inv.qty
-            self.inv.qty = request.qty
+            self.inv.qty = round((request.qty * request.gpu)/1000, 2)
             type = "qty"
         else:
             old_qty = self.inv.forecastqty
-            self.inv.forecastqty = request.qty
+            self.inv.forecastqty = round((request.qty * request.gpu)/1000, 2)
             type = "forecastqty"
 
         # inventory log
