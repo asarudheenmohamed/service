@@ -48,6 +48,7 @@ def test_today_qty_upload(mock_inv, mock_user):
         sku='CHK_SKU',
         store_name="THP",
         triggered_by=mock_user
+
     )
 
     log = InventoryController(mock_inv).process_inventory_request(req)
