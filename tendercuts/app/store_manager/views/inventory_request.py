@@ -91,4 +91,4 @@ class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelV
     
     def update(self, request, *args, **kwargs):
         request.data['triggered_by'] = request.user.id
-        super(StoreInventoryApprovalApi, self).update(request, *args, **kwargs)
+        return super(StoreInventoryApprovalApi, self).update(request, *args, **kwargs)
