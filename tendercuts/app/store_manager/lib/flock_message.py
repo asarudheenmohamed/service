@@ -68,7 +68,7 @@ Note: This will be auto approved, in the next 15 mins</flockml>"""
         )
 
         self.flock.send_flockml('SCRUM', template, 'OoS Request', '',
-                                send_as=self.request.triggered_by.username)
+                                send_as=sample.triggered_by.username)
 
     def publish_response(self, template):
         """Publish the inventory request's response to the flock group
