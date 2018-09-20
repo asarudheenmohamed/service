@@ -42,6 +42,9 @@ Note: This will be auto approved, in the next 15 mins
 
         :type request: InventoryRequest
         """
+        if not getattr(settings, 'FLOCK_ENDPOINTS', None):
+            return
+
         template = self.PUBLISH_TEMPLATE.format(
             product=self.request.product_name,
             store=self.request.store_name,

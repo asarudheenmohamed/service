@@ -42,3 +42,5 @@ def test_verify_create_requests(auth_sm):
         format='json',
     )
 
+    assert len(response.data) == 3
+
