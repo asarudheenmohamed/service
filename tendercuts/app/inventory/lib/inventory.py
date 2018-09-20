@@ -99,3 +99,10 @@ class InventoryRequestController:
         self.request.status = InventoryRequest.Status.REJECTED.value
         self.request.save()
 
+    def process_request(self):
+        if self.request.status == InventoryRequest.Status.APPROVED.value:
+            self.approve()
+        else:
+            self.reject()
+
+

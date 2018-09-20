@@ -6,6 +6,7 @@ from rest_framework import viewsets, mixins
 
 from app.inventory.models import InventoryRequest
 from app.inventory.serializers import InventoryRequestSerializer
+from app.inventory.lib import InventoryRequestController
 from app.store_manager.lib import InventoryFlockAppController
 from app.core.lib import drf
 from ..auth import StoreManagerPermission, InventoryManagerPermission
@@ -82,3 +83,8 @@ class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelV
         )
 
         return requests
+
+    def perform_update(self, serializer):
+        """Override to handle inventory processing"""
+        request = serializer.instance
+        InventoryRequestController(request).process_request(request)
