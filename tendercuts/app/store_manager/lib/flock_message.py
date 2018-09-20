@@ -17,9 +17,7 @@ class InventoryFlockAppController(object):
     """
     Update order status
     """
-    PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b><br/>.
-{products}
-Note: This will be auto approved, in the next 15 mins</flockml>"""
+    PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}Note: This will be auto approved, in the next 15 mins</flockml>"""
 
     TEMPLATES = {
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
