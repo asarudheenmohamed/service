@@ -41,7 +41,7 @@ class InventoryFlockAppController(object):
 
     def _construct_message(self):
         message = ""
-        template = "{product} - {qty}<br/>"
+        template = "<b>{product}</b> - <b>{qty} Packs</b><br/>"
         for request in self.request: # type: InventoryRequest
             message += template.format(
                 product=request.product_name,
