@@ -26,9 +26,11 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
     serializer_class = InventoryRequestSerializer
 
     def create(self, request, *args, **kwargs):
-        if isinstance(kwargs.get('data', {}), list):
+        import pdb
+        pdb.set_trace()
+        if isinstance(request.data, list):
             for record in request.data:
-                record.data['triggered_by'] = request.user.id
+                record['triggered_by'] = request.user.id
 
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
