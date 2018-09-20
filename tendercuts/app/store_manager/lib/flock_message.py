@@ -43,7 +43,9 @@ Note: This will be auto approved, in the next 15 mins</flockml>"""
         message = ""
         template = "{product} - {qty}<br/>"
         for request in self.request: # type: InventoryRequest
-            message += template.format(request.product_name, request.qty)
+            message += template.format(
+                product=request.product_name,
+                qty=request.qty)
 
         return message
 
