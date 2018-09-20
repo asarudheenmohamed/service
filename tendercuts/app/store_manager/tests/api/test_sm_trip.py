@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.django_db
 def test_verify_create_trip(auth_sm, mock_new_driver):
     response = auth_sm.post(
@@ -10,8 +11,7 @@ def test_verify_create_trip(auth_sm, mock_new_driver):
          },
         format='json',
     )
-
-    assert response['driver_user'] is not None
-    assert response['auto_assigned'] is True
-    assert len(response['driver_order']) > 0
+    assert response.data['driver_user'] is not None
+    assert response.data['auto_assigned'] is True
+    assert len(response.data['driver_order']) > 0
     # assert len(response.json()['trip_created_time']) > 0

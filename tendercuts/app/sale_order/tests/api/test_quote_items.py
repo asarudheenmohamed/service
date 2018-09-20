@@ -11,7 +11,7 @@ class TestQuoteItem:
     def test_quote_item_viewset(
             self,
             auth_rest,
-            generate_mock_order):
+            generate_new_order):
         """Test customer last quote item.
 
         Params:
@@ -27,6 +27,7 @@ class TestQuoteItem:
             "/sale_order/quote_items/", {
                 "store_id": generate_mock_order.store.store_id, "customer_id": generate_mock_order.customer_id},
             format='json')
+
         assert (response) is not None
         assert response.status_code == 200
         assert response.json()['results'][0][

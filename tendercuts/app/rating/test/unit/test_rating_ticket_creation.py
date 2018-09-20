@@ -37,11 +37,11 @@ class TestRatingController:
         rating.rating_tag.add(tag_obj)
         rating.save()
 
-        responce = RatingController(
+        response = RatingController(
             generate_mock_order.increment_id).create_fresh_desk_ticket()
 
-        assert response.status_code == 200
+        assert response.status_code == 201
 
-        response = FreshDesk().delete_fresh_desk_ticket(responce['id'])
+        response = FreshDesk().delete_fresh_desk_ticket(response.json()['id'])
 
         assert response.status_code == 204
