@@ -48,6 +48,7 @@ class InventoryRequest(models.Model):
     qty = models.IntegerField(blank=False)
     triggered_by = models.ForeignKey(User, related_name='triggered_by')
     approved_by = models.ForeignKey(User, blank=True, null=True, related_name='approved_by')
+    gpu = models.IntegerField()
     # 0 -> Pending, 1 -> Approved, 2 - Rejected
     status = models.SmallIntegerField(default=0)
 

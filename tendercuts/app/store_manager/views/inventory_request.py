@@ -7,13 +7,14 @@ from rest_framework import viewsets, mixins
 from app.inventory.models import InventoryRequest
 from app.inventory.serializers import InventoryRequestSerializer
 from app.store_manager.lib import InventoryFlockAppController
+from app.core.lib import drf
 from ..auth import StoreManagerPermission, InventoryManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
+class StoreInventoryRequestApi(drf.CreateListMixin, viewsets.ReadOnlyModelViewSet):
     """Endpoint to get all active trip objects.
 
     EndPoint:
@@ -29,8 +30,8 @@ class StoreInventoryRequestApi(mixins.CreateModelMixin, viewsets.ReadOnlyModelVi
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
         # extract and get the inv reuqest obj.
-        inv_request_obj = InventoryRequest.objects.get(pk=inv_request.data['id'])
-        InventoryFlockAppController(inv_request_obj).publish_request()
+        # inv_request_obj = InventoryRequest.objects.filter(id=inv_request.data['id']).first()
+        # InventoryFlockAppController(inv_request).publish_request()
 
         return inv_request
 
