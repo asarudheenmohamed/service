@@ -72,7 +72,8 @@ def test_tomo_qty_upload(mock_inv, mock_user):
         store_id=1,
         type=1,
         qty=0,
-        triggered_by=mock_user
+        triggered_by=mock_user,
+        gpu=1000
     )
 
     log = InventoryController(mock_inv).process_inventory_request(req)
