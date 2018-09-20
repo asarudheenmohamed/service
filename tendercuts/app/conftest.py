@@ -81,7 +81,9 @@ def mock_new_driver():
         username="test", email="test@test.com",
         password='test')
 
+
 @pytest.fixture
+@pytest.mark.django_db
 def mock_sm():
     user = User.objects.create_user(
         username="test1", email="test@test.com",
@@ -90,6 +92,7 @@ def mock_sm():
     group.user_set.add(user)
 
     return user
+
 
 @pytest.fixture
 def mock_im():
