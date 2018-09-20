@@ -58,6 +58,7 @@ class InventoryFlockAppController(object):
             return
 
         sample = self.request #  type: InventoryRequest
+        logger.info(sample)
         inventory_type = "Today" if sample.type == InventoryRequest.INV_TYPE.TODAY.value \
             else "Tomorrow"
         template = self.PUBLISH_TEMPLATE.format(
