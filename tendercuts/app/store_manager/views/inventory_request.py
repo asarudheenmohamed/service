@@ -26,8 +26,6 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
     serializer_class = InventoryRequestSerializer
 
     def create(self, request, *args, **kwargs):
-        import pdb
-        pdb.set_trace()
         if isinstance(request.data, list):
             for record in request.data:
                 record['triggered_by'] = request.user.id
@@ -35,8 +33,9 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
         # extract and get the inv reuqest obj.
-        # inv_request_obj = InventoryRequest.objects.filter(id=inv_request.data['id']).first()
-        # InventoryFlockAppController(inv_request).publish_request()
+        for request in inv_request.data:
+            inv_request_obj = InventoryRequest.objects.get(pk=request['id'])
+            InventoryFlockAppController(inv_request_obj).publish_request()
 
         return inv_request
 
