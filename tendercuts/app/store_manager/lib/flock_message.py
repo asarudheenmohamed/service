@@ -18,7 +18,7 @@ class InventoryFlockAppController(object):
     Update order status
     """
     PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b><br/>.
-{{products}}
+{products}
 Note: This will be auto approved, in the next 15 mins</flockml>"""
 
     TEMPLATES = {
