@@ -26,7 +26,10 @@ class StoreInventoryRequestApi(drf.CreateListMixin, viewsets.ReadOnlyModelViewSe
     serializer_class = InventoryRequestSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data['triggered_by'] = request.user.id
+        if isinstance(kwargs.get('data', {}), list):
+            for record in request.data:
+                record.data['triggered_by'] = request.user.id
+
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
         # extract and get the inv reuqest obj.
