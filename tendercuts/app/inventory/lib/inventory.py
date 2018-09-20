@@ -82,6 +82,11 @@ class InventoryRequestController:
         self.request = request
 
     def approve(self, message=""):
+
+        # double check if no orders are pending
+        if self.request.status == InventoryRequest.Status.CREATED.value:
+            return
+
         inv_controller = InventoryController.get_controller_from_request(self.request)
         inv_controller.process_inventory_request(self.request, message)
 

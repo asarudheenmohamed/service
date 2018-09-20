@@ -31,6 +31,10 @@ class FlockAppApi(APIView):
         req_controller = InventoryRequestController(request)
         flock_msg_controller = InventoryFlockAppController(request)
 
+        if request.status != InventoryRequest.Status.CREATED.value:
+            flock_msg_controller.publish_response('FINISHED')
+            return
+
         if action == '1':
             message = ""
             req_controller.approve()
