@@ -90,5 +90,5 @@ class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelV
         InventoryRequestController(request).process_request()
     
     def update(self, request, *args, **kwargs):
-        request.data['triggered_by'] = request.user.id
+        request.data['approved_by'] = request.user.id
         return super(StoreInventoryApprovalApi, self).update(request, *args, **kwargs)
