@@ -62,7 +62,7 @@ class DrivertripSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """:Override: To handle implicit many to many creation."""
         trip, status = DriverTrip.objects.get_or_create(
-            driver_user_id=self.initial_data.get('driver_user_id'),
+            driver_user_id=self.initial_data.get('driver_user'),
             status=DriverTrip.Status.CREATED.value)  # type: DriverTrip
 
         if 'driver_order' in self.initial_data:

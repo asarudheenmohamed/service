@@ -35,7 +35,7 @@ class FlockAppApi(APIView):
             flock_msg_controller.publish_response('FINISHED')
             return
 
-        if action == 0:
+        if action == '1':
             message = ""
             req_controller.approve()
             flock_msg_controller.publish_response('APPROVED')
@@ -55,7 +55,7 @@ class FlockAppApi(APIView):
         resp = verify_token(token)
 
         # TODO clean up code here to handle multiple events
-        self.handle_actions(self.request.data)
+        self.handle_inventory_action(self.request.data)
 
         return Response(status=status.HTTP_200_OK)
 
