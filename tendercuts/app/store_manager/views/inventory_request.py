@@ -33,9 +33,9 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
         inv_request = super(StoreInventoryRequestApi, self).create(request, *args, **kwargs)
 
         # extract and get the inv reuqest obj.
-        for request in inv_request.data:
-            inv_request_obj = InventoryRequest.objects.get(pk=request['id'])
-            InventoryFlockAppController(inv_request_obj).publish_request()
+        ids = map(lambda req: req['id'], inv_request.data)
+        inv_request_obj = InventoryRequest.objects.filter(ids)
+        InventoryFlockAppController(inv_request_obj).publish_request()
 
         return inv_request
 

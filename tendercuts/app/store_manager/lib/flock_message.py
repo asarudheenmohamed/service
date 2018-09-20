@@ -6,6 +6,7 @@ magento and python layer
 import logging
 
 from django.conf import settings
+from django.db.models.query import QuerySet
 
 from app.core.lib.communication import Flock
 from app.inventory.models import InventoryRequest
@@ -28,7 +29,7 @@ class InventoryFlockAppController(object):
     }
 
     def __init__(self, request):
-        if not isinstance(request, list):
+        if not isinstance(request, list) or not isinstance(request, QuerySet):
             self.request = [request]
         else:
             self.request = request
