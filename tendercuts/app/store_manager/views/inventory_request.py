@@ -14,7 +14,7 @@ from ..auth import StoreManagerPermission, InventoryManagerPermission
 logger = logging.getLogger(__name__)
 
 
-class StoreInventoryRequestApi(drf.CreateListMixin, viewsets.ReadOnlyModelViewSet):
+class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     """Endpoint to get all active trip objects.
 
     EndPoint:
