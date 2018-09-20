@@ -17,10 +17,13 @@ def mock_user():
 
 @pytest.fixture()
 def mock_inv():
-    entry = Graminventory.objects.get(
-        store_id=1, product_id=193, date=datetime.date.today())
-    if entry:
+    try:
+        entry = Graminventory.objects.get(
+            store_id=1, product_id=193, date=datetime.date.today())
         entry.delete()
+    except:
+        pass
+
     return Graminventory.objects.create(
         date=datetime.date.today(),
         product_id=193,
@@ -41,6 +44,9 @@ def test_today_qty_upload(mock_inv, mock_user):
         store_id=1,
         type=0,
         qty=0,
+        gpu=550,
+        sku='CHK_SKU',
+        store_name="THP",
         triggered_by=mock_user
     )
 
@@ -54,6 +60,7 @@ def test_today_qty_upload(mock_inv, mock_user):
     assert log.stockupdatedto == 0
     assert log.store_id == req.store_id
     assert log.type_of_qty == 'qty'
+
 
 @pytest.mark.django_db()
 def test_tomo_qty_upload(mock_inv, mock_user):

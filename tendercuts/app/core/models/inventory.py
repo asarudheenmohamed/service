@@ -58,8 +58,7 @@ class Graminventory(models.Model):
     opening = models.FloatField(blank=True, null=True)
     qty = models.FloatField(blank=True, null=True)
     expiringtoday = models.FloatField(blank=True, null=True)
-    forecastqty = models.IntegerField(blank=True, null=True)
-    forecastqty = models.IntegerField(blank=True, null=True)
+    forecastqty = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False

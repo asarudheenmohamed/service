@@ -16,7 +16,7 @@ class InventoryController:
         :param date (date):
         :return:
         """
-        inv = Graminventory.objects.get(
+        inv, _ = Graminventory.objects.get_or_create(
             product_id=product_id,
             store_id=store_id,
             date=date
@@ -53,14 +53,15 @@ class InventoryController:
 
         :type request: InventoryRequest
         """
-
         if request.type == InventoryRequest.INV_TYPE.TODAY.value:
             old_qty = self.inv.qty
-            self.inv.qty = round((request.qty * request.gpu)/1000, 2)
+            new_qty = round((request.qty * request.gpu) / 1000.0, 2)
+            self.inv.qty = new_qty
             type = "qty"
         else:
             old_qty = self.inv.forecastqty
-            self.inv.forecastqty = round((request.qty * request.gpu)/1000, 2)
+            new_qty = round((request.qty * request.gpu) / 1000.0, 2)
+            self.inv.forecastqty = new_qty
             type = "forecastqty"
 
         # inventory log
@@ -71,38 +72,60 @@ class InventoryController:
             createdat=datetime.datetime.now(),
             message=message,
             stockupdatedfrom=old_qty,
-            stockupdatedto=request.qty,
+            stockupdatedto=new_qty,
             store_id=request.store_id,
             type_of_qty=type
         )
 
 
 class InventoryRequestController:
+
+    @classmethod
+    def auto_approve_expired_request(cls, test_mode=False):
+        start = datetime.date.today()
+        end = datetime.datetime.now() - datetime.timedelta(minutes=15)
+        if test_mode:
+            end = datetime.datetime.now()
+
+        requests = InventoryRequest.objects.filter(
+            created_time__gt=start,
+            created_time__lte=end,
+            status=InventoryRequest.Status.CREATED.value
+        )
+
+        for request in requests:  # type: InventoryRequest
+            message = "Marked done automatically for request raised by {}".format(
+                request.triggered_by.email
+            )
+            req_controller = cls(request)
+            req_controller.approve(message)
+
+        return requests
+
     def __init__(self, request):
         self.request = request
 
-    def approve(self, message=""):
+    def approve(self, message):
+        self.request.status = InventoryRequest.Status.APPROVED.value;
+        self.request.save()
 
+        self._process_inventory(message)
+
+    def reject(self):
+        self.request.status = InventoryRequest.Status.REJECTED.value;
+        self.request.save()
+
+    def _process_inventory(self, message):
+        """Core method to process the inventory."""
         # double check if no orders are pending
         if self.request.status == InventoryRequest.Status.CREATED.value:
             return
 
         inv_controller = InventoryController.get_controller_from_request(self.request)
-        inv_controller.process_inventory_request(self.request, message)
+        log = inv_controller.process_inventory_request(self.request, message)
 
-        # update status
-        self.request.status = InventoryRequest.Status.APPROVED.value
-        self.request.save()
-
-    def reject(self):
-        # update status
-        self.request.status = InventoryRequest.Status.REJECTED.value
-        self.request.save()
-
-    def process_request(self):
+    def process_request(self, message=""):
+        """Called from the view, the values are already updated, so we only
+        process the inventory"""
         if self.request.status == InventoryRequest.Status.APPROVED.value:
-            self.approve()
-        else:
-            self.reject()
-
-
+            self._process_inventory(message)

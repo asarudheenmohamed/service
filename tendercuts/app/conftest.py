@@ -81,8 +81,7 @@ def mock_new_driver():
         username="test", email="test@test.com",
         password='test')
 
-@pytest.fixture(scope="session")
-@pytest.mark.django_db
+@pytest.fixture
 def mock_sm():
     user = User.objects.create_user(
         username="test1", email="test@test.com",
@@ -91,6 +90,17 @@ def mock_sm():
     group.user_set.add(user)
 
     return user
+
+@pytest.fixture
+def mock_im():
+    user = User.objects.create_user(
+        username="test3", email="test3@test.com",
+        password='test')
+    group, _ = Group.objects.get_or_create(name='Inventory Manager')
+    group.user_set.add(user)
+
+    return user
+
 
 @pytest.fixture(scope="module")
 def generate_mock_order(request, mock_user):

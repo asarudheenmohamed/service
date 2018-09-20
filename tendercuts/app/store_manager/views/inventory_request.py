@@ -86,8 +86,9 @@ class StoreInventoryApprovalApi(mixins.UpdateModelMixin, viewsets.ReadOnlyModelV
 
     def perform_update(self, serializer):
         """Override to handle inventory processing"""
-        request = serializer.instance
-        InventoryRequestController(request).process_request()
+        request = serializer.save()
+        message = "Approved by {}".format(self.request.user.email)
+        InventoryRequestController(request).process_request(message=message)
     
     def update(self, request, *args, **kwargs):
         request.data['approved_by'] = request.user.id

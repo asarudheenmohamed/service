@@ -1,14 +1,13 @@
 import logging
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from app.core.auth import verify_token
-from app.store_manager.lib import InventoryFlockAppController
-from app.inventory.lib import InventoryController, InventoryRequestController
-from app.inventory.models import InventoryRequest
 
 logger = logging.getLogger()
+
 
 class FlockAppApi(APIView):
     """
@@ -21,28 +20,28 @@ class FlockAppApi(APIView):
     permission_classes = ()
 
     def handle_inventory_action(self, action_data):
-        """Callback to handle inventory action changes
+        """DEPRECATED: Callback to handle inventory action changes
         ActionId contains the primary key (request-1001)
         """
         # 0 -? approved, 1- rejected
-        inv_request_id, action = action_data['actionId'].split("-")
-        request = InventoryRequest.objects.get(pk=inv_request_id)
-
-        req_controller = InventoryRequestController(request)
-        flock_msg_controller = InventoryFlockAppController(request)
-
-        if request.status != InventoryRequest.Status.CREATED.value:
-            flock_msg_controller.publish_response('FINISHED')
-            return
-
-        if action == '1':
-            message = ""
-            req_controller.approve()
-            flock_msg_controller.publish_response('APPROVED')
-        else:
-            req_controller.reject()
-            flock_msg_controller.publish_response('REJECTED')
-
+        # inv_request_id, action = action_data['actionId'].split("-")
+        # request = InventoryRequest.objects.get(pk=inv_request_id)
+        #
+        # req_controller = InventoryRequestController(request)
+        # flock_msg_controller = InventoryFlockAppController(request)
+        #
+        # if request.status != InventoryRequest.Status.CREATED.value:
+        #     flock_msg_controller.publish_response('FINISHED')
+        #     return
+        #
+        # if action == '1':
+        #     message = ""
+        #     req_controller.approve()
+        #     flock_msg_controller.publish_response('APPROVED')
+        # else:
+        #     req_controller.reject()
+        #     flock_msg_controller.publish_response('REJECTED')
+        pass
 
     def post(self, request):
         logger.info('GOT {}'.format(self.request.data))
@@ -61,10 +60,3 @@ class FlockAppApi(APIView):
 
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
-
-
-
-
-
-
-
