@@ -209,26 +209,22 @@ class DriverController(object):
 
         """
         if trip_id:
-            trip = DriverTrip.objects.filter(id=trip_id)
-            if trip.last().auto_assigned:
-                order_ids = trip.values_list(
-                    'driver_order__increment_id', flat=True)
+            order_ids = DriverTrip.objects.filter(
+                id=trip_id).values_list(
+                'driver_order__increment_id', flat=True)
+            order_obj = SalesFlatOrder.objects.filter(
+                increment_id__in=list(order_ids),
+                status='out_delivery')
+        else:
+            order_ids = DriverOrder.objects.filter(
+                driver_user=self.driver,
+                created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
+                'increment_id',
+                flat=True)
 
-                order_obj = SalesFlatOrder.objects.filter(
-                    increment_id__in=list(order_ids),
-                    status='out_delivery')
-
-                return order_obj
-
-        order_ids = DriverOrder.objects.filter(
-            driver_user=self.driver,
-            created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
-            'increment_id',
-            flat=True)
-
-        order_obj = SalesFlatOrder.objects.filter(
-            increment_id__in=list(order_ids),
-            status=status)[:10]
+            order_obj = SalesFlatOrder.objects.filter(
+                increment_id__in=list(order_ids),
+                status=status)[:10]
         logger.debug(
             'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
                 order_ids))
@@ -247,18 +243,22 @@ class DriverController(object):
 
         """
         if trip_id:
-            trip_orders = DriverTrip.objects.filter(
-                id=trip_id).values_list(
-                'driver_order__increment_id', flat=True)
+            trip = DriverTrip.objects.filter(id=trip_id)
+            if trip.last().auto_assigned:
+                trip_orders = trip.values_list(
+                    'driver_order__increment_id', flat=True)
+
             order_obj = SalesFlatOrder.objects.filter(
                 increment_id__in=list(trip_orders),
                 store_id=store_id,
                 status='processing')
-        else:
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__endswith=order_end_id,
-                store_id=store_id,
-                status='processing')
+
+                return order_obj
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id__endswith=order_end_id,
+            store_id=store_id,
+            status='processing')
 
         logger.debug(
             "Fetched the related orders for the store id:{} with order last digits".format(
