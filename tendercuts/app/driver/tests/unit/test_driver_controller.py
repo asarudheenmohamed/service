@@ -158,9 +158,11 @@ class TestDriverController:
 
         with mock.patch.object(TripController, 'check_and_complete_trip',
                                mock.Mock(return_value=None)):
+            with mock.patch.object(DriverController, '_check_trip',
+                                   mock.Mock(return_value=None)):
 
-            orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
-                                               80.246106, None)
+                orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
+                                                   80.246106, None)
         print orders
 
     def test_order_positions(
@@ -180,9 +182,11 @@ class TestDriverController:
 
         controller = DriverController(user)
         # test record position
-        response = controller.record_position(
-            12.965365,
-            80.246106, None)
+        with mock.patch.object(DriverController, '_check_trip',
+                               mock.Mock(return_value=None)):
+            response = controller.record_position(
+                12.965365,
+                80.246106, None)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106
