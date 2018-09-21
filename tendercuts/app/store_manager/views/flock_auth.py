@@ -45,5 +45,6 @@ class StoreManagerFlockApi(APIView):
             'lastname': user.last_name,
             'email': user.email,
             'token': token.key,
-            'groups': [group.name for group in user.groups.all()]
+            'groups': [group.name for group in user.groups.all()],
+            'store_id': user.userprofile.store_id
         })
