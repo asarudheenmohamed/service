@@ -74,7 +74,7 @@ def mock_driver(request):
     return customer
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 @pytest.mark.django_db
 def mock_new_driver():
     return User.objects.create_user(

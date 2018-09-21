@@ -46,7 +46,8 @@ def fetch_all_rating_tags(cache, auth_rest):
 
 
 @given('A customer shares feedback for the product purchased on rating <comments><rating>')
-def customer_create_a_rating(cache, auth_rest, comments, rating):
+def customer_create_a_rating(
+        cache, auth_rest, mock_django_user, comments, rating):
     """Assign the order.
 
     params:
