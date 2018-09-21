@@ -248,10 +248,10 @@ class DriverController(object):
                 trip_orders = trip.values_list(
                     'driver_order__increment_id', flat=True)
 
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__in=list(trip_orders),
-                store_id=store_id,
-                status='processing')
+                order_obj = SalesFlatOrder.objects.filter(
+                   increment_id__in=list(trip_orders),
+                   store_id=store_id,
+                   status='processing')
 
                 return order_obj
 
