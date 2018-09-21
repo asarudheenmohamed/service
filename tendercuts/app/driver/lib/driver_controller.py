@@ -209,22 +209,26 @@ class DriverController(object):
 
         """
         if trip_id:
-            order_ids = DriverTrip.objects.filter(
-                id=trip_id).values_list(
-                'driver_order__increment_id', flat=True)
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__in=list(order_ids),
-                status='out_delivery')
-        else:
-            order_ids = DriverOrder.objects.filter(
-                driver_user=self.driver,
-                created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
-                'increment_id',
-                flat=True)
+            trip = DriverTrip.objects.filter(id=trip_id)
+            if trip.last().auto_assigned:
+                order_ids = trip.values_list(
+                    'driver_order__increment_id', flat=True)
 
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__in=list(order_ids),
-                status=status)[:10]
+                order_obj = SalesFlatOrder.objects.filter(
+                    increment_id__in=list(order_ids),
+                    status='out_delivery')
+
+                return order_obj
+
+        order_ids = DriverOrder.objects.filter(
+            driver_user=self.driver,
+            created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
+            'increment_id',
+            flat=True)
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id__in=list(order_ids),
+            status=status)[:10]
         logger.debug(
             'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
                 order_ids))
