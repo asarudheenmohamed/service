@@ -65,6 +65,7 @@ def customer_create_a_rating(cache, auth_rest, comments, rating):
         format='json')
 
     assert (response) is not None
+    assert response.data == 'test'
     assert response.status_code == 201
     assert response.data['status'] == True
 
