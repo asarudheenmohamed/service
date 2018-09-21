@@ -26,7 +26,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         API: driver/assign/complete
 
     """
-    # authentication_classes = (DriverAuthentication,)
+    authentication_classes = (DriverAuthentication,)
 
     def create(self, request, *args, **kwargs):
         """Driver assignment  endpoint.
