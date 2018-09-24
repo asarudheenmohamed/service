@@ -11,6 +11,7 @@ from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.core.models.customer import FlatCustomer
 from app.driver.constants import DRIVER_GROUP
+from rest_framework.authtoken.models import Token
 
 
 @pytest.fixture
@@ -72,6 +73,17 @@ def mock_driver(request):
     customer = CustomerSearchController.load_by_id(customer_id)
 
     return customer
+
+
+@pytest.fixture
+def auth_sm(mock_sm):
+    """Auth'd Api (new version) client to create requests."""
+    # A bloody hack to ensure that the user is created in DJ.
+    token, created = Token.objects.get_or_create(user=mock_sm)
+
+    client = APIClient()
+    client.force_authenticate(user=mock_sm)
+    return client
 
 
 @pytest.fixture(scope="module")

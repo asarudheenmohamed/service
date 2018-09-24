@@ -8,7 +8,7 @@ import pytest
 from pytest_bdd import given, scenario, then, when
 import app.core.lib.magento as mage
 from app.core.lib.order_controller import OrderController
-from app.driver.models import DriverOrder, DriverPosition, OrderEvents
+from app.driver.models import DriverOrder, DriverPosition, OrderEvents, DriverTrip
 from django.contrib.auth.models import User
 from app.core.models import SalesFlatOrder
 
@@ -28,6 +28,24 @@ def test_driver_order_complete():
     'Driver Update a order sequence number',
 )
 def test_driver_update_order_sequence():
+    pass
+
+
+@pytest.mark.django_db
+@scenario(
+    'driver.feature',
+    'Auto generated driver Trip',
+)
+def test_auto_generated_driver_trip():
+    pass
+
+
+@pytest.mark.django_db
+@scenario(
+    'driver.feature',
+    'Driver generate a trip',
+)
+def driver_generate_trip():
     pass
 
 
@@ -66,6 +84,67 @@ def fetch_related_order(cache, auth_driver_rest,
     cache['store_id'] = store_id
 
 
+@given('check the driver current trip <assign> details')
+@given('a store manager <assign> order for the driver')
+def store_manager_assign_order(
+        cache, auth_sm, auth_driver_rest, assign, generate_mock_order):
+    """store manage auto assign the order.
+
+    params:
+        generate_mock_order (fixture) - generates a mock order.
+        mock_driver(obj)- driver obj
+        auth_sm(fixture)- store manager auth
+    """
+    response = auth_sm.post(
+        "/store_manager/trips/",
+        {'driver_user': auth_driver_rest.handler._force_user.id,
+         'auto_assigned': True,
+         'driver_order': [generate_mock_order.increment_id]
+         },
+        format='json',
+    )
+
+    assert response.data['driver_user'] is not None
+    assert str(response.data['auto_assigned']) == assign
+    assert len(response.data['driver_order']) > 0
+
+
+@given('a driver create a driver trip <driver_order>')
+@given('a driver get a current trip details <driver_order>')
+def driver_current_trip(cache, driver_order, auth_driver_rest):
+    """Test driver current driver trip.
+
+    params:
+        auth_driver_rest (fixture) - auth driver rest.
+
+    """
+    response = auth_driver_rest.get(
+        "/driver/trip/get_current_trip/",
+        format='json',
+    )
+    cache["trip_id"] = response.data['id']
+
+    assert response.data['driver_user'] is not None
+    assert response.data['auto_assigned'] == True
+    assert len(response.data['driver_order']) == int(driver_order)
+
+
+@given('a driver start a trip')
+def start_trip(auth_driver_rest):
+    """Test driver start a trip.
+
+    params:
+        auth_driver_rest (fixture) - driver auth.
+
+    """
+    response = auth_driver_rest.get(
+        "/driver/trip/start/",
+        format='json',
+    )
+
+    assert response.data['status'] is True
+
+
 @given('a driver is assigned to the order at <latitude><longitude>')
 def driver_controller(cache, auth_driver_rest, latitude, longitude):
     """Assign the order.
@@ -74,12 +153,14 @@ def driver_controller(cache, auth_driver_rest, latitude, longitude):
         generate_mock_order (fixture) - generates a mock order.
 
     """
+
     response = auth_driver_rest.post(
         "/driver/assign/",
         {'order_id': cache['increment_id'],
          'store_id': cache['store_id'],
          'latitude': latitude,
          'longitude': longitude,
+         'trip_id': cache.get('trip_id', None)
          },
         format='json')
 
@@ -118,7 +199,7 @@ def driver_position_update(
 
 
 @when('the order should be completed and the driver location for <latitude><longitude>')
-def order_complete(cache, mock_driver, auth_driver_rest, latitude, longitude):
+def order_complete(cache, auth_driver_rest, latitude, longitude):
     """Assert if order complete.
 
     params:
@@ -128,15 +209,26 @@ def order_complete(cache, mock_driver, auth_driver_rest, latitude, longitude):
         the status of the order.
 
     """
+    trip_id = cache.get('trip_id', None)
     response = auth_driver_rest.post(
         "/driver/assign/complete/",
         {'order_id': cache['increment_id'],
          'latitude': latitude,
-         'longitude': longitude},
+         'longitude': longitude,
+         'trip_id': trip_id
+         },
         format='json')
 
     assert (response) is not None
     assert response.status_code == 201
+
+    driver_trip = DriverTrip.objects.filter(
+        driver_order__increment_id__in=[
+            cache['increment_id']]).last()
+
+    assert (driver_trip) is not None
+    assert driver_trip.status == DriverTrip.Status.COMPLETED.value
+    assert driver_trip.trip_completed == True
 
 
 @then('driver update the sequence number for the B customer order')
@@ -179,7 +271,8 @@ def test_driver_stat(cache, auth_driver_rest):
 
 
 @given("B customer generate a new order and driver assigned the order at <latitude><longitude>")
-def test_generate_new_order(cache, auth_driver_rest, generate_new_order, latitude, longitude):
+def test_generate_new_order(cache, auth_driver_rest,
+                            generate_new_order, latitude, longitude):
     """A customer place a new order."""
     generate_new_order.status = 'processing'
     generate_new_order.save()
@@ -191,6 +284,7 @@ def test_generate_new_order(cache, auth_driver_rest, generate_new_order, latitud
          'store_id': cache['store_id'],
          'latitude': latitude,
          'longitude': longitude,
+         'trip_id': cache.get('trip_id', None)
          },
         format='json')
 
