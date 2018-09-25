@@ -25,4 +25,5 @@ router.register(
 
 urlpatterns = [
     url(r'', include(router.urls)),
+    url(r'check_rating', views.OrderRating.as_view()),
 ]
