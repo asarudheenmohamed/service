@@ -1,6 +1,6 @@
 # virtualenv
 # virtualenvwrapper
-# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite mysql-client
 # brew install chromedriver
 uwsgi
 django==1.10.6
