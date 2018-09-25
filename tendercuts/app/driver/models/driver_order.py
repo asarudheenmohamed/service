@@ -25,6 +25,7 @@ class DriverOrder(models.Model):
 
 
 class DriverTrip(models.Model):
+
     class Status(Enum):
         CREATED = 0
         STARTED = 1
@@ -84,8 +85,8 @@ class DriverPosition(models.Model):
         null=True,
         related_name="driver_position")
     driver_id = models.IntegerField(blank=True, null=True)
-    latitude = models.FloatField(max_length=100)
-    longitude = models.FloatField(max_length=100)
+    latitude = models.FloatField(max_length=100, blank=True, null=True)
+    longitude = models.FloatField(max_length=100, blank=True, null=True)
     recorded_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -94,10 +95,10 @@ class DriverPosition(models.Model):
 
 class OrderEvents(models.Model):
     """Driver Events model."""
-    driver = models.ForeignKey(DriverOrder)
-    driver_position = models.ForeignKey(DriverPosition)
+    driver = models.ForeignKey(DriverOrder, blank=True, null=True)
+    driver_position = models.ForeignKey(DriverPosition, blank=True, null=True)
     updated_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=200)
+    status = models.CharField(max_length=200, blank=True, null=True)
 
 
 class DriverStat(models.Model):
@@ -110,7 +111,7 @@ class DriverStat(models.Model):
 
 class DriverLoginLogout(models.Model):
     """Driver Login Logout model."""
-    driver = models.ForeignKey(User)
+    driver = models.ForeignKey(User, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     check_in = models.TimeField(auto_now=True)
     check_out = models.TimeField(blank=True, null=True)

@@ -68,7 +68,7 @@ class DrivertripSerializer(serializers.ModelSerializer):
         if 'driver_order' in self.initial_data:
             for order in self.initial_data.get('driver_order'):
                 order, status = DriverOrder.objects.get_or_create(
-                    driver_user_id=self.initial_data.get('driver_user_id'), increment_id=order)
+                    driver_user_id=self.initial_data.get('driver_user'), increment_id=order)
                 trip.driver_order.add(order)
 
             trip.auto_assigned = True

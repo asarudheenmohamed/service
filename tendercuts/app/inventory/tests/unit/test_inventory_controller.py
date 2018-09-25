@@ -17,9 +17,9 @@ def mock_user():
 
 @pytest.fixture()
 def mock_inv():
-    try:
-        entry = Graminventory.objects.get(
-            store_id=1, product_id=193, date=datetime.date.today())
+    entry = Graminventory.objects.filter(
+        store_id=1, product_id=193, date=datetime.date.today())
+    if entry:
         entry.delete()
     except:
         pass
@@ -48,11 +48,13 @@ def test_today_qty_upload(mock_inv, mock_user):
         sku='CHK_SKU',
         store_name="THP",
         triggered_by=mock_user
+
     )
 
     log = InventoryController(mock_inv).process_inventory_request(req)
 
-    new_inv = Graminventory.objects.get(pk=mock_inv.graminventoryid)  # type: Graminventory
+    new_inv = Graminventory.objects.get(
+        pk=mock_inv.graminventoryid)  # type: Graminventory
     assert new_inv.qty == 0
 
     assert log.sku == req.sku
@@ -71,12 +73,14 @@ def test_tomo_qty_upload(mock_inv, mock_user):
         store_id=1,
         type=1,
         qty=0,
-        triggered_by=mock_user
+        triggered_by=mock_user,
+        gpu=1000
     )
 
     log = InventoryController(mock_inv).process_inventory_request(req)
 
-    new_inv = Graminventory.objects.get(pk=mock_inv.graminventoryid)  # type: Graminventory
+    new_inv = Graminventory.objects.get(
+        pk=mock_inv.graminventoryid)  # type: Graminventory
     assert new_inv.forecastqty == 0
 
     assert log.sku == req.sku

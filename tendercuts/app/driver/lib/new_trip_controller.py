@@ -41,6 +41,7 @@ class DriverTripController(object):
                 # check if the trip has been completed via external (mage,
                 # external)
                 trip.status = cls.TRIP_COMPLETE
+                self.trip.trip_completed = True
                 trip.save()
 
         return DriverTrip.objects.create(
@@ -63,6 +64,7 @@ class DriverTripController(object):
 
         if not orders:
             self.trip.status = self.TRIP_COMPLETE
+            self.trip.trip_completed = True
             self.trip.save()
             self.compute_driver_trip_distance()
 
@@ -93,6 +95,7 @@ class DriverTripController(object):
             sequence_number(str): order sequence number
 
         """
+
         trip_obj = DriverTrip.objects.get(
             driver_order__increment_id=order_id)
         order_ids = list(
@@ -226,3 +229,4 @@ class DriverTripController(object):
         """Fetch DriverTrip object."""
         trip = DriverTrip.objects.filter(pk=trip_id).last()
         return cls(trip)
+\

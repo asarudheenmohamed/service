@@ -22,5 +22,6 @@ def test_get_or_create_trip_api(auth_new_driver_rest):
     assert len(response.json()['trip_created_time']) > 0
 
     response = auth_new_driver_rest.get(
-        "/driver/trip/current/start/", format='json')
+        "/driver/trip/start/", format='json')
+
     assert response.json()['status'] is True

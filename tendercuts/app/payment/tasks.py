@@ -21,7 +21,6 @@ def cancel_payment_pending_orders():
 
     We look for orders in the last 30 mins
     """
-    return
     THRESHOLD = 30 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)

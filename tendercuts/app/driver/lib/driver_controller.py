@@ -163,7 +163,6 @@ class DriverController(object):
         logger.debug(
             "updated the assigned order:{}'s lat:{} and lon:{} for the driver".format(
                 self.driver.username, lat, lon))
-
         self._record_events(driver_object, position_obj, 'out_delivery')
 
         if trip_id:
@@ -243,18 +242,22 @@ class DriverController(object):
 
         """
         if trip_id:
-            trip_orders = DriverTrip.objects.filter(
-                id=trip_id).values_list(
-                'driver_order__increment_id', flat=True)
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__in=list(trip_orders),
-                store_id=store_id,
-                status='processing')
-        else:
-            order_obj = SalesFlatOrder.objects.filter(
-                increment_id__endswith=order_end_id,
-                store_id=store_id,
-                status='processing')
+            trip = DriverTrip.objects.filter(id=trip_id)
+            if trip.last().auto_assigned:
+                trip_orders = trip.values_list(
+                    'driver_order__increment_id', flat=True)
+
+                order_obj = SalesFlatOrder.objects.filter(
+                   increment_id__in=list(trip_orders),
+                   store_id=store_id,
+                   status='processing')
+
+                return order_obj
+
+        order_obj = SalesFlatOrder.objects.filter(
+            increment_id__endswith=order_end_id,
+            store_id=store_id,
+            status='processing')
 
         logger.debug(
             "Fetched the related orders for the store id:{} with order last digits".format(
@@ -314,9 +317,9 @@ class DriverController(object):
         tasks.driver_stat.delay(order_id)
 
         # update current location for driver
+
         position_obj = self.record_position(lat, lon, trip_id)
         self._record_events(driver_object[0], position_obj, 'completed')
-
         if trip_id:
             controller = DriverTripController.trip_obj(
                 trip_id).check_and_complete_trip()
@@ -330,6 +333,12 @@ class DriverController(object):
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""
+        trip = DriverTrip.objects.filter(driver_user=self.driver,
+                                         status__in=[DriverTrip.Status.CREATED.value,
+                                                     DriverTrip.Status.STARTED.value]).last()
+        if trip:
+            return trip.id
+
         key = '{}:{}'.format(TripController.PREFIX, self.driver.username)
         trip_id = cache.get_key(key)
 
@@ -347,6 +356,7 @@ class DriverController(object):
             Returns DriverPosition object
 
         """
+
         if not trip_id:
             trip_id = self._check_trip()
         obj = DriverPosition(

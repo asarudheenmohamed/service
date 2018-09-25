@@ -110,3 +110,5 @@ class FreshDesk():
                 "ENDPOINT"] + '/{}'.format(ticket_id),
             auth=(settings.FRESHDESK["KEY"], settings.FRESHDESK["PASSWORD"]),
             headers=headers)
+
+        return response

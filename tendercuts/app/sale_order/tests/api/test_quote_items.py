@@ -11,12 +11,12 @@ class TestQuoteItem:
     def test_quote_item_viewset(
             self,
             auth_rest,
-            generate_mock_order):
+            generate_new_order):
         """Test customer last quote item.
 
         Params:
             auth_rest(pytest fixture):user requests
-            generate_mock_order(obj): sale order object
+            generate_new_order(obj): sale order object
 
         Asserts:
             Check response not equal to None
@@ -25,9 +25,10 @@ class TestQuoteItem:
         """
         response = auth_rest.get(
             "/sale_order/quote_items/", {
-                "store_id": generate_mock_order.store.store_id, "customer_id": generate_mock_order.customer_id},
+                "store_id": generate_new_order.store.store_id, "customer_id": generate_new_order.customer_id},
             format='json')
+
         assert (response) is not None
         assert response.status_code == 200
         assert response.json()['results'][0][
-            'customer_id'] == generate_mock_order.customer_id
+            'customer_id'] == generate_new_order.customer_id
