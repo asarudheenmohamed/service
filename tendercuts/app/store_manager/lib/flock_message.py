@@ -33,7 +33,7 @@ class InventoryFlockAppController(object):
         for request in requests:
             flock_msg_controller = cls(request)
             flock_msg_controller.publish_response('AUTO')
-
+    #
     def __init__(self, request):
         if not isinstance(request, collections.Iterable):
             self.request = [request]
@@ -72,7 +72,7 @@ class InventoryFlockAppController(object):
             url=settings.FLOCK_ENDPOINTS['APPROVE_INV_REQ']
         )
 
-        self.flock.send_flockml('SCRUM', template, 'OoS Request', '',
+        self.flock.send_flockml('INVENTORY', template, 'OoS Request', '',
                                 send_as=sample.triggered_by.username)
 
     def publish_response(self, template):
@@ -82,7 +82,7 @@ class InventoryFlockAppController(object):
         """
         template = self.TEMPLATES[template]
         self.flock.send_flockml(
-            'SCRUM',
+            'INVENTORY',
             template.format(
                 product=self.request.product_name,
                 store=self.request.store_name),
