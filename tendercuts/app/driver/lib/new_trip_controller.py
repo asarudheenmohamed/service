@@ -41,7 +41,7 @@ class DriverTripController(object):
                 # check if the trip has been completed via external (mage,
                 # external)
                 trip.status = cls.TRIP_COMPLETE
-                self.trip.trip_completed = True
+                trip.trip_completed = True
                 trip.save()
 
         return DriverTrip.objects.create(
