@@ -1,9 +1,13 @@
-from app.driver.models import DriverTrip
+import logging
+
+from django.utils import timezone
+
 from app.core.models import SalesFlatOrder
 from app.driver.lib.google_api_controller import GoogleApiController
 from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
                                OrderEvents)
-from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 
 class DriverTripController(object):
@@ -46,6 +50,15 @@ class DriverTripController(object):
                 trip.trip_ending_time = timezone.now()
                 trip.save()
 
+                logger.info(
+                    'completed the trip:{} for driver:{}'.format(
+                    trip.id, user.username))
+                # compute driver trip distance
+                cls(trip).self.compute_driver_trip_distance()
+
+        logger.info(
+            'Create a new trip for the driver:{}'.format(
+            user.username))
         return DriverTrip.objects.create(
             driver_user=user, status=cls.TRIP_CREATED)
 
@@ -67,8 +80,13 @@ class DriverTripController(object):
         if not orders:
             self.trip.status = self.TRIP_COMPLETE
             self.trip.trip_completed = True
-            self.trip.save()
             self.trip.trip_ending_time = timezone.now()
+            self.trip.save()
+
+            logger.info(
+                "Completed the trip:{} for driver:{}".format(
+                trip.id, self.trip.driver_user.username))
+
             self.compute_driver_trip_distance()
 
     def add_driver_orders_and_sequence_number(self, driver_order):
@@ -76,6 +94,10 @@ class DriverTripController(object):
         if not self.trip.auto_assigned:
             self.trip.driver_order.add(driver_order)
             self.trip.save()
+            logger.info(
+            'Order:{} added to a trip:{}'.format(
+             driver_order.increment_id,
+         self.trip.id))
 
         order_ids = list(
             self.trip.driver_order.all().values_list(
@@ -196,9 +218,16 @@ class DriverTripController(object):
                 destination = destination_point
 
             directions = GoogleApiController(None).get_directions(
-                starting_points, destination_point, waypoints=waypoints)
+                starting_points, destination, waypoints=waypoints)
 
-            distance = directions[0]['legs'][0]['distance']['value']
+            logger.info(
+                'Measured the km taken for the trip:{} by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
+                    self.trip.id, starting_points, destination_point))
+
+            distance = 0
+
+            for leg in compute_km[0]['legs']:
+                distance += int(leg['distance']['value'])
 
             km_travelled += distance
 
@@ -226,6 +255,8 @@ class DriverTripController(object):
         """Begins the trip"""
         self.trip.status = 1
         self.trip.save()
+
+        logger.info('trip:{} started'.format(self.trip.id))
 
     @classmethod
     def trip_obj(cls, trip_id):
