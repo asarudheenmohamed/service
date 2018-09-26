@@ -83,3 +83,10 @@ def checks_the_customer_rating(cache, auth_rest, comments):
 
     assert rating_obj.rating == 2
     assert rating_obj.comments == comments
+
+    response = auth_rest.get(
+        "/rating/check_rating/",
+        format='json')
+
+    response.data['status'] == True
+    response.data['increment_id'] == cache['increment_id']

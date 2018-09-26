@@ -125,11 +125,18 @@ class DriverController(object):
         order_obj = order_obj[0]
         logger.debug(
             'Fetched the order object of given order id:{}'.format(order))
+        if trip_id:
+            trip = DriverTrip.objects.filter(pk=trip_id).last()
+            if trip.auto_assigned:
+                driver_order = trip.driver_order.filter(increment_id=order)
+                if not driver_order:
+                    raise ValueError(
+                        'You are not allowed to assign this order:{}'.format(order))
 
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif not trip_id:
+        elif (not trip_id or not trip.auto_assigned):
             driver_order = DriverOrder.objects.filter(
                 increment_id=order_obj.increment_id)
             if driver_order:
@@ -248,9 +255,9 @@ class DriverController(object):
                     'driver_order__increment_id', flat=True)
 
                 order_obj = SalesFlatOrder.objects.filter(
-                   increment_id__in=list(trip_orders),
-                   store_id=store_id,
-                   status='processing')
+                    increment_id__in=list(trip_orders),
+                    store_id=store_id,
+                    status='processing')
 
                 return order_obj
 

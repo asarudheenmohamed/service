@@ -26,7 +26,10 @@ ALLOWED_HOSTS = [
     "testserver",
     "localhost",
     "staging.tendercuts.in",
-    "api.tendercuts.in"]
+    "api.tendercuts.in",
+    "139.162.15.28",
+    "api1.tendercuts.in"
+]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
 AUTHENTICATION_BACKENDS = (
