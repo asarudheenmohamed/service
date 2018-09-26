@@ -26,7 +26,7 @@ psycopg2==2.7.5
 python-magento
 celery==4.0.2
 redis
-django-redis
+django-redis==4.8.0
 requests
 django-debug-toolbar
 django-debug-panel

@@ -2,7 +2,7 @@
 
 1. INstall necessary packages
 
-sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite git libmysqlclient-dev
+sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite git libmysqlclient-dev postgresql uwsgi-plugin-python
 
 2. Install virtualenv & uwsgi
 sudo pip install virtualenv virtualenvwrapper uwsgi 
