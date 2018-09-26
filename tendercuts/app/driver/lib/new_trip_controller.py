@@ -3,6 +3,7 @@ from app.core.models import SalesFlatOrder
 from app.driver.lib.google_api_controller import GoogleApiController
 from app.driver.models import (DriverOrder, DriverPosition, DriverTrip,
                                OrderEvents)
+from django.utils import timezone
 
 
 class DriverTripController(object):
@@ -42,6 +43,7 @@ class DriverTripController(object):
                 # external)
                 trip.status = cls.TRIP_COMPLETE
                 trip.trip_completed = True
+                trip.trip_ending_time = timezone.now()
                 trip.save()
 
         return DriverTrip.objects.create(
@@ -66,6 +68,7 @@ class DriverTripController(object):
             self.trip.status = self.TRIP_COMPLETE
             self.trip.trip_completed = True
             self.trip.save()
+            self.trip.trip_ending_time = timezone.now()
             self.compute_driver_trip_distance()
 
     def add_driver_orders_and_sequence_number(self, driver_order):
