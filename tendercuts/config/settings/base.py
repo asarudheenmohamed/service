@@ -295,6 +295,14 @@ ORDER_MEDIUM = {
     'POS': 4
 }
 
+CUT_OFF = {
+    52: 5,
+    53: 1.5,
+    54: 1.5,
+    55: 1.5,
+    56: 1.5
+}
+
 SMS_TEMPLATES = {
     'payment_pending_to_cancel': 'your order #{} has been Cancelled.',
     'canceled': 'Dear Customer Your Order No.#{}. has been Cancelled. We are sorry to have missed you this time. Do call us again for fresh, juicy and tender choices from Tender Cuts. Looking forward to serving you! Tendercuts.in',
@@ -344,5 +352,3 @@ FLOCK_AUTH = {
     'APP_SECRET': '7cffbef4-f106-46db-a410-a8b88528a9af',
     'ALGO': ['HS256']
 }
-
-

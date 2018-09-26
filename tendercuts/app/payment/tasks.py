@@ -21,7 +21,7 @@ def cancel_payment_pending_orders():
 
     We look for orders in the last 30 mins
     """
-    THRESHOLD = 30 * 60   # 30 mins
+    THRESHOLD = 45 * 60   # 30 mins
     end = datetime.datetime.now()
     start = end - datetime.timedelta(seconds=THRESHOLD)
     conn = magento.Connector()
