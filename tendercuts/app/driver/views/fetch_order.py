@@ -40,7 +40,7 @@ class FetchRelatedOrder(viewsets.ReadOnlyModelViewSet):
             "Fetch related order for the store id:{} with order id's last digits {}".format(store_id, order_end_id))
 
         controller = DriverController(driver)
-        order_obj = controller.fetch_related_orders(
+        order_obj = controller.search_related_orders(
             order_end_id, store_id, trip_id=trip_id)
 
         return order_obj

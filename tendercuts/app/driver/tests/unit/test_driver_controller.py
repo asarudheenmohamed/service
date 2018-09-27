@@ -131,7 +131,7 @@ class TestDriverController:
         generate_mock_order.save()
         increment_id = str(generate_mock_order.increment_id)
         controller = DriverController(django_user)
-        orders = controller.fetch_related_orders(
+        orders = controller.search_related_orders(
             increment_id[4:], generate_mock_order.store_id)
         assert (orders) is not None
         assert orders[0].increment_id == generate_mock_order.increment_id

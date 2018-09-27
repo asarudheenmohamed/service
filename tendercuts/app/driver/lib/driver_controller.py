@@ -221,6 +221,8 @@ class DriverController(object):
             order_obj = SalesFlatOrder.objects.filter(
                 increment_id__in=list(order_ids),
                 status='out_delivery')
+            logger.debug(
+                "Fetched the trip:{} out_delivery orders".format(trip_id))
         else:
             order_ids = DriverOrder.objects.filter(
                 driver_user=self.driver,
@@ -231,13 +233,13 @@ class DriverController(object):
             order_obj = SalesFlatOrder.objects.filter(
                 increment_id__in=list(order_ids),
                 status=status)[:10]
-        logger.debug(
-            'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
-                order_ids))
+            logger.debug(
+                'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
+                    order_ids))
 
         return order_obj
 
-    def fetch_related_orders(self, order_end_id, store_id, trip_id=None):
+    def search_related_orders(self, order_end_id, store_id, trip_id=None):
         """Return Sales Order objects.
 
         Params:
@@ -258,6 +260,8 @@ class DriverController(object):
                     increment_id__in=list(trip_orders),
                     store_id=store_id,
                     status='processing')
+                logger.info(
+                    "Fetched the trip:{} assigned orders".format(trip_id))
 
                 return order_obj
 
