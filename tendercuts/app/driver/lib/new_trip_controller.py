@@ -85,7 +85,7 @@ class DriverTripController(object):
 
             logger.info(
                 "Completed the trip:{} for driver:{}".format(
-                trip.id, self.trip.driver_user.username))
+                self.trip.id, self.trip.driver_user.username))
 
             self.compute_driver_trip_distance()
 
@@ -221,12 +221,12 @@ class DriverTripController(object):
                 starting_points, destination, waypoints=waypoints)
 
             logger.info(
-                'Measured the km taken for the trip:{} by the driver using google api with way points travlled from starting point :{} to ending point :{} for a trip '.format(
-                    self.trip.id, starting_points, destination_point))
+                'Measured the km taken for the trip:{} by the driver using Google api with way points:{} traveled from starting point :{} to ending point :{} for a trip '.format(
+                    self.trip.id, waypoints, starting_points, destination_point))
 
             distance = 0
 
-            for leg in compute_km[0]['legs']:
+            for leg in directions[0]['legs']:
                 distance += int(leg['distance']['value'])
 
             km_travelled += distance
