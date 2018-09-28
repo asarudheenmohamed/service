@@ -54,7 +54,7 @@ class DriverTripController(object):
                     'completed the trip:{} for driver:{}'.format(
                     trip.id, user.username))
                 # compute driver trip distance
-                cls(trip).self.compute_driver_trip_distance()
+                cls(trip).compute_driver_trip_distance()
 
         logger.info(
             'Create a new trip for the driver:{}'.format(
