@@ -65,7 +65,8 @@ class RatingController(object):
     @classmethod
     def fetch_customer_last_order(cls, user_id):
         """Return the customer last order."""
-        order = SalesFlatOrder.objects.filter(customer_id=user_id).last()
+        order = SalesFlatOrder.objects.filter(
+            customer_id=user_id, status='complete').last()
 
         logger.info(
             'Fetched the customer:{} last order:{}'.format(user_id, order.increment_id))
