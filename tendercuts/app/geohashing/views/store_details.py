@@ -9,34 +9,28 @@ from app.geohashing.serializers import StockWarehouseSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 
 logger = logging.getLogger()
 
+
 class StoreDetailView(APIView):
-    """/geohash/stores
+    """/geohash/store_details
     """
-    # Opening the endpoint for anonymous browsing
-    authentication_classes = ()
-    permission_classes = ()
 
     def get(self, request, format=None):
         """
-        Url: geohash/store
+        Url: geohash/store_details
 
         Return Modified version of store serializer
         """
+        store_id = request.user.userprofile.store_id
+        store = CoreStore.objects.get(store_id=store_id)
+        odoo_store = StockWarehouse.objects.get(mage_code=store.code)
 
-        stores = CoreStore.objects.all()
-        odoo_stores = StockWarehouse.objects.all()
+        store_data = StoreSerializer(instance=store).data
+        odoo_data = StockWarehouseSerializer(
+            instance=odoo_store).data
 
-        store_data = StoreSerializer(instance=stores, many=True).data
-        odoo_data = StockWarehouseSerializer(instance=odoo_stores, many=True).data
-        odoo_data = {store['mage_code']:store for store in odoo_data}
-
-        for store in store_data:
-            mage_code = store['code']
-            if mage_code in odoo_data:
-                store.update(odoo_data[mage_code])
+        store.update(odoo_data)
 
         return Response(store_data)

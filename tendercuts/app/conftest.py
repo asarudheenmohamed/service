@@ -1,17 +1,18 @@
 """
 Contains commons fixtures that needs to be shared accorss app
 """
-import pytest
-from django.contrib.auth.models import User, Group
-from rest_framework.test import APIClient
+from django.contrib.auth.models import Group, User
 
+import pytest
 from app.core.lib.test import generate_customer
 from app.core.lib.test.utils import GenerateOrder
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.core.models.customer import FlatCustomer
+from app.core.models.user import UserProfile
 from app.driver.constants import DRIVER_GROUP
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 
 
 @pytest.fixture
@@ -71,7 +72,6 @@ def mock_driver(request):
         request.config.cache.set("mock/driver", customer_id)
 
     customer = CustomerSearchController.load_by_id(customer_id)
-
     return customer
 
 
@@ -100,6 +100,10 @@ def mock_sm():
     user = User.objects.create_user(
         username="test1", email="test@test.com",
         password='test')
+
+    profile = UserProfile(user=user, store_id=4, phone=8973111017)
+    profile.save()
+
     group, _ = Group.objects.get_or_create(name='Store Manager')
     group.user_set.add(user)
 
