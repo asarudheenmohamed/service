@@ -31,6 +31,6 @@ class StoreDetailView(APIView):
         odoo_data = StockWarehouseSerializer(
             instance=odoo_store).data
 
-        store.update(odoo_data)
+        store_data.update(odoo_data)
 
         return Response(store_data)
