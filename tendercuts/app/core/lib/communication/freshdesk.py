@@ -4,6 +4,7 @@ import logging
 
 import requests
 from django.conf import settings
+from app.core.lib.communication import Mail
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -50,6 +51,13 @@ class FreshDesk():
             headers=headers,
             data=json.dumps(data))
 
+        if response.status_code is not 201:
+            Mail().send(
+                "reports@tendercuts.in",
+                ["tech@tendercuts.in"],
+                "[INFO] Failed Freshdesk ticket creation",
+                response.text)
+
         return response
 
     def create_ticket_attachment(
@@ -90,6 +98,13 @@ class FreshDesk():
                   settings.FRESHDESK["PASSWORD"]),
             files=multipart_data,
         )
+        if response.status_code is not 201:
+
+            Mail().send(
+                "reports@tendercuts.in",
+                ["tech@tendercuts.in"],
+                "[INFO] Failed Freshdesk ticket creation",
+                response.text)
 
         logger.info(
             'Created Freshdesk desk attachment ticket for the customer:{}'.format(phone))
@@ -110,3 +125,5 @@ class FreshDesk():
                 "ENDPOINT"] + '/{}'.format(ticket_id),
             auth=(settings.FRESHDESK["KEY"], settings.FRESHDESK["PASSWORD"]),
             headers=headers)
+
+        return response

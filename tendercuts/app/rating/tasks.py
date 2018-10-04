@@ -70,7 +70,7 @@ def create_fresh_desk_attachment_ticket(data):
         'CloudAgent: callback details:{} for the customer:{}'.format(
             data, data['CallerID']))
 
-    type_ = {"inbound": "Call Inbound", "outbound": "Call outbound"}
+    type_ = {"inbound": "Call Inbound", "Manual": "Call outbound"}
 
     description = "The start:{} and end time:{} of the conversation will be attached into a ticket  (audio, agent name:{})".format(data[
         "StartTime"], data["EndTime"], data['AgentID'])
