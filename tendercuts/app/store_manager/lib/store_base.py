@@ -81,6 +81,14 @@ class StoreBaseController(object):
             attr_name = attr_map[attr.attribute_id]
         
             data[attr.entity_id][attr_name] = attr.value
-            data[attr.entity_id]['driver_user'] = user_ids[attr.entity_id]
+            data[attr.entity_id]['driver_user'] = attr.entity_id
+            data[attr.entity_id]['id'] = user_ids[attr.entity_id]
+
+        all_drivers = list(data.values())
         
-        return list(data.values())
+        trips = self.get_current_trips()
+
+        for trip in trips:
+            available_drivers = list( filter((lambda x: x['id'] != trip.driver_user_id), all_drivers))
+
+        return available_drivers
