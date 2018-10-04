@@ -86,9 +86,11 @@ class StoreBaseController(object):
 
         all_drivers = list(data.values())
         
+        #getting current trips
         trips = self.get_current_trips()
 
         for trip in trips:
-            available_drivers = list( filter((lambda x: x['id'] != trip.driver_user_id), all_drivers))
+            # fitering out drivers in trip, and capturing idle drivers
+            available_drivers = filter((lambda driver: driver['id'] != trip.driver_user_id), all_drivers)
 
         return available_drivers
