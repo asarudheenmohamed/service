@@ -271,7 +271,7 @@ FRESHDESK = {
 }
 
 GOOGLE_MAP_DISTANCE_API = {
-    "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
+    "KEY": "AIzaSyBwHfj3O6-HVmHVl1lrFiShq2Um3qN1Deg"
 }
 
 # porur and mmda latitude and longitude
