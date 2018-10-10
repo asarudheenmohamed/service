@@ -80,4 +80,13 @@ class StoreBaseController(object):
             data[attr.entity_id]['driver_user'] = attr.entity_id
             data[attr.entity_id]['id'] = user_ids[attr.entity_id]
 
-        return list(data.values())
+        all_drivers = list(data.values())
+        
+        #getting current trips
+        trips = self.get_current_trips()
+
+        for trip in trips:
+            # fitering out drivers in trip, and capturing idle drivers
+            available_drivers = filter((lambda driver: driver['id'] != trip.driver_user_id), all_drivers)
+
+        return available_drivers
