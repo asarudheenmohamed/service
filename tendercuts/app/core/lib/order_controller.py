@@ -15,6 +15,7 @@ from .magento import Connector
 
 logger = logging.getLogger(__name__)
 
+
 class OrdersController(object):
     """
     Update order status
@@ -27,7 +28,8 @@ class OrdersController(object):
     def processing(self, orders):
         """The order status pending to processing state."""
         orders = [{'increment_id': order.increment_id} for order in orders]
-        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(orders)
+        response_data = self.mage.api.tendercuts_order_apis.updateProcessing(
+            orders)
         logger.info(response_data)
 
 
@@ -52,13 +54,17 @@ class OrderController(object):
     def out_delivery(self):
         """The order status processing to out for delivery."""
         try:
-           response_data = self.mage.api.tendercuts_order_apis.updateOutForDelivery(
-               [{'increment_id': self.order.increment_id}])
-           logger.info(
-              'This order:{} was changed to out for delivery'.format(
-                  self.order.increment_id))
+            response_data = self.mage.api.tendercuts_order_apis.updateOutForDelivery(
+                [{'increment_id': self.order.increment_id}])
+            logger.info(
+                'This order:{} was changed to out for delivery'.format(
+                    self.order.increment_id))
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",repr(msg))
+            Mail().send(
+                "reports@tendercuts.in",
+                ["tech@tendercuts.in"],
+                "[CRITICAL] Error in Order OutDelivery API",
+                repr(msg))
 
         response_data
 
@@ -69,11 +75,15 @@ class OrderController(object):
 
         """
         try:
-           response_data = self.mage.api.tendercuts_order_apis.completeOrders(
-              [{'increment_id': self.order.increment_id}])
+            response_data = self.mage.api.tendercuts_order_apis.completeOrders(
+                [{'increment_id': self.order.increment_id}])
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",repr(msg))
-             
+            Mail().send(
+                "reports@tendercuts.in",
+                ["tech@tendercuts.in"],
+                "[CRITICAL] Error in Order Complete API",
+                repr(msg))
+
         return response_data
 
     def cancel(self):
@@ -86,6 +96,9 @@ class OrderController(object):
             self.order.increment_id)
 
         if status:
+            self.order.grid.status = "canceled"
+            self.order.grid.save()
+
             logger.info("Cancelled {}".format(self.order.increment_id))
         else:
             logger.info("Unable to Cancel {}".format(self.order.increment_id))
@@ -176,5 +189,3 @@ class OrderAddressController():
         self.shipping_address.save()
 
         return
-
-
