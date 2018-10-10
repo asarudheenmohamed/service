@@ -81,7 +81,8 @@ class StoreBaseController(object):
             data[attr.entity_id]['id'] = user_ids[attr.entity_id]
 
         all_drivers = list(data.values())
-        
+
+        available_drivers = all_drivers
         #getting current trips
         trips = self.get_current_trips()
 
