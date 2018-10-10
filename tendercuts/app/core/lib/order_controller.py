@@ -58,7 +58,7 @@ class OrderController(object):
               'This order:{} was changed to out for delivery'.format(
                   self.order.increment_id))
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",msg)
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order OutDelivery API",repr(msg))
 
         response_data
 
@@ -72,7 +72,7 @@ class OrderController(object):
            response_data = self.mage.api.tendercuts_order_apis.completeOrders(
               [{'increment_id': self.order.increment_id}])
         except Exception as msg:
-           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",msg)
+           Mail().send("reports@tendercuts.in",["tech@tendercuts.in"],"[CRITICAL] Error in Order Complete API",repr(msg))
              
         return response_data
 
@@ -149,7 +149,7 @@ class OrderAddressController():
         self.shipping_address = self.order.shipping_address.all()\
             .filter(address_type='shipping').first()
 
-    def update_address(self, geohash, lat, lng, street):
+    def update_address(self, geohash, lat, lng, street, pincode):
         """Update the shipping address of the order
 
         :param geohash:
@@ -161,6 +161,9 @@ class OrderAddressController():
         self.shipping_address.o_longitude = lng
         self.shipping_address.o_latitude = lat
         self.shipping_address.geohash = geohash
+
+        if pincode:
+            self.shipping_address.postcode = pincode
 
         street_components = self.shipping_address.street.split('\n')
         if len(street_components) < 2:

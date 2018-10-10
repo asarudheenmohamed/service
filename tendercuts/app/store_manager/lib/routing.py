@@ -25,7 +25,7 @@ class Vehicle():
         """Initializes the vehicle properties"""
         # 20 items
         self._capacity = 30
-        # Travel speed: 5km/h to convert in m/min
+        # Travel speed: 20km/h to convert in m/min
         self._speed = 30 * 60 / 3.6
 
     @property
@@ -40,6 +40,10 @@ class Vehicle():
 
 
 class RoutingData:
+
+    # time for the rider to scan and take in the app.
+    INITIAL_BUFFER_TIME = 15
+
     def __init__(self, store_id):
         """
         :param store_id: Store id for which we collect all the processing orders.
@@ -88,16 +92,19 @@ class RoutingData:
             locations.append((shipping_address.o_latitude, shipping_address.o_longitude))
             # time per order
             if not address_map.get(shipping_address.customer_address_id, None):
-                # Flat 8 mins
+                # Flat 8 mins.
                 time_per_order.append(8)
                 address_map[shipping_address.customer_address_id] = True
             else:
+                # same location then 0 buffer.
                 time_per_order.append(0)
 
-            # Time windows: if the order cannot be serviced, then we put in 30 mins for
-            # high prio.
-            time_remaining = 30 if order.remaining_time < shipping_address.eta else order.remaining_time
-            time_windows.append((0, time_remaining))
+            # this is the min time to deliver the order, scanning + eta
+            min_time = shipping_address.eta + self.INITIAL_BUFFER_TIME
+            # Time windows: if the order cannot be serviced, then we put in mintime itself
+            # so it can get prioritized.
+            time_remaining = min_time if order.remaining_time < min_time else order.remaining_time
+            time_windows.append((self.INITIAL_BUFFER_TIME, time_remaining))
         logger.info(locations)
 
         # setup your projections

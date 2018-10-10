@@ -38,11 +38,12 @@ class TestDriverController:
         controller = DriverController(django_user)
         with mock.patch.object(cache, 'get_key',
                                mock.Mock(return_value=None)):
+            # Send the auto generated trip id is None
             driver_order = controller.assign_order(
                 generate_mock_order.increment_id,
                 generate_mock_order.store_id,
                 12.965365,
-                80.246106)
+                80.246106, None)
 
         assert driver_order.increment_id == generate_mock_order.increment_id
 
@@ -84,7 +85,7 @@ class TestDriverController:
                 generate_mock_order.increment_id,
                 generate_mock_order.store_id,
                 12.965365,
-                80.246106)
+                80.246106, None)
         driver_position = DriverPosition.objects.filter(
             driver_user=django_user).last()
 
@@ -110,6 +111,7 @@ class TestDriverController:
         controller = DriverController(user)
         orders = controller.fetch_orders(status)
         assert len(orders) == 1
+        orders = controller.fetch_orders(status)
 
     def test_fetch_related_order(
             self, auth_rest, mock_driver, django_user, generate_mock_order):
@@ -129,7 +131,7 @@ class TestDriverController:
         generate_mock_order.save()
         increment_id = str(generate_mock_order.increment_id)
         controller = DriverController(django_user)
-        orders = controller.fetch_related_orders(
+        orders = controller.search_related_orders(
             increment_id[4:], generate_mock_order.store_id)
         assert (orders) is not None
         assert orders[0].increment_id == generate_mock_order.increment_id
@@ -156,9 +158,11 @@ class TestDriverController:
 
         with mock.patch.object(TripController, 'check_and_complete_trip',
                                mock.Mock(return_value=None)):
+            with mock.patch.object(DriverController, '_check_trip',
+                                   mock.Mock(return_value=None)):
 
-            orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
-                                               80.246106)
+                orders = controller.complete_order(generate_mock_order.increment_id, 12.965365,
+                                                   80.246106, None)
         print orders
 
     def test_order_positions(
@@ -178,9 +182,11 @@ class TestDriverController:
 
         controller = DriverController(user)
         # test record position
-        response = controller.record_position(
-            12.965365,
-            80.246106)
+        with mock.patch.object(DriverController, '_check_trip',
+                               mock.Mock(return_value=None)):
+            response = controller.record_position(
+                12.965365,
+                80.246106, None)
 
         assert response.latitude == 12.965365
         assert response.longitude == 80.246106

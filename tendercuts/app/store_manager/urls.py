@@ -22,7 +22,19 @@ router.register(
 router.register(
     r'driver_lat_lon',
     views.DriverLocationViewSet,
-    base_name='DriverLocationViewSet')
+    base_name='DriverLocationViewcSet')
+
+router.register(
+    r'inv_request',
+    views.StoreInventoryRequestApi,
+    base_name='StoreInventoryRequestApi')
+
+# Get the list of pending apis and move them thro' approval
+# process.
+router.register(
+    r'pending_inv_request',
+    views.StoreInventoryApprovalApi,
+    base_name='StoreInventoryApprovalApi')
 
 urlpatterns = [
     url(r'', include(router.urls)),
@@ -30,4 +42,6 @@ urlpatterns = [
     url(r'drivers', views.StoreDriverView.as_view()),
     url(r'routing', views.StoreRoutingView.as_view()),
     url(r'processing', views.OrderProcessingView.as_view()),
+    url(r'flock_auth', views.StoreManagerFlockApi.as_view()),
+    url(r'flock_app', views.FlockAppApi.as_view()),
 ]

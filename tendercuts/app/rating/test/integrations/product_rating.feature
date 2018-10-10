@@ -1,12 +1,12 @@
-Feature: Driver completes the order
+Feature: Product rating feature
 
-    Scenario: Driver sucessfully completes the order
-        Given A customer places an order
-        And Rating Tag creation
+    Scenario: Customer review and rating for a product purchased
+        Given A customer placed an order
+        And Add a rating Tag creation
         And Fetch all rating Tags
-        And a customer create a rating <comments>
-        Then find the no of driver stat objects
+        And A customer shares feedback for the product purchased on rating <comments><rating>
+        Then Cross check review rating <comments>
         
         Examples: 
-	   |comments |
-	   |product is bad|
+	   |comments      | rating |
+	   |product is bad|  2     |

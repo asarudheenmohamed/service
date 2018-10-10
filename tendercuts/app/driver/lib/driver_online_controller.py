@@ -3,8 +3,6 @@
 import datetime
 import logging
 
-from django.utils import timezone
-
 from ..models import DriverLoginLogout
 
 logger = logging.getLogger(__name__)
@@ -18,17 +16,18 @@ class DriverOnlineController(object):
         super(DriverOnlineController, self).__init__()
         self.driver = driver
 
-    def driver_checkin(self):
+    def driver_checkin(self, store_id):
         """Create driver check_in object.
 
         Returns:
             Returns True
 
         """
-        DriverLoginLogout.objects.create(driver_id=self.driver.id)
+        DriverLoginLogout.objects.create(
+            driver_id=self.driver.id, store_id=store_id)
 
-        logger.info("Created Check In detail for the driver :{}".format(
-            self.driver))
+        logger.info("Created Check In detail for the driver :{},{}".format(
+            self.driver, store_id))
 
         return True
 
@@ -67,14 +66,14 @@ class DriverOnlineController(object):
         obj = DriverLoginLogout.objects.filter(
             driver=self.driver.id,
             date=datetime.date.today(),
-            check_out__isnull=True).last()
+            check_out__isnull=True).last()  # type: DriverLoginLogout
 
         logger.debug("Set driver: {} online status".format(self.driver))
 
         if obj:
-            status = True
+            status = (True, obj.store_id)
         else:
-            status = False
+            status = (False, None)
 
         logger.info("Checked online status for the driver :{}".format(
             self.driver))

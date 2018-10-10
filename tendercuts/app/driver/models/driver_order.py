@@ -3,14 +3,13 @@
 from __future__ import unicode_literals
 
 import datetime
-import itertools
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from enum import Enum
 
 from app.core.lib import cache
-from django.contrib.auth.models import User
 
 
 class DriverOrder(models.Model):
@@ -26,6 +25,12 @@ class DriverOrder(models.Model):
 
 
 class DriverTrip(models.Model):
+
+    class Status(Enum):
+        CREATED = 0
+        STARTED = 1
+        COMPLETED = 2
+
     """Driver Trip Model."""
     driver_user = models.ForeignKey(User, blank=True, null=True)
     driver_order = models.ManyToManyField(DriverOrder)
@@ -33,6 +38,7 @@ class DriverTrip(models.Model):
     km_travelled = models.FloatField(max_length=100, blank=True, null=True)
     trip_created_time = models.DateTimeField(default=timezone.now)
     trip_ending_time = models.DateTimeField(blank=True, null=True)
+    # Deprecated!gT
     trip_completed = models.BooleanField(default=False)
     auto_assigned = models.BooleanField(default=False)
     # 0, 1, 2 -> created, started, finished
@@ -79,8 +85,8 @@ class DriverPosition(models.Model):
         null=True,
         related_name="driver_position")
     driver_id = models.IntegerField(blank=True, null=True)
-    latitude = models.FloatField(max_length=100)
-    longitude = models.FloatField(max_length=100)
+    latitude = models.FloatField(max_length=100, blank=True, null=True)
+    longitude = models.FloatField(max_length=100, blank=True, null=True)
     recorded_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -89,10 +95,10 @@ class DriverPosition(models.Model):
 
 class OrderEvents(models.Model):
     """Driver Events model."""
-    driver = models.ForeignKey(DriverOrder)
-    driver_position = models.ForeignKey(DriverPosition)
+    driver = models.ForeignKey(DriverOrder, blank=True, null=True)
+    driver_position = models.ForeignKey(DriverPosition, blank=True, null=True)
     updated_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=200)
+    status = models.CharField(max_length=200, blank=True, null=True)
 
 
 class DriverStat(models.Model):
@@ -105,7 +111,8 @@ class DriverStat(models.Model):
 
 class DriverLoginLogout(models.Model):
     """Driver Login Logout model."""
-    driver = models.ForeignKey(User)
+    driver = models.ForeignKey(User, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     check_in = models.TimeField(auto_now=True)
     check_out = models.TimeField(blank=True, null=True)
+    store_id = models.IntegerField(blank=True, null=True)

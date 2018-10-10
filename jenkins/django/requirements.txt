@@ -1,6 +1,6 @@
 # virtualenv
 # virtualenvwrapper
-# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+# sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite mysql-client
 # brew install chromedriver
 uwsgi
 django==1.10.6
@@ -26,7 +26,7 @@ psycopg2==2.7.5
 python-magento
 celery==4.0.2
 redis
-django-redis
+django-redis==4.8.0
 requests
 django-debug-toolbar
 django-debug-panel
@@ -42,6 +42,8 @@ xlrd
 pycrypto
 requests-toolbelt
 geopy
+# needed for flock auth
+pyjwt
 
 
 # Devlopment:

@@ -10,7 +10,7 @@ RUN sh /root/entrypoint.sh
 
 # install packages
 ADD requirements.txt /root/
-RUN pip install -r /root/requirements.txt;
+#RUN pip install -r /root/requirements.txt;
 
 USER root
 RUN apt-get update && apt-get install -y zsh git

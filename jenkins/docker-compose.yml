@@ -92,7 +92,7 @@ services:
       - redis
       - rabbitmq
     ports:
-      - 8082:80
+      - 80:80
       # - 9000:9000
     volumes:
       - ../website/:/var/www/html/

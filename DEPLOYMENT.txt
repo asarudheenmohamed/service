@@ -1,29 +1,31 @@
 0. Create /var/log/django and chown it
-sudo mkdir /var/log/django
-sudo chown django:django /var/log/django
+
 1. INstall necessary packages
 
-sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite
+sudo apt-get install build-essential nginx python-dev python-pip python-sqlite sqlite git libmysqlclient-dev postgresql uwsgi-plugin-python
 
 2. Install virtualenv & uwsgi
 sudo pip install virtualenv virtualenvwrapper uwsgi 
 
 3. Create an user django
 groupadd django
-useradd -d /home/django -gsudo -gdjango -s /bin/bash ifensys
 mkdir /home/django
+useradd -d /home/django -gsudo -gdjango -s /bin/bash django
 chown django:django /home/django
 passwd django
+
+// log files
+sudo mkdir /var/log/django
+sudo chown django:django /var/log/django
+mkdir /var/log/django/driver/
+mkdir /var/log/django/inventory/
 
 4. cd /home/django
 pull in the changes
 
-5. set up env for virtual end
->echo "export WORKON_HOME=~/Env" >> ~/.bashrc
->echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
-
 6. Start env
-> mkvirtualenv tendercuts
+mkdir ~/Env
+virtualenv tendercuts
 
 7. Install the requirements
 > pip install -r requirements.txt
@@ -46,6 +48,11 @@ PART - 2: uwsgi deployment
 3. Add entry for booting the process
     > sudo cp uwsgi/uwsgi.conf /etc/init/
 4. sudo service uwsgi start
+
+PART - 2.a: uwsgi deployment
+    > sudo cp uwsgi/tendercuts.ini /etc/uwsgi/apps-available/
+    > ln to apps-enabled
+    > restart and run
 
 
 Part - 3 Nginx server
