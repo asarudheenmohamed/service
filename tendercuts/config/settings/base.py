@@ -26,7 +26,10 @@ ALLOWED_HOSTS = [
     "testserver",
     "localhost",
     "staging.tendercuts.in",
-    "api.tendercuts.in"]
+    "api.tendercuts.in",
+    "139.162.15.28",
+    "api1.tendercuts.in"
+]
 
 # AUTH_USER_MODEL = 'driver.DriverManagement'
 AUTHENTICATION_BACKENDS = (
@@ -55,7 +58,9 @@ INSTALLED_APPS = [
     'app.inventory',
     'app.payment',
     'app.geohashing',
-    'app.rating'
+    'app.rating',
+    'app.store_manager',
+    'app.callcenter'
 ]
 
 REST_FRAMEWORK = {
@@ -266,7 +271,7 @@ FRESHDESK = {
 }
 
 GOOGLE_MAP_DISTANCE_API = {
-    "KEY": "AIzaSyCQK2O4AMogjO323B-6btf9f2krVWST3bU"
+    "KEY": "AIzaSyBwHfj3O6-HVmHVl1lrFiShq2Um3qN1Deg"
 }
 
 # porur and mmda latitude and longitude
@@ -339,4 +344,11 @@ GROUPS = {
     "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
+    "INVENTORY": "g:4084ae0507c54b25b4bb19099d24e2a5"
+}
+
+FLOCK_AUTH = {
+    'APP_ID': '293d68bb-7307-4774-8644-c962eebefcd8',
+    'APP_SECRET': '7cffbef4-f106-46db-a410-a8b88528a9af',
+    'ALGO': ['HS256']
 }

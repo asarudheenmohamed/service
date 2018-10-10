@@ -48,6 +48,7 @@ class DrivertripSerializer(serializers.ModelSerializer):
         """
         model = DriverTrip
         fields = (
+            'id',
             'driver_order',
             'driver_user',
             'km_travelled',

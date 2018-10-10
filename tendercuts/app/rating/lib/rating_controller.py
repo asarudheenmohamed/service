@@ -2,12 +2,11 @@
 
 import logging
 
-from app.core.lib.user_controller import CustomerSearchController
-
-from app.rating.models import Rating
 from app.core.lib.communication import FreshDesk
+from app.core.lib.user_controller import CustomerSearchController
 from app.core.lib.utils import get_mage_userid
-
+from app.core.models import SalesFlatOrder
+from app.rating.models import Rating
 
 logger = logging.getLogger(__name__)
 
@@ -50,3 +49,26 @@ class RatingController(object):
             'FreshDesk ticket created, customer rating:{} for the order:{}'.format(user_id, self.order_id))
 
         return ticket_obj
+
+    def update_rating(self, rating):
+        """Rating updated in sale order obj.
+        Params:
+            increment_id(int): order id
+            rating(int): customer rating
+        """
+        obj = SalesFlatOrder.objects.filter(
+            increment_id=self.order_id).update(
+            rating=rating)
+
+        return obj
+
+    @classmethod
+    def fetch_customer_last_order(cls, user_id):
+        """Return the customer last order."""
+        order = SalesFlatOrder.objects.filter(
+            customer_id=user_id, status='complete').last()
+
+        logger.info(
+            'Fetched the customer:{} last order:{}'.format(user_id, order.increment_id))
+
+        return order

@@ -58,7 +58,7 @@ class Graminventory(models.Model):
     opening = models.FloatField(blank=True, null=True)
     qty = models.FloatField(blank=True, null=True)
     expiringtoday = models.FloatField(blank=True, null=True)
-    forecastqty = models.IntegerField(blank=True, null=True)
+    forecastqty = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -67,6 +67,7 @@ class Graminventory(models.Model):
         app_label = "magento"
 
 class GraminventoryLatest(models.Model):
+    """View"""
     id = models.CharField(max_length=22, blank=True, null=True)
     # product_id = models.IntegerField()
     product = models.ForeignKey(CatalogProductEntity, models.DO_NOTHING)

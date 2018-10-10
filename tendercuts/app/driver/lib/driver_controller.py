@@ -20,6 +20,8 @@ from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
 
+from app.driver.lib.new_trip_controller import DriverTripController
+
 logger = logging.getLogger(__name__)
 
 
@@ -91,14 +93,15 @@ class DriverController(object):
             longitude: driver completed location longitude
         """
 
-        shipping_address = order.shipping_address.filter(address_type="shipping").last()
+        shipping_address = order.shipping_address.filter(
+            address_type="shipping").last()
         if not shipping_address.geohash:
             return True
-        
+
         return self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
 
-    def assign_order(self, order, store_id, lat, lon):
+    def assign_order(self, order, store_id, lat, lon, trip_id):
         """Assign the order to the driver.
 
         Also publishes the order status to the queue.
@@ -108,6 +111,7 @@ class DriverController(object):
             store_id (str): store id
             lat(int): Driver location latitude
             lon(lon): Driver location longitude
+            trip_id (int):Driver current trip id
 
         Returns:
             obj DriverOrder
@@ -121,20 +125,30 @@ class DriverController(object):
         order_obj = order_obj[0]
         logger.debug(
             'Fetched the order object of given order id:{}'.format(order))
+        if trip_id:
+            trip = DriverTrip.objects.filter(pk=trip_id).last()
+            if trip.auto_assigned:
+                driver_order = trip.driver_order.filter(increment_id=order)
+                if not driver_order:
+                    raise ValueError(
+                        'You are not allowed to assign this order:{}'.format(order))
 
         if int(store_id) != order_obj.store_id:
             raise ValueError('Store mismatch')
 
-        elif DriverOrder.objects.filter(increment_id=order_obj.increment_id):
-            raise ValueError('This order is already assigned')
+        elif (not trip_id or not trip.auto_assigned):
+            driver_order = DriverOrder.objects.filter(
+                increment_id=order_obj.increment_id)
+            if driver_order:
+                raise ValueError('This order is already assigned')
 
         try:
             lat, lon = settings.STORE_LAT_LONG[int(store_id)]
         except KeyError:
             pass
 
-        driver_object = DriverOrder.objects.create(
-            increment_id=order, driver_user=self.driver)
+        driver_object = DriverOrder.objects.get_or_create(
+            increment_id=order, driver_user=self.driver)[0]
 
         # update driver name and driver number in sale order object
         self.update_driver_details(order_obj)
@@ -149,18 +163,23 @@ class DriverController(object):
             'This order:{} will move to out for delivery.'.format(order))
 
         controller.out_delivery()
+
         # update current location for driver
-        position_obj = self.record_position(lat, lon)
+        position_obj = self.record_position(lat, lon, trip_id)
 
         logger.debug(
             "updated the assigned order:{}'s lat:{} and lon:{} for the driver".format(
                 self.driver.username, lat, lon))
-
         self._record_events(driver_object, position_obj, 'out_delivery')
 
-        TripController(
-            driver=self.driver).check_and_create_trip(
-            driver_object, position_obj)
+        if trip_id:
+            controller = DriverTripController.trip_obj(
+                trip_id).add_driver_orders_and_sequence_number(driver_object)
+
+        else:
+            TripController(
+                driver=self.driver).check_and_create_trip(
+                driver_object, position_obj)
 
         tasks.send_sms.delay(order, 'out_delivery')
 
@@ -188,29 +207,39 @@ class DriverController(object):
                 self.driver.username,
                 order))
 
-    def fetch_orders(self, status):
+    def fetch_orders(self, status, trip_id=None):
         """Return all active orders.
 
         Returns
             [SalesFlatOrder]
 
         """
-        order_ids = DriverOrder.objects.filter(
-            driver_user=self.driver,
-            created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
-            'increment_id',
-            flat=True)
+        if trip_id:
+            order_ids = DriverTrip.objects.filter(
+                id=trip_id).values_list(
+                'driver_order__increment_id', flat=True)
+            order_obj = SalesFlatOrder.objects.filter(
+                increment_id__in=list(order_ids),
+                status='out_delivery')
+            logger.debug(
+                "Fetched the trip:{} out_delivery orders".format(trip_id))
+        else:
+            order_ids = DriverOrder.objects.filter(
+                driver_user=self.driver,
+                created_at__startswith=timezone.now().date()).order_by('created_at').values_list(
+                'increment_id',
+                flat=True)
 
-        order_obj = SalesFlatOrder.objects.filter(
-            increment_id__in=list(order_ids),
-            status=status)[:10]
-        logger.debug(
-            'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
-                order_ids))
+            order_obj = SalesFlatOrder.objects.filter(
+                increment_id__in=list(order_ids),
+                status=status)[:10]
+            logger.debug(
+                'Fetched the SalesFlatOrder objects for the list of order ids:{} '.format(
+                    order_ids))
 
         return order_obj
 
-    def fetch_related_orders(self, order_end_id, store_id):
+    def search_related_orders(self, order_end_id, store_id, trip_id=None):
         """Return Sales Order objects.
 
         Params:
@@ -221,6 +250,20 @@ class DriverController(object):
             [SalesFlatOrder]
 
         """
+        if trip_id:
+            trip = DriverTrip.objects.filter(id=trip_id)
+            if trip.last().auto_assigned:
+                trip_orders = trip.values_list(
+                    'driver_order__increment_id', flat=True)
+
+                order_obj = SalesFlatOrder.objects.filter(
+                    increment_id__in=list(trip_orders),
+                    store_id=store_id,
+                    status='processing')
+                logger.info(
+                    "Fetched the trip:{} assigned orders".format(trip_id))
+
+                return order_obj
 
         order_obj = SalesFlatOrder.objects.filter(
             increment_id__endswith=order_end_id,
@@ -244,13 +287,14 @@ class DriverController(object):
         order_obj.shipping_address.all().update(
             latitude=lat, longitude=lon)
 
-    def complete_order(self, order_id, lat, lon):
+    def complete_order(self, order_id, lat, lon, trip_id):
         """Publish the message to the Mage queues.
 
         Params:
             order_id (str): Increment ID
             lat(int): Driver location latitude
             lon(lon): Driver location longitude
+            trip_id(int): Driver current trip id
 
         """
         logger.info("Complete this order {}".format(order_id))
@@ -259,7 +303,7 @@ class DriverController(object):
         # checks the driver completed location with in a customer geolocation
         # radius 500m
 
-        #if not self.is_nearby(order_obj, lat, lon):
+        # if not self.is_nearby(order_obj, lat, lon):
         #    logger.info(
         #        "This driver:{} is trying to complete the order ahead of customer location".format(
         #            self.driver.username))
@@ -276,31 +320,42 @@ class DriverController(object):
             order_obj, lat, lon)
 
         # ToDo commended a customer current location updated because location is not correct
-        # tasks.customer_current_location.delay(order_obj.customer_id, lat, lon)
+        # tasks.customer_current_location.delay(order_obj.customer_id, lat,
+        # lon)
 
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)
 
         # update current location for driver
-        position_obj = self.record_position(lat, lon)
-        self._record_events(driver_object[0], position_obj, 'completed')
 
-        try:
-            TripController(driver=self.driver).check_and_complete_trip(
-                driver_object[0], position_obj)
-        except ValueError:
-            # Legacy handling
-            pass
+        position_obj = self.record_position(lat, lon, trip_id)
+        self._record_events(driver_object[0], position_obj, 'completed')
+        if trip_id:
+            controller = DriverTripController.trip_obj(
+                trip_id).check_and_complete_trip()
+        else:
+            try:
+                TripController(driver=self.driver).check_and_complete_trip(
+                    driver_object[0], position_obj)
+            except ValueError:
+                # Legacy handling
+                pass
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""
+        trip = DriverTrip.objects.filter(driver_user=self.driver,
+                                         status__in=[DriverTrip.Status.CREATED.value,
+                                                     DriverTrip.Status.STARTED.value]).last()
+        if trip:
+            return trip.id
+
         key = '{}:{}'.format(TripController.PREFIX, self.driver.username)
         trip_id = cache.get_key(key)
 
         return trip_id
 
-    def record_position(self, lat, lon):
+    def record_position(self, lat, lon, trip_id=None):
         """Create a Driver current location latitude and longitude.
 
         Params:
@@ -313,8 +368,8 @@ class DriverController(object):
 
         """
 
-        trip_id = self._check_trip()
-
+        if not trip_id:
+            trip_id = self._check_trip()
         obj = DriverPosition(
             driver_user=self.driver,
             latitude=lat,

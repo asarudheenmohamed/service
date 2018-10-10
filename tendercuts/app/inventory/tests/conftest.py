@@ -1,7 +1,7 @@
 import os
 
-import pytest
 import pandas as pd
+import pytest
 
 
 @pytest.fixture
@@ -17,3 +17,4 @@ def mock_df():
 def file_path():
     """File path of the test excel."""
     return os.path.join(os.path.dirname(__file__), "test.xlsx")
+

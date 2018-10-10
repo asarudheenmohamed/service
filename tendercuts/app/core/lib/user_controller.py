@@ -339,54 +339,41 @@ class CustomerAddressController(object):
         return settings.MAGE_ATTRS['STREET']
 
     @property
+    def pincode_field(self):
+        return settings.MAGE_ATTRS['PINCODE']
+
+    @property
     def address_id(self):
         return self.address.entity_id
 
     # 94349
-    def update_address(self, lat, lng, geohash, street):
+    def update_address(self, lat, lng, geohash, street, pincode):
         varchars = CustomerAddressEntityVarchar.objects.all()
-        
-        geohash_row = varchars.filter(
-            entity_id=self.address_id, attribute_id=self.geohash_field).first()
-        if geohash_row:
-            geohash_row.value = geohash
-            geohash_row.save()
-        else:
-            CustomerAddressEntityVarchar.objects.create(
-                entity_type_id=2,
-                attribute_id=self.geohash_field,
+
+        attrs = [(self.lat_field, lat), (self.lng_field, lng),
+                 (self.geohash_field, geohash), (self.pincode_field, pincode)]
+
+        for field_id, value in attrs:
+
+            if value is None:
+                continue
+
+            row = varchars.filter(
                 entity_id=self.address_id,
-                value=geohash
-            )
+                attribute_id=field_id).first()
 
-        lat_row = varchars.filter(
-            entity=self.address_id, attribute=self.lat_field).first()
+            if row:
+                row.value = value
+                row.save()
+            else:
+                CustomerAddressEntityVarchar.objects.create(
+                    entity_type_id=2,
+                    attribute_id=field_id,
+                    entity_id=self.address_id,
+                    value=value
+                )
 
-        if lat_row:
-            lat_row.value = lat
-            lat_row.save()
-        else:
-            CustomerAddressEntityVarchar.objects.create(
-                entity_type_id=2,
-                attribute_id=self.lat_field,
-                entity_id=self.address_id,
-                value=lat
-            )
-
-        lng_row = varchars.filter(
-            entity=self.address_id, attribute=self.lng_field).first()
-
-        if lng_row:
-            lng_row.value = lng
-            lng_row.save()
-        else:
-            CustomerAddressEntityVarchar.objects.create(
-                entity_type_id=2,
-                attribute_id=self.lng_field,
-                entity_id=self.address_id,
-                value=lng
-            )
-
+        #  Special update for street
         texts = CustomerAddressEntityText.objects
         street_row = texts.filter(
             entity=self.address_id, attribute=self.street_field).first()  # type: CustomerAddressEntityText

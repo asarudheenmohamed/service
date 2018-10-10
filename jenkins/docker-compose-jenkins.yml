@@ -1,0 +1,132 @@
+# Rebuild once with docker-compose build
+# PREREQUISITE: ENSURE THAT MAGEDB backup is already set up, we don't do it here.
+
+version: '2'
+services:
+  django:
+    build: ./django
+    container_name: django
+    hostname: django
+    links:
+      - redis:redis
+      - rabbitmq:rabbitmq
+      - db:db
+      - mage-db:mage-db
+      - php:magento
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    ports:
+  #    - 80:80
+      - 8010:8000
+    volumes:
+      - ../:/services/
+      - ../:/opt/project/
+      - ./results/:/jenkins
+    networks:
+      - django
+
+  db:
+    image: mysql:5.7
+    container_name: db
+    hostname: service-db
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: services
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql-db:/var/lib/mysql
+    ports:
+      - 3308:3306
+    networks:
+      - django
+    # access for all
+
+  # creating a second instance so that
+  # we can reuse the volume attached to this.
+  mage-db:
+    image: mysql:5.7
+    container_name: mage-db
+    hostname: mage-db
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: dbmaster
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mage-db:/var/lib/mysql
+    ports:
+      - 3307:3306
+    networks:
+      - django
+
+  odoo-db:
+    image: postgres:9.5
+    container_name: tendercuts-erp-db
+    hostname: odoo-db
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=tendercuts
+    ports:
+      - "5433:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - django
+
+  php:
+    build: ./php
+    container_name: magento
+    hostname: magento
+    links:
+      - mage-db:mysql
+      - redis:redis
+      - rabbitmq:rabbitmq
+    depends_on:
+      - mage-db
+      - redis
+      - rabbitmq
+    ports:
+      - 8082:80
+      # - 9000:9000
+    volumes:
+      - ../website/:/var/www/html/
+    networks:
+      - django
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mage-db:db
+    ports:
+      - 8081:80
+    networks:
+      - django
+
+  redis:
+    image: redis
+    container_name: redis
+    hostname: redis
+    networks:
+      - django
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    hostname: rabbitmq
+    networks:
+      - django
+
+volumes:
+  mysql-db:
+  mage-db:
+  odoo-db-data:
+
+networks:
+  django:

@@ -40,13 +40,14 @@ def fetch_all_rating_tags(cache, auth_rest):
     rating_tags = auth_rest.get(
         "/rating/rating_tags/", format='json')
     rating_tag_ids = []
-    for rating_tag in rating_tags['results']:
+    for rating_tag in rating_tags.data['results']:
         rating_tag_ids.append(rating_tag['id'])
     cache['rating_tag_ids'] = rating_tag_ids
 
 
 @given('A customer shares feedback for the product purchased on rating <comments><rating>')
-def customer_create_a_rating(cache, auth_rest, comments, rating):
+def customer_create_a_rating(
+        cache, auth_rest, mock_django_user, comments, rating):
     """Assign the order.
 
     params:
@@ -66,7 +67,7 @@ def customer_create_a_rating(cache, auth_rest, comments, rating):
 
     assert (response) is not None
     assert response.status_code == 201
-    assert str(response.data['status']) == True
+    assert response.data['status'] == True
 
 
 @then('Cross check review rating <comments>')
@@ -82,3 +83,10 @@ def checks_the_customer_rating(cache, auth_rest, comments):
 
     assert rating_obj.rating == 2
     assert rating_obj.comments == comments
+
+    response = auth_rest.get(
+        "/rating/check_rating/",
+        format='json')
+
+    response.data['status'] == True
+    response.data['increment_id'] == cache['increment_id']
