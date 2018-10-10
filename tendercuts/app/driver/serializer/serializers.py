@@ -64,11 +64,11 @@ class DrivertripSerializer(serializers.ModelSerializer):
         """:Override: To handle implicit many to many creation."""
 
         # if there is an already active trip we return that
-        active_trip = DriverTrip.objects.get(
+        active_trip = DriverTrip.objects.filter(
             driver_user_id=self.initial_data.get('driver_user'),
             status=DriverTrip.Status.STARTED.value)
 
-        if active_trip:
+        if len(active_trip) >= 1:
             raise HttpResponseForbidden
         
         trip, status = DriverTrip.objects.get_or_create(
