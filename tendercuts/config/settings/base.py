@@ -305,7 +305,7 @@ SMS_TEMPLATES = {
     'out_delivery': "Your order #{}, is now out for delivery. Have a great meal Wish to serve you again!",
     'processing': "We have started to process Your #{},we will notify you,when we start to deliver.Tendercut.in-Farm Fresh Meats.",
     'complete': "Thanks for choosing Tendercuts.Your order has been successfully delivered!.please give a missed call to rate our quality of the product.Like it-7097299492 Disliked it-7097299569",
-
+    'complete_mobile': "Thanks for choosing Tendercuts.Your order has been successfully delivered!",
     'retail_complete': "Thanks for choosing Tendercuts. Hope you had a great meal! Please give a missed call to rate our quality of the product. Like it-7097299492 Disliked it-7097299569",
 
     'payment_confirmation': "Payment for order #{} is now confirmed, we will notify you when we start to deliver.",
