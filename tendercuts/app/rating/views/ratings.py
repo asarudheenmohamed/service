@@ -11,6 +11,8 @@ from app.rating.serializer.serializers import (ProductratingSerializer,
 from rest_framework import mixins, renderers, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from app.rating.lib import RatingController
+from app.core import models
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -34,11 +36,19 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             Response({status: bool, message: str})
 
         """
-
+        
         data = request.data.copy()
         data.update({'customer': unicode(self.request.user.id)})
 
         serializer = self.get_serializer(data=data)
+        status = False
+
+        queryset = models.SalesFlatOrder.objects \
+       .filter(customer_id=self.request.user.id, status='complete') \
+       .order_by('-created_at') \
+       .prefetch_related("items") \
+       .prefetch_related("payment") \
+       .prefetch_related("shipping_address")[:2]
 
         if serializer.is_valid():
             serializer.save()
@@ -50,11 +60,15 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             if data['rating'] <= 3:
                 tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
-            return Response(
-                {'status': True, 'message': 'Rating update successfully'}, status=status.HTTP_201_CREATED)
+            if data['rating'] == 5:
+                controller = RatingController()
+                status = controller.check_five_star_rating()
 
-        return Response({'status': False, 'message': serializer.errors},
-                        status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'status': status, 'message': 'Rating update successfully'})
+
+        return Response({'status': status, 'message': serializer.errors}
+                        )
 
 
 class ProductRatingTagViewSet(viewsets.ReadOnlyModelViewSet):
