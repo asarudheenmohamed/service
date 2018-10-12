@@ -2,17 +2,15 @@
 
 import logging
 
-from app.core.lib.utils import get_user_id
 from app.rating import tasks
-from app.rating.lib.rating_controller import RatingController
 from app.rating.models import Rating, RatingTag
 from app.rating.serializer.serializers import (ProductratingSerializer,
                                                ProductRatingTagSerializer)
 from rest_framework import mixins, renderers, status, viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from app.rating.lib import RatingController
 from app.core import models
+
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -36,7 +34,6 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             Response({status: bool, message: str})
 
         """
-        
         data = request.data.copy()
         data.update({'customer': unicode(self.request.user.id)})
 
@@ -52,23 +49,17 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         if serializer.is_valid():
             serializer.save()
-
-            RatingController(
-                data['increment_id']).update_rating(
-                data['rating'])
+            if data['rating'] <= 3:
+                tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
             if data['rating'] <= 3:
                 tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
-            if data['rating'] == 5:
-                controller = RatingController()
-                status = controller.check_five_star_rating()
-
             return Response(
-                {'status': status, 'message': 'Rating update successfully'})
+                {'status': True, 'message': 'Rating update successfully'}, status=status.HTTP_201_CREATED)
 
-        return Response({'status': status, 'message': serializer.errors}
-                        )
+        return Response({'status': False, 'message': serializer.errors},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProductRatingTagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -76,30 +67,3 @@ class ProductRatingTagViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = RatingTag.objects.all()
     serializer_class = ProductRatingTagSerializer
-
-
-class OrderRating(APIView):
-    """A simple ViewSet for viewing OrderRating.
-    """
-
-    def get(self, request):
-        """To check the customer order rating status.
-
-        Input:
-            user_id
-
-        returns:
-            Response({'status':status})
-
-        """
-        logger.info("To Check the customer:{} last order rating".format(
-            self.request.user.username))
-        user_id = get_user_id(request)
-        order = RatingController.fetch_customer_last_order(user_id)
-
-        if order.rating:
-            status = True
-        else:
-            status = False
-
-        return Response({'status': status, 'increment_id': order.increment_id})

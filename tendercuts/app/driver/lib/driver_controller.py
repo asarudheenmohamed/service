@@ -324,10 +324,7 @@ class DriverController(object):
         # lon)
 
         # send sms to customer
-        if order_obj.medium == 3:
-            tasks.send_sms.delay(order_id, 'complete_mobile')
-        else:
-            tasks.send_sms.delay(order_id, 'complete')
+        tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)
 
         # update current location for driver
