@@ -72,3 +72,28 @@ class RatingController(object):
             'Fetched the customer:{} last order:{}'.format(user_id, order.increment_id))
 
         return order
+
+
+
+    def check_five_star_rating(self):
+        """Check user gives five star rating consecutively or not.
+
+        """
+        user_id = get_userid()
+
+        queryset = SalesFlatOrder.objects \
+               .filter(customer_id=user_id, status='complete') \
+               .order_by('-created_at') \
+               .prefetch_related("items") \
+               .prefetch_related("payment") \
+               .prefetch_related("shipping_address")[:2]
+
+        if queryset.length > 2:
+            if (queryset[0].rating == 5 and queryset[1] == 5):
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    
