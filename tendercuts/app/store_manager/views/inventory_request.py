@@ -55,7 +55,7 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
             InventoryFlockAppController(message_req).publish_request()
 
         if approved_req:
-            InventoryFlockAppController(message_req).publish_request(
+            InventoryFlockAppController(approved_req).publish_request(
                 template=InventoryFlockAppController.AUTO_TEMPLATE)
 
         return inv_request
