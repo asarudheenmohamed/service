@@ -46,7 +46,7 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
                 continue
             approved_req.append(req)
 
-            req.status == InventoryRequest.Status.APPROVED.value
+            req.status = InventoryRequest.Status.APPROVED.value
 
             message = "Approved by {}".format(self.request.user.email)
             InventoryRequestController(req).process_request(message=message)
