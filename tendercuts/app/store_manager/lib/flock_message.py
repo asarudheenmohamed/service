@@ -30,6 +30,7 @@ class InventoryFlockAppController(object):
         'FINISHED': """<flockml><b>ALREADY COMPLETE:</b> The product: <b>{product}</b> request at store <b>{store}</b> has already been completed.</flockml>"""
     }
 
+    @classmethod
     def send_approval_messages(cls, requests):
         for request in requests:
             flock_msg_controller = cls(request)
