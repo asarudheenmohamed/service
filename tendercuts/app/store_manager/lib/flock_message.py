@@ -21,21 +21,16 @@ class InventoryFlockAppController(object):
     """
     PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}Note: This will be auto approved, in the next 15 mins</flockml>"""
     AUTO_TEMPLATE = """<flockml>has updated the following inventory at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}</flockml>"""
+    CRON_AUTO_TEMPLATE = """<flockml>Bot has automatically updated the following inventory at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}</flockml>"""
 
     TEMPLATES = {
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
         'REJECTED': """<flockml><b>REJECTED:</b> The product: <b>{product}</b> request has been rejected at <b>{store}</b></flockml>""",
         'FAILED': """<flockml><b>FAILED:</b> The product: <b>{product}</b> has not been marked as out of stock at store  <b>{store}</b></flockml>""",
-        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been updated to {packs} packs at store <b>{store}</b> for {inv_type} inventory automatically</flockml>""",
+        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been updated as out of stock at store <b>{store}</b> automatically</flockml>""",
         'FINISHED': """<flockml><b>ALREADY COMPLETE:</b> The product: <b>{product}</b> request at store <b>{store}</b> has already been completed.</flockml>"""
     }
 
-    @classmethod
-    def send_approval_messages(cls, requests):
-        for request in requests:
-            flock_msg_controller = cls(request)
-            flock_msg_controller.publish_response('AUTO')
-    #
     def __init__(self, request):
         if not isinstance(request, collections.Iterable):
             self.request = [request]
