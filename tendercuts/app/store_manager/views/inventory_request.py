@@ -36,7 +36,18 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
         # extract and get the inv reuqest obj.
         ids = map(lambda req: req['id'], inv_request.data)
         inv_request_obj = InventoryRequest.objects.filter(id__in=ids)
-        InventoryFlockAppController(inv_request_obj).publish_request()
+
+        # auto approve other requests
+        message_req = []
+        for req in inv_request_obj:
+            if req.qty == 0:
+                message_req.append(req)
+                continue
+
+            message = "Approved by {}".format(self.request.user.email)
+            InventoryRequestController(req).process_request(message=message)
+
+        InventoryFlockAppController(message_req).publish_request()
 
         return inv_request
 
