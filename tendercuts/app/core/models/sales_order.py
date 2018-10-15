@@ -445,7 +445,6 @@ class SalesFlatOrder(models.Model):
     driver_number = models.CharField(max_length=12, blank=True, null=True)
     sequence_number = models.IntegerField(blank=True, null=True)
     sale_date = models.DateTimeField(blank=True, null=True)
-    rating = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

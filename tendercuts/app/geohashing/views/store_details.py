@@ -24,13 +24,24 @@ class StoreDetailView(APIView):
         Return Modified version of store serializer
         """
         store_id = request.user.userprofile.store_id
-        store = CoreStore.objects.get(store_id=store_id)
-        odoo_store = StockWarehouse.objects.get(mage_code=store.code)
+        if not store_id:
+            stores = CoreStore.objects.all()
+        else:
+            stores = CoreStore.objects.filter(store_id__in=store_id.split(','))
+        
+        codes = [store.code for store in stores]
+        odoo_stores = StockWarehouse.objects.filter(mage_code__in=codes)
 
-        store_data = StoreSerializer(instance=store).data
+        store_data = StoreSerializer(instance=stores, many=True).data
         odoo_data = StockWarehouseSerializer(
-            instance=odoo_store).data
+            instance=odoo_stores, many=True).data
 
-        store_data.update(odoo_data)
+        odoo_data = {store['mage_code']:store for store in odoo_data}
+        logger.info(odoo_data)
+
+        for store in store_data:
+            mage_code = store['code']
+            if mage_code in odoo_data:
+                store.update(odoo_data[mage_code])
 
         return Response(store_data)
