@@ -324,8 +324,8 @@ CACHE_DEFAULT_VERSION = 2
 # app version
 APP_VERSIONS = {
     "CUSTOMER_APP_VERSION": {
-        "min_app_version": '1.9.2',
-        "current_app_version": '2.0.3'
+        "min_app_version": '2.1.7',
+        "current_app_version": '3.0.4'
     },
 
     "DRIVER_APP_VERSION": {
