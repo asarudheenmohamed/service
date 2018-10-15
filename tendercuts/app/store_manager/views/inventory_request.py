@@ -47,7 +47,8 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
             message = "Approved by {}".format(self.request.user.email)
             InventoryRequestController(req).process_request(message=message)
 
-        InventoryFlockAppController(message_req).publish_request()
+        if message_req:
+            InventoryFlockAppController(message_req).publish_request()
 
         return inv_request
 
