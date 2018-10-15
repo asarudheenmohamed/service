@@ -43,10 +43,7 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
             InventoryRequestController(req).process_request(message=message)
 
         if auto_approve_req:
-            auto_approve_req.update({
-                'status': InventoryRequest.Status.APPROVED.value
-            })
-
+            auto_approve_req.update(status=InventoryRequest.Status.APPROVED.value)
             InventoryFlockAppController(auto_approve_req).publish_request(
                 template=InventoryFlockAppController.AUTO_TEMPLATE)
 
