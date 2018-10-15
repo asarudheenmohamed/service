@@ -20,12 +20,13 @@ class InventoryFlockAppController(object):
     Update order status
     """
     PUBLISH_TEMPLATE = """<flockml>has requested the following inventory to updated at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}Note: This will be auto approved, in the next 15 mins</flockml>"""
+    AUTO_TEMPLATE = """<flockml>has updated the following inventory at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}</flockml>"""
 
     TEMPLATES = {
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
         'REJECTED': """<flockml><b>REJECTED:</b> The product: <b>{product}</b> request has been rejected at <b>{store}</b></flockml>""",
         'FAILED': """<flockml><b>FAILED:</b> The product: <b>{product}</b> has not been marked as out of stock at store  <b>{store}</b></flockml>""",
-        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b> automatically</flockml>""",
+        'AUTO': """<flockml><b>AUTO:</b> The product: <b>{product}</b> has been updated to {packs} packs at store <b>{store}</b> for {inv_type} inventory automatically</flockml>""",
         'FINISHED': """<flockml><b>ALREADY COMPLETE:</b> The product: <b>{product}</b> request at store <b>{store}</b> has already been completed.</flockml>"""
     }
 
@@ -54,7 +55,7 @@ class InventoryFlockAppController(object):
 
         return message
 
-    def publish_request(self):
+    def publish_request(self, template=None):
         """Publish the inventory change request in the flock group
 
         :type request: InventoryRequest
@@ -62,10 +63,12 @@ class InventoryFlockAppController(object):
         if not getattr(settings, 'FLOCK_ENDPOINTS', None):
             return
 
+        template = self.PUBLISH_TEMPLATE if not template else template
+
         sample = self.request[0] #  type: InventoryRequest
         inventory_type = "Today" if sample.type == InventoryRequest.INV_TYPE.TODAY.value \
             else "Tomorrow"
-        template = self.PUBLISH_TEMPLATE.format(
+        template = template.format(
             products=self._construct_message(),
             type=inventory_type,
             store=sample.store_name,
@@ -88,3 +91,4 @@ class InventoryFlockAppController(object):
                 store=self.request.store_name),
             'OoS Request',
             '')
+

@@ -39,10 +39,12 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
 
         # auto approve other requests
         message_req = []
+        approved_req = []
         for req in inv_request_obj:
             if req.qty == 0:
                 message_req.append(req)
                 continue
+            approved_req.append(req)
 
             req.status == InventoryRequest.Status.APPROVED.value
 
@@ -51,6 +53,10 @@ class StoreInventoryRequestApi(drf.CreateListMixin, mixins.CreateModelMixin, vie
 
         if message_req:
             InventoryFlockAppController(message_req).publish_request()
+
+        if approved_req:
+            InventoryFlockAppController(message_req).publish_request(
+                template=InventoryFlockAppController.AUTO_TEMPLATE)
 
         return inv_request
 
