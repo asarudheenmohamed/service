@@ -16,5 +16,6 @@ def mark_out_of_stock():
     """auto approve"""
 
     requests = InventoryRequestController.auto_approve_expired_request()
-    InventoryFlockAppController(requests).publish_request(
-        template=InventoryFlockAppController.CRON_AUTO_TEMPLATE)
+    if requests
+        InventoryFlockAppController(requests).publish_request(
+            template=InventoryFlockAppController.CRON_AUTO_TEMPLATE)
