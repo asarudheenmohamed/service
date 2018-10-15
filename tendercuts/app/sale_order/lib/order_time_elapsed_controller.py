@@ -55,7 +55,10 @@ class OrderTimeElapsedController(object):
             import pytz
             pending_time = dateutil.parser.parse(
                 "{} {}".format(order_obj.scheduled_date, self.slots[order_obj.scheduled_slot]))
-            #pending_time = pending_time.replace(tzinfo=pytz.utc)
+            tz = pytz.timezone('Asia/Kolkata')
+            # remove any timezone
+            pending_time = pending_time.replace(tzinfo=None)
+            pending_time = tz.localize(pending_time, is_dst=None)
         else:
             pending_time = self.order.created_at
 
