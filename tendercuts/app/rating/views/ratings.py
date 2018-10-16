@@ -48,6 +48,7 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             if data['rating'] == 5:
                 controller = RatingController(data['increment_id'])
                 status = controller.check_five_star_rating()
+                tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
             return Response(
                 {'status': status, 'message': 'Rating update successfully'})
