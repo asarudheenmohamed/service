@@ -16,7 +16,7 @@ class FreshDesk():
     def __init__(self):
         pass
 
-    def create_ticket(self, subject, description, email, phone):
+    def create_ticket(self, subject, description,tags, email, phone):
         """Create Freshdesk ticket.
 
         params:
@@ -40,6 +40,7 @@ class FreshDesk():
             "phone": str(phone),
             "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PORTAL"],
             "type": settings.FRESHDESK["TICKETS_CREATE"]["TYPE"],
+            "tags": tags
         }
 
         headers = {"Content-Type": "application/json"}

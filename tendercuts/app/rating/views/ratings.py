@@ -10,7 +10,8 @@ from rest_framework import mixins, renderers, status, viewsets
 from rest_framework.response import Response
 from app.rating.lib import RatingController
 from app.core import models
-
+from rest_framework.views import APIView
+from app.core.lib.utils import get_user_id
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -61,3 +62,41 @@ class ProductRatingTagViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = RatingTag.objects.all()
     serializer_class = ProductRatingTagSerializer
+
+
+
+class OrderRating(APIView):
+    """A simple ViewSet for viewing OrderRating.
+    """
+
+    def get(self, request):
+        """To check the customer order rating status.
+
+        Input:
+            user_id
+
+        returns:
+            Response({'status':status})
+
+        """
+        logger.info("To Check the customer:{} last order rating".format(
+            self.request.user.username))
+        user_id = get_user_id(request)
+        order = RatingController.fetch_customer_last_order(user_id)
+
+        if order.rating:
+            status = True
+        else:
+            status = False
+
+        return Response({'status': status, 'increment_id': order.increment_id})
+
+
+
+
+
+
+
+
+
+

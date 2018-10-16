@@ -44,17 +44,18 @@ class RatingController(object):
         customer_details = CustomerSearchController.load_basic_info(
             user_id)
 
-        subject = "#{} Customer Review&Rating".format(self.order_id)
+        subject = "{} Star rating for the order#{}".format(rating_obj.rating,self.order_id)
 
         tags = ", ".join(
             str(tag) for tag in rating_obj.rating_tag.values_list(
                 'tag_name', flat=True))
 
-        description = "Order Id #{} Comments:{} Review Rating:{} Rating Tags:{}".format(
-            self.order_id, rating_obj.comments, rating_obj.rating, tags)
+        description = "Comments:{} for the Order#{}".format(
+            rating_obj.comments, self.order_id)
+        tags=[tag for tag in rating_obj.rating_tag.values_list('tag_name', flat=True)]
 
         ticket_obj = FreshDesk().create_ticket(
-            subject, description, customer_details[1], customer_details[2])
+            subject, description,tags, customer_details[1], customer_details[2])
 
         logger.info(
             'FreshDesk ticket created, customer rating:{} for the order:{}'.format(user_id, self.order_id))
