@@ -99,7 +99,7 @@ class RatingController(object):
                .prefetch_related("payment") \
                .prefetch_related("shipping_address")[:2]
 
-        if queryset.length > 2:
+        if len(queryset) > 2:
             if (queryset[0].rating == 5 and queryset[1] == 5):
                 return True
             else:
