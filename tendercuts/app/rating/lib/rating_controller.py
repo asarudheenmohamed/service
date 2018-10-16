@@ -90,7 +90,7 @@ class RatingController(object):
         """Check user gives five star rating consecutively or not.
 
         """
-        user_id = get_userid()
+        user_id = self.get_userid()
 
         queryset = SalesFlatOrder.objects \
                .filter(customer_id=user_id, status='complete') \
