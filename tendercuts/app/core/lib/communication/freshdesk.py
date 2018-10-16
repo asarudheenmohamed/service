@@ -35,7 +35,7 @@ class FreshDesk():
             "description": description,
             "email": email,
             "priority": settings.FRESHDESK["TICKETS_CREATE"]["PRIORITY"]["HIGH"],
-            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["OPEN"],
+            "status": settings.FRESHDESK["TICKETS_CREATE"]["STATUS"]["CLOSED"],
             "cc_emails": settings.FRESHDESK["CC_EMAILS"],
             "phone": str(phone),
             "source": settings.FRESHDESK["TICKETS_CREATE"]["SOURCE"]["PORTAL"],

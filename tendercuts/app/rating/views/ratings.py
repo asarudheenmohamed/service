@@ -42,13 +42,11 @@ class ProductratingViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            if data['rating'] <= 3:
-                tasks.create_fresh_desk_ticket.delay(data['increment_id'])
+            tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
             if data['rating'] == 5:
                 controller = RatingController(data['increment_id'])
                 status = controller.check_five_star_rating()
-                tasks.create_fresh_desk_ticket.delay(data['increment_id'])
 
             return Response(
                 {'status': status, 'message': 'Rating update successfully'})
