@@ -54,5 +54,5 @@ class SalesOrderSerializer(serializers.ModelSerializer):
                   "deliverytype",
                   "promised_delivery_time_dt", "shipping_amount",
                   "discount_amount", "driver_name", "driver_number",
-                  "sequence_number"
+                  "sequence_number","rating"
                   )
