@@ -97,10 +97,10 @@ class RatingController(object):
                .order_by('-created_at') \
                .prefetch_related("items") \
                .prefetch_related("payment") \
-               .prefetch_related("shipping_address")[:2]
+               .prefetch_related("shipping_address")[:3]
 
         if len(queryset) > 2:
-            if (queryset[0].rating == 5 and queryset[1] == 5):
+            if (queryset[0].rating == 5 and queryset[1].rating == 5 and queryset[2].rating == 5):
                 return True
             else:
                 return False
