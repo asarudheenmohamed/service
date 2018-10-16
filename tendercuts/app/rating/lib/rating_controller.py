@@ -18,8 +18,8 @@ class RatingController(object):
         """Constructor."""
         self.order_id = order_id
 
-    def create_fresh_desk_ticket(self):
-        """Create fresh desk ticket for the given order-rating.
+    def get_userid(self):
+        """To get the user_id.
 
         params:
            order_id (obj): sale order increment_id
@@ -29,6 +29,17 @@ class RatingController(object):
 
         # get megento user id
         user_id = get_mage_userid(rating_obj.customer)
+
+        return user_id
+
+    def create_fresh_desk_ticket(self):
+        """Create fresh desk ticket for the given order-rating.
+
+        params:
+           order_id (obj): sale order increment_id
+
+        """
+        user_id = get_userid()
         # fetch the customer basic info
         customer_details = CustomerSearchController.load_basic_info(
             user_id)
