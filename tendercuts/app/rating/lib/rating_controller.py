@@ -30,7 +30,7 @@ class RatingController(object):
         # get megento user id
         user_id = get_mage_userid(rating_obj.customer)
 
-        return user_id
+        return user_id, rating_obj
 
     def create_fresh_desk_ticket(self):
         """Create fresh desk ticket for the given order-rating.
@@ -39,7 +39,7 @@ class RatingController(object):
            order_id (obj): sale order increment_id
 
         """
-        user_id = get_userid()
+        user_id,rating_obj = self.get_userid()
         # fetch the customer basic info
         customer_details = CustomerSearchController.load_basic_info(
             user_id)
@@ -91,7 +91,7 @@ class RatingController(object):
         """Check user gives five star rating consecutively or not.
 
         """
-        user_id = self.get_userid()
+        user_id,rating_obj = self.get_userid()
 
         queryset = SalesFlatOrder.objects \
                .filter(customer_id=user_id, status='complete') \
