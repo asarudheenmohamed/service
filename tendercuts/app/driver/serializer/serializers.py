@@ -2,6 +2,8 @@ from rest_framework import serializers
 from app.driver.models.driver_order import DriverStat, DriverTrip, DriverOrder, DriverPosition
 from app.core.serializers.sales_order import SalesOrderSerializer
 
+from django.http import HttpResponseForbidden
+
 
 class DriverStatSerializer(serializers.ModelSerializer):
     """
@@ -61,6 +63,15 @@ class DrivertripSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """:Override: To handle implicit many to many creation."""
+
+        # if there is an already active trip we return that
+        active_trip = DriverTrip.objects.get(
+            driver_user_id=self.initial_data.get('driver_user'),
+            status=DriverTrip.Status.STARTED.value)
+
+        if active_trip:
+            raise HttpResponseForbidden
+        
         trip, status = DriverTrip.objects.get_or_create(
             driver_user_id=self.initial_data.get('driver_user'),
             status=DriverTrip.Status.CREATED.value)  # type: DriverTrip
@@ -74,4 +85,4 @@ class DrivertripSerializer(serializers.ModelSerializer):
             trip.auto_assigned = True
             trip.save()
 
-        return trip
+        return trip  
