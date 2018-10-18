@@ -344,7 +344,8 @@ GROUPS = {
     "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
-    "INVENTORY": "g:4084ae0507c54b25b4bb19099d24e2a5"
+    "INVENTORY": "g:4084ae0507c54b25b4bb19099d24e2a5",
+    "OoS": "g:dd109248c7774252939420458d990a75"
 }
 
 FLOCK_AUTH = {
