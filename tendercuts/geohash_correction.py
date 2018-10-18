@@ -61,10 +61,12 @@ def get_consolidated_df():
 
 print ("Getting mismatches")
 merged_df = get_consolidated_df()
+#merged_df = merged_df[(merged_df.old_store == 'kattupakkam') | (merged_df.new_store == 'kattupakkam')]
 for key, group in merged_df.groupby('new_store'):
     #data = CustomerAddressEntityVarchar.objects.filter(entity_id__in=group.entity_id.tolist(), attribute_id=231)
     #data.update(value=key)
     print (key)
     print (group)
     print ("============================")
+print (len(merged_df))
 

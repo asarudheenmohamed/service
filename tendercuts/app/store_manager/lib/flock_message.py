@@ -23,6 +23,13 @@ class InventoryFlockAppController(object):
     AUTO_TEMPLATE = """<flockml>has updated the following inventory at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}</flockml>"""
     CRON_AUTO_TEMPLATE = """<flockml>Bot has automatically updated the following inventory at store: <b>{store}</b> for <b>{type}</b>.<br/>{products}</flockml>"""
 
+    TEMPLATE_CHANNEL = {
+        PUBLISH_TEMPLATE: 'OoS',
+        AUTO_TEMPLATE: 'INVENTORY',
+        CRON_AUTO_TEMPLATE: 'OoS'
+    }
+    
+    # Deprecated
     TEMPLATES = {
         'APPROVED': """<flockml><b>SUCCESS:</b> The product: <b>{product}</b> has been marked as out of stock at store <b>{store}</b></flockml>""",
         'REJECTED': """<flockml><b>REJECTED:</b> The product: <b>{product}</b> request has been rejected at <b>{store}</b></flockml>""",
@@ -60,6 +67,7 @@ class InventoryFlockAppController(object):
             return
 
         template = self.PUBLISH_TEMPLATE if not template else template
+        channel = self.TEMPLATE_CHANNEL[template]
 
         sample = self.request[0] #  type: InventoryRequest
         inventory_type = "Today" if sample.type == InventoryRequest.INV_TYPE.TODAY.value \
@@ -71,9 +79,10 @@ class InventoryFlockAppController(object):
             url=settings.FLOCK_ENDPOINTS['APPROVE_INV_REQ']
         )
 
-        self.flock.send_flockml('INVENTORY', template, 'OoS Request', '',
+        self.flock.send_flockml(channel, template, 'OoS Request', '',
                                 send_as=sample.triggered_by.username)
 
+    # Deprecated
     def publish_response(self, template):
         """Publish the inventory request's response to the flock group
 

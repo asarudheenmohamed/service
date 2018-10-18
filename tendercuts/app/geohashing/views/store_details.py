@@ -37,7 +37,6 @@ class StoreDetailView(APIView):
             instance=odoo_stores, many=True).data
 
         odoo_data = {store['mage_code']:store for store in odoo_data}
-        logger.info(odoo_data)
 
         for store in store_data:
             mage_code = store['code']
