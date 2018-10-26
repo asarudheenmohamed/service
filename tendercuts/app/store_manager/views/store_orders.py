@@ -73,5 +73,5 @@ class HistoricOrderViewSet(viewsets.ReadOnlyModelViewSet):
         for field_name, field_value in self.request.query_params.items():
             filters[field_name] = field_value
 
-        return models.SalesFlatOrder(**filters)
+        return models.SalesFlatOrder.objects.filter(**filters)
 
