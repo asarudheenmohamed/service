@@ -14,6 +14,11 @@ router.register(
     base_name='StoreOrderViewSet')
 
 router.register(
+    r'order_history',
+    views.HistoricOrderViewSet,
+    base_name='HistoricOrderViewSet')
+
+router.register(
     r'trips',
     views.StoreTripViewSet,
     base_name='StoreTripViewSet')

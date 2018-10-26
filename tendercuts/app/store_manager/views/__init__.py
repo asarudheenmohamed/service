@@ -1,5 +1,5 @@
 from .login import StoreManagerLoginApi
-from .store_orders import StoreOrderViewSet
+from .store_orders import StoreOrderViewSet, HistoricOrderViewSet
 from .store_trips import StoreTripViewSet
 from .store_drivers import StoreDriverView
 from .routing import StoreRoutingView
