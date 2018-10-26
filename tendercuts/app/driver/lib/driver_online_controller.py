@@ -39,9 +39,7 @@ class DriverOnlineController(object):
 
         """
         obj = DriverLoginLogout.objects.filter(
-            driver=self.driver.id,
-            date=datetime.date.today(),
-            check_out__isnull=True)
+            driver_id=self.driver.id, check_out__isnull=True)
 
         logger.debug("Check whether driver: {} Checked In or not".format(
             self.driver))

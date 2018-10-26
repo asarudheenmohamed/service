@@ -92,3 +92,8 @@ class CatalogProductFlat24Serializer(serializers.ModelSerializer):
     class Meta:
         model = models.CatalogProductFlat24
         fields = PRODUCT_FIELDS
+
+class CatalogProductFlat26Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CatalogProductFlat26
+        fields = PRODUCT_FIELDS

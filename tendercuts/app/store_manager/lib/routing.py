@@ -42,7 +42,7 @@ class Vehicle():
 class RoutingData:
 
     # time for the rider to scan and take in the app.
-    INITIAL_BUFFER_TIME = 15
+    INITIAL_BUFFER_TIME = 0
 
     def __init__(self, store_id):
         """
@@ -62,6 +62,9 @@ class RoutingData:
         self.depot = 0
         # location for all orders.
         self.time_windows, self.time_per_order, self.locations = self.prepare_location_data()
+        logger.info(self.time_windows)
+        logger.info(self.time_per_order)
+        logger.info(self.locations)
         # Item counts for all orders
         self.demands = self.generate_demands()
         # time window for all orders
@@ -103,9 +106,8 @@ class RoutingData:
             min_time = shipping_address.eta + self.INITIAL_BUFFER_TIME
             # Time windows: if the order cannot be serviced, then we put in mintime itself
             # so it can get prioritized.
-            time_remaining = min_time if order.remaining_time < min_time else order.remaining_time
-            time_windows.append((self.INITIAL_BUFFER_TIME, time_remaining))
-        logger.info(locations)
+            time_remaining = min_time + 10 if order.remaining_time < min_time else order.remaining_time
+            time_windows.append((self.INITIAL_BUFFER_TIME, int(time_remaining)))
 
         # setup your projections
         crs_wgs = proj.Proj(init='epsg:4326')  # assuming you're using WGS84 geographic
@@ -377,6 +379,7 @@ class RoutingController():
 
         # Define weight of each edge
         distance_evaluator = CreateDistanceEvaluator(data).distance_evaluator
+        logger.info(CreateDistanceEvaluator(data)._distances)
         routing.SetArcCostEvaluatorOfAllVehicles(distance_evaluator)
 
         # Add Capacity constraint
@@ -394,7 +397,7 @@ class RoutingController():
 
         # Solve the problem.
         assignment = routing.SolveWithParameters(search_parameters)
-        logger.info("SOLVED and status was {}".format(assignment))
+        logger.info("status was {}".format(routing.status()))
         # printer = ConsolePrinter(data, routing, assignment)
 
         return self.format_output(routing, data, assignment)
