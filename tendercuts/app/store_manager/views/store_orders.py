@@ -70,7 +70,7 @@ class HistoricOrderViewSet(viewsets.ReadOnlyModelViewSet):
         store_id = self.request.GET['store_id']
 
         filters  = {}
-        for field_name, field_value in self.request.query_params:
+        for field_name, field_value in self.request.query_params.items():
             filters[field_name] = field_value
 
         return models.SalesFlatOrder(**filters)
