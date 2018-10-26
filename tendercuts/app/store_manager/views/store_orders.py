@@ -71,6 +71,8 @@ class HistoricOrderViewSet(viewsets.ReadOnlyModelViewSet):
 
         filters  = {}
         for field_name, field_value in self.request.query_params.items():
+            if field_name in ['page']:
+                continue
             filters[field_name] = field_value
 
         return models.SalesFlatOrder.objects\
