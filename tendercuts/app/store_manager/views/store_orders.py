@@ -5,11 +5,17 @@ from rest_framework import viewsets
 
 from app.core import serializers
 from app.store_manager.lib import StoreBaseController
+from rest_framework.pagination import  PageNumberPagination
 
 from ..auth import StoreManagerPermission
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 1000
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
 
 
 class StoreOrderViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,7 +25,7 @@ class StoreOrderViewSet(viewsets.ReadOnlyModelViewSet):
         API: store_manager/store_data/
 
     """
-
+    pagination_class = LargeResultsSetPagination
     permission_classes = (StoreManagerPermission,)
     serializer_class = serializers.SalesOrderSerializer
 
