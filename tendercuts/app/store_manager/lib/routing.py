@@ -2,8 +2,11 @@
 import datetime
 import logging
 
+from django.db.models import Q
+
 import pyproj as proj
 from app.core.models import CoreStore, SalesFlatOrder
+from app.driver.models.driver_order import DriverOrder
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 # Get an instance of a logger
