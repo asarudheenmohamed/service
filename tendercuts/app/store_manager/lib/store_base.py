@@ -47,7 +47,7 @@ class StoreBaseController(object):
         trips = DriverTrip.objects.filter(
             driver_order__increment_id__in=increment_ids)
 
-        return trips
+        return set(trips)
 
     def get_current_drivers(self):
         """Get the currently active drivers.
