@@ -76,22 +76,16 @@ class RoutingData:
     def fetch_orders(self):
         """Fetch the non assign orders based on store_id.
 
-        Returns:
+    Returns:
          sale order object
         """
         today = format(datetime.date.today(), '%Y-%m-%d')
 
         order = SalesFlatOrder.objects.filter(
-            store_id=self.store_id, status='processing',
-            sale_date__gte=today).prefetch_related('items', 'shippig_address')
-        order_ids = [increment_id for increment_id in order.values_list(
-            'increment_id', flat=True)]
-        assign_driver_orders = DriverOrder.objects.filter(
-            increment_id__in=order_ids)
-
-        order_ids = [
-            driver_order.increment_id for driver_order in assign_driver_orders]
-        order = order.filter(~Q(increment_id__in=order_ids))
+            store_id=self.store_id,
+            status='processing',
+            sale_date__gte=today,
+            driver_number__isnull=True).prefetch_related('items', 'shipping_address')
 
         return order
 

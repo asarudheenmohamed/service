@@ -4,8 +4,6 @@ import logging
 
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponseForbidden
-
 from app.core.lib.user_controller import CustomerSearchController
 from app.core.models import SalesFlatOrder
 from app.driver.models import DriverPosition
@@ -96,12 +94,14 @@ class StoreOrderController(object):
             status=DriverTrip.Status.STARTED.value)
 
         if len(active_trip) >= 1:
-            raise HttpResponseForbidden
+            return (False,"The driver trip is already started")
 
         assign_order=DriverOrder.objects.filter(~Q(driver_user_id=data.get('driver_user')),
-                                    increment_id__in=data.get('driver_order'))
+                                    increment_id__in=data.get('driver_order')).values_list('increment_id',flat=True)
         if assign_order:
-            raise HttpResponseForbidden
+            orders=str(assign_order).strip('[]')
+
+            return (False,'{}:These orders already assigned'.format(orders))
 
         trip, status=DriverTrip.objects.get_or_create(
             driver_user_id=data.get('driver_user'),
@@ -117,4 +117,4 @@ class StoreOrderController(object):
             trip.save()
         self._update_driver_details(trip.driver_user,data.get('driver_order'))
 
-        return trip
+        return (True,"Orders assigned successfully")

@@ -50,9 +50,10 @@ class TestStoreOrderController:
                 'driver_order': [2134234, 345436556]}
 
         controller = StoreOrderController()
-        obj = controller.store_manager_assign_orders(data)
+        status, message = controller.store_manager_assign_orders(data)
 
-        assert obj.driver_user_id == user_obj.id
+        assert status == True
+        assert message == "Orders assigned successfully"
 
     @pytest.mark.django_db
     def test_update_driver_details(self, mock_driver, generate_mock_order):
