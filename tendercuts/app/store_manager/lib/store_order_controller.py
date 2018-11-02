@@ -99,7 +99,7 @@ class StoreOrderController(object):
         assign_order=DriverOrder.objects.filter(~Q(driver_user_id=data.get('driver_user')),
                                     increment_id__in=data.get('driver_order')).values_list('increment_id',flat=True)
         if assign_order:
-            orders=str(assign_order).strip('[]')
+            orders=str(list(assign_order)).strip('[]')
 
             return (False,'{}:These orders already assigned'.format(orders))
 

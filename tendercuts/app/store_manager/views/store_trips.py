@@ -37,8 +37,8 @@ class StoreTripViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
         status_,message=StoreOrderController().store_manager_assign_orders(request.data)
 
         return Response(
-                {'status': status, 'message': message},
-                 status=status.HTTP_201_CREATED if status_ else status.HTTP_400_BAD_REQUEST)
+                {'status': status_, 'message': message},
+                 status=status.HTTP_201_CREATED)
 
 
     def get_queryset(self):
