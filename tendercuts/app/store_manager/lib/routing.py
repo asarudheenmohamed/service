@@ -1,12 +1,13 @@
 """Endpoint to get optimum routing."""
-import logging
 import datetime
+import logging
+
+from django.db.models import Q
 
 import pyproj as proj
-from ortools.constraint_solver import pywrapcp
-from ortools.constraint_solver import routing_enums_pb2
-
-from app.core.models import SalesFlatOrder, CoreStore
+from app.core.models import CoreStore, SalesFlatOrder
+from app.driver.models.driver_order import DriverOrder
+from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -50,12 +51,10 @@ class RoutingData:
         """
         self.store_id = store_id
         today = format(datetime.date.today(), '%Y-%m-%d')
-        self.orders = SalesFlatOrder.objects.filter(store_id=store_id, status='processing', sale_date__gte=today)
-        logger.info(self.orders)
-        self.orders = self.orders.prefetch_related('items', 'shipping_address')
-
+        self.orders = self.fetch_orders()
         # +1 to counter the depot location also
-        self.cache = {index + 1: order for index, order in enumerate(self.orders)}
+        self.cache = {index + 1: order for index,
+                      order in enumerate(self.orders)}
         self.vehicle = Vehicle()
         self.num_vehicles = 20
 
@@ -74,6 +73,22 @@ class RoutingData:
         """Gets number of locations"""
         return len(self.locations)
 
+    def fetch_orders(self):
+        """Fetch the non assign orders based on store_id.
+
+    Returns:
+         sale order object
+        """
+        today = format(datetime.date.today(), '%Y-%m-%d')
+
+        order = SalesFlatOrder.objects.filter(
+            store_id=self.store_id,
+            status='processing',
+            sale_date__gte=today,
+            driver_number__isnull=True).prefetch_related('items', 'shipping_address')
+
+        return order
+
     def prepare_location_data(self):
         """Get all lat and lng and convert to cartesian
         coordinates
@@ -81,18 +96,20 @@ class RoutingData:
         :return:
             A list of (x, y)
         """
-       
+
         time_windows = [(0, 0)]
         time_per_order = [0]
         locations = []
 
-        # map to hold addresses, so that we can set the times to zero for 
+        # map to hold addresses, so that we can set the times to zero for
         # same addresses.
         address_map = {}
         for order in self.orders:
-            shipping_address = order.shipping_address.all().filter(address_type='shipping').first()
-            
-            locations.append((shipping_address.o_latitude, shipping_address.o_longitude))
+            shipping_address = order.shipping_address.all().filter(
+                address_type='shipping').first()
+
+            locations.append((shipping_address.o_latitude,
+                              shipping_address.o_longitude))
             # time per order
             if not address_map.get(shipping_address.customer_address_id, None):
                 # Flat 8 mins.
@@ -106,12 +123,16 @@ class RoutingData:
             min_time = shipping_address.eta + self.INITIAL_BUFFER_TIME
             # Time windows: if the order cannot be serviced, then we put in mintime itself
             # so it can get prioritized.
-            time_remaining = min_time + 10 if order.remaining_time < min_time else order.remaining_time
-            time_windows.append((self.INITIAL_BUFFER_TIME, int(time_remaining)))
+            time_remaining = min_time + \
+                10 if order.remaining_time < min_time else order.remaining_time
+            time_windows.append(
+                (self.INITIAL_BUFFER_TIME, int(time_remaining)))
 
         # setup your projections
-        crs_wgs = proj.Proj(init='epsg:4326')  # assuming you're using WGS84 geographic
-        crs_bng = proj.Proj(init='epsg:27700')  # use a locally appropriate projected CRS
+        # assuming you're using WGS84 geographic
+        crs_wgs = proj.Proj(init='epsg:4326')
+        # use a locally appropriate projected CRS
+        crs_bng = proj.Proj(init='epsg:27700')
 
         locations = [proj.transform(crs_wgs, crs_bng, location[0], location[1])
                      for location in locations]
@@ -122,8 +143,8 @@ class RoutingData:
             'location__longandlatis__latitude').first()
 
         depot = proj.transform(crs_wgs, crs_bng,
-            store_lat_and_lng['location__longandlatis__latitude'],
-            store_lat_and_lng['location__longandlatis__longitude'])
+                               store_lat_and_lng['location__longandlatis__latitude'],
+                               store_lat_and_lng['location__longandlatis__longitude'])
         locations.insert(0, depot)
 
         return time_windows, time_per_order, locations
@@ -243,7 +264,8 @@ def add_time_window_constraints(routing, data, time_evaluator):
         routing.AddToAssignment(time_dimension.SlackVar(index))
     for vehicle_id in xrange(data.num_vehicles):
         index = routing.Start(vehicle_id)
-        time_dimension.CumulVar(index).SetRange(data.time_windows[0][0], data.time_windows[0][1])
+        time_dimension.CumulVar(index).SetRange(
+            data.time_windows[0][0], data.time_windows[0][1])
         routing.AddToAssignment(time_dimension.SlackVar(index))
 
 
@@ -317,7 +339,8 @@ class ConsolePrinter():
             time_max = self.assignment.Max(time_var)
             total_dist += route_dist
             total_time += route_time
-            plan_output += ' {0} Load({1}) Time({2},{3})\n'.format(node_index, route_load, time_min, time_max)
+            plan_output += ' {0} Load({1}) Time({2},{3})\n'.format(
+                node_index, route_load, time_min, time_max)
             plan_output += 'Distance of the route: {0}m\n'.format(route_dist)
             plan_output += 'Load of the route: {0}\n'.format(route_load)
             plan_output += 'Time of the route: {0}min\n'.format(route_time)
@@ -375,7 +398,8 @@ class RoutingController():
         data = RoutingData(store_id)
 
         # Create Routing Model
-        routing = pywrapcp.RoutingModel(data.num_locations, data.num_vehicles, data.depot)
+        routing = pywrapcp.RoutingModel(
+            data.num_locations, data.num_vehicles, data.depot)
 
         # Define weight of each edge
         distance_evaluator = CreateDistanceEvaluator(data).distance_evaluator
