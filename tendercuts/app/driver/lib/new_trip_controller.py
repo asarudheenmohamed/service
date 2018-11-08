@@ -89,6 +89,15 @@ class DriverTripController(object):
 
             self.compute_driver_trip_distance()
 
+    def create_sequence_number(self, increment_id):
+        """create sequence number for the order."""
+        trip_driver_orders = self.trip.driver_order.all()
+
+        # update order sequence number
+        SalesFlatOrder.objects.filter(
+            increment_id=increment_id).update(
+            sequence_number=len(trip_driver_orders))
+
     def add_driver_orders_and_sequence_number(self, driver_order):
         """create sequence number for the driver assigned order."""
         if not self.trip.auto_assigned:
@@ -96,21 +105,9 @@ class DriverTripController(object):
             self.trip.save()
             logger.info(
             'Order:{} added to a trip:{}'.format(
-             driver_order.increment_id,
-         self.trip.id))
+             driver_order.increment_id, self.trip.id))
 
-        order_ids = list(
-            self.trip.driver_order.all().values_list(
-                'increment_id', flat=True))
-
-        order_objects = SalesFlatOrder.objects.filter(
-            increment_id__in=order_ids)
-
-        for index, value in enumerate(order_ids, start=1):
-            # update order sequence number
-            order = order_objects.get(increment_id=value)
-            order.sequence_number = index
-            order.save()
+            self.create_sequence_number(driver_order.increment_id)
 
     def update_sequence_number(self, order_id, sequence_number):
         """Update order sequence number for the given order id.
