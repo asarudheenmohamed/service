@@ -1,5 +1,6 @@
-import pytest
+from datetime import datetime
 
+import pytest
 from app.core.lib.controller import ProductsPriceController
 from app.core.models.product import CatalogProductFlat1
 
@@ -25,11 +26,11 @@ class TestProductPriceController:
             entity=products_prices[0]['entity_id'])
 
         obj.special_price = 100
+        obj.special_to_date=datetime.now()
         obj.save()
 
         controller = ProductsPriceController()
         products_prices = controller.get_products_price(store_id)
+        product=(products_price for products_price in products_prices if products_price["entity_id"] == obj.entity_id).next()
 
-        assert obj.visibility == 4
-        assert obj.status == 1
-        assert obj.special_price == 100
+        assert obj.special_price == product['special_price']
