@@ -142,6 +142,44 @@ def test_add_driver_orders_and_sequence_number(django_user):
 
 
 @pytest.mark.django_db
+def test_create_sequence_number(django_user):
+    """Test trip id based driver order sequence number creation.
+    Assert:
+     Checks the trip assign order sequence number
+    """
+    # mock order id
+    objs = SalesFlatOrder.objects.all()[:2]
+
+    user_obj = User.objects.get_or_create(
+        username=django_user.username)[0]
+
+    driver_order1 = DriverOrder.objects.create(
+        driver_user=user_obj,
+        increment_id=objs[0].increment_id)
+    driver_order2 = DriverOrder.objects.create(
+        driver_user=user_obj,
+        increment_id=objs[1].increment_id)
+    trip = DriverTrip.objects.create(driver_user=user_obj)
+    trip.driver_order.add(driver_order1)
+
+    controller = DriverTripController(trip)
+    controller.create_sequence_number(objs[0].increment_id)
+    order = SalesFlatOrder.objects.filter(
+        increment_id=objs[0].increment_id).last()
+
+    assert order.sequence_number == 1
+
+    trip.driver_order.add(driver_order2)
+
+    controller = DriverTripController(trip)
+    controller.create_sequence_number(objs[1].increment_id)
+    order = SalesFlatOrder.objects.filter(
+        increment_id=objs[1].increment_id).last()
+
+    assert order.sequence_number == 2
+
+
+@pytest.mark.django_db
 def test_compute_driver_trip_distance(django_user):
     """Test compute driver trip distance.
 

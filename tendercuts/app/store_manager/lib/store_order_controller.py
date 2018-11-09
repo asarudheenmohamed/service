@@ -10,6 +10,8 @@ from app.driver.models import DriverPosition
 from app.driver.models.driver_order import (DriverOrder, DriverPosition,
                                             DriverStat, DriverTrip)
 
+from app.driver.lib.new_trip_controller import DriverTripController
+
 logger = logging.getLogger(__name__)
 
 
@@ -40,7 +42,6 @@ class StoreOrderController(object):
 
         return driver_user_obj
 
-
     def get_driver_location(self, driver_id):
         """Fetch driver current location.
 
@@ -56,14 +57,14 @@ class StoreOrderController(object):
 
         return driver_position_obj
 
-    def _update_driver_details(self,driver_user,order_ids):
+    def _update_driver_details(self, driver_user, order_ids):
         """Update driver name and driver number in sale order object.
 
         params:
            order_obj (obj): sale order object
 
         """
-        user_id=driver_user.username.split(":")[1]
+        user_id = driver_user.username.split(":")[1]
         driver_details = CustomerSearchController.load_cache_basic_info(
             user_id)
 
@@ -76,8 +77,6 @@ class StoreOrderController(object):
             'The order:{} assigned driver details like driver name:{}, and driver number:{} updated'.format(
                 order_ids, driver_details['name'], driver_details['phone']))
 
-
-
     def store_manager_assign_orders(self, data):
         """Assign orders in driver trip.
 
@@ -88,33 +87,35 @@ class StoreOrderController(object):
             driver trip
 
         """
-        
+
         active_trip = DriverTrip.objects.filter(
             driver_user_id=data.get('driver_user'),
             status=DriverTrip.Status.STARTED.value)
 
         if len(active_trip) >= 1:
-            return (False,"The driver trip is already started")
+            return (False, "The driver trip is already started")
 
-        assign_order=DriverOrder.objects.filter(~Q(driver_user_id=data.get('driver_user')),
-                                    increment_id__in=data.get('driver_order')).values_list('increment_id',flat=True)
+        assign_order = DriverOrder.objects.filter(~Q(driver_user_id=data.get('driver_user')),
+                                                  increment_id__in=data.get('driver_order')).values_list('increment_id', flat=True)
         if assign_order:
-            orders=str(list(assign_order)).strip('[]')
+            orders = str(list(assign_order)).strip('[]')
 
-            return (False,'{}:These orders already assigned'.format(orders))
+            return (False, '{}:These orders already assigned'.format(orders))
 
-        trip, status=DriverTrip.objects.get_or_create(
+        trip, status = DriverTrip.objects.get_or_create(
             driver_user_id=data.get('driver_user'),
             status=DriverTrip.Status.CREATED.value)  # type: DriverTrip
 
         if 'driver_order' in data:
-            for order in data.get('driver_order'):
-                order, status=DriverOrder.objects.get_or_create(
-                    driver_user_id=data.get('driver_user'), increment_id=order)
+            for increment_id in data.get('driver_order'):
+                order, status = DriverOrder.objects.get_or_create(
+                    driver_user_id=data.get('driver_user'), increment_id=increment_id)
                 trip.driver_order.add(order)
+                DriverTripController(trip).create_sequence_number(increment_id)
 
-            trip.auto_assigned=True
+            trip.auto_assigned = True
             trip.save()
-        self._update_driver_details(trip.driver_user,data.get('driver_order'))
 
-        return (True,"Orders assigned successfully")
+        self._update_driver_details(trip.driver_user, data.get('driver_order'))
+
+        return (True, "Orders assigned successfully")

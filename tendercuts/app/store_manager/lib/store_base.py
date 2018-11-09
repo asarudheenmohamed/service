@@ -58,9 +58,9 @@ class StoreBaseController(object):
         """
         # tuple of mage_id, dj_id
         driver_objs = DriverLoginLogout.objects.filter(
-            store_id=self.store_id).values_list(
+            store_id=self.store_id, check_out__isnull=True).values_list(
             'driver__username', 'driver_id')
-        
+
         user_ids = {}
         for mage_id, dj_id in driver_objs:
             entity_id = mage_id.split(":")[1]
@@ -83,11 +83,5 @@ class StoreBaseController(object):
         all_drivers = list(data.values())
 
         available_drivers = all_drivers
-        #getting current trips
-        trips = self.get_current_trips()
-
-        for trip in trips:
-            # fitering out drivers in trip, and capturing idle drivers
-            available_drivers = filter((lambda driver: driver['id'] != trip.driver_user_id), all_drivers)
 
         return available_drivers
