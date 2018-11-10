@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'', include(router.urls)),
     url(r'update_address', views.UpdateAddressApi.as_view()),
     url(r'search_customer', views.SearchCustomerApi.as_view()),
-    url(r'freshdesk_tickets', views.FreshDeskTicketApi.as_view())
+    url(r'freshdesk_tickets', views.FreshDeskTicketApi.as_view()),
+    url(r'sale_order_location', views.SaleOrderLocationAPI.as_view())
 ]
