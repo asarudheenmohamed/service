@@ -68,6 +68,8 @@ class SaleOrderLocationAPI(views.APIView):
             orders = models.SalesFlatOrder.objects.filter(increment_id__in=increment_ids) \
                         .prefetch_related("shipping_address")
 
+            orders = list(orders)
+
             current_seq_no = 0
             for order in orders:  # type: models.SalesFlatOrder
                 if current_order_id == order.increment_id:
