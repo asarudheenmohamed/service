@@ -6,7 +6,7 @@ from typing import Optional, Any
 
 from app.core import serializers
 from app.sale_order import models
-from app.driver.models import DriverOrder, DriverPosition
+from app.driver.models import DriverOrder, DriverPosition, DriverTrip
 from rest_framework import views
 from rest_framework.response import Response
 
@@ -44,15 +44,43 @@ class SaleOrderLocationAPI(views.APIView):
     permission_classes = (CallCenterPermission,)
 
     def get(self, request):
+        """TODO: Refactor this logic into controller and add unit test cases
+        TODO: Add documentation.
+        """
 
-        order_id = self.request.query_params['order_id']
+        waypoints = []
+        current_order_id = self.request.query_params['order_id']
 
-        order = DriverOrder.objects.filter(increment_id=order_id).first()
+        current_order = DriverOrder.objects.filter(increment_id=current_order_id).first()
+        trip = DriverTrip.objects.filter(driver_order=current_order).first()
+        increment_ids = trip.driver_order.values_list('increment_id', flat=True)
+
+        # get the intermediate points
+        # get order ids upto that way point
+        filtered_inc_ids = []
+        for order_id in increment_ids:
+            if order_id != current_order_id:
+                filtered_inc_ids.append(order_id)
+            else:
+                break
+
+        if filtered_inc_ids:
+            orders = models.SalesFlatOrder.objects.filter(increment_id__in=filtered_inc_ids) \
+                        .prefetch_related("shipping_address")
+            for order in orders:
+                shipping_address = order.shipping_address.all().filter(
+                    address_type='shipping').first()
+                waypoints.append({
+                    'latitude': shipping_address.o_latitude,
+                    'longitude': shipping_address.o_longitude
+                })
+
 
         last_position = DriverPosition.objects.filter(driver_user=order.driver_user).\
             order_by('-recorded_time').first()  # type: DriverPosition
-
-        return Response({
+        waypoints.append({
             'latitude': last_position.latitude,
             'longitude': last_position.longitude
         })
+
+        return Response(waypoints)
