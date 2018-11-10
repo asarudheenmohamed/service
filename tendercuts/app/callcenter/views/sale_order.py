@@ -52,6 +52,15 @@ class SaleOrderLocationAPI(views.APIView):
         current_order_id = self.request.query_params['order_id']
 
         current_order = DriverOrder.objects.filter(increment_id=current_order_id).first()
+
+        # current driver position
+        last_position = DriverPosition.objects.filter(driver_user=current_order.driver_user). \
+            order_by('-recorded_time').first()  # type: DriverPosition
+        waypoints.append({
+            'latitude': last_position.latitude,
+            'longitude': last_position.longitude
+        })
+
         trip = DriverTrip.objects.filter(driver_order=current_order).first()
         increment_ids = trip.driver_order.values_list('increment_id', flat=True)
 
@@ -67,20 +76,15 @@ class SaleOrderLocationAPI(views.APIView):
         if filtered_inc_ids:
             orders = models.SalesFlatOrder.objects.filter(increment_id__in=filtered_inc_ids) \
                         .prefetch_related("shipping_address")
-            for order in orders:
+            for order in orders:  # type: models.SalesFlatOrder
+                # skipping completed orders
+                if order.status == 'complete':
+                    continue
                 shipping_address = order.shipping_address.all().filter(
                     address_type='shipping').first()
                 waypoints.append({
                     'latitude': shipping_address.o_latitude,
                     'longitude': shipping_address.o_longitude
                 })
-
-
-        last_position = DriverPosition.objects.filter(driver_user=current_order.driver_user).\
-            order_by('-recorded_time').first()  # type: DriverPosition
-        waypoints.append({
-            'latitude': last_position.latitude,
-            'longitude': last_position.longitude
-        })
 
         return Response(waypoints)
