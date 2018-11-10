@@ -64,22 +64,23 @@ class SaleOrderLocationAPI(views.APIView):
         trip = DriverTrip.objects.filter(driver_order=current_order).first()
         increment_ids = trip.driver_order.values_list('increment_id', flat=True)
 
-        # get the intermediate points
-        # get order ids upto that way point
-        filtered_inc_ids = []
-        for order_id in increment_ids:
-            if order_id != current_order_id:
-                filtered_inc_ids.append(order_id)
-            else:
-                break
-
-        if filtered_inc_ids:
-            orders = models.SalesFlatOrder.objects.filter(increment_id__in=filtered_inc_ids) \
+        if increment_ids:
+            orders = models.SalesFlatOrder.objects.filter(increment_id__in=increment_ids) \
                         .prefetch_related("shipping_address")
+
+            current_seq_no = 0
+            for order in orders:  # type: models.SalesFlatOrder
+                if current_order_id == order.increment_id:
+                    current_seq_no = order.sequence_number
+
             for order in orders:  # type: models.SalesFlatOrder
                 # skipping completed orders
                 if order.status == 'complete':
                     continue
+
+                if order.sequence_number >= current_seq_no:
+                    break
+
                 shipping_address = order.shipping_address.all().filter(
                     address_type='shipping').first()
                 waypoints.append({
