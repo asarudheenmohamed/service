@@ -41,7 +41,7 @@ class SalesOrderDetailSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SaleOrderLocationAPI(views.APIView):
-    authentication_classes = (CallCenterPermission,)
+    permission_classes = (CallCenterPermission,)
 
     def get(self, request):
 

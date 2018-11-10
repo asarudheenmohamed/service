@@ -25,7 +25,7 @@ STATUS = {
 
 
 class FreshDeskTicketApi(views.APIView):
-    authentication_classes = (CallCenterPermission,)
+    permission_classes = (CallCenterPermission,)
 
     def get(self, request):
 
