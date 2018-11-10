@@ -76,7 +76,7 @@ class SaleOrderLocationAPI(views.APIView):
                 })
 
 
-        last_position = DriverPosition.objects.filter(driver_user=order.driver_user).\
+        last_position = DriverPosition.objects.filter(driver_user=current_order.driver_user).\
             order_by('-recorded_time').first()  # type: DriverPosition
         waypoints.append({
             'latitude': last_position.latitude,
