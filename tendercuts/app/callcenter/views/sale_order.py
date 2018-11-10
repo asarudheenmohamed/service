@@ -65,7 +65,7 @@ class SaleOrderLocationAPI(views.APIView):
         increment_ids = trip.driver_order.values_list('increment_id', flat=True)
 
         if increment_ids:
-            orders = models.SalesFlatOrder.objects.filter(increment_id__in=increment_ids) \
+            orders = models.SalesFlatOrder.objects.filter(increment_id__in=list(increment_ids)) \
                         .prefetch_related("shipping_address")
 
             orders = list(orders)
