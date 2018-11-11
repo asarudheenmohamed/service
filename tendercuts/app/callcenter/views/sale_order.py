@@ -72,11 +72,11 @@ class SaleOrderLocationAPI(views.APIView):
 
             orders = list(orders)
             # since rider
-            # current_seq_no = 0
-            # for order in orders:  # type: models.SalesFlatOrder
-            #     if current_order_id == order.increment_id:
-            #         current_seq_no = order.sequence_number
-            #         break
+            current_seq_no = 0
+            for order in orders:  # type: models.SalesFlatOrder
+                if current_order_id == order.increment_id:
+                    current_seq_no = order.sequence_number
+                    break
 
             for order in orders:  # type: models.SalesFlatOrder
                 # skipping completed orders
@@ -86,10 +86,8 @@ class SaleOrderLocationAPI(views.APIView):
                 if order.increment_id == current_order_id:
                     continue
 
-                logger.info(order.increment_id)
-
-                # if order.sequence_number >= current_seq_no:
-                #     break
+                if order.sequence_number >= current_seq_no:
+                    break
 
                 shipping_address = order.shipping_address.all().filter(
                     address_type='shipping').first()
