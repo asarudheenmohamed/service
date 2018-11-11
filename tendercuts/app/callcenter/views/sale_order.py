@@ -90,7 +90,8 @@ class SaleOrderLocationAPI(views.APIView):
                     address_type='shipping').first()
                 waypoints.append({
                     'latitude': shipping_address.o_latitude,
-                    'longitude': shipping_address.o_longitude
+                    'longitude': shipping_address.o_longitude,
+                    'display': order.increment_id
                 })
 
         return Response(waypoints)
