@@ -79,13 +79,14 @@ class SaleOrderLocationAPI(views.APIView):
             #         break
 
             for order in orders:  # type: models.SalesFlatOrder
-                logger.info(order.increment_id)
                 # skipping completed orders
                 if order.status == 'complete':
                     continue
 
                 if order.increment_id == current_order_id:
                     continue
+
+                logger.info(order.increment_id)
 
                 # if order.sequence_number >= current_seq_no:
                 #     break
