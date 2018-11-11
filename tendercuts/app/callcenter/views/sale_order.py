@@ -64,7 +64,6 @@ class SaleOrderLocationAPI(views.APIView):
         trip = DriverTrip.objects.filter(driver_order=current_order).first()
         increment_ids = trip.driver_order.values_list('increment_id', flat=True)
         increment_ids = list(increment_ids)
-        logger.info(increment_ids)
 
         if increment_ids:
             orders = models.SalesFlatOrder.objects.filter(increment_id__in=increment_ids) \
@@ -72,19 +71,20 @@ class SaleOrderLocationAPI(views.APIView):
 
             orders = list(orders)
 
-            current_seq_no = 0
-            for order in orders:  # type: models.SalesFlatOrder
-                if current_order_id == order.increment_id:
-                    current_seq_no = order.sequence_number
-                    break
+            # since rider
+            # current_seq_no = 0
+            # for order in orders:  # type: models.SalesFlatOrder
+            #     if current_order_id == order.increment_id:
+            #         current_seq_no = order.sequence_number
+            #         break
 
             for order in orders:  # type: models.SalesFlatOrder
                 # skipping completed orders
                 if order.status == 'complete':
                     continue
 
-                if order.sequence_number >= current_seq_no:
-                    break
+                # if order.sequence_number >= current_seq_no:
+                #     break
 
                 shipping_address = order.shipping_address.all().filter(
                     address_type='shipping').first()
