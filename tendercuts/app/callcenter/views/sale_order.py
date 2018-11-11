@@ -68,7 +68,7 @@ class SaleOrderLocationAPI(views.APIView):
         if increment_ids:
             orders = models.SalesFlatOrder.objects.filter(increment_id__in=increment_ids) \
                         .prefetch_related("shipping_address") \
-                        .order_by('sequence_number')
+                        .order_by('-sequence_number')
 
             orders = list(orders)
             logger.info(orders)
