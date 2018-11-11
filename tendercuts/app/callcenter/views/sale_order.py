@@ -71,6 +71,7 @@ class SaleOrderLocationAPI(views.APIView):
                         .order_by('sequence_number')
 
             orders = list(orders)
+            logger.info(orders)
             # since rider
             # current_seq_no = 0
             # for order in orders:  # type: models.SalesFlatOrder
