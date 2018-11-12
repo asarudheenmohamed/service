@@ -34,9 +34,9 @@ class DriverCheckIn(APIView):
             self.request.user))
 
         controller = DriverOnlineController(self.request.user)
-        status = controller.driver_checkin(store_id)
+        status,message = controller.driver_checkin(store_id)
 
-        return Response({'status': status})
+        return Response({'status': status,'message':message})
 
 
 class DriverCheckOut(APIView):
@@ -62,9 +62,9 @@ class DriverCheckOut(APIView):
             self.request.user))
 
         controller = DriverOnlineController(self.request.user)
-        status = controller.driver_checkout()
+        status,message = controller.driver_checkout()
 
-        return Response({'status': status})
+        return Response({'status': status,'message':message})
 
 
 class CheckStatus(APIView):

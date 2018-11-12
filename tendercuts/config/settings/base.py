@@ -324,8 +324,8 @@ CACHE_DEFAULT_VERSION = 2
 # app version
 APP_VERSIONS = {
     "CUSTOMER_APP_VERSION": {
-        "min_app_version": '1.9.2',
-        "current_app_version": '2.0.3'
+        "min_app_version": '2.1.7',
+        "current_app_version": '3.0.4'
     },
 
     "DRIVER_APP_VERSION": {
@@ -344,7 +344,8 @@ GROUPS = {
     "mogappair": "g:823d501a91a541f9a6e53d183fc55f79",
     "medavakkam": "g:a5daf77b4ee146f6a378a4b1bd798206",
     "adayar": "g:f4b98d63098243b9bf423ee8d89f7ef1",
-    "INVENTORY": "g:4084ae0507c54b25b4bb19099d24e2a5"
+    "INVENTORY": "g:4084ae0507c54b25b4bb19099d24e2a5",
+    "OoS": "g:dd109248c7774252939420458d990a75"
 }
 
 FLOCK_AUTH = {

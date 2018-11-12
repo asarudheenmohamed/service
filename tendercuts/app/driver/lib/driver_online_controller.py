@@ -23,13 +23,17 @@ class DriverOnlineController(object):
             Returns True
 
         """
+        if DriverLoginLogout.objects.filter(
+           driver_id=self.driver.id, store_id=store_id,date=datetime.date.today(), check_out__isnull=True).exists():
+           return (False,'This account is already online')
+
         DriverLoginLogout.objects.create(
             driver_id=self.driver.id, store_id=store_id)
 
         logger.info("Created Check In detail for the driver :{},{}".format(
             self.driver, store_id))
 
-        return True
+        return (True,"Successfully login")
 
     def driver_checkout(self):
         """Update driver check_out time..
@@ -42,6 +46,9 @@ class DriverOnlineController(object):
             driver=self.driver.id,
             date=datetime.date.today(),
             check_out__isnull=True)
+        
+        if not obj:
+           return (False,"This account is already offline")
 
         logger.debug("Check whether driver: {} Checked In or not".format(
             self.driver))
@@ -54,7 +61,7 @@ class DriverOnlineController(object):
         logger.info("Update check_out time for the driver :{}".format(
             self.driver))
 
-        return True
+        return (True,"Successfully checkout")
 
     def driver_status(self):
         """Check driver online status.

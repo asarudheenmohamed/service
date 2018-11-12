@@ -59,29 +59,3 @@ class DrivertripSerializer(serializers.ModelSerializer):
             'auto_assigned',
             'status'
         )
-
-    def create(self, validated_data):
-        """:Override: To handle implicit many to many creation."""
-
-        # if there is an already active trip we return that
-        active_trip = DriverTrip.objects.filter(
-            driver_user_id=self.initial_data.get('driver_user'),
-            status=DriverTrip.Status.STARTED.value)
-
-        if len(active_trip) >= 1:
-            raise HttpResponseForbidden
-        
-        trip, status = DriverTrip.objects.get_or_create(
-            driver_user_id=self.initial_data.get('driver_user'),
-            status=DriverTrip.Status.CREATED.value)  # type: DriverTrip
-
-        if 'driver_order' in self.initial_data:
-            for order in self.initial_data.get('driver_order'):
-                order, status = DriverOrder.objects.get_or_create(
-                    driver_user_id=self.initial_data.get('driver_user'), increment_id=order)
-                trip.driver_order.add(order)
-
-            trip.auto_assigned = True
-            trip.save()
-
-        return trip  

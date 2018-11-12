@@ -37,7 +37,7 @@ class ScheduledDelivery(Delivery):
 
     @property
     def cost(self):
-        return 0
+        return 9
 
     def is_slots_available(self):
         return True

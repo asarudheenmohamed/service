@@ -27,15 +27,14 @@ class StoreDetailView(APIView):
         if not store_id:
             stores = CoreStore.objects.all()
         else:
-            stores = CoreStore.objects.get(store_id__in=store_id.split(','))
-        
+            stores = CoreStore.objects.filter(store_id__in=store_id.split(','))
         
         codes = [store.code for store in stores]
         odoo_stores = StockWarehouse.objects.filter(mage_code__in=codes)
 
         store_data = StoreSerializer(instance=stores, many=True).data
         odoo_data = StockWarehouseSerializer(
-            instance=odoo_stores).data
+            instance=odoo_stores, many=True).data
 
         odoo_data = {store['mage_code']:store for store in odoo_data}
 

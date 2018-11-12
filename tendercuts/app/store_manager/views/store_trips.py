@@ -1,10 +1,10 @@
 """Endpoint to get selected store driver orders."""
 import logging
 
-from rest_framework import viewsets, mixins
-
 from app.driver import serializer as driver_serializer
-from app.store_manager.lib import StoreBaseController
+from app.store_manager.lib import StoreBaseController, StoreOrderController
+from rest_framework import mixins, renderers, status, viewsets
+from rest_framework.response import Response
 
 from ..auth import StoreManagerPermission
 
@@ -22,6 +22,24 @@ class StoreTripViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (StoreManagerPermission,)
     serializer_class = driver_serializer.DrivertripSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Driver assignment  endpoint.
+
+        Params:
+            request dict object like {"driver_user":2343546, "driver_order": [100043454,1000032423]}
+
+        returns:
+            Response({status: bool, message: str})
+
+        """
+
+        status_,message=StoreOrderController().store_manager_assign_orders(request.data)
+
+        return Response(
+                {'status': status_, 'message': message},
+                 status=status.HTTP_201_CREATED)
+
 
     def get_queryset(self):
         """Get all active state trip objects.
