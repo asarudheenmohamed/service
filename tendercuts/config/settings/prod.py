@@ -90,7 +90,9 @@ PAYMENT = {
         "secret": "7E93DB150C034DF79E5C21BB61D9D5EB",
         "url": "https://api.juspay.in/card/tokenize",
         "return_url": "https://api.tendercuts.in/payment/juspay",
-        "environment": "production"
+        "environment": "production",
+        "web_success_url": "https://tendercuts.in/checkout/success?orderId={}",
+        "web_failure_url": "https://tendercuts.in/checkout/retry?orderId={}"
     },
     "PAYU": {
         "url": "https://info.payu.in/",

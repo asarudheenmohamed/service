@@ -99,7 +99,9 @@ PAYMENT = {
         "secret": "C8B21475421D4A14AE78A825344B7E65",
         "url": "https://sandbox.juspay.in/card/tokenize",
         "return_url": "http://staging.tendercuts.in:82/payment/juspay",
-        "environment": "sandbox"
+        "environment": "sandbox",
+        "web_success_url": "https://staging.tendercuts.in:83/success?orderId={}",
+        "web_failure_url": "https://staging.tendercuts.in:83/payment-retry?orderId={}"
     },
     "PAYU": {
         "url": "https://test.payu.in/",

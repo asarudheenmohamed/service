@@ -7,6 +7,7 @@ import traceback
 import urllib
 
 from django.conf import settings
+from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from rest_framework import exceptions
 from rest_framework import views, viewsets, mixins
@@ -15,8 +16,10 @@ from rest_framework.decorators import api_view, permission_classes, \
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from core.models import SalesFlatOrder
 from .. import serializer
 from ..lib import gateway as gw
+from app.core.models import SalesFlatOrder
 from app.payment import tasks
 from datetime import datetime, timedelta
 
@@ -45,6 +48,9 @@ def juspay_done(request):
     """
     A NOOP callback to act as a end url of the juspay callback flow
     """
+    params = request.query_params.dict()
+    logger.debug("parama {}".format(params))
+
     return Response()
 
 
@@ -84,11 +90,23 @@ class JusPayApprovalCallBack(views.APIView):
         is_charged = payment_status == "CHARGED"
         increment_id = request.query_params['order_id']
 
+        sale_order = SalesFlatOrder.objects.filter(increment_id=increment_id)
+        sale_order = sale_order.first() # type: SalesFlatOrder
+
+        # Params to push to next request.
+        params = {'increment_id': sale_order.increment_id,
+                  'medium': sale_order.medium}
+
         logger.debug("Trying to approve {} with status: {}".format(
             increment_id, payment_status))
 
+        params = params.update({'status': True})
+        success_url = reverse('juspay_done', kwargs=params, request=request)
+        params = params.update({'status': False})
+        failure_url = reverse('juspay_done', kwargs=params, request=request)
+
         if not is_charged:
-            return HttpResponseRedirect(reverse('juspay_done', request=request))
+            return HttpResponseRedirect(failure_url)
             # Response({"status": False})
 
         try:
@@ -99,13 +117,13 @@ class JusPayApprovalCallBack(views.APIView):
                 "confirmed payment for the order ID: {} with status {}".format(
                     increment_id, status))
 
-            return HttpResponseRedirect(reverse('juspay_done', request=request))
+            return HttpResponseRedirect(success_url)
         except Exception as e:
             exception = traceback.format_exc()
             logger.info("JP Payement verification for {} with error {}".format(
                 increment_id, str(exception)))
 
-            return HttpResponseRedirect(reverse('juspay_done', request=request))
+            return HttpResponseRedirect(failure_url)
 
 
 class PaymentMethodViewSet(mixins.ListModelMixin,
