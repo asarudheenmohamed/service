@@ -48,10 +48,24 @@ def juspay_done(request):
     A NOOP callback to act as a end url of the juspay callback flow
     """
     params = request.query_params.dict()
-    logger.debug("parama {}".format(params))
-    logger.debug("parama {}".format(request.__dict__))
 
-    return Response()
+    # if mobile then nuke it
+    if params['medium'] != settings.ORDER_MEDIUM['NEW_WEBSITE']:
+        return Response()
+
+    order_id = params['increment_id']
+    if params['status'] is True:
+        url = "{}{}".format(
+            settings.PAYMENT['JUSPAY']['web_success_url'],
+            order_id
+        )
+        return HttpResponseRedirect(url)
+
+    url = "{}{}".format(
+        settings.PAYMENT['JUSPAY']['web_failure_url'],
+        order_id
+    )
+    return HttpResponseRedirect(url)
 
 
 class JusPayApprovalCallBack(views.APIView):

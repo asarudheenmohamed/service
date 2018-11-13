@@ -292,7 +292,9 @@ VALUE_FIRST_SMS_GATEWAY = {
 }
 
 ORDER_MEDIUM = {
-    'POS': 4
+    'POS': 4,
+    'MOBILE': 3,
+    'NEW_WEBSITE': 9
 }
 
 CUT_OFF = {
