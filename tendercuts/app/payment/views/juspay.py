@@ -54,7 +54,7 @@ def juspay_done(request):
         return Response()
 
     order_id = params['increment_id']
-    if params['status'] is True:
+    if int(params['status']) == 1:
         url = "{}{}".format(
             settings.PAYMENT['JUSPAY']['web_success_url'],
             order_id
@@ -114,11 +114,11 @@ class JusPayApprovalCallBack(views.APIView):
         logger.debug("Trying to approve {} with status: {}".format(
             increment_id, payment_status))
 
-        params.update({'status': True})
+        params.update({'status': 1})
         success_url = "{}?{}".format(
             reverse('juspay_done', request=request), urllib.urlencode(params))
 
-        params.update({'status': False})
+        params.update({'status': 0})
         failure_url = "{}?{}".format(
             reverse('juspay_done', request=request), urllib.urlencode(params))
 
