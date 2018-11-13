@@ -99,9 +99,9 @@ class JusPayApprovalCallBack(views.APIView):
         logger.debug("Trying to approve {} with status: {}".format(
             increment_id, payment_status))
 
-        params = params.update({'status': True})
+        params.update({'status': True})
         success_url = reverse('juspay_done', kwargs=params, request=request)
-        params = params.update({'status': False})
+        params.update({'status': False})
         failure_url = reverse('juspay_done', kwargs=params, request=request)
 
         if not is_charged:
