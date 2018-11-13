@@ -49,6 +49,7 @@ def juspay_done(request):
     """
     params = request.query_params.dict()
     logger.debug("parama {}".format(params))
+    logger.debug("parama {}".format(request.__dict__))
 
     return Response()
 
@@ -100,9 +101,9 @@ class JusPayApprovalCallBack(views.APIView):
             increment_id, payment_status))
 
         params.update({'status': True})
-        success_url = reverse('juspay_done', kwargs=params, request=request)
+        success_url = reverse('juspay_done', request=request)
         params.update({'status': False})
-        failure_url = reverse('juspay_done', kwargs=params, request=request)
+        failure_url = reverse('juspay_done', request=request)
 
         if not is_charged:
             return HttpResponseRedirect(failure_url)
