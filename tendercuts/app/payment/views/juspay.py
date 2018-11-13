@@ -50,7 +50,7 @@ def juspay_done(request):
     params = request.query_params.dict()
 
     # if mobile then nuke it
-    if params['medium'] != settings.ORDER_MEDIUM['NEW_WEBSITE']:
+    if params['medium'] != str(settings.ORDER_MEDIUM['NEW_WEBSITE']):
         return Response()
 
     order_id = params['increment_id']
