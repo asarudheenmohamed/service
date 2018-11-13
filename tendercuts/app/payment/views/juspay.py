@@ -101,9 +101,12 @@ class JusPayApprovalCallBack(views.APIView):
             increment_id, payment_status))
 
         params.update({'status': True})
-        success_url = reverse('juspay_done', request=request)
+        success_url = "{}?{}".format(
+            reverse('juspay_done', request=request), urllib.urlencode(params))
+
         params.update({'status': False})
-        failure_url = reverse('juspay_done', request=request)
+        failure_url = "{}?{}".format(
+            reverse('juspay_done', request=request), urllib.urlencode(params))
 
         if not is_charged:
             return HttpResponseRedirect(failure_url)
