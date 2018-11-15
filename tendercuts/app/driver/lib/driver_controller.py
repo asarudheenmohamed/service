@@ -100,10 +100,7 @@ class DriverController(object):
         distance = self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude)
 
-        return float(distance) <= float(1.5):
-
-            # return self._get_distance(
-            # latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude) < 0.5
+        return float(distance) <= float(1.5)
 
     def assign_order(self, order, store_id, lat, lon, trip_id):
         """Assign the order to the driver.
@@ -306,14 +303,12 @@ class DriverController(object):
 
         # checks the driver completed location with in a customer geolocation
         # radius 500m
-        if order_obj.store_id == settings.STORE_ID['CHROMEPET']:
+        if order_obj.store_id == settings.STORE_ID['TAMBARAM']:
             if not self.is_nearby(order_obj, lat, lon):
                 logger.info(
                     "This driver:{} is trying to complete the order ahead of customer location".format(
                         self.driver.username))
-
-                raise ValueError(
-                    'Please Complete the order customer nearest locations')
+                return (False, 'Please Complete the order customer nearest locations')
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
@@ -345,6 +340,8 @@ class DriverController(object):
             except ValueError:
                 # Legacy handling
                 pass
+
+        return (True, 'order completed successfully')
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""

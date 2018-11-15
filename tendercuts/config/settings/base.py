@@ -282,7 +282,7 @@ STORE_LAT_LONG = {
 }
 
 STORE_ID = {
-    'CHROMEPET': 18
+    'TAMBARAM': 7
 }
 
 # value first new ventor

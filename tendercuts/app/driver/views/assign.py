@@ -89,11 +89,11 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
                                 status=status.HTTP_403_FORBIDDEN)
 
         controller = DriverController(self.request.user)
-        controller.complete_order(order_id, lat, lon, trip_id)
+        status_, message = controller.complete_order(
+            order_id, lat, lon, trip_id)
+        logger.info("status:{} message:{}".format(status_, message))
 
-        logger.info("{} this order completed successfully".format(order_id))
-
-        return Response({'status': True}, status=status.HTTP_201_CREATED)
+        return Response({'status': status_, 'message': message}, status=status.HTTP_201_CREATED)
 
 
 class OrderFetchViewSet(viewsets.ReadOnlyModelViewSet):
