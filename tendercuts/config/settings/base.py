@@ -281,6 +281,9 @@ STORE_LAT_LONG = {
     5: (13.041706, 80.176288)
 }
 
+STORE_ID = {
+    'CHROMEPET': 18
+}
 
 # value first new ventor
 VALUE_FIRST_SMS_GATEWAY = {
