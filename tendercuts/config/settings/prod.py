@@ -119,3 +119,5 @@ MAGE_ATTRS = {
 FLOCK_ENDPOINTS = {
     'APPROVE_INV_REQ': 'https://api.tendercuts.in/store_manager/inv_request/approve'
 }
+
+REFERRAL_RULE_ID = 115

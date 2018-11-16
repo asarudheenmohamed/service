@@ -110,3 +110,5 @@ PAYMENT = {
         "environment": "Sandbox"
     }
 }
+
+REFERRAL_RULE_ID = 2

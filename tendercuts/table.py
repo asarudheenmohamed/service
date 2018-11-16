@@ -15,7 +15,7 @@ tables = ["catalog_product_entity", "catalog_product_entity_datetime", "catalog_
           "catalog_product_entity_int", "catalog_product_entity_text", "catalog_product_entity_text",
           "catalog_product_entity_varchar"]
 tables = ['sales_flat_orders_address']
-tables = ['inventorylog']
+tables = ['salesrule']
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,

@@ -64,6 +64,11 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
         from app.driver import tasks
         tasks.compute_order_eta.delay(message['increment_id'])
 
+    def trigger_reward_pts_credit_task(self, message):
+        """Triggers the reward pts task"""
+        from app.tcash import tasks
+        tasks.credit_referral_points.delay(message['increment_id'])
+
     def handle_message(self, body, message):
         """RMQ callback for handling the message/payload."""
         # {u'status': u'complete', u'increment_id': u'700018288'}
@@ -77,7 +82,7 @@ class MageOrderChangeConsumer(bootsteps.ConsumerStep):
             'scheduled_order': [self._on_update_order_elapsed_time],
             'processing': [self._on_update_order_elapsed_time, self.compute_order_eta],
             'out_delivery': [self._on_update_order_elapsed_time],
-            'complete': [self._on_update_order_elapsed_time],
+            'complete': [self._on_update_order_elapsed_time, self.trigger_reward_pts_credit_task],
             'canceled': [self._on_update_order_elapsed_time, self._send_sms],
             'closed': [self._on_update_order_elapsed_time]
         }
