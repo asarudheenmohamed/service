@@ -31,24 +31,32 @@ def driver_stat(order_id):
 
 
 @app.task(base=TenderCutsTask)
-def address_verified(address_id):
+def address_verified(order_id):
     """Celery task to add the driver completed order."""
+    from django.conf import settings
 
     order = SalesFlatOrder.objects.filter(increment_id=order_id).last()
-    if not order_obj:
+    if not order:
         raise ValueError('Order object Does not exist')
+
+    is_verified_attr = settings.MAGE_ATTRS['IS_VERIFIED']
     shipping_address = order.shipping_address.filter(
         address_type="shipping").last()
 
-    is_verified_obj = CustomerAddressEntityInt.objects.create(
-        attribute_id=244, entity_type_id=2, entity_id=shipping_address.customer_address_id, value=True)
+    is_verified_obj, _ = CustomerAddressEntityInt.objects.get_or_create(
+        attribute_id=is_verified_attr,
+        entity_type_id=2,
+        entity_id=shipping_address.customer_address_id)
+
+    is_verified_obj.value = True
+    is_verified_obj.save()
 
 
 @app.task(base=TenderCutsTask)
 def send_force_complete_order_alert(order_id, force_complete_lat, force_complete_lng):
     """Celery task to alert the driver force completed order."""
     order = SalesFlatOrder.objects.filter(increment_id=order_id).last()
-    if not order_obj:
+    if not order:
         raise ValueError('Order object Does not exist')
     shipping_address = order.shipping_address.filter(
         address_type="shipping").last()

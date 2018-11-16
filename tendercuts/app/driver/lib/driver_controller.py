@@ -86,9 +86,13 @@ class DriverController(object):
 
     def _check_address_verified(self, address_id):
         """Returns the order shipping adress is verified."""
+        is_verified_attr = settings.MAGE_ATTRS['IS_VERIFIED']
 
         is_verified_obj = CustomerAddressEntityInt.objects.filter(
-            attribute_id=244, entity_id=address_id).last()
+            attribute_id=is_verified_attr, entity_id=address_id).last()
+
+        if not is_verified_obj:
+           return False
 
         return True if is_verified_obj.value else False
 
@@ -103,11 +107,12 @@ class DriverController(object):
 
         shipping_address = order.shipping_address.filter(
             address_type="shipping").last()
-        if not shipping_address.geohash:
-            return True
 
-        distance = self._get_distance(
-            latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude)
+        if not shipping_address.geohash:
+            return (True, 2, False)
+
+        distance = self._get_distance(latitude, longitude,
+            shipping_address.o_latitude, shipping_address.o_longitude)
 
         if self._check_address_verified(shipping_address.customer_address_id):
             return (float(distance) <= float(1.5), distance, True)
@@ -317,18 +322,21 @@ class DriverController(object):
         # radius 1.5 km
         if order_obj.store_id == settings.STORE_ID['TAMBARAM'] and not force_complete:
             nearby, distance, is_verified = self.is_nearby(order_obj, lat, lon)
-            if is_verified and not nearby:
+            if not nearby:
                 logger.info(
                     "This driver:{} is trying to complete the order ahead of customer location".format(
                         self.driver.username))
                 return (False, is_verified, 'Please Complete the order customer nearest locations')
-            elif float(distance) <= float(0.5):
+
+            if float(distance) <= float(0.5):
                 tasks.address_verified.delay(order_obj.increment_id)
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
+
         controller = OrderController(self.conn, order_obj)
         controller.complete()
+
         # update customer current location
         position_obj = self.update_order_completed_location(
             order_obj, lat, lon)
@@ -337,7 +345,8 @@ class DriverController(object):
         # tasks.customer_current_location.delay(order_obj.customer_id, lat,
         # lon)
         if force_complete:
-            tasks.send_force_complete_order_alert.delay(order_id)
+            tasks.send_force_complete_order_alert.delay(order_id, lat, lon)
+
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)
@@ -357,7 +366,7 @@ class DriverController(object):
                 # Legacy handling
                 pass
 
-        return (True, 'order completed successfully')
+        return (True, False, 'order completed successfully')
 
     def _check_trip(self):
         """Returns the current trip id for the giver driver user."""
