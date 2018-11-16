@@ -99,6 +99,8 @@ class DriverController(object):
             return True
         distance = self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude)
+        logger.info("{} completing at ({}, {})- with a distance of {}".format(
+            order.increment_id, latitude, longitude, distance))
 
         return float(distance) <= float(1.5)
 
