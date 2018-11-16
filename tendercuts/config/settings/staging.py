@@ -129,4 +129,4 @@ FLOCK_ENDPOINTS = {
     'APPROVE_INV_REQ': 'https://staging.tendercuts.in:82/store_manager/inv_request/approve'
 }
 
-REFERRAL_RULE_ID = 115
+REFERRAL_RULE_ID = 118
