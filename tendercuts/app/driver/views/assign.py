@@ -79,7 +79,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
         lat = self.request.data['latitude']
         lon = self.request.data['longitude']
         trip_id = self.request.data.get('trip_id', None)
-
+        force_complete = self.request.data.get('force_complete', None)
         # only if the trip is started the user should be able to
         # complete
         if trip_id:
@@ -90,7 +90,7 @@ class DriverOrdersViewSet(viewsets.GenericViewSet):
 
         controller = DriverController(self.request.user)
         status_, message = controller.complete_order(
-            order_id, lat, lon, trip_id)
+            order_id, lat, lon, trip_id,force_complete=force_complete)
         logger.info("status:{} message:{}".format(status_, message))
 
         return Response({'status': status_, 'message': message}, status=status.HTTP_201_CREATED)

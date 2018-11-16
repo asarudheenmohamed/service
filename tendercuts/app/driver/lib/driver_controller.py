@@ -15,7 +15,7 @@ from app.core.models import SalesFlatOrder
 from app.core.models.customer.address import CustomerAddressEntity
 from app.driver import tasks
 import geopy.distance
-
+from app.core.models.customer.address import CustomerAddressEntityInt
 from ..models import (DriverOrder, DriverPosition, DriverStat, DriverTrip,
                       OrderEvents)
 from .trip_controller import TripController
@@ -84,6 +84,14 @@ class DriverController(object):
         """
         return geopy.distance.vincenty((dest_lat, dest_lng), (lat, lng)).km
 
+    def _check_address_verified(self, address_id):
+        """Returns the order shipping adress is verified."""
+
+        is_verified_obj = CustomerAddressEntityInt.objects.filter(
+            attribute_id=244, entity_id=address_id).last()
+
+        return True if is_verified_obj.value else False
+
     def is_nearby(self, order, latitude, longitude):
         """Check the driver completed location is inside the customer geolocation radius.500m
 
@@ -97,10 +105,14 @@ class DriverController(object):
             address_type="shipping").last()
         if not shipping_address.geohash:
             return True
+
         distance = self._get_distance(
             latitude, longitude, shipping_address.o_latitude, shipping_address.o_longitude)
 
-        return float(distance) <= float(1.5)
+        if self._check_address_verified(shipping_address.customer_address_id):
+            return (float(distance) <= float(1.5), distance, True)
+
+        return (float(distance) <= float(1.5), distance, False)
 
     def assign_order(self, order, store_id, lat, lon, trip_id):
         """Assign the order to the driver.
@@ -288,7 +300,7 @@ class DriverController(object):
         order_obj.shipping_address.all().update(
             latitude=lat, longitude=lon)
 
-    def complete_order(self, order_id, lat, lon, trip_id):
+    def complete_order(self, order_id, lat, lon, trip_id, force_complete=None):
         """Publish the message to the Mage queues.
 
         Params:
@@ -302,13 +314,16 @@ class DriverController(object):
         order_obj = self.get_order_obj(order_id)
 
         # checks the driver completed location with in a customer geolocation
-        # radius 500m
-        if order_obj.store_id == settings.STORE_ID['TAMBARAM']:
-            if not self.is_nearby(order_obj, lat, lon):
+        # radius 1.5 km
+        if order_obj.store_id == settings.STORE_ID['TAMBARAM'] and not force_complete:
+            nearby, distance, is_verified = self.is_nearby(order_obj, lat, lon)
+            if is_verified and not nearby:
                 logger.info(
                     "This driver:{} is trying to complete the order ahead of customer location".format(
                         self.driver.username))
-                return (False, 'Please Complete the order customer nearest locations')
+                return (False, is_verified, 'Please Complete the order customer nearest locations')
+            elif float(distance) <= float(0.5):
+                tasks.address_verified.delay(order_obj.increment_id)
 
         driver_object = DriverOrder.objects.filter(
             increment_id=order_id, driver_user=self.driver)
@@ -321,7 +336,8 @@ class DriverController(object):
         # ToDo commended a customer current location updated because location is not correct
         # tasks.customer_current_location.delay(order_obj.customer_id, lat,
         # lon)
-
+        if force_complete:
+            tasks.send_force_complete_order_alert.delay(order_id)
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
         tasks.driver_stat.delay(order_id)

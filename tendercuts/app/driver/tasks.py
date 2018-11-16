@@ -10,7 +10,8 @@ from app.core.models import SalesFlatOrder
 from app.driver.models import DriverLoginLogout
 from config.celery import app
 from django.conf import settings
-
+from app.core.lib.communication import Mail
+from app.core.models.customer.address import CustomerAddressEntityInt
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,41 @@ def driver_stat(order_id):
     stat_controller = DriverStatController(order_id)
     orders = stat_controller.generate_stat(
         order_obj.increment_id, order_obj.status)
+
+
+@app.task(base=TenderCutsTask)
+def address_verified(address_id):
+    """Celery task to add the driver completed order."""
+
+    order = SalesFlatOrder.objects.filter(increment_id=order_id).last()
+    if not order_obj:
+        raise ValueError('Order object Does not exist')
+    shipping_address = order.shipping_address.filter(
+        address_type="shipping").last()
+
+    is_verified_obj = CustomerAddressEntityInt.objects.create(
+        attribute_id=244, entity_type_id=2, entity_id=shipping_address.customer_address_id, value=True)
+
+
+@app.task(base=TenderCutsTask)
+def send_force_complete_order_alert(order_id, force_complete_lat, force_complete_lng):
+    """Celery task to alert the driver force completed order."""
+    order = SalesFlatOrder.objects.filter(increment_id=order_id).last()
+    if not order_obj:
+        raise ValueError('Order object Does not exist')
+    shipping_address = order.shipping_address.filter(
+        address_type="shipping").last()
+    if shipping_address.geohash:
+        # return True
+
+        message = "The Order:{} complete the force customer location lat:{},lng:{} and dest location:{},{}".format(
+            order_id, force_complete_lat, force_complete_lng, shipping_address.o_latitude, shipping_address.o_longitude)
+
+        Mail().send(
+            "reports@tendercuts.in",
+            ["jira@tendercuts.atlassian.net", "tech@tendercuts.in"],
+            "[INFO] Order:{} force complete Alert".format(order_id),
+            message)
 
 
 @app.task(base=TenderCutsTask)
