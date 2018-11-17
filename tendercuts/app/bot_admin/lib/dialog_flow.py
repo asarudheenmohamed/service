@@ -100,7 +100,7 @@ class DialogFlowQuery(object):
 
         response = requests.post(
             self.QUERY_URL,
-            headers=self.auth,
+            headers=self.headers,
             data=data
         )
 
