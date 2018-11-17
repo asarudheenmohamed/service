@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from app.bot_admin.lib import verify_token, FlockBot, DialogFlowQuery
 
+
 logger = logging.getLogger()
 
 

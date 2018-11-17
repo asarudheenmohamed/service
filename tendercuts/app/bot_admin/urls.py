@@ -10,5 +10,6 @@ router = DefaultRouter()
 
 urlpatterns = [
     url(r'', include(router.urls)),
-    url(r'callback', views.FlockAppApi.as_view())
+    url(r'flock_callback', views.FlockAppApi.as_view()),
+    url(r'dialogflow_callback', views.DialogFlowAppApi.as_view())
 ]
