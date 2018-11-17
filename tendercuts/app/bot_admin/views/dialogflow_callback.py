@@ -18,7 +18,7 @@ class DialogFlowAppApi(APIView):
     permission_classes = (AdminPermission,)
 
     def post(self, request):
-        logger.info('GOT {}'.format(self.request.data))
+        logger.info('DF DATA {}'.format(self.request.data))
         # event_name = self.request.data['name']
         #
         # EVENT_CALLBACK_MAP = {
@@ -33,4 +33,9 @@ class DialogFlowAppApi(APIView):
         #
         # EVENT_CALLBACK_MAP[event_name](self.request.data)
 
-        return Response(status=status.HTTP_200_OK)
+        response = {
+            "fulfillmentText": "This is a text response",
+            "source": "api1.tendercuts.in",
+        }
+
+        return Response(response, status=status.HTTP_200_OK)
