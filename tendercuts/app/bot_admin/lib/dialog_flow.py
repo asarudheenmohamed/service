@@ -10,7 +10,7 @@ logger = logging.getLogger()
 class DialogFlowQuery(object):
     """Parses the data from flock chat and sends a response
     back to the flock user"""
-    QUERY_URL = 'https://api.dialogflow.com/v1/query/'
+    QUERY_URL = 'https://api.dialogflow.com/v1/query?v=20170712'
 
     def __init__(self, chat):
         """
@@ -49,9 +49,7 @@ class DialogFlowQuery(object):
         return json.dumps({
             "query": chat['message']['text'],
             "lang": "en",
-            "sessionId": chat['message']['from'],
-            'v': '20170712'
-
+            "sessionId": chat['message']['from']
         })
 
     def _prepare_response(self, response):
