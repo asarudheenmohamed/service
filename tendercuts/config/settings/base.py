@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'app.geohashing',
     'app.rating',
     'app.store_manager',
-    'app.callcenter'
+    'app.callcenter',
+    'app.bot_admin'
 ]
 
 REST_FRAMEWORK = {
@@ -354,5 +355,11 @@ GROUPS = {
 FLOCK_AUTH = {
     'APP_ID': '293d68bb-7307-4774-8644-c962eebefcd8',
     'APP_SECRET': '7cffbef4-f106-46db-a410-a8b88528a9af',
+    'ALGO': ['HS256']
+}
+
+FLOCK_ADMIN_BOT_AUTH = {
+    'APP_ID': '98d18fca-0baf-41ed-bec2-1518ff981e3b',
+    'APP_SECRET': '1b7c06df-a999-4155-9638-afee15b6a658',
     'ALGO': ['HS256']
 }

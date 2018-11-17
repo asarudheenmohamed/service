@@ -37,5 +37,6 @@ urlpatterns = [
     url(r'store_manager/', include('app.store_manager.urls')),
     url(r'geohash/', include('app.geohashing.urls')),
     url(r'rating/', include('app.rating.urls')),
-    url(r'callcenter/', include('app.callcenter.urls'))
+    url(r'callcenter/', include('app.callcenter.urls')),
+    url(r'admin_bot/', include('app.bot_admin.urls'))
 ]
