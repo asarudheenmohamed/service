@@ -49,7 +49,9 @@ class DialogFlowQuery(object):
         return json.dumps({
             "query": chat['message']['text'],
             "lang": "en",
-            "sessionId": chat['message']['from']
+            "sessionId": chat['message']['from'],
+            'v': '20170712'
+
         })
 
     def _prepare_response(self, response):
