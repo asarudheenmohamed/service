@@ -89,7 +89,7 @@ class DialogFlowQuery(object):
         """
         response = response.json()
         logger.info("Got df response {} ".format(response))
-        return response['result']['speech']
+        return response['result']['fulfillment']['speech']
 
     def response(self):
         """
