@@ -26,7 +26,7 @@ class FlockBot():
             u'name': u'chat.receiveMessage'}
 
         """
-        return chat['from']
+        return chat['message']['from']
 
     def send(self, user_id, message):
         """Send flock message.
