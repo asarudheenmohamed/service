@@ -363,3 +363,7 @@ FLOCK_ADMIN_BOT_AUTH = {
     'APP_SECRET': '1b7c06df-a999-4155-9638-afee15b6a658',
     'ALGO': ['HS256']
 }
+
+DIALOG_FLOW = {
+    'AUTH': 'Bearer 2b420dd2d4eb427e94003cdee2e544bb'
+}

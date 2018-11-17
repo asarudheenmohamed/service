@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.bot_admin.lib.auth import verify_token
+from app.bot_admin.lib import verify_token, FlockBot, DialogFlowQuery
 
 logger = logging.getLogger()
 
@@ -19,10 +19,13 @@ class FlockAppApi(APIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def handle_inventory_action(self, action_data):
+    def handle_chat(self, action_data):
         """DEPRECATED: Callback to handle inventory action changes
         ActionId contains the primary key (request-1001)
         """
+        from_id = FlockBot.get_sender_id(action_data)
+        response = DialogFlowQuery(action_data).response()
+        FlockBot().send(from_id, response)
         logger.info(action_data)
         # 0 -? approved, 1- rejected
         # inv_request_id, action = action_data['actionId'].split("-")
@@ -40,7 +43,7 @@ class FlockAppApi(APIView):
         #     req_controller.approve()
         #     flock_msg_controller.publish_response('APPROVED')
         # else:
-        #     req_controller.reject()
+        #     req_controller.reject(
         #     flock_msg_controller.publish_response('REJECTED')
         pass
 
@@ -48,14 +51,17 @@ class FlockAppApi(APIView):
         logger.info('GOT {}'.format(self.request.data))
         event_name = self.request.data['name']
 
-        # if event_name not in ['client.flockmlAction']:
-        #     return Response(status=status.HTTP_200_OK)
+        EVENT_CALLBACK_MAP = {
+            'chat.receiveMessage': self.handle_chat
+        }
+
+        if event_name not in EVENT_CALLBACK_MAP:
+            return
 
         token = request.META.get('X-Flock-Event-Token')
         resp = verify_token(token)
 
-        # TODO clean up code here to handle multiple events
-        self.handle_inventory_action(self.request.data)
+        EVENT_CALLBACK_MAP[event_name](self.request.data)
 
         return Response(status=status.HTTP_200_OK)
 
