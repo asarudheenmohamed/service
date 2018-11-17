@@ -1,4 +1,4 @@
-class BaseAction:
+class BaseAction(object):
     """Base class for handling the webhook messages"""
 
     def __init__(self, data):
