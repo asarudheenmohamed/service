@@ -19,7 +19,7 @@ class CancelOrderAction(BaseAction):
         """
         conn = mage.Connector()
         order = SalesFlatOrder.objects.filter(
-            increment_id=int(self.orderId))
+            increment_id=int(self.orderId)).first()
         controller = OrderController(conn, order)
         try:
             controller.cancel()
