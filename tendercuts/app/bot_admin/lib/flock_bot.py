@@ -39,11 +39,15 @@ class FlockBot():
             Error in case of bad/invalid request
 
         """
-        url = "https://api.flock.co/v1/chat.sendMessage?to={}&text={}&token={}".format(
-            user_id,
-            message,
-            self.APP_TOKEN)
 
-        resp = requests.get(url)
+        data = {
+            'to': user_id,
+            'text': message,
+            'token': self.APP_TOKEN
+
+        }
+        url = "https://api.flock.co/v1/chat.sendMessage"
+
+        resp = requests.post(url, data=data)
 
         resp.raise_for_status()
