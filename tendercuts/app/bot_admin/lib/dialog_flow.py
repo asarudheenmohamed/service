@@ -33,8 +33,11 @@ class DialogFlowQuery(object):
         self.chat = chat
 
     @property
-    def auth(self):
-        return {'Authorization': settings.DIALOG_FLOW['AUTH']}
+    def headers(self):
+        return {
+            'Authorization': settings.DIALOG_FLOW['AUTH'],
+            'Content-type': 'application/json'
+        }
 
     def _prepare_query(self, chat):
         """@private
