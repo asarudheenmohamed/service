@@ -6,7 +6,6 @@ from django.conf import settings
 
 logger = logging.getLogger()
 
-
 class DialogFlowQuery(object):
     """Parses the data from flock chat and sends a response
     back to the flock user"""
