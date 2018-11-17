@@ -57,7 +57,7 @@ class FlockAppApi(APIView):
         }
 
         if event_name not in EVENT_CALLBACK_MAP:
-            return
+            return Response(status=status.HTTP_200_OK)
 
         token = request.META.get('X-Flock-Event-Token')
         resp = verify_token(token)
