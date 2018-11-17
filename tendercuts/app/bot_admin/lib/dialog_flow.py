@@ -1,4 +1,5 @@
 import logging
+import json
 
 import requests
 from django.conf import settings
@@ -45,11 +46,11 @@ class DialogFlowQuery(object):
 
         :return:
         """
-        return {
+        return json.dumps({
             "query": chat['message']['text'],
             "lang": "en",
             "sessionId": chat['message']['from']
-        }
+        })
 
     def _prepare_response(self, response):
         """Parse and extract the response from bot
