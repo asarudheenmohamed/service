@@ -1,5 +1,9 @@
+import logging
+
 import requests
 from django.conf import settings
+
+logger = logging.getLogger()
 
 
 class DialogFlowQuery(object):
@@ -79,6 +83,8 @@ class DialogFlowQuery(object):
         :return: (str)
 
         """
+        response = response.json()
+        logger.info("Got df response {} ".format(response))
         return response['result']['speech']
 
     def response(self):
