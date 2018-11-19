@@ -55,6 +55,7 @@ class SalesruleCoupon(models.Model):
     is_popup = models.IntegerField(blank=True, null=True)
     user_ip = models.CharField(max_length=20, blank=True, null=True)
     popup_cookie_id = models.CharField(max_length=20, blank=True, null=True)
+    user_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
