@@ -417,7 +417,7 @@ class RoutingController():
         # Setting first solution heuristic (cheapest addition).
         search_parameters = pywrapcp.RoutingModel.DefaultSearchParameters()
         search_parameters.first_solution_strategy = (
-            routing_enums_pb2.FirstSolutionStrategy.SAVINGS)
+            routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC)
 
         # Solve the problem.
         assignment = routing.SolveWithParameters(search_parameters)
