@@ -26,7 +26,8 @@ class DialogFlowAppApi(APIView):
         CALLBACK_MAP = {
             'ORDER_CANCELLED': actions.CancelOrderAction,
             'ORDER_COMPLETED': actions.CompleteOrderAction,
-            'ORDER_STATUS': actions.OrderStatusAction
+            'ORDER_STATUS': actions.OrderStatusAction,
+            'ORDER_REFUND': actions.OrderRefund
         }
 
         response = {
