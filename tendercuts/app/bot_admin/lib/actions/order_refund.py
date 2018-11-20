@@ -12,11 +12,11 @@ class OrderRefund(BaseAction):
 
     @property
     def confirm(self):
-        return self.params['confirmed']['confirmed']
+        return self.params['confirmed']
 
     @property
     def refund_mode(self):
-        return self.params['refundMode']['refundMode']
+        return self.params['refundMode']
 
     def execute(self):
         """order id
