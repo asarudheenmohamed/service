@@ -45,6 +45,7 @@ class OrderDataController(object):
             shipping_address = order.shipping_address.all()[0]
             user = CustomerSearchController.load_basic_info(order.customer_id)
             params = {
+                "entity_id":order.entity_id,
                 "increment_id": order.increment_id,
                 "created_at": str(order.created_at),
                 "medium": order.medium,

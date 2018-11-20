@@ -9,7 +9,7 @@ from app.core.models import SalesruleCoupon
 class ReferralCodeController:
     """EndPoint add transaction amount for the user."""
 
-    MESSAGE_TEMPLATE = """Get Farm Fresh Meat & Fish delivered at home by TenderCuts. Use code {} & get ₹100 off on your 1st order. Download our App https://tcuts.in/4Mi5ZloXPR"""
+    MESSAGE_TEMPLATE = """Get Farm Fresh Meat & Fish delivered at home by TenderCuts. Use code {} & get 100 off on your 1st order. Download our App https://tcuts.in/4Mi5ZloXPR"""
 
     def __init__(self, user_id):
         self.user_id = user_id

@@ -16,7 +16,7 @@ class GetReferralCodeApi(APIView):
 
     def get(self, request, format=None):
         user_id = get_user_id(request)
-        message = ReferralCodeController(user_id).get_code()
+        message = ReferralCodeController(user_id).get_message()
 
         return Response({
             'status': True,

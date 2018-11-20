@@ -11,5 +11,5 @@ router = DefaultRouter()
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'referral', views.RewardPointAmountApi.as_view()),
-    url(r'code', views.ReferralCodeController.as_view())
+    url(r'code', views.GetReferralCodeApi.as_view())
 ]
