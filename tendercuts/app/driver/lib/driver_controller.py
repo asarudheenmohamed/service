@@ -328,7 +328,7 @@ class DriverController(object):
                         self.driver.username))
                 return (False, is_verified, 'Please Complete the order customer nearest locations')
 
-            if float(distance) <= float(0.5):
+            if not is_verified and float(distance) <= float(0.5):
                 tasks.address_verified(order_obj.increment_id)
 
         driver_object = DriverOrder.objects.filter(
@@ -345,7 +345,7 @@ class DriverController(object):
         # tasks.customer_current_location.delay(order_obj.customer_id, lat,
         # lon)
         if force_complete:
-            tasks.send_force_complete_order_alert(order_id, lat, lon)
+            tasks.send_force_complete_order_alert.delay(order_id, lat, lon)
 
         # send sms to customer
         tasks.send_sms.delay(order_id, 'complete')
