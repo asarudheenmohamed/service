@@ -122,7 +122,8 @@ MAGE_ATTRS = {
     'LATITUDE': 239,
     'LONGITUDE': 237,
     'STREET': 25,
-    'PINCODE': 30
+    'PINCODE': 30,
+    'IS_VERIFIED': 244
 }
 
 FLOCK_ENDPOINTS = {

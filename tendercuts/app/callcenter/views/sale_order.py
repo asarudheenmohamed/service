@@ -58,7 +58,8 @@ class SaleOrderLocationAPI(views.APIView):
             order_by('-recorded_time').first()  # type: DriverPosition
         waypoints.append({
             'latitude': last_position.latitude,
-            'longitude': last_position.longitude
+            'longitude': last_position.longitude,
+            'display': last_position.recorded_time
         })
 
         trip = DriverTrip.objects.filter(driver_order=current_order).first()

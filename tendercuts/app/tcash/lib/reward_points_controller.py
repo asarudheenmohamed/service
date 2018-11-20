@@ -49,10 +49,6 @@ class RewardsPointController:
         """Private method to ease testing to get rul"""
         return SalesruleCoupon.objects.get(code=coupon_code)
 
-    def _get_customer_id(self, ph_number):
-        """Private method to ease testing to get rul"""
-        return CustomerEntityVarchar.objects.get(
-            attribute_id=149, value=ph_number)
 
     def add_referral_bonus(self, order_id):
         """Add Transaction amount for the order if it is a
@@ -64,10 +60,10 @@ class RewardsPointController:
         Returns: None
         """
 
-        order = self._get_order()
+        order = self._get_order(order_id)
 
         # first check if the coupon code applied is a phone number of registered user
-        if not order.coupon_code or len(order.coupon_code) != 10:
+        if not order.coupon_code:
             return
 
         try:
@@ -75,15 +71,9 @@ class RewardsPointController:
         except SalesruleCoupon.DoesNotExist:
             return
 
-        try:
-            origin_customer = self._get_customer_id(rule.code)
-        except CustomerEntityVarchar.DoesNotExist:
-            self.log.debug("Unable to find user for coupon {}".format(
-                order.coupon_code))
-            return
-
+        origin_customer = rule.user_id
         reward_point_obj = MRewardsTransaction(
-            customer_id=origin_customer.entity_id,
+            customer_id=origin_customer,
             amount=self.amount,
             is_expired=self.is_expired,
             created_at=datetime.datetime.now(),
