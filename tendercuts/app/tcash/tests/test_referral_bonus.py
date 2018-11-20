@@ -40,18 +40,18 @@ def test_referral_bonus_success(monkeypatch):
 
     def mock_order(*args):
         order = mock.Mock()
-        order.coupon_code = "9908765678"
+        order.coupon_code = "TESTABC"
         return order
 
-    def mock_user(*args):
-        order = mock.Mock()
-        order.entity_id = 1
-        return order
+    def mock_rule(*args):
+        rule = mock.Mock()
+        rule.user_id = 1
+        return rule
 
     monkeypatch.setattr(
         RewardsPointController, '_get_order', mock_order)
     monkeypatch.setattr(
-        RewardsPointController, '_get_customer_id', mock_user)
+        RewardsPointController, '_get_rule', mock_rule)
 
     obj = RewardsPointController().add_referral_bonus(123)
     assert obj is not None
