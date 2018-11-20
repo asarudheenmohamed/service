@@ -69,7 +69,7 @@ class CustomerAddressEntityDecimal(models.Model):
 
 class CustomerAddressEntityInt(models.Model):
     value_id = models.AutoField(primary_key=True)
-    # entity_type = models.ForeignKey('EavEntityType', models.DO_NOTHING)
+    entity_type = models.ForeignKey('EavEntityType', models.DO_NOTHING)
     attribute = models.ForeignKey('EavAttribute', models.DO_NOTHING)
     entity = models.ForeignKey(
         CustomerAddressEntity,

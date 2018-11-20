@@ -17,7 +17,7 @@ def verify_token(token):
         resp = jwt.decode(
             token,
             settings.FLOCK_AUTH['APP_SECRET'],
-            settings.FLOCK_AUTH['APP_SECRET'])
+            settings.FLOCK_AUTH['ALGO'])
 
         return resp
     
