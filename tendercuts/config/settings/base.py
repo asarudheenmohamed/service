@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'app.rating',
     'app.store_manager',
     'app.callcenter',
-    'app.bot_admin'
+    'app.bot_admin',
+    'app.tcash'
 ]
 
 REST_FRAMEWORK = {
