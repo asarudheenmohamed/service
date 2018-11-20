@@ -46,9 +46,10 @@ def address_verified(order_id):
     is_verified_obj, _ = CustomerAddressEntityInt.objects.get_or_create(
         attribute_id=is_verified_attr,
         entity_type_id=2,
+        value=0,
         entity_id=shipping_address.customer_address_id)
 
-    is_verified_obj.value = True
+    is_verified_obj.value = 1
     is_verified_obj.save()
 
 
