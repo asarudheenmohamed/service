@@ -1,10 +1,9 @@
-import mock
 import pytest
 from django.conf import settings
 
 from app.core.models import SalesruleCoupon
 from app.tcash.lib.referral_code_controller import ReferralCodeController
-from app.tcash.lib.reward_points_controller import RewardsPointController
+import mock
 
 
 @pytest.mark.django_db
@@ -16,72 +15,46 @@ def test_code_controller(monkeypatch):
     controller = ReferralCodeController(27274)
     assert controller is not None
 
-    phone = 9908765678
-    rule_id = settings.REFERRAL_RULE_ID
-    rule = SalesruleCoupon.objects.filter(
-        rule_id=rule_id,
-        code=phone,
-    ).delete()
-
     def mock_load_basic_info(*args):
-        return (27272, "test@test.com", phone, 'Test User', 134)
+        return (27272, "test@test.com", "9908765678", 'Test User', 134)
 
     monkeypatch.setattr(
         ReferralCodeController, 'get_user_data', mock_load_basic_info)
 
     rule = controller.get_code()
-    assert rule.code == phone
+    assert rule.code[:4] == "TEST"
+    assert rule.user_id == 27272
 
 
 @pytest.mark.django_db
-def test_referral_bonus_failure_with_non_ph_coupon(monkeypatch):
-    """Asserts if coupon code no action is taken for failure"""
+def test_create_code():
+    """
+    When trying to create code, if the code already exists for another user
+    then create a new once
 
-    def mock_order(*args):
-        order = mock.Mock()
-        order.coupon_code = "blah"
-        return order
+    :return:
+    """
+    # Scene: TESTABC is already given to 2724 customer
+    SalesruleCoupon.objects.filter(code="TESTBAC").delete()
+    exist_code = "TESTABC"
+    rule_id = settings.REFERRAL_RULE_ID
+    rule, _ = SalesruleCoupon.objects.get_or_create(
+        rule_id=rule_id,
+        code=exist_code,
+        usage_per_customer=1,
+        times_used=0,
+        type=1,
+        user_id=27274
+    )
 
-    monkeypatch.setattr(
-        RewardsPointController, '_get_order', mock_order)
+    controller = ReferralCodeController(27275)
 
-    assert RewardsPointController().add_referral_bonus(123) is None
+    # mock the generate code call, first time when called, it gives the existing
+    # code
+    controller._generate_code = mock.Mock()
+    controller._generate_code.side_effect = ["TESTABC", "TESTABC", "TESTBAC"]
 
+    code = controller._create_code(27275, "test")
+    assert code.code == "TESTBAC"
+    assert code.user_id == 27275
 
-@pytest.mark.django_db
-def test_referral_bonus_failure_with_nocoupon(monkeypatch):
-    """Asserts if coupon code no action is taken for failure"""
-
-    def mock_order(*args):
-        order = mock.Mock()
-        order.coupon_code = None
-        return order
-
-    monkeypatch.setattr(
-        RewardsPointController, '_get_order', mock_order)
-
-    assert RewardsPointController().add_referral_bonus(123) is None
-
-
-@pytest.mark.django_db
-def test_referral_bonus_success(monkeypatch):
-    """Asserts if coupon code no action is taken for failure"""
-
-    def mock_order(*args):
-        order = mock.Mock()
-        order.coupon_code = "9908765678"
-        return order
-
-    def mock_user(*args):
-        order = mock.Mock()
-        order.entity_id = 1
-        return order
-
-    monkeypatch.setattr(
-        RewardsPointController, '_get_order', mock_order)
-    monkeypatch.setattr(
-        RewardsPointController, '_get_customer_id', mock_user)
-
-    obj = RewardsPointController().add_referral_bonus(123)
-    assert obj is not None
-    assert obj.amount == 100
