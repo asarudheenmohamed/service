@@ -49,22 +49,16 @@ def juspay_done(request):
     """
     params = request.query_params.dict()
 
-    # if mobile then nuke it
+    # if it's a mobile order then nuke it
     if params['medium'] != str(settings.ORDER_MEDIUM['NEW_WEBSITE']):
         return Response()
-
+    
     order_id = params['increment_id']
     if int(params['status']) == 1:
-        url = "{}{}".format(
-            settings.PAYMENT['JUSPAY']['web_success_url'],
-            order_id
-        )
+        url = settings.PAYMENT['JUSPAY']['web_success_url'].format(order_id)
         return HttpResponseRedirect(url)
 
-    url = "{}{}".format(
-        settings.PAYMENT['JUSPAY']['web_failure_url'],
-        order_id
-    )
+    url = settings.PAYMENT['JUSPAY']['web_failure_url'].format(order_id)
     return HttpResponseRedirect(url)
 
 
@@ -80,6 +74,30 @@ class JusPayApprovalCallBack(views.APIView):
     SECRET = settings.PAYMENT['JUSPAY']['secret']
     authentication_classes = ()
     permission_classes = ()
+
+    def get_url(self, order, success=False):
+        """Get the end payment url for the order based on success
+        or failur and based on the medium
+
+        :params:
+            order: SaleFlatOrder
+            success: bool, indicates if the payment was successful
+             or not.
+        """
+        # For website we push the params to the endpoint, so that it
+        # can push the data to the angular client
+        params = {'increment_id': order.increment_id,
+                  'medium': order.medium}
+        params.update({'status': 1 if success else 0})
+        url = "{}?{}".format(
+            reverse('juspay_done', request=self.request), urllib.urlencode(params))
+
+        logger.debug("Redirecting payment for order {} to: {}".format(
+            order.increment_id,
+            url
+        ))
+        
+        return url
 
     def get(self, request, **kwargs):
         """
@@ -107,23 +125,12 @@ class JusPayApprovalCallBack(views.APIView):
         sale_order = SalesFlatOrder.objects.filter(increment_id=increment_id)
         sale_order = sale_order.first() # type: SalesFlatOrder
 
-        # Params to push to next request.
-        params = {'increment_id': sale_order.increment_id,
-                  'medium': sale_order.medium}
-
         logger.debug("Trying to approve {} with status: {}".format(
             increment_id, payment_status))
 
-        params.update({'status': 1})
-        success_url = "{}?{}".format(
-            reverse('juspay_done', request=request), urllib.urlencode(params))
-
-        params.update({'status': 0})
-        failure_url = "{}?{}".format(
-            reverse('juspay_done', request=request), urllib.urlencode(params))
-
         if not is_charged:
-            return HttpResponseRedirect(failure_url)
+            return HttpResponseRedirect(
+                self.get_url(sale_order, success=False))
             # Response({"status": False})
 
         try:
@@ -134,13 +141,15 @@ class JusPayApprovalCallBack(views.APIView):
                 "confirmed payment for the order ID: {} with status {}".format(
                     increment_id, status))
 
-            return HttpResponseRedirect(success_url)
+            return HttpResponseRedirect(
+                self.get_url(sale_order, success=True))
         except Exception as e:
             exception = traceback.format_exc()
             logger.info("JP Payement verification for {} with error {}".format(
                 increment_id, str(exception)))
 
-            return HttpResponseRedirect(failure_url)
+            return HttpResponseRedirect(
+                self.get_url(sale_order, success=False))
 
 
 class PaymentMethodViewSet(mixins.ListModelMixin,

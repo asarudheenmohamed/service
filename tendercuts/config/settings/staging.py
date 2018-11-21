@@ -100,8 +100,8 @@ PAYMENT = {
         "url": "https://sandbox.juspay.in/card/tokenize",
         "return_url": "https://staging.tendercuts.in:82/payment/juspay",
         "environment": "sandbox",
-        "web_success_url": "https://staging.tendercuts.in:83/success?orderId={}",
-        "web_failure_url": "https://staging.tendercuts.in:83/payment-retry?orderId={}"
+        "web_success_url": "https://staging.tendercuts.in:83/checkout/success?orderId={}",
+        "web_failure_url": "https://staging.tendercuts.in:83/checkout/payment-retry?orderId={}"
     },
     "PAYU": {
         "url": "https://test.payu.in/",
