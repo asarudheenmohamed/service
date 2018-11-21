@@ -71,6 +71,9 @@ class RewardsPointController:
         except SalesruleCoupon.DoesNotExist:
             return
 
+        if not rule.user_id:
+            return
+
         origin_customer = rule.user_id
         reward_point_obj = MRewardsTransaction(
             customer_id=origin_customer,
