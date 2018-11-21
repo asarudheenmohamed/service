@@ -2,7 +2,6 @@
 import logging
 
 from rest_framework import viewsets
-from typing import Optional, Any
 
 from app.core import serializers
 from app.sale_order import models
