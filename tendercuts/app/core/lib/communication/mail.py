@@ -28,4 +28,6 @@ class Mail:
                 }
             ]
         }
-        requests.post(url, headers=headers, data=data)
+        resp = requests.post(url, headers=headers, data=data)
+        resp.raise_for_status()
+
