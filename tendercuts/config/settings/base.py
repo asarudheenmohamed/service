@@ -254,7 +254,8 @@ SMS_GATEWAY = {
 
 MAIL_GATEWAY = {
     "TC_USER": "reports@tendercuts.in",
-    "TC_PASS": "D%6Byz6+no;Dhgv2"
+    "TC_PASS": "D%6Byz6+no;Dhgv2",
+    "KEY" : "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"
 }
 
 
