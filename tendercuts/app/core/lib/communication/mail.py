@@ -1,4 +1,5 @@
 import requests
+import json
 from django.conf import settings
 
 
@@ -28,6 +29,6 @@ class Mail:
                 }
             ]
         }
-        resp = requests.post(url, headers=headers, data=data)
+        resp = requests.post(url, headers=headers, data=json.dumps(data))
         resp.raise_for_status()
 
