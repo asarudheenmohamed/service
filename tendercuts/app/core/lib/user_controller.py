@@ -15,6 +15,7 @@ from app.core.models.customer import (CustomerEntity, CustomerEntityVarchar,
                                       FlatCustomer, CustomerAddressEntityVarchar,
                                       CustomerAddressEntityText, CustomerAddressEntity,
                                       CustomerAddressEntityText)
+from app.core.lib.utils import get_user_id
 
 logger = logging.getLogger(__name__)
 
@@ -209,6 +210,23 @@ class CustomerController(object):
 
         return redis_value
 
+    @classmethod
+    def verify_token(self, token):
+        """Check whether the Token is valid or not.
+
+        Params:
+         token(str): customer token
+
+        returns:
+            token status
+
+        """
+        user = Token.objects.filter(key=token).last()
+        if not user:
+            raise CustomerNotFound()
+
+        return user
+
     def authenticate_with_password(self, username, password):
         """Check whether the given password is  Valid or not.
 
@@ -219,6 +237,26 @@ class CustomerController(object):
         """
         if not self.validate_password(password):
             raise InvalidCredentials
+
+    @classmethod
+    def token_authenticate(cls, token):
+        """Authenticate the agents in token mode.
+
+        Args:
+            token (str): User Token
+
+        Returns:
+            User
+
+        """
+
+        user = cls.verify_token(token)
+
+        mage_id = get_user_id(user)
+
+        user = CustomerSearchController.load_by_id(mage_id)
+
+        return user
 
     @classmethod
     def authenticate(cls, username, password, otp_mode=False):

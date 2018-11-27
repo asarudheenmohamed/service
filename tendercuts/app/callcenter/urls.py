@@ -20,6 +20,7 @@ router.register(
 
 urlpatterns = [
     url(r'', include(router.urls)),
+    url(r'token_login', views.UserTokenLoginApi.as_view()),
     url(r'update_address', views.UpdateAddressApi.as_view()),
     url(r'search_customer', views.SearchCustomerApi.as_view()),
     url(r'freshdesk_tickets', views.FreshDeskTicketApi.as_view()),
