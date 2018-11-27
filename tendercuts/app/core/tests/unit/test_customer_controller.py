@@ -5,6 +5,7 @@ import pytest
 from app.core.lib.user_controller import (CustomerController)
 from app.core.lib.exceptions import CustomerNotFound, InvalidCredentials
 
+
 @pytest.fixture
 def clsobj():
     """As a fixture wrapper for the class."""
@@ -48,6 +49,34 @@ class TestCustomerControllerAuth:
         """
         flat = clsobj.authenticate(mock_user.email, "12345678")
         assert flat.customer.email == mock_user.email
+
+    def test_verify_token(self, clsobj, mock_user):
+        """Test verify the user token.
+
+        Asserts:
+            Checks the response username
+
+        """
+        user = clsobj.verify_token(mock_user.generate_token())
+
+        assert user.username == mock_user.dj_user_id
+
+    def test_verify_invalid_token(self, clsobj):
+        """Test user invalid token."""
+
+        with pytest.raises(CustomerNotFound):
+            user = clsobj.verify_token("ttttttttttttttt")
+
+    def test_token_authenticate(self, clsobj, mock_user):
+        """Test token authentication.
+
+        Asserts:
+            Checks the response username
+
+        """
+        user = clsobj.token_authenticate(mock_user.generate_token())
+
+        assert user.dj_user_id == mock_user.dj_user_id
 
 
 @pytest.mark.django_db
