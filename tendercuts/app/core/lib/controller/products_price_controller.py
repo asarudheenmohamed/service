@@ -1,10 +1,10 @@
 """All product price controller related actions."""
 
 import logging
-from datetime import datetime
+import datetime
 
 import pandas as pd
-
+import numpy as np
 from app.core import models as models
 
 # Get an instance of a logger
@@ -40,9 +40,10 @@ class ProductsPriceController(object):
         # Create the DataFrame for products
         products_df = pd.DataFrame(
             list(products), columns=columns)
-        products_df['special_price'] = products_df.apply(lambda x: x['special_price'] if x['special_to_date'].date() == datetime.now().date() else
-                                                         None, axis=1)
+        products_df.special_to_date = pd.to_datetime(products_df.special_to_date)
 
+        products_df.special_price = np.where(
+            products_df.special_to_date > datetime.datetime.now(), products_df.special_price, None)
         products_df = products_df[[
             'price', 'special_price', 'entity_id']].to_dict('records')
 
