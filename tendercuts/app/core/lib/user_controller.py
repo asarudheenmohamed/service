@@ -4,7 +4,7 @@ import random
 import string
 import uuid
 import logging
-
+from rest_framework.authtoken.models import Token
 from django.db.models import Q, Sum, QuerySet
 from django.conf import settings
 
@@ -221,11 +221,11 @@ class CustomerController(object):
             token status
 
         """
-        user = Token.objects.filter(key=token).last()
-        if not user:
+        token = Token.objects.filter(key=token).last()
+        if not token:
             raise CustomerNotFound()
 
-        return user
+        return token.user
 
     def authenticate_with_password(self, username, password):
         """Check whether the given password is  Valid or not.
@@ -251,10 +251,8 @@ class CustomerController(object):
         """
 
         user = cls.verify_token(token)
-
-        mage_id = get_user_id(user)
-
-        user = CustomerSearchController.load_by_id(mage_id)
+        user_id = user.username.split(":")[1]
+        user = CustomerSearchController.load_by_id(user_id)
 
         return user
 

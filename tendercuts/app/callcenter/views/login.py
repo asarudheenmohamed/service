@@ -1,12 +1,12 @@
 """Endpoint for user login."""
 
 import logging
-
+import traceback
 import app.core.lib.magento as magento
 from app.core.lib.user_controller import CustomerController
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from ..auth import CallCenterPermission
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -36,12 +36,14 @@ class UserTokenLoginApi(APIView):
             user = CustomerController.token_authenticate(token)
             logger.debug(
                 "Logging successful for the customer token:{}".format(token))
-        except CustomerNotFound:
+        except Exception as e:
             user = CustomerController(None)
-            user.message = "User does not exists!"
+            user.message = "Invalid username/password"
+            exception = traceback.format_exc()
 
-            logger.warn("user token:{} not found".format(token))
-
+            logger.error("user {} tried to login caused and exception {}".format(
+                token,
+                exception))
             return Response(user.message)
 
         return Response(user.deserialize())
