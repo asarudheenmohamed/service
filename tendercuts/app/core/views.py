@@ -273,10 +273,10 @@ class ProductMetaApi(APIView):
 	meta_description.value description,
 	meta_title.value as title
 from
-catalog_product_entity product
-left join catalog_product_entity_text meta_keyword on product.entity_id = meta_keyword.entity_id and meta_keyword.attribute_id = 83 and meta_keyword.store_id = 1
-left join catalog_product_entity_varchar meta_description on product.entity_id = meta_description.entity_id and meta_description.attribute_id = 84 and meta_description.store_id = 1
-left join catalog_product_entity_varchar meta_title on product.entity_id = meta_title.entity_id and meta_title.attribute_id = 82 and meta_title.store_id = 1"""
+v2.catalog_product_entity product
+left join v2.catalog_product_entity_text meta_keyword on product.entity_id = meta_keyword.entity_id and meta_keyword.attribute_id = 83 and meta_keyword.store_id = 1
+left join v2.catalog_product_entity_varchar meta_description on product.entity_id = meta_description.entity_id and meta_description.attribute_id = 84 and meta_description.store_id = 1
+left join v2.catalog_product_entity_varchar meta_title on product.entity_id = meta_title.entity_id and meta_title.attribute_id = 82 and meta_title.store_id = 1"""
 
     def get(self, request):
         data = []
