@@ -258,37 +258,45 @@ class ProductPriceViewSet(APIView):
         return Response(products_prices)
 
 
-from django.db import connection
+from app.core.models import CatalogProductEntityText, CatalogProductEntityVarchar
+from django.conf import settings
+import collections
 
 
 class ProductMetaApi(APIView):
     """Fetches and gives the API data."""
     authentication_classes = ()
     permission_classes = ()
+    COL_MAP = {
+        settings.MAGE_ATTRS['META_DESCRIPTION']: 'description',
+        settings.MAGE_ATTRS['META_TITLE']: 'title',
+        settings.MAGE_ATTRS['META_KEYWORD']: 'keywords'
+    }
 
-    # the query is a bit complex, so using direct now.
-    QUERY = """select
-	product.entity_id, 
-	meta_keyword.value keyword, 
-	meta_description.value description,
-	meta_title.value as title
-from
-v2.catalog_product_entity product
-left join v2.catalog_product_entity_text meta_keyword on product.entity_id = meta_keyword.entity_id and meta_keyword.attribute_id = 83 and meta_keyword.store_id = 1
-left join v2.catalog_product_entity_varchar meta_description on product.entity_id = meta_description.entity_id and meta_description.attribute_id = 84 and meta_description.store_id = 1
-left join v2.catalog_product_entity_varchar meta_title on product.entity_id = meta_title.entity_id and meta_title.attribute_id = 82 and meta_title.store_id = 1"""
+    def _build_dict(self, data, rows):
+        """Private mehtod to build dict.
+        :param data: defaultdict(dict)
+        :param rows:
+        :return:
+        """
+        for row in rows:
+            attr_name = self.COL_MAP[row.attribute_id]
+            data[row.entity_id][attr_name] = row.value
+
 
     def get(self, request):
-        data = []
-        with connection.cursor() as cursor:
-            cursor.execute(self.QUERY)
+        data = collections.defaultdict(dict)
 
-            for pid, keyword, description, title in cursor.fetchall():
-                data.append({
-                    'product_id': pid,
-                    'keyword': keyword,
-                    'descrption': description,
-                    'title': title
-                })
+        meta_rows = CatalogProductEntityVarchar.objects.filter(
+            store_id=1,
+            attribute_id__in=[
+                settings.MAGE_ATTRS['META_TITLE'],
+                settings.MAGE_ATTRS['META_DESCRIPTION']])
+        self._build_dict(data, meta_rows)
 
-        return Response(data)
+        meta_rows = CatalogProductEntityText.objects.filter(
+            store_id=1,
+            attribute_id=settings.MAGE_ATTRS['META_KEYWORD'])
+        self._build_dict(data, meta_rows)
+
+        return Response(data.values())
