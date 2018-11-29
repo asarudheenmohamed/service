@@ -220,3 +220,5 @@ class CatalogProductFlat26(CatalogProductFlat):
         managed = False
         db_table = 'catalog_product_flat_26'
         app_label = "magento"
+
+

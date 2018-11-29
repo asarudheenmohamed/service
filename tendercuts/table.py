@@ -11,11 +11,10 @@ settings.DATABASES = DATABASES
 
 django.setup()
 
-tables = ["catalog_product_entity", "catalog_product_entity_datetime", "catalog_product_entity_decimal",
-          "catalog_product_entity_int", "catalog_product_entity_text", "catalog_product_entity_text",
-          "catalog_product_entity_varchar"]
 tables = ['sales_flat_orders_address']
 tables = ['salesrule']
+tables = [ "catalog_product_entity_text",
+          "catalog_product_entity_varchar"]
 
 Command().execute(
     table=tables,#lambda table_name: table_name in tables,

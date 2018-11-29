@@ -5,6 +5,7 @@ from .store import CoreStore, GmapLangandlatisLongandlatis, GmapLangandlatisLong
 from .entity import EavAttribute
 
 from .product import *
+from .product_entity import *
 
 from .category import *
 
