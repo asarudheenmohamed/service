@@ -263,6 +263,8 @@ from django.db import connection
 
 class ProductMetaApi(APIView):
     """Fetches and gives the API data."""
+    authentication_classes = ()
+    permission_classes = ()
 
     # the query is a bit complex, so using direct now.
     QUERY = """select
