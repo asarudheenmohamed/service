@@ -27,7 +27,7 @@ router.register(
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'product', views.ProductViewSet.as_view()),
-    url(r'product_meta/', views.ProductMetaApi.as_view()),
+    url(r'page_meta/', views.ProductMetaApi.as_view()),
     url(r'cart/add/', views.CartAddApi.as_view()),
     url(r'customer/', views.CustomerDataApi.as_view()),
     url(r'price/', views.ProductPriceViewSet.as_view()),
