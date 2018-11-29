@@ -282,6 +282,7 @@ class ProductMetaApi(APIView):
         for row in rows:
             attr_name = self.COL_MAP[row.attribute_id]
             data[row.entity_id][attr_name] = row.value
+            data[row.entity_id]['product_id'] = row.entity_id
 
 
     def get(self, request):
