@@ -281,7 +281,7 @@ left join catalog_product_entity_varchar meta_title on product.entity_id = meta_
     def get(self, request):
         data = []
         with connection.cursor() as cursor:
-            cursor.execut(self.QUERY)
+            cursor.execute(self.QUERY)
 
             for pid, keyword, description, title in cursor.fetchall():
                 data.append({
