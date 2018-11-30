@@ -1,0 +1,5636 @@
+[33mcommit 35336b3f51362152c7e6658718483ea15ddfd1fb[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 19:14:21 2018 +0530
+
+    fix audio file issue
+
+[33mcommit 97af501feba32535ff20b7a669bea49a040dbd88[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 14:17:52 2018 +0530
+
+    fix issue
+
+[33mcommit 7159d7b944c8fec6d5a8f356fb026062b020d33f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 14:17:01 2018 +0530
+
+    fix indent issuee
+
+[33mcommit a604ead032fc565db10deb606f3bbd3a8223dac6[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 12:52:20 2018 +0530
+
+    append agent id in ticket description
+
+[33mcommit dc5798d64a3478333c95cf1db95bc8971eb5e2c3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 12:38:49 2018 +0530
+
+    fix audio file issue
+
+[33mcommit 12ee4493d387e1e5abb0ff60a2167db80e60c415[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 9 12:26:09 2018 +0530
+
+    fix agent callback issue
+
+[33mcommit aaf13324f01fafee54b0de7ad58e1e6bfcbca80a[m
+Merge: 5e93087 f508e10
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 16:17:59 2018 +0530
+
+    Merge branch 'Api-CloudAgentCallback'
+
+[33mcommit f508e10ae2fc1ab4b9bf6e16133be68889d14564[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 16:17:28 2018 +0530
+
+    fix docs issue
+
+[33mcommit 5e93087b4f4f54f58434b9cbc6eaa4fef1954299[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 15:03:50 2018 +0530
+
+    fix live issue
+
+[33mcommit 1215a6879db59e368a1107170430edd007581379[m
+Merge: c6d77e0 df48e62
+Author: Django <varun@tendercuts.in>
+Date:   Mon Aug 6 14:46:35 2018 +0530
+
+    Merge conflicts
+
+[33mcommit c6d77e02b78ad3e248a8aa2b5ba58db35a123c32[m
+Author: Django <varun@tendercuts.in>
+Date:   Mon Aug 6 14:45:20 2018 +0530
+
+    Fixwes
+
+[33mcommit df48e6280570672c2fab6c5e89a48ee396ae76b8[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 14:44:25 2018 +0530
+
+    add odoo credentials
+
+[33mcommit 0979d0d2af6e17a53510e3950eb39e0cc8f713ef[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 12:44:05 2018 +0530
+
+    fix indent issue
+
+[33mcommit d42b2efd20f5f41cadbe448c21f2c2240cf85693[m
+Merge: f0c022d a8358f6
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 6 04:58:47 2018 +0000
+
+    Merged in feat-cmsApi (pull request #67)
+    
+    create api for cms page
+
+[33mcommit a8358f6471a16607e98ecebab835f4a414fd1a3d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Aug 3 16:30:30 2018 +0530
+
+    create api for cms page
+
+[33mcommit f0c022d8ab24b2c18fe042adea0f381de4fae8c6[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 1 17:25:18 2018 +0530
+
+    add task name in celery failure mail
+
+[33mcommit 67ee21dcc5aa076823c50c40ab3e3e3ac3ae97af[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 1 16:51:35 2018 +0530
+
+    commended the customer current location update
+
+[33mcommit bf9d65db87aefda742cc4581717e34800f9c866a[m
+Merge: 8383d69 433c6f7
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 1 16:02:43 2018 +0530
+
+    Merged geohash-api into master
+
+[33mcommit 433c6f76cc7e48f6b29bdae2d567e39ebba90fe1[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Wed Aug 1 15:57:34 2018 +0530
+
+    sorted imports
+
+[33mcommit 2f3744b9d14e3809d4b1dd89cea2cc15ae8ecd1e[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Wed Aug 1 15:39:46 2018 +0530
+
+    review changes
+
+[33mcommit 11a0d62960de0e70e9c5bc3a439920e2975a8e38[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 1 14:19:38 2018 +0530
+
+    create a cloudagent callback details api
+
+[33mcommit 23e727cb9f6c94a3c934c88292ee81f6d4b3641d[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 31 18:40:08 2018 +0530
+
+    rm geohash controller from core
+
+[33mcommit d7d56ad1ff35eeaf1084086ae4af36119aba4182[m
+Merge: ba59550 8383d69
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 31 18:35:34 2018 +0530
+
+    Merge branch 'master' into geohash-api
+
+[33mcommit ba59550ffb7ba5b6c33414ff859156b40977cb23[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 31 18:27:47 2018 +0530
+
+    TCUTS-2416 geohash mail and naming changes
+
+[33mcommit 8383d69da26417abb650c495501f8dcfc2253fa3[m
+Merge: 0b2d295 052d291
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 25 11:44:56 2018 +0530
+
+    Merge branch 'feat-quoteItem'
+
+[33mcommit 052d291db904565c3aadc35c93e711885b0d878f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 25 11:43:52 2018 +0530
+
+    Revert "saravana local diff"
+    
+    This reverts commit 474139bebae64751fbe1069a4103613bd824f54f.
+
+[33mcommit 0b2d2955ad7e6ba321baa9064679bec8cd887fd3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 25 11:20:47 2018 +0530
+
+    add the additional return params in order_data api
+
+[33mcommit 474139bebae64751fbe1069a4103613bd824f54f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Jul 24 18:35:39 2018 +0530
+
+    saravana local diff
+
+[33mcommit cac7dd0b048f77a0fe1ea76e9a09cdbca641787b[m
+Merge: d2ec841 5175d69
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jul 20 11:08:03 2018 +0000
+
+    Merged in Api-designatedStore (pull request #65)
+    
+    Api designatedStore
+
+[33mcommit d2ec84109c4bed73d257b11539da9f08e06ef902[m
+Merge: 9d90708 0eb7c62
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jul 20 06:17:19 2018 +0000
+
+    Merged in feat-productFeature (pull request #62)
+    
+    create product review and rating feature
+
+[33mcommit 0eb7c62e4788744ef3ba46d30d38de7e7bf2a760[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 19 16:27:26 2018 +0530
+
+    add fresh desk controller
+
+[33mcommit 5175d69152c2a8009d84a442a8f6c9659acac005[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 19:16:01 2018 +0530
+
+    fix test case issue
+
+[33mcommit e27d47188ef2af63028aaaecff5af73293a11ede[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 19:11:20 2018 +0530
+
+    created designated store api and test case
+
+[33mcommit 9d90708db27f5f414475e0e5b62bc1f018e0b6ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 14:41:45 2018 +0530
+
+    fix global name mock user issue
+
+[33mcommit 55dc514f79435683c2e0f2b78dfac05343145646[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 14:19:11 2018 +0530
+
+    fix test case issue
+
+[33mcommit 1abc8555eaec3914886b6f75abcc3d9aa30276ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 14:07:27 2018 +0530
+
+    fix catagery test case issue
+
+[33mcommit 297f00a6490a7c86f9ff76f6ddd9b346a3f4936a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 13:54:46 2018 +0530
+
+    fix test case 'SalesFlatOrder' object has no attribute 'longitude'
+
+[33mcommit 935cdfe7b224c5bcc44c24eca0e3f55fa3e35a96[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 13:41:59 2018 +0530
+
+    fix test case isuues
+
+[33mcommit a6ce4ac27c86b9adba0be6ef83cdef7c23638659[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 13:19:39 2018 +0530
+
+    fix test case global name SalesFlatOrderAddress issue
+
+[33mcommit 417ea254a33c9919deb736b32aa7edfc1b11247b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 18 12:03:37 2018 +0530
+
+    fix jenkin test case issue
+
+[33mcommit be1189bbf8037b67f39db4f1e2574f17e3a0049a[m
+Merge: 3c80407 d251927
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 17 18:55:16 2018 +0530
+
+    Merge branch 'master' into geohash-api
+
+[33mcommit d2952ce1b49d1d3ab4b09acb3ca1d71ae8193617[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jul 17 18:40:45 2018 +0530
+
+    create customer last quote items viewset and test case
+
+[33mcommit 3c804077eed4869347534561b657101a8127753d[m
+Merge: 46ac756 292642d
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 17 17:32:37 2018 +0530
+
+    Merge branch 'master' into geohash-api
+
+[33mcommit 46ac7565dfd5cbc3ce9d97a5665e9e4fdc923667[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 17 17:13:22 2018 +0530
+
+    removed store_id from customer address
+
+[33mcommit 677e51ef04818d5cfc881e572aeb9335d2d89b34[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 17 15:14:29 2018 +0530
+
+    incl documentation and few review changes
+
+[33mcommit d251927d28c18ce2e210a8f196b21d4e2c2d8951[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jul 16 15:33:41 2018 +0530
+
+    change local megento port id 80
+
+[33mcommit 95a38bbfb6e0e12c5f19bf881db8358fde38d2be[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jul 16 15:26:42 2018 +0530
+
+    change local megento port id
+
+[33mcommit 5108573b6351fccbe6e29a5cf68e41123c6b8b9d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jul 13 18:33:47 2018 +0530
+
+    fresh desk ticket creation and unit test cases
+
+[33mcommit 52df23cebf78566ef2f377021a9774ca3a4b03c4[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 15:42:34 2018 +0530
+
+    remove paybiz auto
+
+[33mcommit 15da72a641d98c9da3f75e21b62ab2fa1a266b6d[m
+Merge: b57a4b6 0c30888
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 13:42:59 2018 +0530
+
+    Merge branch 'master' into feat-productFeature
+
+[33mcommit 0c3088863ab09f3bd8912ed0a64c6005b93fae9c[m
+Merge: b51be4a a63e6d8
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 13:27:17 2018 +0530
+
+    Merge branch 'v2.2'
+
+[33mcommit a63e6d80620581b370112ea0cd2e10201552d2b7[m
+Author: Django <varun@tendercuts.in>
+Date:   Thu Jul 12 13:22:29 2018 +0530
+
+    fix for deals
+
+[33mcommit b51be4a882b59f44a1dc847be59e40bff4d03248[m
+Merge: 93b1d78 930b194
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 12:39:51 2018 +0530
+
+    Merge branch 'v2.2'
+    
+    Conflicts:
+    	tendercuts/app/core/serializers/sales_order.py
+
+[33mcommit 93b1d789d52d96a58d1d2e1c9dacbd49ab0c23c5[m
+Merge: 211081d a0dd95f
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 12:27:13 2018 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 211081d397dd09fa94039b79357a289f8cc02ce7[m
+Merge: 9a47420 e44eb6c
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jul 12 12:16:57 2018 +0530
+
+    Merge branch 'v2.2'
+
+[33mcommit 930b194833ecb731a82f62332801680d8cc08a6c[m
+Author: Django <varun@tendercuts.in>
+Date:   Thu Jul 12 12:14:25 2018 +0530
+
+    Bug fix
+
+[33mcommit be0588a0f5ba011e8334a55cceabe7eedee8a8d1[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Wed Jul 11 17:28:22 2018 +0530
+
+    alignment changes
+
+[33mcommit 56abc88b53fc9aaae1290e53ee774a3d425c0d32[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Wed Jul 11 17:21:38 2018 +0530
+
+    code review changes
+
+[33mcommit 1dd15bba18ded7c935a7e23038844a9f0d871a6f[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 10 18:23:09 2018 +0530
+
+    host name changed in staging
+
+[33mcommit 4d7ab5ea87390ce1117b31f7f7936249749ba604[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 10 17:42:33 2018 +0530
+
+    added erp db entry in staging prod files
+
+[33mcommit a0dd95f555fb2fb91d2342c2c68271c52b35afe2[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Jul 10 17:41:00 2018 +0530
+
+    Fix Jenkins
+
+[33mcommit b57a4b62b08280ffdcb88e70d9306714665e4c39[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jul 10 16:27:42 2018 +0530
+
+    create product review and rating feature
+
+[33mcommit a56b29d6af2d65a9e2df96b4f2627f2b97e6d12f[m
+Author: Hariharan <hariharan@tendercuts.in>
+Date:   Tue Jul 10 13:40:31 2018 +0530
+
+    TCUTS-2130, TCUTS-2148, TCUTS-2239 geohash and distance matrix to store done
+
+[33mcommit 9a47420ffc2e92c48c37eb2fe25ee2f1e3747701[m
+Merge: 292642d 8c0a858
+Author: Naveen Kumar <naveen@tendercuts.in>
+Date:   Tue Jul 10 05:42:27 2018 +0000
+
+    Merged in special-price (pull request #61)
+    
+    TCUTS-2234 Product price API
+    
+    Approved-by: Varun Prasad <varun@tendercuts.in>
+
+[33mcommit 8c0a858bba8d21d904f48819a786eabb752c7847[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Jul 6 16:09:32 2018 +0530
+
+    fix authentications
+
+[33mcommit 27db05debbc8fe15252c7c56ab38b2ae699d83fa[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Jul 6 15:52:57 2018 +0530
+
+    TCUTS-2234
+
+[33mcommit 91dd5bb0724070a0dcda9532790ff3218de04f92[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Jul 6 15:34:33 2018 +0530
+
+    TCUTS-2234 Product price API
+
+[33mcommit ccc084631550a48f31315803aef03059c08decf4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Jul 3 10:51:56 2018 +0530
+
+    Geohashing module setup
+
+[33mcommit b54238e488f448a998afa0217eee91fe3f103e6d[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jun 27 13:50:57 2018 +0530
+
+    fix sequence order test case issue
+
+[33mcommit 42487de564658e865f2e7bdad6e3a1e0b87716eb[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jun 27 13:19:08 2018 +0530
+
+    add sequence number in sale order serializer
+
+[33mcommit e44eb6cb0a0e64680715592553fa20f4016fc80e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jun 20 15:17:26 2018 +0530
+
+    merge driver sequence order
+
+[33mcommit 7db31ed2fb37691260b4b7556ec675066fd80d4e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 21 12:50:56 2018 +0530
+
+    cherry pic sequence order number
+
+[33mcommit 292642d938590dae47ef5e0734a7ecc76b946d72[m
+Merge: c2aedad 378aff8
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jun 27 05:32:52 2018 +0000
+
+    Merged in feat-addLatAndLon (pull request #60)
+    
+    update the order completed location
+    
+    Approved-by: Varun Prasad <varun@tendercuts.in>
+
+[33mcommit c2aedad9c3a441291d1e2ee7b913861fa5311f9c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 26 18:46:49 2018 +0530
+
+    fix test case mock order issues
+
+[33mcommit cdc712a29a207a63cd227d179f9bf38e62192b38[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 26 18:36:22 2018 +0530
+
+    remove pdb debuger
+
+[33mcommit 6c2a7a09d72e3122d4a58a39568af135b61e0f34[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 26 17:54:28 2018 +0530
+
+    fix test case issues
+
+[33mcommit d37d73f9974d63ec5948d5251e27b50524092e32[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 26 16:22:34 2018 +0530
+
+    fix payment celery task issue
+
+[33mcommit 514d53ec00d53423f9367a6d162b7b5d8229c7b1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 26 12:27:25 2018 +0530
+
+    fix test_payment_card_add issue
+
+[33mcommit 378aff8d4a50619309e989088c02374364937392[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jun 25 18:09:35 2018 +0530
+
+    update the order completed location
+
+[33mcommit 5d669b913000e839d079ae5d35b2c780808df4a8[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 8 12:51:18 2018 +0530
+
+    fix payment task test case issue
+
+[33mcommit 398872f730b2c4ee6e7c11aa68a5678cfb9d6b77[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 8 12:19:25 2018 +0530
+
+    fix test case global name mock issue
+
+[33mcommit 186b1bb8055feffcad0e1afe5fdf7f56b370d8f1[m
+Merge: 702a4f2 a593b78
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 7 19:19:38 2018 +0530
+
+    Merged feat-PayuAuto into master
+
+[33mcommit a593b78ad16b4970aabde201d962eea4bf98a7b4[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 7 17:49:12 2018 +0530
+
+    add test case for payubiz order pending orders
+
+[33mcommit 53645f038eada6d456246700f77292da529f8f3a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 7 17:00:50 2018 +0530
+
+    change staging task failure mail ids
+
+[33mcommit df218d47356eafccc47fd8860fee8c9b143577f7[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 7 16:45:06 2018 +0530
+
+    add payu order status check
+
+[33mcommit 3331bd28fe4b42da88a1279b0a7ad17f0ed99e2b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 7 16:40:38 2018 +0530
+
+    checks the payubiz order status in cancel_payment_pending_order tasks and create test cases
+
+[33mcommit 22b1a28c27170726d84518709c1514f4fb7aa813[m
+Author: Django <varun@tendercuts.in>
+Date:   Wed Jun 6 13:09:17 2018 +0530
+
+    bug fixes
+
+[33mcommit 702a4f2eae2d14a46ffbe52a7f6c6256baf7926c[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jun 6 13:09:09 2018 +0530
+
+    remove status caching in redis db
+
+[33mcommit 4f7692c90324762f31cc53a25f6617f130a3bfa4[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed May 30 16:51:20 2018 +0530
+
+    reduce the fetch order limit
+
+[33mcommit 812a25a368c69321e584355574aed28c89172fc2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 30 12:07:03 2018 +0530
+
+    fix task failure unbounded data error in task failure mail
+
+[33mcommit 7a9d38e07cbbe4df0807c2c406d1ccbf27514584[m
+Merge: d65c0e0 e7b15e0
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 30 12:00:49 2018 +0530
+
+    :merge
+    Merge branch 'master' into v2.1
+
+[33mcommit d65c0e0b1fc883b62ddd0ad5aeca04bda08b973f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed May 30 11:59:46 2018 +0530
+
+    add special price in product
+
+[33mcommit e7b15e03a0b47faac2d8b5d19846a392798dfcbf[m
+Merge: 2124294 1096d44
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue May 29 09:05:23 2018 +0000
+
+    Merged in fix-orderHistory (pull request #57)
+    
+    Fix orderHistory
+
+[33mcommit 1096d44ab6417762c46d55a115bc63ef708fcd4e[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue May 29 10:53:42 2018 +0530
+
+    fix sintex issue
+
+[33mcommit dd61872f4c633de74556e795c37659c3f458a435[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon May 28 13:15:49 2018 +0530
+
+    add order pending and canceled message
+
+[33mcommit 27a7bc7c1eaad6a1dc892e5e41fbc96245adadc3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 28 10:53:16 2018 +0530
+
+    fix task failure issues
+
+[33mcommit d14b15423ee11e8281543a9429bd25caa361c437[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri May 25 17:09:10 2018 +0530
+
+    webhook via order status changes update in order history table
+
+[33mcommit 21242943a2e9ae15206a7f8d0018c61c91ddbb50[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 15:13:00 2018 +0530
+
+    update celery task apply method in notify test cases
+
+[33mcommit 3f42ef82929a40d8b943fbfa0c413fa309edbee1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 15:11:04 2018 +0530
+
+    fix mock django user issues
+
+[33mcommit d5377e8e1faf5f0daa8089d9414f8eff746928d9[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 14:34:13 2018 +0530
+
+    fix customer location update test case issue
+
+[33mcommit 8030adcbc792cd9695de0fc1b815377c957a6f69[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 14:25:58 2018 +0530
+
+    fix customer location test cases issues
+
+[33mcommit b2a8f067fc9fa3f95af295ce98f46ac40f53a745[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 14:21:26 2018 +0530
+
+    fix notify issue
+
+[33mcommit f81f33982c7a1854f5763a8af9877886d9006565[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 14:00:30 2018 +0530
+
+    fix driver mock trip km issue
+
+[33mcommit 77ae020c7b32173c025f31ada444495d961a4879[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 12:34:59 2018 +0530
+
+    fix notify customer test case issues
+
+[33mcommit 814cb70167c5de8fc7bc53b4a5f2db02e9999870[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 23 11:14:17 2018 +0530
+
+    fix user object cache issue
+
+[33mcommit 532deb672d30346bf402f6cc4b3a1df8c850b661[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue May 22 16:35:17 2018 +0530
+
+    fix storeorder and order time elapsed test case issues
+
+[33mcommit 68f067ff99939d5698905ee6370723c5ffa1b689[m
+Merge: 47eb254 29c2d79
+Author: Django <varun@tendercuts.in>
+Date:   Tue May 22 14:51:24 2018 +0530
+
+    Bug fix
+
+[33mcommit 47eb254108060a70ff58b3a1145b292b9b0d944e[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue May 22 14:50:53 2018 +0530
+
+    Bug fix
+
+[33mcommit 29c2d79c9e551cc20cc72ca93f82718152cbd450[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue May 22 14:47:16 2018 +0530
+
+    fix bug
+
+[33mcommit 9b27df7ea678717710b7de3bd956b1b6cb0b7078[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon May 21 12:30:36 2018 +0530
+
+    Bug fix
+
+[33mcommit 375f973f3a36ad5349139358e0a19477ccf548a3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue May 22 13:26:14 2018 +0530
+
+    fix celery task issues
+
+[33mcommit 715d30b44a8ac5c43afd89c35da56ca940519a5a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 15:47:16 2018 +0530
+
+    add logs in webhook
+
+[33mcommit bc11c0afd1c4f1bc59e57e7eb0d69353a53c1af9[m
+Merge: fce5707 76682ca
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 14:25:47 2018 +0530
+
+    Merge branch 'v2.1' of bitbucket.org:tendercutsservices/services into v2.1
+
+[33mcommit fce5707a841a9f8e75c41153a31a0c6b469a49c7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 14:25:26 2018 +0530
+
+    Add navallur
+
+[33mcommit 76682ca504f56060c792273e1f799f5afff383aa[m
+Merge: 4854603 3cc35ca
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 14:09:11 2018 +0530
+
+    Merge branch 'master' into v2.1
+
+[33mcommit 3cc35caa0444168c1c8c50d4936871aef36fb36b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 14:07:40 2018 +0530
+
+    remove order webhook history update
+
+[33mcommit c09f55911e658bf87f89d455a513e07fd5f80dd1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 14:02:20 2018 +0530
+
+    Bug fix
+
+[33mcommit 3951103059847b6fd4bfc643301b6c4e8f10a70a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 13:56:07 2018 +0530
+
+    Fix jenkins
+
+[33mcommit 80c2f1c703e661f5e57b0da58188982d9a11d9b0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 13:33:00 2018 +0530
+
+    bug fix
+
+[33mcommit aca2484d01a223882178f0e7398d1c31fe551095[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 13:22:30 2018 +0530
+
+    bug fix
+
+[33mcommit e70c54d2294a1f76fad4c1a811111bf5ecb76f8e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 13:12:34 2018 +0530
+
+    bug fix
+
+[33mcommit 57393cbcd1bb2d25d5c320a2efe9450d1783262f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:57:11 2018 +0530
+
+    bug fix
+
+[33mcommit ed7159ccbd52ed9161b94fda90272ece82405fa3[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:54:00 2018 +0530
+
+    bug fix
+
+[33mcommit 48546032e71298ab979ff0681d60b5d540eb9280[m
+Merge: 2e5f090 d805339
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 12:42:58 2018 +0530
+
+    Merge branch 'master' into v2.1
+
+[33mcommit 2e5f0901ae00a8c495f8a504885eec79d3dcd1c3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 12:30:48 2018 +0530
+
+    update webhook order status in order history table
+
+[33mcommit 549d4ac3ade52602da56bb45f77f9deaaca9b30d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:15:51 2018 +0530
+
+    Bug fixes
+
+[33mcommit c0f7f39307047b04c5cb2afcf4ea7f41f8f563d8[m
+Merge: a522c30 d805339
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:42:32 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit a522c308fcff7581bf8ccc214f63cb6d9400c1c9[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:42:20 2018 +0530
+
+    Remove notebooks
+
+[33mcommit d8053392bea58bfab2942ec35275175e2bd0bed6[m
+Merge: bdf7745 49492cb
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 07:07:53 2018 +0000
+
+    Merged in update-orderHistory (pull request #55)
+    
+    update webhook order status in order history table
+
+[33mcommit 49492cb0357521b20b90f40f0d48b56ac9b02a7c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon May 21 12:30:48 2018 +0530
+
+    update webhook order status in order history table
+
+[33mcommit bdf77459d93307ed9dc9212efe22e4b9b91eb589[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 12:15:51 2018 +0530
+
+    Bug fixes
+
+[33mcommit da87f4fdbe10039c7ef28a28241238671fc036d0[m
+Merge: 9d9d6ad 129fe55
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 11:34:05 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit 9d9d6ada09511f6f5170095e6173a9dc8d6026f1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 21 11:31:58 2018 +0530
+
+    Double check at pg for order failure
+
+[33mcommit 129fe559acb47dde5b5d65ea99975775829f0d63[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu May 17 11:29:08 2018 +0530
+
+    Checks the order event name "ORDER_SUCCEEDED" in juspay webhook
+
+[33mcommit cb7e7544a2b74ace485bf8b5841ea42e2d264761[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed May 16 16:05:41 2018 +0530
+
+    add increment_id inique var
+
+[33mcommit 8350b81ac74834fe6db55d4ff09deedc34683b3c[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed May 16 15:20:43 2018 +0530
+
+    add pos order if cond
+
+[33mcommit 271719525d2d5b43c011270c5ba267e40eddeab0[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed May 16 14:05:43 2018 +0530
+
+    checks the webhook request group name and fix order elapsed time issues
+
+[33mcommit bc7bcc5ec3eb540c94c845784175242c3b7d87e9[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 10:58:33 2018 +0530
+
+    Automate payent pending
+
+[33mcommit d45ab70a7797a7d0e1cb3fb75f01eb915be0ddb6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 10:03:41 2018 +0530
+
+    Inject sort order api
+
+[33mcommit 6bc8c5df8db995700571f5ec7987fdb9610f4044[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 09:34:39 2018 +0530
+
+    Navallur
+
+[33mcommit 912a3664e2796dec0cf7522ff4ebf47952b1cee7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 09:11:59 2018 +0530
+
+    store results
+
+[33mcommit 8a57871ae335015925d00cb2cb4cb9709507f282[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 09:04:13 2018 +0530
+
+    Bug fix
+
+[33mcommit 69b7b5f19efe4e2e68d6f2f4e0a1211daac677d3[m
+Merge: 74c4f6a 9381857
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 09:03:30 2018 +0530
+
+    More fixes
+
+[33mcommit 74c4f6a162fee0655805296ed070d8c0ddd42d66[m
+Merge: fe0c6d9 c7f0cf6
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 09:01:31 2018 +0530
+
+     mErge conflicts
+
+[33mcommit fe0c6d9c08fa6443840aab2b7ff097040e923add[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 08:57:50 2018 +0530
+
+    Update website
+
+[33mcommit 4aebaa556eb0a4c4832414bc22c02377fdf0cc60[m
+Merge: f2bbac8 8de3e8f
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 08:56:48 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit f2bbac8c3f6e9668fea6b6bdd2b30953f1c67247[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 11 08:56:36 2018 +0530
+
+    Freeze requeirtements
+
+[33mcommit 8de3e8f269dc2ec58f50a3b8de736b3c3828208e[m
+Merge: de3fd64 b142eb4
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri May 11 08:53:21 2018 +0530
+
+    CLena ups
+
+[33mcommit de3fd647e79ac79974005a7104634638ebda6ec9[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri May 11 08:41:18 2018 +0530
+
+    Bug fix
+
+[33mcommit 7fa610db1dcbe4ccf3ed0711def51d14f1816974[m
+Merge: 896e549 4bb2b12
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 9 19:04:50 2018 +0530
+
+    Merged feat-orderlapse into master
+
+[33mcommit 4bb2b12ecaa90b32814b5594083d3d6e8611d7e5[m
+Merge: 609fb5c 896e549
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 9 17:15:57 2018 +0530
+
+    fix merge conflict=
+
+[33mcommit 609fb5cb5560a005984f732121067555ea61b01d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 9 17:11:40 2018 +0530
+
+    change order elapsed fun name
+
+[33mcommit 9b67d05015fe0a6c1e5f9af4c72ccdfffb01e3ff[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed May 9 17:07:20 2018 +0530
+
+    fix order elapsed time issues
+
+[33mcommit 896e549ac3f6524bd3f405dc81c0599049861168[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed May 9 15:52:02 2018 +0530
+
+    Jenkins bug fix
+
+[33mcommit d025105f50b2786f5651605fc58b2a07a9dfe114[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed May 9 15:20:16 2018 +0530
+
+    Payment recon
+
+[33mcommit f836f3fda2f8d22a4edf08c431386b834b36b98b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue May 8 13:51:13 2018 +0530
+
+    fix order elapsed time celery task issue
+
+[33mcommit c7f0cf664e67757bbaa488a6175c70f29022c950[m
+Merge: fad7b78 55b204b
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 27 15:58:55 2018 +0530
+
+    fix merge conflicts
+
+[33mcommit fad7b786098e6ff422a7e7dc30fafdf862df2287[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Apr 17 14:36:21 2018 +0530
+
+    fix review changes
+
+[33mcommit cfa70b6d9301545a09bdb531a46f0b35554ac585[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Apr 16 12:01:14 2018 +0530
+
+    add reward point in user basic info
+
+[33mcommit 27182678f2862021a2ccbb769ae74d95319bbd31[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:26:51 2018 +0530
+
+    check order type conditions
+
+[33mcommit 74115046d2afebe896f3ffeab48ac6400428dea3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:24:37 2018 +0530
+
+    add scheduled sms api integration
+
+[33mcommit 06a170012a68c16295a6565c34041838422c453d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:22:08 2018 +0530
+
+    create order change queues and consumer
+
+[33mcommit 72abe9ed0e1cc9f2e08d2e8d5006e41c2247fcae[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 6 20:19:06 2018 +0530
+
+    Make jnekins happy
+
+[33mcommit f804b5a690d3b497c18597157aaf200f618c55b0[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Apr 6 15:02:16 2018 +0530
+
+    Expose lat, long & Is_customer_mapped
+
+[33mcommit 6e2bb0d790513b1c677ec2a9537bd1f067b6bd54[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Apr 3 20:06:54 2018 +0530
+
+    Bug fices
+
+[33mcommit a2fe01692a2f2abea01f1fe5641da4fbf8933d49[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 14:48:44 2018 +0530
+
+    fix docker
+
+[33mcommit d1504e53f427ed4512ded5e893bf65da3c872736[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:53:22 2018 +0530
+
+    REmoved pdb
+
+[33mcommit 9c1ec48beb37e0e1b2f2b7c22faaaabe8a2f79b2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:46:06 2018 +0530
+
+    Cyclic import fix
+
+[33mcommit bd05017b255ba11cbfc4a510f7d53dea6fdae073[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:40:55 2018 +0530
+
+    Cyclic import fix
+
+[33mcommit fe45f58a75b54d3ed36e0c3867a69f0b685da27b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:29:43 2018 +0530
+
+    removed usless test cases
+
+[33mcommit 7293fad92ad5e68363c0b6214d83134dc46528c5[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:25:32 2018 +0530
+
+    Restrict 80 port for jenkins
+
+[33mcommit b886fa4b7fec1d2e72951f418cc7b7a10439f5cb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 12:11:40 2018 +0530
+
+    update notebook
+
+[33mcommit d17d02f91e32844e94f25deed9c6fcbc317f98f7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:58:57 2018 +0530
+
+    clean up
+
+[33mcommit a996ae0a0395e5f4065d7ce0605a958b7f0797eb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:57:00 2018 +0530
+
+    Added notebooks submodule
+
+[33mcommit ab94cc9ea50697bcde559cdb3aea20f4200a6042[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:56:25 2018 +0530
+
+    Removenotebooks
+
+[33mcommit 4332fb18097bacf796185a9a85ba04bd8831c46f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Mar 25 14:31:09 2018 +0530
+
+    Enabled paytm
+
+[33mcommit 49a873eeca0197f46cbac849b56f94fa1db969b5[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 14 13:47:08 2018 +0530
+
+    TCUTS-1634
+
+[33mcommit 627b47bf591acd58657bb19bc24840e5ef535a68[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 14 12:21:13 2018 +0530
+
+    delete TestStoreOrderController
+
+[33mcommit 635e167242f44f43f78fd748e51258c5a3706fbe[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 13 15:55:13 2018 +0530
+
+    TCUTS-1574 fix reviews and delete files
+
+[33mcommit faa615d0c6bb12447aca59b8484658ca6b9e7416[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Mar 13 07:53:09 2018 +0530
+
+    add store lat and lng for settings file
+
+[33mcommit 6c3080b7be7537a469980e2f64975a0a2e2e9246[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 18:49:12 2018 +0530
+
+    add get_django_username method
+
+[33mcommit 4e7b5ed7ec26e8ff9652a751abeaadb61c76b98d[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 18:45:48 2018 +0530
+
+    TCUTS-1574 change views and add user controler
+
+[33mcommit 5a3ea484d84f1df4af680ce74efa30983eebe531[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 13:59:15 2018 +0530
+
+    fix reviews in driver lat lon
+
+[33mcommit 30176a4dc8df010875ae3d1af07db16b74b52d2b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 14:31:13 2018 +0530
+
+    Added subrepo
+
+[33mcommit 6f98c4cc9073e0505f019a3134267a1c63df097b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 13:27:26 2018 +0530
+
+    Remove website
+
+[33mcommit fb4303c98d832cd45789b43d83eb123abc5fb116[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 8 12:40:40 2018 +0530
+
+    fix test cases
+
+[33mcommit 269199e383ea41f9c481d8c4527f3b9fbba82e8c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 10:37:36 2018 +0530
+
+    Minor fixes to catalog gen
+
+[33mcommit c64320d273ad67c71b247fad27c4d5412f2246a8[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 7 13:36:53 2018 +0530
+
+    fix login test case to create group
+
+[33mcommit 4bec103f6f1ce1b4ea9f7a8eb27b7785e399358f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 12:22:19 2018 +0530
+
+    change store manager test file name
+
+[33mcommit 09f6f256741349f6e3003eba7cb43baf2fbee3ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 12:08:25 2018 +0530
+
+    fix store manager test case issue
+
+[33mcommit e7676449a4a8f6b0f53023cd2c14c2112dd017ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 11:49:29 2018 +0530
+
+    change local config
+
+[33mcommit 6caa6b4d3ea114c067c1d1b1531da23914c3e9e3[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 19:08:35 2018 +0530
+
+    TCUTS-1605
+
+[33mcommit 17015563c87d2b5953780a2ef287d5908d120365[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 15:48:56 2018 +0530
+
+    TCUTS-1604 fix reviews
+
+[33mcommit 3483937772db1a498a0f653bd7982a807bd931fe[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Mar 6 15:34:09 2018 +0530
+
+    fix review commends
+
+[33mcommit 80ec34a67682d886f41f2b07c857a05941df8ba0[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 12:30:17 2018 +0530
+
+    TCUTS-1595 fix login bug
+
+[33mcommit 6efb8b6416f1ffdd67d052d9af727c8b0b9ed718[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Mar 5 19:59:22 2018 +0530
+
+    TCUTS-1604
+
+[33mcommit ec8c1337d100c5a1e62d251398b802cd6d428996[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Mar 3 15:09:04 2018 +0530
+
+    notebook
+
+[33mcommit 6ac946e3bc2a61cd3267f4269f33b98d3bb075fa[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 1 17:10:42 2018 +0530
+
+    TCUTS-1590 fix reviews
+
+[33mcommit cd21306b5319c27f22f6c5b5ca4174c29969b242[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Mar 1 14:25:37 2018 +0530
+
+    add porur and mmda location lat and lon
+
+[33mcommit b19a4371e487cd8d881aa77afa27eb4b6d6b50a8[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 1 14:14:04 2018 +0530
+
+    TCUTS-1590
+
+[33mcommit 6c3f7bbb7eea4df69a393b36d7850701106ab918[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Feb 23 16:01:46 2018 +0530
+
+    TCUTS-1573 fix login testcase
+
+[33mcommit edfd685a90673b4240856134588c331a99f1bd25[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Feb 23 12:23:55 2018 +0530
+
+    Added store manager
+
+[33mcommit ec92a74c570cfd0e24da64232ad29d7f7b8ad72d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 19:11:51 2018 +0530
+
+    fix login test cases issue
+
+[33mcommit bc55ec8f2496a01db85d7e21a835ff10f47c7304[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 19:10:41 2018 +0530
+
+    fix inventry test case issues
+
+[33mcommit d41e436466ac09d3b3bda5cc04ddcc95987e745d[m
+Author: Django <varun@tendercuts.in>
+Date:   Fri Apr 27 13:19:54 2018 +0530
+
+    Bug fixes
+
+[33mcommit c9482a9f1cb670fcfc13b8969d77cc266e1876ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Apr 24 17:49:26 2018 +0530
+
+    create order lapse controller and models creation
+
+[33mcommit 55b204b301bf43a6bcb69a207864869ff3255582[m
+Author: madhu <madhu@merchantrms.com>
+Date:   Fri Apr 20 19:34:33 2018 +0530
+
+    docker phpmuadmin setup
+
+[33mcommit 100b9a9db92e12f8cd7a7e5e1c7284b5321d77ce[m
+Merge: 3f06fcc a3e637e
+Author: madhu <madhu@merchantrms.com>
+Date:   Fri Apr 20 19:17:30 2018 +0530
+
+    merge conflict
+
+[33mcommit 3f06fcc317c644df95cd627be965182f2b460313[m
+Author: madhu <madhu@merchantrms.com>
+Date:   Fri Apr 20 19:16:42 2018 +0530
+
+    Docker set up instruction fix
+
+[33mcommit a3e637e3178d4fd3ddbc146659ea16354deea8f7[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 20 12:54:51 2018 +0530
+
+    change scheduled sms valuefirst ventor to msg91
+
+[33mcommit 65d028704167ebe42594ecb001d6d77c85113b0f[m
+Merge: 6e6a9ca af04962
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Apr 17 15:27:57 2018 +0530
+
+    fix merge conflict
+
+[33mcommit af04962c727712faf4a3f0e235d89b50dc57259d[m
+Merge: 33dda78 78bb4b9
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Apr 17 09:36:33 2018 +0000
+
+    Merged in feat-orderChangeCustomQueues (pull request #53)
+    
+    Feat orderChangeCustomQueues
+
+[33mcommit 78bb4b9d0ffddac82271e044c2ae1e0f79c53d3d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Apr 17 14:36:21 2018 +0530
+
+    fix review changes
+
+[33mcommit f661b92a01131d104a7a397accfd7d30e5cda193[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Apr 16 12:01:14 2018 +0530
+
+    add reward point in user basic info
+
+[33mcommit 75d6bd3aa9142b3b7eedce63773b334ed539fd63[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:26:51 2018 +0530
+
+    check order type conditions
+
+[33mcommit 11c50f4e222ecb3c25f7ae277b5f324ce65c4106[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:24:37 2018 +0530
+
+    add scheduled sms api integration
+
+[33mcommit 17661630c9dc9c05e6028e3f3c18fa19e414f8e9[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Apr 13 18:22:08 2018 +0530
+
+    create order change queues and consumer
+
+[33mcommit 33dda7811afeb9daccd7d784bb8fe839baa7548f[m
+Merge: 944999b c196a8f
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 6 20:20:00 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit 944999b06e73600ddb22659bd57c9ac91e6c21cf[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 6 20:19:06 2018 +0530
+
+    Make jnekins happy
+
+[33mcommit c196a8f0ef0c61c8a02acd9a0a59c9caab46e086[m
+Merge: 049d5ff 66539bd
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Apr 6 15:02:35 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit 049d5ff06d3145a6c3bd7e187de00d7277d86c63[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Apr 6 15:02:16 2018 +0530
+
+    Expose lat, long & Is_customer_mapped
+
+[33mcommit 66539bd214e744fe5b07605e3391f674ece33fc1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Apr 3 20:06:54 2018 +0530
+
+    Bug fices
+
+[33mcommit d724d897bdbe4368f3af43284f471004fb0d4dc7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 14:48:44 2018 +0530
+
+    fix docker
+
+[33mcommit d7c863a0aebe1e5fb51205811c34d9871d7a7fd3[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:53:22 2018 +0530
+
+    REmoved pdb
+
+[33mcommit 8572c6280da0a20457f910ce7eca910191d99476[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:46:06 2018 +0530
+
+    Cyclic import fix
+
+[33mcommit 5cafcec717c9ab5b611458dadbea29b3600bde32[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:40:55 2018 +0530
+
+    Cyclic import fix
+
+[33mcommit 1f90dd5b8f3a3f61bf57d84a7dd25e8a3c03fcce[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:29:43 2018 +0530
+
+    removed usless test cases
+
+[33mcommit 676987ce03efe77c9f5564638ea034133c621e90[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 2 13:25:32 2018 +0530
+
+    Restrict 80 port for jenkins
+
+[33mcommit 3f172bf0008c4937585b75d413633e8e8b415fea[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 12:11:40 2018 +0530
+
+    update notebook
+
+[33mcommit 9735681bab72c8725735563fcbd2d8d94b8ad769[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:58:57 2018 +0530
+
+    clean up
+
+[33mcommit 567144bb0d9809ee63f9b02c10b5cb02ba8876f6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:57:00 2018 +0530
+
+    Added notebooks submodule
+
+[33mcommit aa42797a4dd1f653b78b39ee156e655aa2e11940[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 26 11:56:25 2018 +0530
+
+    Removenotebooks
+
+[33mcommit ae98e051c3462f25b2a5c1e800088a398780f592[m
+Merge: dde4da3 3e20dac
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Mar 25 14:31:31 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit dde4da350ba0a8054184e4b3c3cfee276a0a55ae[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Mar 25 14:31:09 2018 +0530
+
+    Enabled paytm
+
+[33mcommit 3e20dac3f115e923cf2e2c4d03247498ad53843c[m
+Merge: 03626ac 05d87e7
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Thu Mar 15 05:16:55 2018 +0000
+
+    Merged in update-driverapp-version (pull request #51)
+    
+    TCUTS-1634
+
+[33mcommit 03626acbfe9dafa9b54089d854a15d4c26dac22f[m
+Merge: 7e0522c b7dd610
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Thu Mar 15 03:57:37 2018 +0000
+
+    Merged in feat-store-manager (pull request #47)
+    
+    Feat store manager
+
+[33mcommit 05d87e74c9687957b9ce8a50ecac66b359ec206a[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 14 13:47:08 2018 +0530
+
+    TCUTS-1634
+
+[33mcommit b7dd610739b92181fb9afc0a2bdf546262156e7e[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 14 12:21:13 2018 +0530
+
+    delete TestStoreOrderController
+
+[33mcommit 569815445509f41bfe325229045565daaff23b1f[m
+Merge: 46bb0af 7e0522c
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 13 16:08:54 2018 +0530
+
+    cleared conflicts
+
+[33mcommit 46bb0af14b2c755b813ca153a0b1cde4bdbe4251[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 13 15:55:13 2018 +0530
+
+    TCUTS-1574 fix reviews and delete files
+
+[33mcommit 7e0522ca6d40bf689017d998fa496f6946f73ee8[m
+Merge: 23675db 9cb5a34
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Mar 13 08:15:42 2018 +0530
+
+    Merged fix-storeDriverLocation into master
+
+[33mcommit 9cb5a344999bcc2aaee73725a030495404e7554f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Mar 13 07:53:09 2018 +0530
+
+    add store lat and lng for settings file
+
+[33mcommit 48a6fa5ef6394028976df87de977470dc2a884ee[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 18:49:12 2018 +0530
+
+    add get_django_username method
+
+[33mcommit df7df23e581e13c3911c90ecc8700aaae9de6444[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 18:45:48 2018 +0530
+
+    TCUTS-1574 change views and add user controler
+
+[33mcommit af8c6b8c24be292c229be7ba473817e3ef6141a7[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Mar 9 13:59:15 2018 +0530
+
+    fix reviews in driver lat lon
+
+[33mcommit 23675db62c2c88995a533b690ecae7d85d224f6d[m
+Merge: 5771d97 1145114
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 14:31:26 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit 5771d97fea11a62cf719978c742e3da76853a1c8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 14:31:13 2018 +0530
+
+    Added subrepo
+
+[33mcommit 114511460a1eb70e077606919b1121ccebcf2549[m
+Merge: 89d72fa 8cf4bac
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Thu Mar 8 08:19:23 2018 +0000
+
+    Merged in fix-test-cases (pull request #49)
+    
+    fix test cases
+
+[33mcommit 2c0eb9e6aaa5deb6c63bff168f7ac978523c3ad4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 13:27:26 2018 +0530
+
+    Remove website
+
+[33mcommit 8cf4bac2bda1c1a27598b3d8b409fb9de468ac2d[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 8 12:40:40 2018 +0530
+
+    fix test cases
+
+[33mcommit 89d72fa6407b7bea5f25b224528b8a70a2ac4257[m
+Merge: 4aa89a8 1508dcc
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 10:37:43 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit 4aa89a8ef1b429718c0a1e7d786aad418d217e50[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 8 10:37:36 2018 +0530
+
+    Minor fixes to catalog gen
+
+[33mcommit f48f10a36866510845e65ec18389bcbe8e3d17ef[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Mar 7 13:36:53 2018 +0530
+
+    fix login test case to create group
+
+[33mcommit 1508dccfd10c7cae8d61e373ea1d882b3ea2bae2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 12:22:19 2018 +0530
+
+    change store manager test file name
+
+[33mcommit 6d152202a07c3ccd8683d862fe7d74d110121acc[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 12:08:25 2018 +0530
+
+    fix store manager test case issue
+
+[33mcommit 3fe9a4594ade055d5aa163979aef5e8a35f6fbe3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Mar 7 11:49:29 2018 +0530
+
+    change local config
+
+[33mcommit 6c194ed92c52107304f703698ecb7c752c910945[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 19:08:35 2018 +0530
+
+    TCUTS-1605
+
+[33mcommit ac36b7d3da7b6958696819e9105ebbb5d2b9ef8f[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 15:48:56 2018 +0530
+
+    TCUTS-1604 fix reviews
+
+[33mcommit 8f0aa93afa4cacbc33c7a4f99daedf083dcbc191[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Mar 6 15:34:09 2018 +0530
+
+    fix review commends
+
+[33mcommit 2259a0f05545707870da57b8da9d652a2984e986[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Mar 6 12:30:17 2018 +0530
+
+    TCUTS-1595 fix login bug
+
+[33mcommit a770d50931e503934fee4f32872788dee8f5d5bd[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Mar 5 19:59:22 2018 +0530
+
+    TCUTS-1604
+
+[33mcommit e5e77371bb97f764b147f99b06cc656558936dd6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Mar 3 15:09:04 2018 +0530
+
+    notebook
+
+[33mcommit 0fadbaa22d685ed5854343b7be7401ee3f768d11[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 1 17:10:42 2018 +0530
+
+    TCUTS-1590 fix reviews
+
+[33mcommit a951d50cb30f94026b85c0a6bed76761f02781d1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Mar 1 14:25:37 2018 +0530
+
+    add porur and mmda location lat and lon
+
+[33mcommit 2e5fa7f6631da0243ea601060798b368b02109a4[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Mar 1 14:14:04 2018 +0530
+
+    TCUTS-1590
+
+[33mcommit df9f1f2c8bbabb9b73cb38e0f4067be86b0e224b[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Feb 23 16:01:46 2018 +0530
+
+    TCUTS-1573 fix login testcase
+
+[33mcommit 5733320cdf24d6783095c528ba4b4e2171a98d91[m
+Merge: d66e5fd c688829
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Feb 23 12:24:14 2018 +0530
+
+    Merge branch 'master' of bitbucket.org:tendercutsservices/services
+
+[33mcommit d66e5fd4705c79b7e5ad61c90e57271de7a1a024[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Feb 23 12:23:55 2018 +0530
+
+    Added store manager
+
+[33mcommit c6888293414f19bbdaf196a2c2123f47a57bcc0a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 19:11:51 2018 +0530
+
+    fix login test cases issue
+
+[33mcommit cafca6a7d8e5f3880a8871de2aaefffc65ee613e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 19:10:41 2018 +0530
+
+    fix inventry test case issues
+
+[33mcommit 3c3e31c2993044b9f2f80ce7bca476bd06d591db[m
+Merge: 75cd87c 5898999
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 17:42:40 2018 +0530
+
+    Merge branch 'fix-driverposition'
+
+[33mcommit 6e6a9ca86916db16ea1446cc735172d785316b95[m
+Merge: 1ff405a 5898999
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 17:41:28 2018 +0530
+
+    Merge branch 'fix-driverposition' into vs12
+
+[33mcommit 1ff405aa3991f1ef6012cf1596e72b93320e1a5c[m
+Merge: 6dd94cf 75cd87c
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 17:38:35 2018 +0530
+
+    Merge branch 'master' into vs12
+
+[33mcommit 75cd87c8345319bb3eddba977bf0a2329d4e7581[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 17:36:53 2018 +0530
+
+    fix test case issues
+
+[33mcommit 58989992cb72c056c194c2c3578b027e424e392d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 14:56:44 2018 +0530
+
+    fix driver position update issue
+
+[33mcommit 106d33e110b8350b1c3f70b1408c38b9ad325cde[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Feb 14 12:15:24 2018 +0530
+
+    fix clery task test issue and order fetch test case issue
+
+[33mcommit b142eb4d21015d1c9290bee6e22d626c530f38f3[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Feb 13 18:30:08 2018 +0530
+
+    fix djanago dashboard issue
+
+[33mcommit 8c7a52992f1cb52e5095812a6b535e6f76c610e7[m
+Author: Jenkins <varun@tendercuts.in>
+Date:   Tue Feb 13 17:43:50 2018 +0530
+
+    Updated v3.3
+
+[33mcommit 6dd94cf396fd31d1791791cced30b488dc031672[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue Feb 13 15:09:22 2018 +0530
+
+    Correct ph numbers
+
+[33mcommit 7d644ab02fbdf461c3aa0ec246123e14ed7bdd4f[m
+Merge: d7c4c85 9aefb62
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Feb 13 13:49:20 2018 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit d7c4c85bdc74564edbe1fb76325871858b139332[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Feb 13 13:48:48 2018 +0530
+
+    Fix version
+
+[33mcommit 9aefb62a4aac9f6f7a78dc4b039c5c66ab6ac2d4[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Feb 13 13:20:36 2018 +0530
+
+    fix driver integration test cases
+
+[33mcommit 0740391da744917784799d2ed039e3865a929908[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Feb 13 13:10:06 2018 +0530
+
+    fixed missing migration
+
+[33mcommit ea0e0711a45e375508eb3ba20034639ecde9074d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Feb 13 13:02:13 2018 +0530
+
+    add driver name and driver number field in sale order
+
+[33mcommit e50774584e44ee94ceacd9097917d1b01459b71e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Feb 13 12:55:52 2018 +0530
+
+    remove pdb set trace
+
+[33mcommit c2701cccd223dc4b13ba0d883a54f6e0c0bbbaf0[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Feb 13 12:45:57 2018 +0530
+
+    fix refer friend test cases issue
+
+[33mcommit cc0616042aa51e61081f556f87dee2f86f075e98[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 23:52:54 2018 +0530
+
+    Nuked useless app
+
+[33mcommit 2478edffecc9babd0b2aa4ba325a71d40888b622[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 23:36:21 2018 +0530
+
+    Specify path
+
+[33mcommit 8232a222929a2995846471c7ab29c2731ff51a68[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 23:24:11 2018 +0530
+
+    Added coverage reports
+
+[33mcommit 513d4f61da31d83111baaa9d872a5ef9e597ba9b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 19:12:55 2018 +0530
+
+    Fix perms for var dir
+
+[33mcommit e99cf13d3c96e996becf2c3a8c7bc722af175082[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 18:55:36 2018 +0530
+
+    fix
+
+[33mcommit 9a5ebb81e3dbac2b597547c3ca699f9283a5cbc8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 18:30:12 2018 +0530
+
+    Move the cache to a diff location
+
+[33mcommit 1c2c1c062e8c1e5071aea8108c3d325a9d018284[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 18:27:41 2018 +0530
+
+    Start celery in teh same session
+
+[33mcommit 5d809188519608e870d452d0547d7e266d614ce2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 18:16:53 2018 +0530
+
+    Add php installation
+
+[33mcommit 6c503ee32d847b6f075262749913b859d1a4b836[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 18:08:11 2018 +0530
+
+    junit reporting
+
+[33mcommit ba2f6f1d6012562f6676debe3d3daeb0c912d78c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 16:51:56 2018 +0530
+
+    Fixes
+
+[33mcommit dad86080537d6b4f90d6d145f6eaeb14018a7fef[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 16:50:09 2018 +0530
+
+    Fix changes'
+
+[33mcommit ca779a6dec1a70fddf07051df60c4fec73a391e2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 16:46:28 2018 +0530
+
+    Minor changes
+
+[33mcommit 46ab6e2951d7445f1afbe4a9963e5281f31375a9[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 16:19:04 2018 +0530
+
+    repointed to git
+
+[33mcommit 401c0192db33d059f79a81b7191aa8971d4849f9[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 16:16:33 2018 +0530
+
+    Set up php env
+
+[33mcommit 3fcd909fcc98d8989f69f387651a339f3abb98aa[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Feb 12 16:10:57 2018 +0530
+
+    Frozen v3.3 to master
+
+[33mcommit c95ebdeedbb6069207a78e6cbbfa9bbd11866962[m
+Merge: 581322c b74b7cc
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Feb 12 16:10:04 2018 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 581322c35fb2f990446d23cd2320eb2753b16c80[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Feb 12 16:09:20 2018 +0530
+
+    Added repo set up for jenkins
+
+[33mcommit b74b7cc754d04b2d94bd69ea7821c85087aa7d28[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:51:34 2018 +0530
+
+    Minor changes
+
+[33mcommit cfa58473b6467d85ae42f31872dac7e291170581[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:50:56 2018 +0530
+
+    Fix port mappingl
+
+[33mcommit cc20e335cc8e78aa6e1691018d4804643d558036[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:48:18 2018 +0530
+
+    Fix port mappingl
+
+[33mcommit 46eb69db3587d2440d545a95d473218e53a0c148[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:47:22 2018 +0530
+
+    Fix port mapping
+
+[33mcommit 52de50004e1e102d63737be232cfd70a6d9bdb0b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:46:11 2018 +0530
+
+    Fix port mapping
+
+[33mcommit b00581e5f3689f37c167657568ec8f3efd4daa3b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:39:46 2018 +0530
+
+    Bug fixes
+
+[33mcommit 5cb8530a8882d1a7a93e9784121a4a358f93f292[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:36:57 2018 +0530
+
+    Bug fixes
+
+[33mcommit 38024a5cad9100ece49cad848832c8932b0c479e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:36:47 2018 +0530
+
+    Test cases fixes
+
+[33mcommit 593d7fabe6efbc4ebb46dcb59d566b86e0cc31ad[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Feb 12 15:36:33 2018 +0530
+
+    Jenkins set up
+
+[33mcommit b7369200c4405f129662a644ae1a4f79909c36f1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Feb 9 17:32:05 2018 +0530
+
+    add migration file in km travelled field
+
+[33mcommit 5e7cd6217d8d98907d38a0a116e2268840cc1c14[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Feb 9 16:27:55 2018 +0530
+
+    Remove km_travelled changes
+
+[33mcommit 01519b7558deeac4710f122ec34fb0050bc62a43[m
+Merge: 969ef79 492b187
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Feb 9 16:13:16 2018 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 492b187970069bb445bcbe3c892c6b59028e5e85[m
+Merge: 59aba46 36cb820
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Feb 9 10:42:33 2018 +0000
+
+    Merged in script-driverTripKm (pull request #45)
+    
+    add migration file
+
+[33mcommit 36cb820986bc2be559ed8843a72524f79dbe7416[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Feb 9 16:11:27 2018 +0530
+
+    add migration file
+
+[33mcommit 969ef79872927eb43c953a86ab1101446d7e82d9[m
+Merge: 8d5a4fb 59aba46
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Feb 9 16:03:16 2018 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 8d5a4fb225df0218273dc67b3346444a02d13a6a[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Feb 9 16:02:59 2018 +0530
+
+    Hot fixes
+
+[33mcommit 59aba4663c312699a94c587265412d19d024b84c[m
+Merge: 1e7ef5b 86635ec
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Feb 9 10:14:39 2018 +0000
+
+    Merged in script-driverTripKm (pull request #44)
+    
+    fix migration issues
+
+[33mcommit 86635ec4b508b50d0928dc9860f11dcf4dd20fbb[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Feb 9 15:41:47 2018 +0530
+
+    fix migration issues
+
+[33mcommit 1e7ef5b8634fbbd6ff3bd2be89eda43fe4044cad[m
+Merge: a38b30b 4e9957c
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Feb 8 12:05:21 2018 +0000
+
+    Merged in script-driverTripKm (pull request #43)
+    
+    fix trip distance computation issue and bugs
+
+[33mcommit 4e9957c8a97c13ef15f7679905b4a983159bc94b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Feb 8 17:04:21 2018 +0530
+
+    fix trip distance computation issue and bugs
+
+[33mcommit a38b30bb5f78f83673e6e2d182ce4d30357a02ff[m
+Merge: 864b3b4 6be76d5
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Wed Feb 7 06:07:50 2018 +0000
+
+    Merged in low-stock-notification (pull request #42)
+    
+    Low stock notification
+
+[33mcommit 6be76d57eedae65f298e28cd59de55d070a8daa6[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Feb 6 16:02:41 2018 +0530
+
+    TCUTS-1494
+
+[33mcommit 922fbdfd8303a8468b4a3963f90437c91c6b26be[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Feb 6 12:10:45 2018 +0530
+
+    TCUTS-1494
+
+[33mcommit 864b3b4a1e2a8dab1a4e0798522c0e018a5322c8[m
+Merge: 649dec5 e52e99f
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Sat Feb 3 06:46:22 2018 +0000
+
+    Merged in low-stock-notification (pull request #40)
+    
+    Low stock notification
+
+[33mcommit 649dec5ee5f391343f24bdc58017c415a0a10ec4[m
+Merge: 2b09d07 8eaabf1
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Fri Feb 2 12:08:09 2018 +0000
+
+    Merged in driver-version-control (pull request #41)
+    
+    Driver version control
+
+[33mcommit 8eaabf1378bef842933068be02969e0f672df02e[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Feb 2 12:08:28 2018 +0530
+
+    TCUTS-1465
+
+[33mcommit e52e99f0f473948a29258be9c61bb6982104a70c[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Feb 1 20:09:56 2018 +0530
+
+    TCUTS-1264
+
+[33mcommit a87c76b5f9601aaf315d5221ba7511c9b542e297[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Feb 1 14:02:02 2018 +0530
+
+    TCUTS-1465
+
+[33mcommit 59e22f61cb751af39e2d5f56f53b439982d743a5[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Jan 31 18:15:18 2018 +0530
+
+    TCUTS-1264
+
+[33mcommit c94377194f57472816f836c54150287fbbeca77e[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Jan 31 18:07:36 2018 +0530
+
+    TCUTS-1264
+
+[33mcommit 2b09d07d7fe6711eb4e9777b3e38cc727e073108[m
+Merge: c5772e9 6f6c31b
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jan 30 09:43:43 2018 +0000
+
+    Merged in feat-relateUserModel (pull request #39)
+    
+    Feat relateUserModel
+
+[33mcommit 6f6c31b38e486dc83a624d12c636bfcf6bc63855[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jan 30 10:57:00 2018 +0530
+
+    add migration files
+
+[33mcommit 97a90e61cd4876da4234fffe873d95666281e35d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jan 29 22:35:06 2018 +0530
+
+    fix test case issues driver module
+
+[33mcommit c5772e9c68c1a8bac72f304ce8f78faf17bf8d1c[m
+Merge: 5a71a5e 87f973e
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jan 29 05:41:41 2018 +0000
+
+    Merged in feat-relateUserModel (pull request #38)
+    
+    Feat relateUserModel
+
+[33mcommit 87f973e0a4f010967002b709eb3baba073b45a11[m
+Merge: a261f5a 5a71a5e
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jan 29 11:06:41 2018 +0530
+
+    fix merge conflict
+
+[33mcommit a261f5a304ea99f5f4ad8ad0f0c2782fe85872cc[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jan 25 14:21:49 2018 +0530
+
+    fix migration issues in driver store order controller and dashbord store issue
+
+[33mcommit d6eb91adeefc479087ee53a39e819a8133356488[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 24 18:01:20 2018 +0530
+
+    fix test case issue
+
+[33mcommit 4d0ca9e34f884a7d6419ccaca65a0f012292ed96[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 24 13:07:05 2018 +0530
+
+    add driver trip end point and user migration in driver app
+
+[33mcommit 5a71a5ea5b63aa159c64c49304c81d00f7943814[m
+Merge: f05a47f 96ada61
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Mon Jan 22 09:54:14 2018 +0000
+
+    Merged in driver-version-control (pull request #37)
+    
+    TCUTS-1407
+
+[33mcommit 96ada6128f91afdce2a27252f4e48afdc1ba474c[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Jan 22 14:11:50 2018 +0530
+
+    TCUTS-1407
+
+[33mcommit f05a47f8da19af505d15817ed6ddec47d18c09c9[m
+Merge: 5a120f0 7e9d714
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Mon Jan 22 07:30:16 2018 +0000
+
+    Merged in driver-version-control (pull request #35)
+    
+    Driver version control
+
+[33mcommit 7e9d714d8878c2d48c2a9ec84451160df65f2490[m
+Merge: ae2534e 5a120f0
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Jan 22 12:57:38 2018 +0530
+
+    TCUTS-1407
+
+[33mcommit ae2534ec3258c59e9e2de9dd1244cd7625118968[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 17 18:27:34 2018 +0530
+
+    migrate sms ventor api
+
+[33mcommit 5a120f056a5658c9d39c9ed4a75e59c61aa58c53[m
+Merge: 43271dd 5ee5d15
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Sat Jan 20 04:40:45 2018 +0000
+
+    Merged in driver-checkin-checkout (pull request #36)
+    
+    TCUTS-1334
+
+[33mcommit 5ee5d15ad54ecb870b8956008fb03c5dbfd95ba3[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Jan 19 21:46:59 2018 +0530
+
+    TCUTS-1334
+
+[33mcommit 409351eed6d1320bbd3fed4e85438a6c0f4b7714[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Jan 18 13:05:37 2018 +0530
+
+    TCUTS-1407
+
+[33mcommit 43271dd65ae28811b6bf54b779c9f10223ebd85a[m
+Merge: b23e39e 0731041
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jan 18 05:48:00 2018 +0000
+
+    Merged in migrate-SMSapi (pull request #34)
+    
+    migrate sms ventor api
+
+[33mcommit 0731041442de76011827b3b1d5c9e9bfc2e8dfc7[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 17 18:27:34 2018 +0530
+
+    migrate sms ventor api
+
+[33mcommit 9381857e3923a9aa05605ce36208cd1694cd931b[m
+Merge: 4e36d19 b25f419
+Author: Django <varun@tendercuts.in>
+Date:   Mon Jan 15 15:44:16 2018 +0530
+
+    Merge branch 'vS10' of https://bitbucket.org/tendercutsservices/services into vS10
+
+[33mcommit 4e36d19d5442b3d06f4aa8c5f2db73fb9f46d0ad[m
+Author: Django <varun@tendercuts.in>
+Date:   Mon Jan 15 15:40:46 2018 +0530
+
+    Hot fix for 500 error while synce
+
+[33mcommit b23e39e556d348c22c8d61171a4c2506ea1c3326[m
+Merge: b25f419 783385d
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Wed Jan 10 13:29:40 2018 +0000
+
+    Merged in del-payment-mode (pull request #33)
+    
+    Del payment mode
+
+[33mcommit 783385d76aa5b980044266478e78b3f16e74eef5[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Jan 10 18:54:49 2018 +0530
+
+    Change-del-card
+
+[33mcommit b25f41934ff5b18919b85cd7e20601d4afb756a6[m
+Merge: 6c7f737 2498934
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jan 10 18:30:18 2018 +0530
+
+    Merge branch 'vS10' of https://bitbucket.org/tendercutsservices/services into vS10
+
+[33mcommit 2498934d349f81c2ff68c74c401898b4bf7d6078[m
+Author: Django <varun@tendercuts.in>
+Date:   Wed Jan 10 18:27:02 2018 +0530
+
+    Live bug fixes
+
+[33mcommit 6c7f7371f756e3388931d53e6171dd5da28ffb16[m
+Merge: d93234d 14fba50
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jan 10 17:17:47 2018 +0530
+
+    Merge conflicts
+
+[33mcommit d93234d9994fb37922c11e77168b7bd3f8d6949f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jan 10 17:12:48 2018 +0530
+
+    fix driver trip order assign issue
+
+[33mcommit e9ddae82f0218a32ceb29c01708b95cbb0573707[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Jan 10 15:16:44 2018 +0530
+
+    Change_del-payment-mode
+
+[33mcommit 14fba50a8505b6bb26814b4f12dcfc222def2192[m
+Merge: a0805be 3403bf2
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 10 14:13:11 2018 +0530
+
+    Merge branch 'test-itemWeightUpdate' into vS10
+
+[33mcommit 0d4efecefe7e63f31bfd8fbf6669e588ca66003a[m
+Merge: 4aa5e40 a0805be
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Jan 10 13:12:11 2018 +0530
+
+    Merge branch 'vS10' of https://bitbucket.org/tendercutsservices/services into vS10
+
+[33mcommit a0805bef17da7e6c90b9551f77cb800a365eec4b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 10 13:00:36 2018 +0530
+
+    fix review changes and exception handling in google way point api
+
+[33mcommit 9ef06378f805b613979b46e9c8517e0c075cce48[m
+Merge: 869ea5d 23ed144
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 10 11:00:45 2018 +0530
+
+    fix vS10 merge conflicts
+
+[33mcommit 869ea5df107ee642aee8a6d70f19faf8578ce63d[m
+Merge: 7ec3e73 4ccacf5
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 10 10:57:59 2018 +0530
+
+    fix merge conflict issue
+
+[33mcommit 7ec3e73f75cb8fdad27a0c4ab2d45514a787757a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jan 10 08:10:32 2018 +0530
+
+    fix cache key issue and test case issue
+
+[33mcommit c3529010a66d75becc68aadf6d27912f598b1537[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jan 9 19:38:42 2018 +0530
+
+    create driver trip distance update script and driver trip way point changes updated
+
+[33mcommit 8a99fdbf2aa168076773899d52b370d7efb136da[m
+Merge: 11dd41f 13adc91
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jan 9 17:59:50 2018 +0530
+
+    Merge branch 'fix-celeryTaskIssue' into update-drivertripKM
+
+[33mcommit 3403bf2b57ae42c1b29641c5850952d138a4ff6b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jan 8 13:16:50 2018 +0530
+
+    remove unwanted params in order details
+
+[33mcommit 004b96682eedfeca839fd850759e18c0e3bc0e7d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jan 8 13:02:01 2018 +0530
+
+    create test case for item weight update
+
+[33mcommit 4ccacf5f3a18796748c16fb99ca9053e742db9db[m
+Merge: 30805f8 660418f
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Sat Jan 6 04:33:04 2018 +0000
+
+    Merged in update-drivername (pull request #30)
+    
+    update driver name in sale order objects
+
+[33mcommit 30805f81f33e070a6156f42e9281e6b88e0e05d6[m
+Merge: a40e5a2 13adc91
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Sat Jan 6 04:31:28 2018 +0000
+
+    Merged in fix-celeryTaskIssue (pull request #31)
+    
+    fix task failure issue and create test cases
+
+[33mcommit 13adc91969d718daad90f30c4b4b63caf1ed34c3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jan 5 18:41:39 2018 +0530
+
+    fix task failure issue and create test cases
+
+[33mcommit 4aa5e4008f2161a37ed984648cdca5724a535cb7[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Jan 5 15:17:44 2018 +0530
+
+    fix item weight update issue
+
+[33mcommit 660418f50126111c596ab4b16bfc1fe5cae4286f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jan 5 11:35:46 2018 +0530
+
+    update driver name in sale order objects
+
+[33mcommit 11dd41fe6778671b9573785fa27e45d13d69af0e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jan 4 18:01:04 2018 +0530
+
+    to create dtriver trip staring point and way points property
+
+[33mcommit c52a4c6d0cbf6f1acaf3777936c6311cab222fd0[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jan 4 12:35:12 2018 +0530
+
+    google map api key move to settings file
+
+[33mcommit 07d6b7fff2dd01b2d7087b583201f3401e71dce9[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jan 2 15:49:51 2018 +0530
+
+    add migration file in driver trip model
+
+[33mcommit 99016c4ef88a38acefdee17c422f3e30a303ae83[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 29 15:08:54 2017 +0530
+
+    compute driver distance
+
+[33mcommit 23ed144210f646a953b5691c5e3023784e84bd66[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Dec 29 11:30:09 2017 +0530
+
+    fix entity_type field issue
+
+[33mcommit 4181c4e1ec5d6ef2e8b155ed33915baaec82e4c2[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Dec 27 15:37:21 2017 +0530
+
+    fix celery task issue and update weight issue
+
+[33mcommit a40e5a20e7be75c4ec7400a24107a8c1833f0479[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Dec 27 15:37:21 2017 +0530
+
+    fix celery task issue and update weight issue
+
+[33mcommit 2f239a227070af835618c81da931a1fe78afc401[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Dec 26 14:48:41 2017 +0530
+
+    Bug fixes for cache issue
+
+[33mcommit 53632ab1f1e7c2bc66227ff6a8fac32950342d41[m
+Merge: e77560c ce02e8e
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat Dec 23 15:51:00 2017 +0530
+
+    Merge conflicts
+
+[33mcommit ce02e8e7dfbddadf7a12f6b434bd943bf037b8fb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Dec 23 15:48:46 2017 +0530
+
+    Trip Integration
+
+[33mcommit e77560c837aae6e37c1456816c5e5c40b2521c40[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Dec 22 11:47:01 2017 +0530
+
+    Bug fixes for shipping address
+
+[33mcommit 1dc4b9f587b577b761e37d1e6f428954e1d5176b[m
+Merge: 729a2b4 1118a18
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Dec 21 05:56:42 2017 +0000
+
+    Merged in task-endofdayDriverDetails (pull request #27)
+    
+    generate a end of day driver details
+    
+    Approved-by: Varun Prasad <varun@tendercuts.in>
+
+[33mcommit 1118a188f35c2480a2010c7f175e749c7d6ea875[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Dec 20 19:21:35 2017 +0530
+
+    add logs
+
+[33mcommit 0528f1b36673ebd36378ea7940ac9c3923aa59b1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Dec 20 19:13:52 2017 +0530
+
+    generate a end of day driver details
+
+[33mcommit ffc6273750fef4102fb224ea2909c3c711a7d724[m
+Merge: 86cb16b 729a2b4
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Dec 20 17:58:22 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 729a2b49fb4f44d1fb7fcf963e8b27304718801a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Dec 20 17:27:58 2017 +0530
+
+    Refactored payment & added endpoints to handle payment adds
+
+[33mcommit 8864cf612106b9231b484d75fb5930ea944a8f3b[m
+Merge: 1d6f38e e49112c
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Dec 19 12:28:57 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 1d6f38ee020e76db691c4cb3c23836a06ae111ba[m
+Merge: 4efb3a9 7501ad4
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Dec 19 12:28:21 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 86cb16b1e2ee91b2834a1e266622dd52a5d22816[m
+Merge: a3e6c78 1d3a779
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Dec 18 18:46:47 2017 +0530
+
+    Merge branch 'v2.7'
+
+[33mcommit e49112cc4b27bbcbfaac9907955dbfb9d88f1e19[m
+Merge: a3e6c78 074ff8b
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Dec 14 16:33:41 2017 +0530
+
+    Merged feat-testcaseDriverStat into master
+
+[33mcommit 074ff8bcc21a7112630317031dc823e0101b3b5e[m
+Merge: 551ba15 a3e6c78
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Dec 14 16:29:08 2017 +0530
+
+    fix merge conflict
+
+[33mcommit 1d3a7793827700a942d0cbdc132cd4881530be9b[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Dec 14 11:26:29 2017 +0530
+
+    add product weight_from and weight_to fields
+
+[33mcommit a3e6c7820ea0fbc5b899858575ce647da39f5176[m
+Merge: c07971f e255bce
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Dec 11 08:11:16 2017 +0000
+
+    Merged in feat-TripEnd (pull request #25)
+    
+    create trip complete end point
+
+[33mcommit e255bced42ea0154f7001ed2e479efd9d39da995[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Dec 11 13:22:35 2017 +0530
+
+    fix review comments
+
+[33mcommit 551ba15d454aed4e0abb738759ab5cddad99eed9[m
+Merge: 33e3e0a 020de91
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Dec 11 12:59:51 2017 +0530
+
+    fix merge coflict
+
+[33mcommit c07971feff1e367bf8f41dfce30dcda60ba27831[m
+Merge: 4efb3a9 65ca6f2
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Dec 11 12:51:37 2017 +0530
+
+    Merged fix-tcash into master
+
+[33mcommit 65ca6f246ebb20ed3ef78e86a848d5d2ab98ae20[m
+Merge: f97e462 4efb3a9
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Dec 11 12:51:25 2017 +0530
+
+    Merged master into fix-tcash
+
+[33mcommit 33e3e0a496839233cf2fc43dbba86963a59bb47a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Dec 11 12:49:31 2017 +0530
+
+    driver assign integration test case content changed
+
+[33mcommit ff92ae5255859f6ba1b3fd449fffd63499accfdd[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 8 17:43:24 2017 +0530
+
+    TCUTS-886 add integration test cases for driver stat and driver location
+
+[33mcommit 4efb3a98270101b81cc2ce4878176ac556c1d9b2[m
+Merge: 56a2973 1f9a7a4
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Dec 11 12:35:17 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 56a29731fb3278c25fc948c76d0b58863b52e00a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Dec 11 12:34:57 2017 +0530
+
+    Added jira notebooks
+
+[33mcommit 1f9a7a4406461411b2b32eb56289bd3649818870[m
+Merge: 9db0e38 96a387c
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Mon Dec 11 07:02:43 2017 +0000
+
+    Merged in feat-orderdata (pull request #26)
+    
+    Feat orderdata
+
+[33mcommit 020de918e5a949080ca57d28dd5f0b821553e6b9[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 8 17:43:24 2017 +0530
+
+    TCUTS-886 add integration test cases for driver stat and driver location
+
+[33mcommit 3169f7e58225570a7e961a8fdd55a7d30d7de43e[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Dec 8 16:01:04 2017 +0530
+
+    added grams perunit field in model and serializer
+
+[33mcommit 96a387ce3a9d706053b8d1f50a919d133ac5552a[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Dec 7 19:23:05 2017 +0530
+
+    TCUTS-939
+
+[33mcommit 361ba3a1b803bd9a015a7e4cfd78275b49164966[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Dec 7 19:19:08 2017 +0530
+
+    TCUTS-939
+
+[33mcommit 9db0e3861463212dc49d7be29fcaabbd87979f0e[m
+Merge: 4ea2d0f b64ea6c
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Dec 7 16:56:25 2017 +0530
+
+    Merge v2.7
+
+[33mcommit 7501ad478d65bf6b8aebea2d5a12be052ee75f60[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Dec 6 18:28:46 2017 +0530
+
+    TCUTS-819
+
+[33mcommit 4ea2d0f6f1007709a36d571d1cd454efbd14a185[m
+Merge: 7a3eb63 04b0d26
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Dec 6 18:09:45 2017 +0530
+
+    fix merge conflict for v2.7
+
+[33mcommit 6c04f1948fce3efdbac45b298f8e12ae0f27644b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Dec 6 18:01:13 2017 +0530
+
+    create a integration for driver trip create and completed
+
+[33mcommit 24efeacda6c26b061a030c2c37c27b5844443b2d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Dec 6 12:01:58 2017 +0530
+
+    create trip complete end point
+
+[33mcommit 7a3eb637a77d455189ebb9de8c0ca9b4229f6a3e[m
+Merge: 8eeb824 b26f57d
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Dec 5 12:12:48 2017 +0000
+
+    Merged in feat-updateProductWeight (pull request #22)
+    
+    Feat updateProductWeight
+
+[33mcommit b26f57da01fa64d3dedf81b80f68b5d056f8e15f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Dec 5 13:54:23 2017 +0530
+
+    create order item weight update
+
+[33mcommit 3ee55fb2b241a6b0b815755ff91f502267655f94[m
+Merge: eddb73e 8eeb824
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Dec 5 13:10:12 2017 +0530
+
+    fix merge conflict
+
+[33mcommit c9354ffc4f69591cb862611fec7fcfc240b83a18[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Dec 4 15:22:43 2017 +0530
+
+    Migrated to pandas
+
+[33mcommit 7846b2ee2de532b5912707245b40639f24dcc35c[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Dec 4 12:04:25 2017 +0530
+
+    TCUTS-819
+
+[33mcommit b4c5df31c3cf28556a3fa79b7668102bc1cb168e[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Dec 1 19:26:58 2017 +0530
+
+    TCUTS-819
+
+[33mcommit 8eeb824ba25b623e83164e434f64cbcfda618cbc[m
+Merge: e6f4018 42c9ec8
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 13:07:33 2017 +0000
+
+    Merged in feat-driverTrip (pull request #21)
+    
+    Feat driverTrip
+
+[33mcommit 42c9ec842942ab96cf708d6f7a0eba9b654928ec[m
+Merge: fbd9a4c e6f4018
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 18:35:08 2017 +0530
+
+    fix conflict
+
+[33mcommit fbd9a4cb47235597fb65a4533574bdcf57a3650f[m
+Merge: 449f0bd f4f9c5a
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 18:28:01 2017 +0530
+
+    Merge branch 'master' into feat-driverTrip
+
+[33mcommit e6f401804f60ac6758c7b079b3576970732a4699[m
+Merge: 6bbcda2 728ab70
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 12:38:50 2017 +0000
+
+    Merged in fix-taskFailureMail (pull request #23)
+    
+    change task failure mail ids
+
+[33mcommit 6bbcda2b5002b369c38aaf099963392ab3408ce8[m
+Merge: b3aeb62 3643282
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 12:37:32 2017 +0000
+
+    Merged in fix-testCases (pull request #24)
+    
+    Fix testCases
+
+[33mcommit b3aeb6299ecc6d7c45cafc932b510673ac1aee02[m
+Merge: b0090e9 4ea87af
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 12:34:01 2017 +0000
+
+    Merged in log-otp (pull request #20)
+    
+    add log for otp module
+
+[33mcommit b0090e9f82a8a2abb53a9d3b81ae5d2be7e3ba84[m
+Merge: f4f9c5a 35d5415
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 12:32:17 2017 +0000
+
+    Merged in feat-customerLocation (pull request #19)
+    
+    update customer location
+
+[33mcommit eddb73e5834df03568afd23a210d8b3949eb56b3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Dec 1 16:23:01 2017 +0530
+
+    create product weight update end point and add weight and product_id field in SalesFlatOrderItemSerializer
+
+[33mcommit f4f9c5a067bbcb443d6414187d89bdaa9990b8be[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Nov 30 18:09:18 2017 +0530
+
+    FIx catalog generation for BOM
+
+[33mcommit 449f0bd098dc2b56fe3ecd95d72ebb5d150f7d8c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 30 18:00:15 2017 +0530
+
+    add extra logs for driver module
+
+[33mcommit c192d84ecefd5e86165ecc1e03d3f7996342ae7b[m
+Merge: 116aec7 bb6d509
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Nov 30 17:32:48 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 116aec79c9a8c8b6fbf4330a9e28edae552d5a3f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Nov 30 17:32:11 2017 +0530
+
+    Updated catalog sheet
+
+[33mcommit 728ab70a49850844e7e1eb9db4b1b1c958d8d521[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 30 12:48:08 2017 +0530
+
+    change task failure mail ids
+
+[33mcommit f97e462b429c8ffbd58841c0defb5aa24d36c38e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 19:06:17 2017 +0530
+
+    add else condition for tcash referal
+
+[33mcommit 068535c6e4f15d8830c1145406955326761dd063[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 17:57:03 2017 +0530
+
+    code optimized in driver app test cases
+
+[33mcommit b64ea6c17f4d47feea099f1374971341857a5f50[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 29 15:42:44 2017 +0530
+
+    fix promised_delivery_time_dt issue
+
+[33mcommit 364328291216f934882811339ffef9097d56c257[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 13:00:35 2017 +0530
+
+    fix test case issue in core module
+
+[33mcommit 1af2629f91f397bec990af0792e11d7ac8760492[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 12:58:24 2017 +0530
+
+    fix test case issue in driver app
+
+[33mcommit e426444089d41a6e09f554bbadfcbb38b529a7fe[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 12:54:35 2017 +0530
+
+    fix test case issue in payment module
+
+[33mcommit eb6a6a71924a103d054058f876997a54b0d37aa2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 12:51:06 2017 +0530
+
+    fix test case issue in tcash module
+
+[33mcommit f0f91625afd25033cac2176c538a046a07624831[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 29 12:50:29 2017 +0530
+
+    fix test case issue sale_order module
+
+[33mcommit f8668bd4a33e6751b952133f65c4bb179d0f6e47[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Nov 28 14:48:25 2017 +0530
+
+    create driver trip model and endpoint
+
+[33mcommit 4901a4d063c80400754d4d8f92240625da1a1d27[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Nov 28 13:15:00 2017 +0530
+
+    change the task failure mail id
+
+[33mcommit 96394e3c9972585bb1b2b314247c12e72821c2e3[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 15:42:22 2017 +0530
+
+    remove unwanted logs driver tasks
+
+[33mcommit 04b0d2678fdcff9cf8165aac45dc628579265fd0[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 15:35:54 2017 +0530
+
+    Added additional logs
+
+[33mcommit f0e17dd71a0cfab868051c823902454f98c598fc[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 12:17:46 2017 +0530
+
+    Syntax error fix
+
+[33mcommit 1a0fe080f3d04c98c917dcf355106690f35edc1b[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 12:09:48 2017 +0530
+
+    Added logs
+
+[33mcommit 8b526de450869eb42b8d6435221233214442872c[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 11:07:33 2017 +0530
+
+    Updated db for statging
+
+[33mcommit 5bfaae71f6ec7a14acbf0625bf576338c03e5dc2[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Nov 27 10:35:25 2017 +0530
+
+    bug fix
+
+[33mcommit 35d5415e484a6c9a65296983dd50ccd4c4a46aba[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Nov 24 14:56:14 2017 +0530
+
+    customer location create
+
+[33mcommit 4ea87af64de339f46d2e0e9465f8e60457240077[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 23 13:15:20 2017 +0530
+
+    add log for otp module
+
+[33mcommit 4a581679a2cc3a6d7ae540163f646c368673c554[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 22 19:38:14 2017 +0530
+
+    update customer location
+
+[33mcommit b267037fb1f8ca30ea834cb53b3aac9b237fea6b[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Nov 22 14:28:47 2017 +0530
+
+    TCUTS-810
+
+[33mcommit 498c1eb439d822a4a2544ca53c2fb52293c0fd21[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 22 13:03:22 2017 +0530
+
+    Bug fix
+
+[33mcommit bb6d50949d341476f37831b6c1b6aebae1a48167[m
+Merge: 885ae34 6987ed0
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 22 12:32:03 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 885ae349a2c6efa1e9703fe62101ab284d886c40[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 22 12:24:44 2017 +0530
+
+    Fixes done by azar
+
+[33mcommit 588528dc1ab77940739c2538529ad23c8e6b8186[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Nov 16 13:35:07 2017 +0530
+
+    TCUTS-810
+
+[33mcommit 6987ed09b194f0dc58d8f7c365d82ffea9946876[m
+Merge: 603fc63 348a437
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Nov 16 13:31:39 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 603fc6370b3cadb3c1f07752ea93eb161f959b03[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Nov 16 13:31:13 2017 +0530
+
+    Base commits for notebooks
+
+[33mcommit 393c9b9cfe6e077f8048904b2f2e3577f815b9d7[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 15 19:04:14 2017 +0530
+
+    add email for celery failure task reported file
+
+[33mcommit 303600b1f0ed84ed99c866d242904c3ddb9cc550[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 15 17:45:22 2017 +0530
+
+    new migration file for OrderEvents and DriverPosition models
+
+[33mcommit 348a4376ca7c6eabf8e725bd056828b96c2d4aef[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 15 13:04:24 2017 +0530
+
+    Removed dup entry for debug toolbar
+
+[33mcommit 1ce61ce23b0b8c4fdae9a2c6e7f8e775ff277252[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 1 16:32:20 2017 +0530
+
+    fix test case issue saleorder module
+
+[33mcommit aca0230218635c1d7a652b6658581371147b06de[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 1 13:30:58 2017 +0530
+
+    fix login module test cases
+
+[33mcommit 817699db8fe23b152c004ac36c0ca32a6638e75b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 31 15:32:40 2017 +0530
+
+    fix driver app test cases
+
+[33mcommit fd8312474f0571b0f005e974ba6496926a8b6a40[m
+Merge: 367c2b0 b8d44f2
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 15 11:11:05 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit b8d44f2abeada531532047d86129a0f47d2373a8[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Nov 14 18:17:49 2017 +0530
+
+    driver details review changes update
+
+[33mcommit 1d1497cb4f77a18c436aefbe964484b3c4e22860[m
+Merge: 51eaa7e 381e784
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Nov 14 11:17:54 2017 +0000
+
+    Merged in fix-DriverPositionModel (pull request #17)
+    
+    Fix DriverPositionModel
+
+[33mcommit 367c2b01f9a2d8804dc3f38d3890aa789e8c2e83[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue Nov 14 16:14:45 2017 +0530
+
+    Fix rewards transaction
+
+[33mcommit 4341ede1f0de885aee8b6b4aafa907dbbb948570[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue Nov 14 15:57:53 2017 +0530
+
+    Bug fixes
+
+[33mcommit 381e784b95f484da587caabc8eb9c7c5403b6ade[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Nov 14 15:40:45 2017 +0530
+
+    TCUTS-781
+
+[33mcommit 546190aeacf5c0d906ca9f147ae3095ee839b44e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Nov 14 15:30:53 2017 +0530
+
+    fix dash board issue and order via filtering
+
+[33mcommit 51eaa7e98b4311e2e977c315cfa68a7d718d5e35[m
+Merge: 5cda6a4 f23f9bb
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Mon Nov 13 12:14:29 2017 +0000
+
+    Merged in feat-orderdata (pull request #14)
+    
+    Feat orderdata
+
+[33mcommit f23f9bb316d1b8c596483979f78cddc8b73b49d0[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Nov 13 17:35:49 2017 +0530
+
+    FeatOrderData after fixing conflict
+
+[33mcommit f4478ed0212f18fc1a2bcc6b68ee64d9eb1e3b95[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 8 18:34:09 2017 +0530
+
+    rewrite the store order controller
+
+[33mcommit 84dec2616710b6701ac1187155d64e7b150cb28a[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Nov 7 15:36:39 2017 +0530
+
+    New changes version_control & sales_order
+
+[33mcommit 5cda6a4561d81e29f79adf5be27f2379031df70c[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Nov 3 13:19:28 2017 +0530
+
+    bug fixes
+
+[33mcommit 59a880814268f6363bf8d8e1c73ed4eb78cb42ca[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 2 20:37:26 2017 +0530
+
+    fix driver model view and test cases
+
+[33mcommit b9fcdedd125ab7642653449310b5ff3699f0fbb9[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Nov 2 17:07:04 2017 +0530
+
+    The new store order, order details & version control
+
+[33mcommit c279aa39e69515835cd9d8b1bdbc778b08b5ad62[m
+Merge: 063af23 4e35519
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 2 05:44:38 2017 +0000
+
+    Merged in feat-driverStat (pull request #16)
+    
+    create DriverStat table
+
+[33mcommit 4e35519150fb067eca48844ac46c8d74b883c66d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 2 11:11:41 2017 +0530
+
+    create DriverStat table
+
+[33mcommit 063af23c971b20229a54f344e53ded793a319029[m
+Merge: 1a2c928 9c17ec4
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Nov 2 05:29:37 2017 +0000
+
+    Merged in feat-driverStat (pull request #15)
+    
+    Feat driverStat
+
+[33mcommit 9c17ec4b709155204edee4d9944a16e29b70cca6[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 1 19:43:27 2017 +0530
+
+    serializer for a driver stat
+
+[33mcommit 6e7ee4729f8dc2fb94746c19e44327ad44ea3b3c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Nov 1 19:40:57 2017 +0530
+
+    driver stat api creation
+
+[33mcommit 1a2c92829a32b3104f9a5c7ce24807bda4e337e7[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Nov 1 17:00:06 2017 +0530
+
+    Bug fixes
+
+[33mcommit 543194f6bd5aef9aacd75ab30fa00811eeb9b68b[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Oct 31 20:28:53 2017 +0530
+
+    Store order
+
+[33mcommit 6b8d3f1dff47793fae74c00fb56a7b826482a828[m
+Merge: b8bf688 e90e52f
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 31 16:54:06 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit e90e52f97251a25da20193bddbe21faddff3de75[m
+Merge: 0171310 728b348
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Tue Oct 31 10:30:37 2017 +0000
+
+    Merged in feat-driverreport (pull request #7)
+    
+    Feat driverreport
+
+[33mcommit 728b348946e1b801e08cea00d06404253ecd759f[m
+Merge: 948feb7 0171310
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 31 15:58:27 2017 +0530
+
+    fix merge conflict
+
+[33mcommit 01713104916d4910ee18f052fd9f382a2df0a075[m
+Merge: 2a4170c 1b8019e
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 31 10:13:31 2017 +0000
+
+    Merged in refact-tcashAmount (pull request #13)
+    
+    change reward amount for refer a frient
+
+[33mcommit b8bf688478a65bc6688fd47aceab4b4d505d33f7[m
+Merge: a890236 2a4170c
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 31 15:34:09 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 2a4170c32b82b1f806f282c95b9df072bbc3c191[m
+Merge: e3fb560 a18999e
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 31 01:54:08 2017 +0000
+
+    Merged in fix-DashboardUi (pull request #12)
+    
+    code clean up in dashboard ui
+
+[33mcommit a18999e53e224f6a668cc5161a7cec99f674d3c9[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 31 07:22:13 2017 +0530
+
+    code clean up in dashboard ui
+
+[33mcommit e3fb560e37585330d2e8f08dc21d9b796c1dc177[m
+Merge: 209b8a2 13ce13e
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 31 01:25:27 2017 +0000
+
+    Merged in fix-driverDashboard (pull request #11)
+    
+    fix dashboard issue
+
+[33mcommit 948feb7c9f2e4b7f5e2d765a3d29ba55ebc34ca8[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Oct 30 17:05:04 2017 +0530
+
+    Changed driver stat
+
+[33mcommit 13ce13e0fa729b2ea609f77984887349ed035ff4[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Oct 30 15:36:55 2017 +0530
+
+    fix dashboard issue
+
+[33mcommit 209b8a2ef6fab91aa5533081427b2f4010dda564[m
+Merge: b296c33 7a7be16
+Author: naveen@tendercuts.in <naveen@tendercuts.in>
+Date:   Thu Oct 26 14:04:34 2017 +0000
+
+    Merged in feat-orderdata (pull request #9)
+    
+    order details
+
+[33mcommit 57abaa7c8ec9652891a615f07980d6266469e40e[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Oct 26 15:16:38 2017 +0530
+
+    new changes
+
+[33mcommit 1b8019e3b8cdc928d29d3f7f343ce8bd0b6f8791[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 26 13:14:28 2017 +0530
+
+    change reward amount for refer a frient
+
+[33mcommit a890236db9552b42c28d728e398b67a19d2ef3e6[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Oct 26 11:49:25 2017 +0530
+
+    Fixes for driver app
+
+[33mcommit b296c33cce438ce1710431aca56a30e944df01b1[m
+Merge: d1f0afa 51ae6d1
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Oct 26 06:15:47 2017 +0000
+
+    Merged in feat-driverDashboard (pull request #10)
+    
+    create dashboard page for driver management
+
+[33mcommit 51ae6d13ea1d3310e45b9953c2ef655b5f59685d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 26 10:06:06 2017 +0530
+
+    create dashboard page for driver management
+
+[33mcommit 7a7be1625b7c506bec7c92ce465f81165a4af704[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Oct 25 17:42:24 2017 +0530
+
+    order details
+
+[33mcommit d1f0afad89f749c70df6c49951c26acf3cb8f4d0[m
+Merge: 11e9198 c478f9f
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 24 09:26:16 2017 +0000
+
+    Merged in fix-driverSms (pull request #8)
+    
+    order delivery remaining time and change sms message content
+
+[33mcommit c478f9f2dc7d4d86b4353ae19e0f23847b3ead2d[m
+Merge: 22d4b1e 11e9198
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Oct 24 14:53:45 2017 +0530
+
+    fix merge conflict
+
+[33mcommit 11e9198287310c12597595290583084c8624f482[m
+Merge: 3b566b1 87de731
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 23 12:58:06 2017 +0530
+
+    Merge branch 'v2.5'
+
+[33mcommit 87de7312c3cacac60a22b24607689570cdd20845[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 23 12:57:49 2017 +0530
+
+    Bump delivery time to 120 mins
+
+[33mcommit e49e86fef4231ca395f3e4892b196d30d14334c0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 23 12:43:04 2017 +0530
+
+    update delivery cost
+
+[33mcommit a5719c96aa36e6e07432bd2420ead820a4ad98b1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 23 12:40:12 2017 +0530
+
+    added medavakkam and chrompet store
+
+[33mcommit 3b566b16a4d3a43aed3d8cd5c3ab09ea89efabef[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 23 11:23:41 2017 +0530
+
+    Added a fix for delivvery time
+
+[33mcommit 22d4b1e8e3cb2e8e68e4c3f3b08d341552d2054f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Oct 20 17:44:44 2017 +0530
+
+    order delivery remaining time and change sms message content
+
+[33mcommit a90d377bf7aa733f69270fc5cf3882624f3f9ed2[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Tue Oct 17 13:07:44 2017 +0530
+
+    New driver report
+
+[33mcommit 6616583f56de0ff6880d5a5115726c6681902409[m
+Merge: 9c71de9 649f52b
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Oct 16 13:28:35 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 9c71de9560cca2a0508e06a1132f9718bdf23a11[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Oct 16 13:03:52 2017 +0530
+
+    Renamed spicy lable
+
+[33mcommit 56855bb4a77d7bae219c80bfaed93f455cf1807b[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Oct 13 20:36:16 2017 +0530
+
+    Calculate driver orders
+
+[33mcommit 1a2da549848570057a724b532e6279f882e572cb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Oct 13 14:06:37 2017 +0530
+
+    expose spicy level
+
+[33mcommit ba073b28a621e8ca5e51b6afdb5f5c6a525283b8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Oct 13 12:57:15 2017 +0530
+
+    Added spicy level
+
+[33mcommit 649f52b7bf5ad7367fe8b0803eb59ffc426cd99e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 12 19:48:38 2017 +0530
+
+    add admin file in driver app
+
+[33mcommit 060c6c3df1fa540d497c22c2feabcaedbb0681ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 12 18:43:57 2017 +0530
+
+    fix issue
+
+[33mcommit 12d123cf7713b756a674ebfc69f46821184f37ba[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 12 18:30:40 2017 +0530
+
+    fix import error in admin
+
+[33mcommit c8bb95f85959fee274872001c8d6918d44f6e599[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 12 18:22:23 2017 +0530
+
+    dir set in base file
+
+[33mcommit f460acf7d20095f2d9ee341814f234d143e57a4d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Oct 12 17:50:43 2017 +0530
+
+    Driver order change view list and admin html creation
+
+[33mcommit 5f5a97a6cd32e93e5d663debe9e849c7ed216a84[m
+Merge: 9a99659 31ce632
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Oct 10 13:38:44 2017 +0530
+
+    Merge branch 'v2.5' of https://bitbucket.org/tendercutsservices/services into v2.5
+
+[33mcommit 9a9965997f4480f77274ba4d67a1c8eb38bee12b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Oct 10 13:38:28 2017 +0530
+
+    fix celery config
+
+[33mcommit 31ce632cdf9ab6d0a99c1de9acdeacb0d54c5816[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue Oct 10 13:21:32 2017 +0530
+
+    Bug fix
+
+[33mcommit 1c900db1f5a9ee3d599182a3debcb16fe94c9894[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Oct 10 11:35:29 2017 +0530
+
+    Fix rabbit mq link
+
+[33mcommit d35bf41b3718b292b7b7d8db4b845dc501ca1fd4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Oct 10 11:20:14 2017 +0530
+
+    Integrate live redis config
+
+[33mcommit 5d0173727de067166b1962a48b5339125d8bfc94[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Oct 6 12:07:23 2017 +0530
+
+    Bug fixes
+
+[33mcommit c84301f5f2c5804018917e29f6be71089bee521a[m
+Merge: ce8e1ad 5d4b6f8
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 3 10:00:12 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit ce8e1adab8760b891f6bc7b35692cffd1ec885d1[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 3 09:59:35 2017 +0530
+
+    Change URL for redis
+
+[33mcommit 5d4b6f8b6149925de5fa50904f2cbac7a56266c0[m
+Merge: e068634 2fc7c22
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Oct 3 09:57:21 2017 +0530
+
+    Merged feat-otpModule into master
+
+[33mcommit 76ecc705910325246c8f6137e84f555054f44b76[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Sep 28 17:55:23 2017 +0530
+
+    Send sms celery task
+
+[33mcommit 2fc7c22f7dcb154795ae90dee302755d7cbf3300[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Sep 26 16:11:51 2017 +0530
+
+    remove unwanted args in otp retry method
+
+[33mcommit 14dc0b1c1f6b8ec4db660adf9f65fcccdeda63fe[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Sep 15 18:07:30 2017 +0530
+
+    Fix spelling mistakes taht was causing the code to break
+    
+    create a new django app otp
+    
+    cache folder move to core lib.and fix minor changes
+
+[33mcommit a52d48185c4598bfc205a6d56c4fada8646a9b8a[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Mon Sep 25 11:57:40 2017 +0530
+
+    New Driver Delay SMS
+
+[33mcommit b7b27d9cdb54e694b1aadba11e600e74fa27a33a[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Fri Sep 22 18:32:29 2017 +0530
+
+    Driver sending delay SMS to customer
+
+[33mcommit e9d49ea78c864925b0d80d9b523898f30ec2a29d[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Thu Sep 21 19:28:39 2017 +0530
+
+    New Driver delay SMS sending
+
+[33mcommit 378364a1e5211ef6a70a7cfc3564da5a27a03ce6[m
+Author: naveenkumar <naveen@tendercuts.in>
+Date:   Wed Sep 20 19:31:49 2017 +0530
+
+    Driver delay SMS
+
+[33mcommit 84b4369ee6ed9edacfde4bd68a1c77ba2d854220[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Sep 20 11:43:15 2017 +0530
+
+    minor changes in driver controller.
+
+[33mcommit 7c8342316ada7d9b9c8c10d7d04cf10cce47b7a2[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Sep 18 14:12:04 2017 +0530
+
+    Bug fixes
+
+[33mcommit e06863462f0cc2b033fd23216b7e81bc48a04087[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Sep 15 18:07:30 2017 +0530
+
+    Fix spelling mistakes taht was causing the code to break
+
+[33mcommit 06fb32ed9affd330b8f8a748eb44686f12ee617f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Sep 15 16:10:30 2017 +0530
+
+    fix review comments
+
+[33mcommit c67cfc9879e962503d1065c7df3760cbad8b334a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Sep 14 16:39:36 2017 +0530
+
+    remove unwanted files and geo location logics
+
+[33mcommit 7a75a9cda7f3adab5739e8d06bb8fdc5b7f65d38[m
+Merge: 83caf37 63e96cd
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Sep 13 12:40:56 2017 +0000
+
+    Merged in feat-storeCache (pull request #5)
+    
+    Feat storeCache
+
+[33mcommit 6bcbce311462605ca0f89d38d77e9cc67772917e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Sep 13 17:53:39 2017 +0530
+
+    Add google map key and add google api requirements
+
+[33mcommit 3961689607c554bafad9aae7352deea80feedb72[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Aug 29 13:38:40 2017 +0530
+
+    model creation driver position and driver events
+    
+    temporarily commited in driver position and order events api
+    
+    add driver locations
+
+[33mcommit 83caf373993f8fe719d289bed6cf9d55f9ccd504[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Sep 12 17:00:35 2017 +0530
+
+    Enable admin panel
+
+[33mcommit eddc9c058fadd77b27cc24d2200f9ce91c338582[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Sep 11 16:00:14 2017 +0530
+
+    added default store and designated store
+
+[33mcommit 0e4a29f23ab66db3af3a4bf8ff2af9ab3c0022e4[m
+Merge: 36f2390 2b3da52
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Sep 11 14:54:09 2017 +0530
+
+    Merge branch 'v2'
+
+[33mcommit 36f2390f48d78a2b99327b5ff6cfd0af23e42068[m
+Merge: e3653e9 fe56eac
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Sep 11 14:46:24 2017 +0530
+
+    Merge branch 'v2'
+
+[33mcommit e3653e9305f68168152f79e467d91fa0be395db7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Sep 11 14:45:09 2017 +0530
+
+    fix notebooks path
+
+[33mcommit 2b3da5289c45cf094e9f5a0947ba901ed4c0fa01[m
+Merge: 40fc29e fe56eac
+Author: Django <varun@tendercuts.in>
+Date:   Sun Sep 10 22:26:24 2017 +0530
+
+    Merge branch 'v2' of https://bitbucket.org/tendercutsservices/services into v2
+
+[33mcommit 63e96cd628023c6592b31dab547faec691e91217[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Sep 8 18:55:02 2017 +0530
+
+    fix review changes
+
+[33mcommit 25117aab1b642b5dae759e3183e70b414bf889e2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Sep 8 15:30:41 2017 +0530
+
+    change redis controller to django cache and fetch posible store for user
+
+[33mcommit fe56eac9c69afed9cc7c7f7d526aa642c148fc8e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Sep 6 14:14:36 2017 +0530
+
+    bug fix
+
+[33mcommit 5030f3b5070e64a8f2b037b4bdc2e0ac17234eb6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Sep 6 14:11:50 2017 +0530
+
+    Bug fix for store closign
+
+[33mcommit 40fc29ecf6a197e328610b14ecde103e97918b81[m
+Author: Django <varun@tendercuts.in>
+Date:   Wed Sep 6 14:08:01 2017 +0530
+
+    Added new store and fix for bug in mobile
+
+[33mcommit ebee36bce0b67b3fe80bb8c197663686be3896dc[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Sep 6 10:31:33 2017 +0530
+
+    Fix for store
+
+[33mcommit 7ff26b2a7c3e1a172940458ad3db55c9f59ed2e2[m
+Merge: 5b73c5a 9a4f376
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Sep 6 10:30:26 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 5b73c5a6708087c04601fa52fc5ef3468af8c346[m
+Merge: 26833aa d617484
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Sep 5 18:29:29 2017 +0530
+
+    Added locatioN PINCODES
+
+[33mcommit 9a4f3761e4c1044216aca1b5dc468fa8033a3d1b[m
+Merge: 26833aa d617484
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Sep 5 18:29:29 2017 +0530
+
+    merge v2
+
+[33mcommit d61748447585d349a27e8a26318c152eecc29a0a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 30 12:04:08 2017 +0530
+
+    More bug fixes
+
+[33mcommit 3a48ea09ae3ab3c57ea5253cbf317250b0d6f98b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 30 11:59:31 2017 +0530
+
+    Bug fix
+
+[33mcommit 15b1b69699e37279ad23bb0c7dbbbb4471f6c541[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 30 11:56:40 2017 +0530
+
+    Fix for store close
+
+[33mcommit 04370343482e04e5e5a4e2bf72e5181ab5692a12[m
+Merge: e8aa13b d86ed72
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 30 01:25:01 2017 +0530
+
+    Merge conflicts'
+
+[33mcommit e8aa13bff3b13c07470af4245db8bcbb65baa07d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 30 01:24:03 2017 +0530
+
+    Fix inventory to new model
+
+[33mcommit d86ed7243dd8b60e6ae85f5638d63afcf88a320d[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Aug 29 14:56:39 2017 +0530
+
+    Fix null values
+
+[33mcommit 26833aabfbf6a0a8514c08ff33810a94c4548aa2[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Aug 29 14:56:39 2017 +0530
+
+    Fix null values
+
+[33mcommit 69cc9f16f729407b0e66e2cbf98848f18f6bb753[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Aug 29 14:16:07 2017 +0530
+
+    Bug fix for raw query
+
+[33mcommit d1a417e95c94bf91acddf33583fbae1261d2e3b9[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Aug 29 14:16:07 2017 +0530
+
+    Bug fix for raw query
+
+[33mcommit 1e8664cf899b09c58e6a5f80614a573d4a8db8d8[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Aug 29 13:38:40 2017 +0530
+
+    model creation driver position and driver events
+
+[33mcommit c71e7293728506f52adcbdac5fed24f7a1626429[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Aug 29 11:38:07 2017 +0530
+
+     Fix task data
+
+[33mcommit fbb798fe1ffd128402fe28103ee7780a81ca01dd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Aug 28 19:45:56 2017 +0530
+
+    bug fix for inventoryt
+
+[33mcommit e76ea70fb884b351d335fcb21a28dace0c3ba43f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Aug 28 19:45:56 2017 +0530
+
+    bug fix for inventoryt
+
+[33mcommit ea1d569e56fdf51264230666a8bc6daf775ca0b2[m
+Merge: 152e9c8 c721ae0
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Aug 28 16:31:55 2017 +0530
+
+    Merge conflicts:
+
+[33mcommit 152e9c89726b8623aa6658207ea282be95befc86[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Aug 28 16:28:55 2017 +0530
+
+    Changes done by azghar for store id
+
+[33mcommit c721ae0c441799d8082c21420420f761a4fd9525[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Aug 28 16:26:56 2017 +0530
+
+    Advanced Inv changes
+
+[33mcommit 5a77c22ff11ea4bfe37288415a7dbd09e09d3edc[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 24 18:46:51 2017 +0530
+
+    add logger in driver app
+
+[33mcommit ba4594a2e01ab573fb6c81e657671dbca00ef362[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 24 15:03:09 2017 +0530
+
+    add driver app test cases and fix test case issues
+
+[33mcommit d98f37445a2453540232b395f08115adf39d138f[m
+Merge: a2f1eaa 60a77d1
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Aug 21 16:29:40 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 60a77d1f7b3f360a7bb27ccbddc853a0f2151b29[m
+Merge: 0b24c2d 7531fa8
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 10:57:40 2017 +0000
+
+    Merged in feat-driverassign (pull request #4)
+    
+    Feat driverassign
+    
+    Approved-by: Varun Prasad <varun@tendercuts.in>
+
+[33mcommit 7531fa8bdeda7423ac378e0bd2e1b63209991f3f[m
+Merge: eb90649 0b24c2d
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 16:26:31 2017 +0530
+
+    fix conflict issue
+
+[33mcommit eb9064998bf11c92a437e5c54950ec3ba519030b[m
+Merge: 3e0e015 fdb4ac8
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 16:18:39 2017 +0530
+
+    Merge branch 'master' into feat-driverassign
+
+[33mcommit 3e0e01577b80e5e8150182ece6940bd7917238bf[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 15:36:35 2017 +0530
+
+    create new enpoint for unassign
+
+[33mcommit 5b7f448113ec124c422922cc28198e239d07f68c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 20:08:43 2017 +0530
+
+    Repoint staging DB
+
+[33mcommit b993eb2b3f024aba54f8d731efdcb2bc2158a64d[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat Aug 19 20:01:58 2017 +0530
+
+    Fixes done by azar
+
+[33mcommit 7a9946b150516a5dc45ba04e7f5e3eba7b993212[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 18:25:50 2017 +0530
+
+    Migrating to new inventory model
+
+[33mcommit a6ea940d0ded440487e0949106c129634e182551[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 18 16:53:46 2017 +0530
+
+    Remvoed idea repo
+
+[33mcommit d009c61bc48003559a892a30f9baa808e45a8bec[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 18 16:51:07 2017 +0530
+
+    ADded celery config
+
+[33mcommit 1adecdea126df5adec1a6062a21b21f47fad4a21[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Aug 18 13:19:07 2017 +0530
+
+    Scenario content changes updated
+
+[33mcommit c425dbf8c5cb42693617fd8c45f3a5eaa9b1423d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 17 14:48:39 2017 +0530
+
+    add otp integration testing
+
+[33mcommit 8f90dbcd9910704e4c246e506a524534a8796e25[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Aug 17 14:29:04 2017 +0530
+
+    fix otp minor changes
+
+[33mcommit 3023c6144fa965e77660c46dae3babdd4a652c4e[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 13:29:15 2017 +0530
+
+    fix user id issue
+
+[33mcommit dca2ca39c74bf4444b7a7116f65724d8938dd8a2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 13:27:21 2017 +0530
+
+    fetching related order based on last 4 numbers order id
+
+[33mcommit 8c4fddd957306e0f3b370e00303d19f50ad8d21f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 21 12:35:18 2017 +0530
+
+    driver create fetching related order based on order id and raise valdation error
+
+[33mcommit a2f1eaaeb972a725528a5e1cb8557c0f8eaec936[m
+Merge: 0b24c2d 5398833
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Aug 21 12:02:48 2017 +0530
+
+    Merge branch 'v2'
+
+[33mcommit 53988338f008cc03f52e7756fb7dc4edeff479eb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 20:08:43 2017 +0530
+
+    Repoint staging DB
+
+[33mcommit 0b24c2d7b359eb7ab6d390870de35f15ad1e2f26[m
+Merge: 020ab6c 5ebd236
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 20:08:57 2017 +0530
+
+    git pushMerge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 020ab6cc4a4e3cfe1de61e12a7b7ddf5c42e583d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 20:08:43 2017 +0530
+
+    Repoint staging DB
+
+[33mcommit 5ebd236da656c2f54534334eee5a884da4de4ef3[m
+Merge: 2553674 fe650fe
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat Aug 19 20:03:10 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit 25536745e51dcfacaeff6c7d4fba7500c909630f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat Aug 19 20:01:58 2017 +0530
+
+    Fixes done by azar
+
+[33mcommit fe650fe5a5ea3549dda5031b77810ed94c6bee8e[m
+Merge: 29109ba c1e29df
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 18:32:53 2017 +0530
+
+    Merge conflicts on new inventory models
+
+[33mcommit c1e29dfee85b0426fb2a7e9f41e764e3eda803e0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Aug 19 18:25:50 2017 +0530
+
+    Migrating to new inventory model
+
+[33mcommit 29109baf58525bbe6ecf5e8ba864ea05292d12b7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 18 16:53:46 2017 +0530
+
+    Remvoed idea repo
+
+[33mcommit 12d2fd647f84b9d3c8df2503d6a5da5da7aa7e39[m
+Merge: a7c6676 fdb4ac8
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 18 16:51:24 2017 +0530
+
+    Merge branch 'master' of https://bitbucket.org/tendercutsservices/services
+
+[33mcommit a7c66760a6c95813edd5d275ef1a427e78f63494[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 18 16:51:07 2017 +0530
+
+    ADded celery config
+
+[33mcommit fdb4ac8707ad560c81abea2ead6a2ca484c78d6d[m
+Merge: 0c90b70 b1110db
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Aug 18 09:04:02 2017 +0000
+
+    Merged in feat-otpTestIntegration (pull request #3)
+    
+    add otp integration testingFeature
+    
+    Approved-by: Varun Prasad <varun@tendercuts.in>
+
+[33mcommit b1110dbed5ad6371f9e12e3b3ae9a1ac3141779f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Aug 18 13:19:07 2017 +0530
+
+    Scenario content changes updated
+
+[33mcommit ea3316c17bb43030374eec47615cda848105cc0c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 17 14:48:39 2017 +0530
+
+    add otp integration testing
+
+[33mcommit 94b00e48458c428ec2ed79cfcf7f13beb9e99b58[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Aug 17 14:29:04 2017 +0530
+
+    fix otp minor changes
+
+[33mcommit 0c90b704b1f6997db5a1cee68955407234fddb94[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 16 18:19:22 2017 +0530
+
+    Fix
+
+[33mcommit 8f32946767f9ca9cacf3506988211e32bda38079[m
+Merge: 652240e fc67095
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 16 11:44:30 2017 +0530
+
+    Merge v2
+
+[33mcommit 652240eb89249ca0c7a6dc5e28e51f0a7109ea00[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 16 11:42:29 2017 +0530
+
+    Bug fixes
+
+[33mcommit fc67095a1ec076372a2fdadb900f73ba3bc753ab[m
+Author: Django <varun@tendercuts.in>
+Date:   Wed Aug 16 11:39:44 2017 +0530
+
+    Fix for field name
+
+[33mcommit 5815107f9c3653f36593128869416c51f59281ca[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Aug 16 11:30:00 2017 +0530
+
+    Minor bug fixes
+
+[33mcommit a079d15f9b4167d0131d4d33eb421535ca90aea1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Aug 11 12:53:28 2017 +0530
+
+    Added bdd for refer a friend
+
+[33mcommit 4595279789226c356f46fdfabdb789700b8ad1cd[m
+Merge: b20e387 318adfb
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu Aug 10 12:04:47 2017 +0000
+
+    Merged in refact-mockUser (pull request #2)
+    
+    change that test user to mock user in tcash and login app
+
+[33mcommit 318adfbdd68a0fa77b61d3230d31c73c26172f1d[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Aug 10 17:16:28 2017 +0530
+
+    change that test user to mock user in tcash and login app
+
+[33mcommit b20e387bb1a17df3cd959c929b86eb1502e06de3[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Aug 10 13:47:16 2017 +0530
+
+    Test cases fix
+
+[33mcommit f972cf95be0bcb1772eee1dadf476e73d69362dd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 21:06:29 2017 +0530
+
+    Refactored all test cases
+
+[33mcommit 8f92e1ef8e5e72440fa245218d94e5c597509854[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 13:27:00 2017 +0530
+
+    Fixed driver app
+
+[33mcommit 443663e4e65546d07c42a1b42137b9583b077525[m
+Merge: fd92685 d57d4e3
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Aug 9 07:19:10 2017 +0000
+
+    Merged in refact-otp (pull request #1)
+    
+    Refactor
+
+[33mcommit d57d4e3e6e13d5c4bb6c0a254a176bfd51560333[m
+Merge: 76fe376 23b269a
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 12:48:33 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 76fe3761eea7c622909fe5d02e26d84171058cb2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 12:43:33 2017 +0530
+
+    Fix test cases
+
+[33mcommit d473c35820ae45535f4ac6d79bf0788295ad0b71[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 9 11:49:02 2017 +0530
+
+    fixed issues regarding the review comments
+
+[33mcommit 9eb840283810629e89e9b3f5642067728e6dfc51[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 7 15:12:59 2017 +0530
+
+    change otp type key
+
+[33mcommit a054c80d92e595e12df6d2a55c8379d2a48ff7d1[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 7 13:58:23 2017 +0530
+
+    Otp refact review changes fix
+
+[33mcommit 2fea95677eefd1ada59b9cb7e5e51cd6abf66eb3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Aug 1 15:25:37 2017 +0530
+
+    otp validations and otp mode login Flat customer code refactoring
+
+[33mcommit 32e95cec0bee6fbba347a905fbe002c01a62de5b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 12 19:21:44 2017 +0530
+
+    minor changes updated in otp
+
+[33mcommit c9debfda8f13fd31a4d5b67a99ad784bfdff4748[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 12 18:56:33 2017 +0530
+
+    refactor forgot otp and signup otp
+
+[33mcommit 23b269a25e586b2798b4e23655954ea6ccda09f5[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 12:43:33 2017 +0530
+
+    Fix test cases
+
+[33mcommit fd92685b4fb8982e3c204e78ce157a9cec727a6a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Aug 9 12:21:52 2017 +0530
+
+    Changed the queue name
+
+[33mcommit fb583c1de92c60db566b1f6b414ff1df8c8ac269[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Aug 9 11:49:02 2017 +0530
+
+    fixed issues regarding the review comments
+
+[33mcommit 24300540df36cd684aaedff7f485e1670aaa7c87[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Aug 8 13:53:10 2017 +0530
+
+    refer a friend reward point transection commend msg changes
+
+[33mcommit e00dd8d14656abef82f336a4ef1f0875188867d4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Aug 7 17:19:40 2017 +0530
+
+    Driver app initial configurations
+
+[33mcommit 53e6aba70a684ea3c0c47a12a0edf619428d3ecd[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 7 15:12:59 2017 +0530
+
+    change otp type key
+
+[33mcommit b1eac9c6ccdffb72783d0b0f13d00810f537f23c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Aug 7 13:58:23 2017 +0530
+
+    Otp refact review changes fix
+
+[33mcommit ab0ba70e676438445b5ee442827dd49347f2f172[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Aug 3 16:15:21 2017 +0530
+
+    Added new moduels for virtualenv
+
+[33mcommit 23beb714570b5b04062cbaafa3794c0d0aadfee5[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Aug 3 15:41:32 2017 +0530
+
+    Remove unsed files
+
+[33mcommit 4de96f5d9aa2a604986829cf96038070aadb7383[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Aug 3 15:41:06 2017 +0530
+
+    Clean ups
+
+[33mcommit e852a9cca4ff4ebd83c6797165986fbcc47cfeb4[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Aug 1 15:25:37 2017 +0530
+
+    otp validations and otp mode login Flat customer code refactoring
+
+[33mcommit a0fbfd5c2e7646bdb3167b94e9df98ad32b541c3[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue Jul 25 18:44:58 2017 +0530
+
+    minor fixes
+
+[33mcommit cd0f8688d3a95b12dc2c2d8fa3970685a8553c56[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Jul 25 09:10:41 2017 +0530
+
+    Fix for sche order delivery
+
+[33mcommit b56a3b6fd5c1a1219d918fe966d0ed3184bb7818[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 24 23:48:41 2017 +0530
+
+     Whats new is in fron tnow
+
+[33mcommit ff44878aee7c10588f6694b42d67f21baf7cbc18[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 24 20:38:40 2017 +0530
+
+    Removed duplicate fields
+
+[33mcommit c90b8c7853b08bf9879ed5b4c65df2275605c3f2[m
+Merge: 6c6bf10 e4215cb
+Author: Administrator <devlab@tendercuts.in>
+Date:   Mon Jul 24 15:07:14 2017 +0000
+
+    Merge branch 'fix-orderPromisedTime' into 'master'
+    
+    fix promised date issue in sale order
+    
+    See merge request !9
+
+[33mcommit e4215cb81c8b3078cf22ff9b9449ba7fbb6de687[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jul 24 18:00:42 2017 +0530
+
+    fix promised date issue in sale order
+
+[33mcommit 6c6bf10d9d6406e783f98815608b6b4e85ca3907[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Jul 21 17:41:16 2017 +0530
+
+    Minor bug fixes
+
+[33mcommit 9d96a46f87608a39a7b94a726b4b2203166b93b3[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Jul 21 17:09:25 2017 +0530
+
+    Minor refactoring
+
+[33mcommit ec0e3286ec4d2ef32204296e90470671e1a356d1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Jul 21 16:45:55 2017 +0530
+
+    Added new stores
+
+[33mcommit e8ede74a3716b4477a4634dfa58289f6fb5a469b[m
+Merge: 9db4814 56b0641
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Jul 21 16:35:50 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit 9db4814658f3fa2cab3bb4a3621cac558e397802[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Jul 21 16:35:15 2017 +0530
+
+    bug fixes
+
+[33mcommit 56b0641d73c6761fc5c3c78899d42f531bb95f9b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jul 21 12:48:20 2017 +0530
+
+    fix date issue in sale order
+
+[33mcommit 82ba507890b91161e776c6566d9cec1d9a330d5f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 20:05:02 2017 +0530
+
+    Send alert mails inc ase of failures
+
+[33mcommit 632bda4e1fb0d498f0f65155b9676b9f740558ac[m
+Merge: ab8ea01 82a769c
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 18:43:13 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit ab8ea01e0629322b4e960cb1413e6d831d4edd2a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 18:42:14 2017 +0530
+
+    Add HTTPS
+
+[33mcommit 82a769cb185b3f446b672eb36af641ad0097ddd7[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Jul 17 18:30:10 2017 +0530
+
+    Added pycrypto
+
+[33mcommit f26131a4aa55c6d7e2d90d4ec9bfff4572d3e727[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 18:22:44 2017 +0530
+
+    Added enail backend
+
+[33mcommit 3e84cdf6c0f2d6496663447c5ffb0156db81e345[m
+Merge: dfa022a 1e06f97
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 18:02:02 2017 +0530
+
+    git pushMerge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit dfa022a6a1af90d60a13c55d4ffbc3e0c0d67ff1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 18:01:58 2017 +0530
+
+    Failure mail to admins
+
+[33mcommit 1e06f978613aa73fcb0ad670aa4004f3c786e05f[m
+Merge: 12743be 049af6e
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Jul 17 16:26:16 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 12743bee42dbe8e71e68e7bc4b24f063ba940259[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Jul 17 16:24:07 2017 +0530
+
+    Bug fixes
+
+[33mcommit 049af6ebbc0c50361b383f22ccb2ec58f4b47150[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jul 17 16:22:29 2017 +0530
+
+    Payment_received flag changes
+
+[33mcommit 92d35b9513849855786d2454a51de66ac67ca26f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 12 19:21:44 2017 +0530
+
+    minor changes updated in otp
+
+[33mcommit 5e361ba05d45f12d893bbc680eb7c5b96d391df3[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jul 12 18:56:33 2017 +0530
+
+    refactor forgot otp and signup otp
+
+[33mcommit 0772f6658b7dadefa2af6825526f27f5a247d456[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jul 10 13:28:01 2017 +0530
+
+    create documentation in userprofile controller page
+
+[33mcommit 6051e6880be68cc43464dbf55108886056378a9f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Jul 10 12:53:47 2017 +0530
+
+    Adding init file for the package
+
+[33mcommit 63830cfec301b3b7ee94b5ce2bb74be1f507a593[m
+Merge: b9dba74 faf6d96
+Author: Administrator <devlab@tendercuts.in>
+Date:   Mon Jul 10 06:18:23 2017 +0000
+
+    Merge branch 'fix-referFriend' into 'master'
+    
+    Fix refer friend
+    
+    See merge request !8
+
+[33mcommit b9dba74096bea5195ea2ddcfed3eaecde7939d5b[m
+Merge: e0bcdcf f66d4f3
+Author: Administrator <devlab@tendercuts.in>
+Date:   Mon Jul 10 06:16:36 2017 +0000
+
+    Merge branch 'feat-userProfileEdit' into 'master'
+    
+    Feat user profile edit
+    
+    See merge request !7
+
+[33mcommit e0bcdcf259bf829cf69aff64bcc51da25e1a1e8d[m
+Merge: 6f5d6ca 4f6f0fb
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jul 4 12:05:55 2017 +0000
+
+    Merge branch 'fix-resendOtpIssue' into 'master'
+    
+    Fix resend otp issue
+    
+    See merge request !6
+
+[33mcommit 4f6f0fb55825e654476ad2f30010a078ceddf325[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jul 4 15:45:35 2017 +0530
+
+    sort imports
+
+[33mcommit 89d590cbfcad066ddef021d3155be73e48e04039[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jul 4 15:36:57 2017 +0530
+
+    fix resend otp issue
+
+[33mcommit faf6d96ee32e0ef181ccbd66765549ed77bef423[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 23 15:19:12 2017 +0530
+
+    review changes reward points
+
+[33mcommit f66d4f31e4a4ade14f1974e20eadc9ccaa5cb699[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 23 14:45:19 2017 +0530
+
+    review changes updated in user profile edit
+
+[33mcommit 9f2a26924c2100038d2eec771a0a88284e0b3b2f[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 22 16:53:22 2017 +0530
+
+    creating user profile edit api and test cases
+
+[33mcommit 25b51c0d94e332e21cbd2c61e51bc4648d4b71f2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jun 21 14:16:58 2017 +0530
+
+    fix msg content issue
+
+[33mcommit 6f5d6cab429b02b96d8ae49d2176f0ae791fe157[m
+Merge: eb72503 ad29df3
+Author: Administrator <devlab@tendercuts.in>
+Date:   Tue Jun 20 12:14:08 2017 +0000
+
+    Merge branch 'feat-tcashMoney' into 'master'
+    
+    Feat tcash money
+    
+    See merge request !5
+
+[33mcommit ad29df3a2169f75228794a46f5e129cc166f9bfa[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 20 17:39:50 2017 +0530
+
+    fix code format issue
+
+[33mcommit e557ea29d5a9b2f293531ffaee8ba616fba9096c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Jun 20 12:53:21 2017 +0530
+
+    Fix the partial screw ups
+
+[33mcommit dc44f0ecbfcad183c593c78567ead5897993fb49[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 20 12:15:19 2017 +0530
+
+    fix review changes test cases
+
+[33mcommit 3254b043dd4c4697de198f72bd5562ae72b633a2[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jun 19 18:51:19 2017 +0530
+
+    fix review changes
+
+[33mcommit eb7250398f1612bde3d6c36b7dd41f84f3b97cde[m
+Merge: 6011f4a 308b9a8
+Author: Administrator <devlab@tendercuts.in>
+Date:   Mon Jun 19 06:02:57 2017 +0000
+
+    Merge branch 'feat-signupResendOtp' into 'master'
+    
+    Feat signup resend otp
+    
+    See merge request !4
+
+[33mcommit 6011f4a7c2afdf919d159bd2ece49b6a955146da[m
+Merge: f7fe3d0 d0cf6ef
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Jun 18 17:28:25 2017 +0530
+
+    Merge conflicts
+
+[33mcommit d0cf6ef3763c427d8a908c14c9160e8954f20f0e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Jun 18 17:26:01 2017 +0530
+
+    Open up endpoints for anony browsing
+
+[33mcommit f7fe3d0eb0150a4a477f986b3f97d32a25373d56[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Jun 16 15:49:11 2017 +0530
+
+    Open Product & Inv endpoint for anony browsing
+
+[33mcommit 303dc109eaf0ea53e82697535c40d0c01b763125[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 15 15:14:16 2017 +0530
+
+    1. create end to end test case referral method
+    2. fix is expired issue
+
+[33mcommit f24bf7d1209a90adbf0c25cb0e037f0cf7948504[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jun 14 13:33:17 2017 +0530
+
+    new tcash module creations and referral amount added fuctionality
+
+[33mcommit 308b9a8de073f330aa3e595af4a7065e255e675a[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jun 12 16:51:10 2017 +0530
+
+    fix resend otp issue
+
+[33mcommit c81614b7ff29f4c3e741ca7fa05c479c344274ad[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Mon Jun 12 12:20:22 2017 +0530
+
+    Resend Otp text and voice method in SignUp functionality
+
+[33mcommit ad19507bda9bd0a5f7090f3e4947b52d929a9553[m
+Merge: be2d3f0 c034b4e
+Author: Administrator <devlab@tendercuts.in>
+Date:   Fri Jun 9 09:11:24 2017 +0000
+
+    Merge branch 'feat-rewardPointsTransection' into 'master'
+    
+    Feat reward points transection
+    
+    See merge request !3
+
+[33mcommit be2d3f0580c5b3351ecd1c6633a0e500d375022f[m
+Merge: e79b7b8 6d99917
+Author: Administrator <devlab@tendercuts.in>
+Date:   Fri Jun 9 09:10:57 2017 +0000
+
+    Merge branch 'feat-resendOtpVoice' into 'master'
+    
+    Feat resend otp voice
+    
+    See merge request !2
+
+[33mcommit 6d99917de9d01e38aa8b0e9c96510ad6c15b5653[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 9 14:38:18 2017 +0530
+
+    create documents in test cases
+
+[33mcommit c034b4e7ee56e38bf32efc818e8f70b78edf6b7c[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 9 14:20:53 2017 +0530
+
+    fix documentation test case issue
+
+[33mcommit 21cd6204075274017bf032d7ac4355bb035d4877[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Wed Jun 7 12:17:00 2017 +0530
+
+    fix documentation issue and created test case documentation
+
+[33mcommit e79b7b817b8cfa893149b189901270f0e858d8b8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Jun 6 20:35:02 2017 +0530
+
+    Remove deleted column
+
+[33mcommit 903901a830e8ea83fe240e33481b0cd3112bd03b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Tue Jun 6 17:57:27 2017 +0530
+
+    resend OTP type text and voice method creaton api
+
+[33mcommit 99dc0d94ad9b5caf9eceed665c6ce74579a5c616[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:49:00 2017 +0530
+
+    Fix log issue
+
+[33mcommit 11205429179869a30a7c65999cd91d3fcdaa5438[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:44:27 2017 +0530
+
+    Separate logs for inventory
+
+[33mcommit cabea7dcd60f7ac6b98286f6c2e3c1347646fd45[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:33:17 2017 +0530
+
+    missed to commit
+
+[33mcommit dcbc92a601db3b569ef08cb93429ed93fa74f09b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:18:53 2017 +0530
+
+    missed to commit
+
+[33mcommit 3a96a685c4d634903313b28880dc2a6168f8ad65[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:06:46 2017 +0530
+
+    Added invenoty upload
+
+[33mcommit 8b021bbbb8c8b881357cb837436ca02b49b41dd1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 20:02:04 2017 +0530
+
+    Added invenoty upload
+
+[33mcommit fc263a006f1f6c0d79dcb496d8ead7e2f7f05e3a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Jun 5 15:00:10 2017 +0530
+
+    Organized notebooks
+
+[33mcommit d00c6f9aa6cd92ca9610480165f816fd9013d35b[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Fri Jun 2 15:21:22 2017 +0530
+
+    creation of user credit balance details api and fix reward poins transaction api code formet issue
+
+[33mcommit 9e08bab4644ce0ca4b6b65640486344f140b64ab[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 1 16:52:00 2017 +0530
+
+    change api fuctionality method
+
+[33mcommit 03d9b641a826ab51fc513a3dcb99b041453a61d7[m
+Author: asarudheen <asarudheen@tendercuts.in>
+Date:   Thu Jun 1 14:13:28 2017 +0530
+
+    reward point transection api and test case creation
+
+[33mcommit a6d5d62c515a8f71b208e34cb9857c1f466bcc56[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 30 20:49:36 2017 +0530
+
+    Adding persist to enable customer to save card
+
+[33mcommit 88efa60521fea10067f543abda79ee5fa8debd96[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 30 00:11:39 2017 +0530
+
+    Empty response on sucess callback
+
+[33mcommit 81631425ebae3fbb7ab0d9b135f85d5849641bf0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 30 00:09:32 2017 +0530
+
+    Remove perms and remove web api
+
+[33mcommit e7bebeeec4c92f926d4f97bb706572443ed86ed5[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 29 23:59:26 2017 +0530
+
+    fixed redirection issue
+
+[33mcommit dbf84066b3eb1b2fc8345475adc41bd2ffaf2b08[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 29 20:37:38 2017 +0530
+
+    juspay customer details
+
+[33mcommit ae204fdeb4b5ce5a34076ccb9ac1d3ab9fe362e7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 29 19:58:47 2017 +0530
+
+    bug fix
+
+[33mcommit d79e6bf1feef424e7b6c61b718a29f2c9135ea18[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 29 19:28:41 2017 +0530
+
+    Inject amount into transaction response
+
+[33mcommit 52d9c78872a601937c53c5cd53d2b23e3d52e1d0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 29 18:46:51 2017 +0530
+
+    Pass the entire transaction data to the client
+
+[33mcommit 3615dc752e040c2494babad045f2a2198b7f2e2b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed May 24 12:16:35 2017 +0530
+
+    Add order id from server
+
+[33mcommit 6f94777f5d4cda88f9b6f05d244c2164b66b2d66[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 23 17:41:17 2017 +0530
+
+    Minor comments
+
+[33mcommit dba9c76206676772b5b27a7def0cb5560396b1d6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 23 17:40:18 2017 +0530
+
+    Change password endpoint added
+
+[33mcommit ef6be8937301a9c2d8f9654aad04f44055ca7534[m
+Author: Django <varun@tendercuts.in>
+Date:   Tue May 23 13:45:27 2017 +0530
+
+    Redis fix for socket
+
+[33mcommit 938f999d94c68d41b92fc70e82ec6483b9f9370c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 22 20:37:23 2017 +0530
+
+    Sort order for NBS
+
+[33mcommit c73afba3e99860c77909a35d0e8adf6304f629c1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 22 19:49:02 2017 +0530
+
+    add brand to serializers
+
+[33mcommit 1ff644532fb07cb47ffac630d12c139587d7ab76[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 22 19:23:02 2017 +0530
+
+    Added VISA/MC branding
+
+[33mcommit 590afc8fbea46b0debf967c80159a68e2b115a19[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun May 21 12:26:58 2017 +0530
+
+    shorter title
+
+[33mcommit 422f093adc16d8ff301b6d77e30b55e35f3e009c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 12:26:43 2017 +0530
+
+    Base64 encosing for the url
+
+[33mcommit 03769306b54dd7fc9489d5232c8a2a5c73503a64[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 12:23:32 2017 +0530
+
+    Base64 encosing for the url
+
+[33mcommit e1d4f672c4975296f83de4eeb4716cdc886650f8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 02:59:25 2017 +0530
+
+    Add logic to save cards
+
+[33mcommit 6f4625930b571a4a6aeef22bf370aa511fde0633[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 02:56:13 2017 +0530
+
+    Add logic to save cards
+
+[33mcommit 2df95194ff7326bafc7b89f3aa52af3d8bc71bf2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 02:16:41 2017 +0530
+
+    Order customer id will be user id
+
+[33mcommit ff6ffa2766e084e60b7a074fddd7c6b05a5ea366[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 02:04:12 2017 +0530
+
+    Increase pagination size
+
+[33mcommit 1114a76024c7cf31ac49991ed97b2e00f7322d93[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 20 01:46:48 2017 +0530
+
+    Added card fields to serilizer
+
+[33mcommit 222109ace16164bf6910c9549a3e96d7c04579bf[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 19:51:55 2017 +0530
+
+    hack for staging NBs displau
+
+[33mcommit 660c6f615ab9b0f7736ce8f0d39868431b070930[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 19:46:26 2017 +0530
+
+    Bug fix
+
+[33mcommit fe6398ad87203da7d340596d4e68f84efa83313c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 19:35:41 2017 +0530
+
+    Additional test cases for saved cards
+
+[33mcommit 7c23067c90fd85ce85e86ed12f726b692ec9f0d8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 17:37:11 2017 +0530
+
+    User id will be fetch from customer
+
+[33mcommit 962b700007e0e5e2cab11f53280a6d1ba1774a22[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 17:20:10 2017 +0530
+
+    Deeper juspay intergation
+
+[33mcommit b9f5ec9d1ead9c15c4403bd7b092b52bf5cb9103[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 14:03:17 2017 +0530
+
+    Added url for JP
+
+[33mcommit ea5181ac7cdf1f5a1007fb0a8e3ce9382caaf780[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 19 01:01:59 2017 +0530
+
+    Added card transactions
+
+[33mcommit dc8b75f33910fc2d68eb5672123cfa0988df5257[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 18 17:51:57 2017 +0530
+
+    Added logs
+
+[33mcommit 37356035553b8ddf8bd78947b2db19b85f972706[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 18 16:07:55 2017 +0530
+
+     Fix test cases
+
+[33mcommit 2aaf96da3802631fe9836e29757919d167d5ae69[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 18 15:50:33 2017 +0530
+
+    payment status
+
+[33mcommit 548ffbbe4443ac811fe66813d904ae3045207eed[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 18 15:49:17 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 3e6289fedfb6c4af8ba57e1810449f9f0efef6b8[m
+Merge: fa4d61a 1772b05
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 18 15:48:41 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 1772b05bd1220288f6bea33f34b148b2b222fb02[m
+Merge: 93aec11 19ab5e3
+Author: Django <varun@tendercuts.in>
+Date:   Mon May 15 14:38:06 2017 +0530
+
+    Merge conflicts
+
+[33mcommit 93aec116bd5f7c08222df3262d4d811a4303851e[m
+Author: Django <varun@tendercuts.in>
+Date:   Mon May 15 14:36:15 2017 +0530
+
+    Added logs
+
+[33mcommit 19ab5e3430c9247ee170078e275f1d438a498bfa[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 15 12:10:10 2017 +0530
+
+    Log format fix
+
+[33mcommit 7aa7715720851a878a07fc34502d9b43a2d1c479[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 15 11:30:02 2017 +0530
+
+    Integration wiht msg91
+
+[33mcommit 86f67fe32168437d4e343d61372896e149c5057d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 15 11:10:24 2017 +0530
+
+    Integration wiht msg91
+
+[33mcommit b1ba6db7206017f02499cf54f3fe1a091c2dcd85[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 15 10:52:04 2017 +0530
+
+    Integration wiht msg91
+
+[33mcommit 79954d044964f979cbeaaf4b7dedb16bff45115a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 15 10:48:07 2017 +0530
+
+    Integration wiht msg91
+
+[33mcommit 1c5d1e1f9eae6a4a1d85e998ef8d03de74b66e88[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 21:55:11 2017 +0530
+
+    Added new vendor for OTP auth
+
+[33mcommit f595a59ce6f2e25adb0a37eb35d76012e6b2b811[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 21:51:53 2017 +0530
+
+    Added new vendor for OTP auth
+
+[33mcommit 76815cfcf5b56e78cdb0d2c93a1fdf4d3ecb1356[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 21:46:16 2017 +0530
+
+    Added new vendor for OTP auth
+
+[33mcommit 2892e98ce1d3ce8828c35316b34de04508a5b5e5[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 20:51:14 2017 +0530
+
+    Fix for OTP
+
+[33mcommit 449de6a34190654809fa1754319d80ef662fa7cb[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 18:46:37 2017 +0530
+
+     fix url
+
+[33mcommit 1c00add20a2c5fe4739b5d66f064162a45aede00[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 17:41:46 2017 +0530
+
+    Bug fix
+
+[33mcommit 7163ddfa5d734cc82e16c87fdb81140d3482c23b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 17:32:33 2017 +0530
+
+    Fixes
+
+[33mcommit fa4d61ad331d4d2d9a7be1343e605b947c0e1932[m
+Merge: 8a675f6 a97d530
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat May 13 16:44:00 2017 +0530
+
+    merge
+
+[33mcommit 8a675f6dbec96564ab0d4deba012bd6a2dc0080b[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat May 13 16:43:08 2017 +0530
+
+    fixes
+
+[33mcommit 8869485b710659cc4f6c5fa7a85a89cabad337ba[m
+Merge: 05955dd b23eb20
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 16:40:59 2017 +0530
+
+    Merge branch 'v1' of devlab.tendercuts.in:root/api into v1
+
+[33mcommit 05955dd324bddec59eff23e36a8497975a76c76d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 13 16:40:52 2017 +0530
+
+    Image added
+
+[33mcommit e0b6ba9ca3e70a99b20df3b92309d98a30d59054[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 12 15:27:38 2017 +0530
+
+    adding logs
+
+[33mcommit b23eb201705ac56db4affd02e91e4732699bf48e[m
+Author: Django <varun@tendercuts.in>
+Date:   Thu May 11 21:51:57 2017 +0530
+
+    Bug fixes
+
+[33mcommit 26420a93be6a21fa5d11e1aaa1ea1a44702905e8[m
+Author: Django <varun@tendercuts.in>
+Date:   Thu May 11 21:14:29 2017 +0530
+
+    Update key details
+
+[33mcommit a97d5305d7c46da2556f539817ef862c2c824f18[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 11 15:51:59 2017 +0530
+
+    Minor fixes
+
+[33mcommit 1ce410534e6438bd33678ca0b26dcd3d30a0b448[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu May 11 15:51:25 2017 +0530
+
+    minor fixes
+
+[33mcommit df8af827caa1e21d8bbcb5ea07b4d73b0aca9174[m
+Merge: c7934bb 59b1c79
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon May 8 15:59:06 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit c7934bbacab9609ee98740113ee884498a99517a[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon May 8 15:58:41 2017 +0530
+
+    Logs
+
+[33mcommit 59b1c79d20042db506fc1ee09caa70fb4b2b1afc[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 8 15:56:07 2017 +0530
+
+    added promised delivery time
+
+[33mcommit 615e434a17e559cfba10f9f021b4b7014b588c2b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 8 15:54:55 2017 +0530
+
+    added promised delivery time
+
+[33mcommit f22a13743a6f100888684fc378b1cd2a7f536beb[m
+Merge: 5e60c4c 43ffc1f
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 6 16:36:27 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit 5e60c4c7381d82e4185cccdf83e38eeb8c6c563d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 6 16:35:43 2017 +0530
+
+    fix juspay with login
+
+[33mcommit 43ffc1fa435ec2f4b6bbb96b69cb461c41c450d1[m
+Merge: 07f5358 54d6635
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat May 6 16:01:34 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit 07f535877e9451371c232f8c9caa7eaa45961e83[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Sat May 6 16:01:21 2017 +0530
+
+    Bug fix
+
+[33mcommit 54d6635bcccbf3a17f1dbd95ed06ad3ab068c8dd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat May 6 15:58:22 2017 +0530
+
+    Added jusayintegration
+
+[33mcommit c85fe9dc89d6c425391841754813f30bbb6bf80c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 23:49:10 2017 +0530
+
+    juspay fix
+
+[33mcommit da8fc46905348bff036ca0f593406dbce0fb93da[m
+Merge: 7584dca 05cc9d2
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 23:44:36 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit 7584dca4a7e654d344db6698546f05c0ef6e3b4c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 23:44:29 2017 +0530
+
+    juspay fix
+
+[33mcommit 05cc9d2053adf26014d1a31357e4785505b3303d[m
+Merge: 2cd9e1b 50720c8
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri May 5 19:17:46 2017 +0530
+
+     Merge cnflicts
+
+[33mcommit 2cd9e1bd91e88197376e896011c4fdc44e20dbd5[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri May 5 19:16:42 2017 +0530
+
+    Added logs
+
+[33mcommit 50720c8a46d74f69038534f227352c37fa568d08[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 19:15:55 2017 +0530
+
+    Added capture for RZP
+
+[33mcommit 79fb1f41de6519943adc2d1a0719f3425bee5dce[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 19:09:55 2017 +0530
+
+    Added capture for RZP
+
+[33mcommit 8b85ca5ac7dcb532571a01e3051dc3fd0989c259[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 19:05:44 2017 +0530
+
+    Added capture for RZP
+
+[33mcommit 8467412e98fdc91b7e9238057a54f62b4c99bbb4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri May 5 15:56:23 2017 +0530
+
+    Added API to handle verify trans
+
+[33mcommit bc4befb01c17be12eec31c243eaeb90fb4b30a90[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Thu May 4 00:28:52 2017 +0530
+
+    Simple integration fixes
+
+[33mcommit 89c654adc77651228625436bf5698e8104d40556[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed May 3 23:03:39 2017 +0530
+
+    Added simpl interation
+
+[33mcommit 566febd47f7cb55bf710f5d05a94bed04bd5ebd4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 2 17:54:04 2017 +0530
+
+    Add address to fetch
+
+[33mcommit f1c7afcb92d81ef0a0a421e902b2ef8d3ab03494[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 2 12:42:42 2017 +0530
+
+    Inventory fix
+
+[33mcommit 9a79fb532078979fccdd2d93e0f46be2e0971cec[m
+Merge: 6707300 d783fe2
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 2 12:36:13 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit 67073001c412c8fa811fc323c1688f936329e7c8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue May 2 12:36:10 2017 +0530
+
+    Bug fix for null values in invetory
+
+[33mcommit d783fe2319c681dcbca938a004f693250f099406[m
+Merge: 3619a82 1bd14da
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue May 2 11:34:07 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit 3619a8279a666a8bd83fab0b83d53b84121b2514[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Tue May 2 11:34:00 2017 +0530
+
+    Reward points fix
+
+[33mcommit 1bd14da33e74fe8a179b281f45d0b3496e9bbd7c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 1 22:23:19 2017 +0530
+
+    Added juspay sdk for future integrations
+
+[33mcommit 4fc599256cac15a63b62c4d6d8ee68e6d9418d9a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 1 19:40:31 2017 +0530
+
+    Test case fixes
+
+[33mcommit dc67167c6bbcaa73faa2ff0f63befd96acbf8dff[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon May 1 19:40:06 2017 +0530
+
+    Test case fixes
+
+[33mcommit d3dbd080a1b0579a199f086a1164807060ed5e3f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Apr 27 10:14:38 2017 +0530
+
+    Integrated new reward points
+
+[33mcommit 7124e94f38b38f64aaf8b698e71a2aa95a00a0b1[m
+Merge: cd43f98 c1a7407
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 24 12:26:01 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit cd43f98f945e907fb3ab0e87ccf4d4a53b41a2e4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 24 12:25:51 2017 +0530
+
+    changed status to result
+
+[33mcommit c1a7407a30d2b9c79595fc35a15dbd1cbb871fdc[m
+Merge: 3cbd741 b52a59a
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Apr 24 10:57:49 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit 3cbd7411911a397f27386497d6f5c246e56e08ad[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Apr 24 10:57:38 2017 +0530
+
+     bug fix
+
+[33mcommit b52a59ac44d669f960965c6fa9e2d9ed4fd23ff0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Apr 24 10:56:14 2017 +0530
+
+    User exists service
+
+[33mcommit ee8df2b0f974c990620d83c1d4fb2cf3a1e523c1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 15:04:11 2017 +0530
+
+    Fix fro login with phone
+
+[33mcommit c6105f22079168805a25c4d930947e114a0740d7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 14:58:22 2017 +0530
+
+    REfresh user data end point
+
+[33mcommit 8a8e359d2a897450667e34c69d3e5f571401a14b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 14:56:12 2017 +0530
+
+    REfresh user data end point
+
+[33mcommit 8de45bff4b000bcceb3dc4d59d8de0f5b4365711[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 14:52:30 2017 +0530
+
+    REfresh user data end point
+
+[33mcommit aea97327af634a2378c4d34dc7a4e2744a15856b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 14:47:32 2017 +0530
+
+    REfresh user data end point
+
+[33mcommit a41549eeffaf06445152da597229cd49cbe9871b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 14:07:25 2017 +0530
+
+    Log fix
+
+[33mcommit 53919e6d3c5d2036b65222efe4adf68f599d9156[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sat Apr 22 02:12:07 2017 +0530
+
+    Remove hard coding
+
+[33mcommit ee4733939b1328f1a97c562f9f79d87864f773dd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 20:04:58 2017 +0530
+
+     Remove missing fields
+
+[33mcommit 75cbbfbf0457ead8afe026eab715ec14984d0c2e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 20:03:57 2017 +0530
+
+     Remove missing fields
+
+[33mcommit 65a2cd2e1e4c76af87fa00244faa704c90f0d975[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 20:01:59 2017 +0530
+
+     Remove missing fields
+
+[33mcommit 800bd10f3ea856d77cf88f313bc400653144d70c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 14:01:08 2017 +0530
+
+    Store credit fix
+
+[33mcommit 7db36b0056bc5ddb3763f72670c30ccc4fdb5e3f[m
+Merge: ad0b68c 7901a53
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:48:52 2017 +0530
+
+    Merge branch 'master' of devlab.tendercuts.in:root/api
+
+[33mcommit ad0b68c8be6e66190474b542897a604b05aa2020[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:48:44 2017 +0530
+
+    Store credit fix
+
+[33mcommit 7901a53b853e9c88c2ac9a05c01d1a0fd36b413f[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Fri Apr 21 13:48:24 2017 +0530
+
+    Push loggin
+
+[33mcommit ec638067e6184226f4476526a62f49036fe98c7c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:23:33 2017 +0530
+
+    Logging enhancements
+
+[33mcommit 66d83a9c6c0c1d2439195f4b0a1d69474a408cf6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:20:52 2017 +0530
+
+    Logging enhancements
+
+[33mcommit 804b1087688ff4b05f7ee2c413f50d069fb7bf44[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:18:36 2017 +0530
+
+    Logging enhancements
+
+[33mcommit 96f0f75838aafe2ef581b4b900718eb2087657fd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:18:23 2017 +0530
+
+    Logging enhancements
+
+[33mcommit 63fa81138ffcefe50a91403db96151f6d140f3d9[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:15:38 2017 +0530
+
+    Logging enhancements
+
+[33mcommit 0596459f38f3016d2ae0ae5ab8843118254686a0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 13:06:17 2017 +0530
+
+    logging for login
+
+[33mcommit 37ce8fa7d3871c378d65ad8b53b60544e5d2f588[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 12:35:57 2017 +0530
+
+    changes
+
+[33mcommit d5fc36a4a5ba0b5b1538d5fe998deb1c6d177ce1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 12:27:29 2017 +0530
+
+    Fix celry
+
+[33mcommit d9d44bed55e08b7cbe17f26990b4457177c1c074[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 12:17:08 2017 +0530
+
+    Fix changes
+
+[33mcommit f6687e08e6bab584e6b6189a6de89c1d7b298d8f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 21 12:02:01 2017 +0530
+
+    remove debugger
+
+[33mcommit 6ff4a827d0bf97b9f47b061da2d85eb89713f50b[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Apr 20 16:02:04 2017 +0530
+
+    Eav serializer and quote model added
+
+[33mcommit 7bd53a5adc0dca60496d2c02bdb7b315ec894115[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Apr 20 12:34:23 2017 +0530
+
+    Password reset by OTP
+
+[33mcommit 35fb2ee7b5bb1a4fb8bd80a2cca19d7552db345d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Apr 18 13:20:09 2017 +0530
+
+    Added OTP
+
+[33mcommit 3b50fae67ca11fabe40dd69fbf6e755970112cca[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 7 16:44:35 2017 +0530
+
+    delivery changes
+
+[33mcommit 791e211967a8f0bb4407a6a8ad2bb92aded3f0e1[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 7 00:39:56 2017 +0530
+
+    Fix dates
+
+[33mcommit 077d128fa2e40bc9583edae197196dff252680a7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Fri Apr 7 00:28:40 2017 +0530
+
+    Added flock and extended payu automation
+
+[33mcommit 551e7083bcd26291fe8b73d31cc18a1173996df2[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Apr 6 19:09:06 2017 +0530
+
+     Restructed customer models
+
+[33mcommit 98105b4540bad831576455afcb800f2c5c998241[m
+Author: Django <varun@tendercuts.in>
+Date:   Thu Apr 6 19:09:56 2017 +0530
+
+    Enabled flower
+
+[33mcommit 542f27a4bba957948aefaede69ab8e5ac5dc25b9[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Thu Apr 6 16:02:20 2017 +0530
+
+    exception log in shadowfax controller
+
+[33mcommit d165479962de31f0b4b8561a43c928b0b1ab24b9[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Thu Apr 6 15:58:20 2017 +0530
+
+    Added log entry in while pushing orders to shadowfax
+
+[33mcommit b61f217c97d6c9ebfbd8129a08cbcf560044be4a[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Thu Apr 6 14:45:19 2017 +0530
+
+    added store longitude and lattitude details
+
+[33mcommit 520d2c7ef80c17c9d5789912a131d03ce3c18e56[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Wed Apr 5 18:13:33 2017 +0530
+
+    Added dynamic store address in shadowfax post
+
+[33mcommit 5666567ecbfcd7a2820f37e1a47cc1c8bd4206bd[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Wed Apr 5 15:02:16 2017 +0530
+
+    test case for delivered response
+
+[33mcommit 51de09425eaadba9a98ff4e60446bf0fe272681d[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Wed Apr 5 14:56:04 2017 +0530
+
+    staging to Production auth,url and code change
+
+[33mcommit a0e3f78eb59b6213c70134c0c19aee322237945a[m
+Author: Saravana <saravana@tendercuts.in>
+Date:   Thu Mar 30 00:58:47 2017 +0530
+
+    Magento updateorder to complete
+
+[33mcommit 0cab7078ba04ee16af50dfa20234aa6fc0831259[m
+Author: Django <varun@tendercuts.in>
+Date:   Wed Mar 29 10:25:20 2017 +0530
+
+    Celery fix: moved it to redis server
+
+[33mcommit dbb1dee622a8254c367445b6d3b608b1451d305d[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 20:42:00 2017 +0530
+
+    Fix celery config to celeryconfig file
+
+[33mcommit cc03a6babd0f368a6387023839dfaed226b157b7[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 20:23:08 2017 +0530
+
+    Fix settings
+
+[33mcommit 245356a4daf435c20db69d74291a4eb79e7a725c[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 20:10:24 2017 +0530
+
+    Added config files
+
+[33mcommit c8756ee407586bb036c51945388e2264222a6c64[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 20:00:20 2017 +0530
+
+    Added worker daemons
+
+[33mcommit 5c38e7f8a41ef6ada106b7659149dc8cd8573cb6[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 19:31:34 2017 +0530
+
+    Added logs
+
+[33mcommit db2366f67c941013f8615bf0dea8ece4ce2a1a65[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 19:25:30 2017 +0530
+
+    Added logs
+
+[33mcommit 6c7658c8c5fcb09f95cab3127df55fc73008ae6a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 18:46:38 2017 +0530
+
+    Exception catching for cancelled orders
+
+[33mcommit 53f34d10b7bb1db05a6370cc605a9f5aeda5abd0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 18:45:01 2017 +0530
+
+    Exception catching for cancelled orders
+
+[33mcommit 46d10d054502071a22a517a647f3dafe8c6a786f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 18:13:37 2017 +0530
+
+    Added timestamp
+
+[33mcommit 8328b6151ba0b4f68f54450068b978e83dc3bd1f[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 18:06:27 2017 +0530
+
+    Bump up limit to 15 mins
+
+[33mcommit f7134c20afb7ed54a8a2f80c5ac0b5cb77b02ff0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 18:00:23 2017 +0530
+
+    Bug fix for payu
+
+[33mcommit 8885eead011a944b433c29a7e891cdfc8e968f7e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 17:34:36 2017 +0530
+
+    Added timestamp
+
+[33mcommit a1925982c1fe54da1a7ef421a59a4aa3691e8f77[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 17:10:45 2017 +0530
+
+    Celery deployment
+
+[33mcommit 4fdb746da8bb110e2ed5498ceef6d4ba546b244a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 17:00:53 2017 +0530
+
+    Celery deployment
+
+[33mcommit 2a8df439a50732026ecc5cdc10005b01de6dabaa[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 16:59:29 2017 +0530
+
+    Celery deployment
+
+[33mcommit 0ed56ed22cf5ae339a9635ba8df7ff77a8988288[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 16:41:29 2017 +0530
+
+    Celery deployment
+
+[33mcommit 99850fb59ee0360fcd7281454b96d40421291fbc[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 16:39:13 2017 +0530
+
+    Celery deployment
+
+[33mcommit dfdc1a0055ef56ac7f4016ff70b25ad75ef44341[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 16:37:20 2017 +0530
+
+    Celery deployment
+
+[33mcommit de840e49ab399f05b9fdfd8c889aa040e16bf929[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 28 15:42:27 2017 +0530
+
+    Added payu automation
+
+[33mcommit 98cb7be5cbd798e3b54f3877b6d9ecf339ace78a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 27 17:53:40 2017 +0530
+
+    Deployment changes
+
+[33mcommit 58880d5f95bcdb00057fcc14947b9ec134f46011[m
+Merge: 2d8c2dd 46a53c7
+Author: Django <varun@tendercuts.in>
+Date:   Mon Mar 27 17:53:00 2017 +0530
+
+    Merge branch 'master' of http://devlab.tendercuts.in/root/api
+
+[33mcommit 2d8c2ddae657a7ff21453b7d4f2efc50d3375eff[m
+Author: Django <varun@tendercuts.in>
+Date:   Mon Mar 27 17:51:50 2017 +0530
+
+    Deployment changes
+
+[33mcommit 46a53c7171db5072a9268b7dfb617b76ba2d8cd4[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 27 13:39:48 2017 +0530
+
+    Added payment recon  app
+
+[33mcommit eec2f1e8347aaff6b5723fc9f3d783ca4cd80286[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 23 17:50:14 2017 +0530
+
+    Bug fix: Wrond import
+
+[33mcommit 84cb9f54e07222062f40186efc2b5fbc5a0ff40a[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 23 15:32:04 2017 +0530
+
+    Added readme
+
+[33mcommit 9e706c5a088741f9615d309d5a6d76954dbe5206[m
+Author: Varun <varun@tendercuts.in>
+Date:   Thu Mar 23 14:28:51 2017 +0530
+
+     Added inventory and OTP services
+
+[33mcommit 6e924e1626c7e7e8cb51eb9006486ddaa3161fc0[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 21 10:47:20 2017 +0530
+
+     added inventory
+
+[33mcommit a269d4e2b897c9a8404904ae48fbf33610b62244[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 20 15:46:15 2017 +0530
+
+    Added sale_order module
+
+[33mcommit 9fefd4abfec8754414d0888dc2256cb1aada6f8e[m
+Author: Varun <varun@tendercuts.in>
+Date:   Mon Mar 20 10:45:01 2017 +0530
+
+    Refactored changes
+
+[33mcommit 5df22da90cd2f8fd46cac2f1a2a1b8451ea652b8[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 14 11:49:12 2017 +0530
+
+    Huge commit blob:
+
+[33mcommit 57ba21c3f9afc06883beb7ac3bb68e90d14a3d75[m
+Author: Varun <varun@tendercuts.in>
+Date:   Wed Mar 8 11:05:06 2017 +0530
+
+    Remove gitignore files
+
+[33mcommit babbfd14cfa28ea4708c4f7e1ef7c8aa1498bceb[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Wed Mar 8 10:49:45 2017 +0530
+
+    Staging changes
+
+[33mcommit 36cca26d2bdf1f5f90b9c4ba0cd11b5f9c24cd46[m
+Author: Varun <varun@tendercuts.in>
+Date:   Tue Mar 7 19:38:01 2017 +0530
+
+    Shadowfax integration
+
+[33mcommit b64d6905efbc4c8cb686b81cf419ec5590f127ab[m
+Author: Varun Prasad <varun@tendercuts.in>
+Date:   Mon Mar 6 09:54:48 2017 +0530
+
+    Production settings
+
+[33mcommit d0cf7519baedcce80f7eb484329ba2134f145cee[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Mar 5 03:09:36 2017 +0530
+
+    staging changes
+
+[33mcommit cea0af0294e5bb15409c08b41f44592e9bc7c4cd[m
+Author: Varun <varun@tendercuts.in>
+Date:   Sun Mar 5 03:03:34 2017 +0530
+
+    Basic commits
+
+[33mcommit 161815e1eb31b0de6d59092eee15581bc653b48a[m
+Author: Varun <vprasad@Varuns-MacBook-Pro-2.local>
+Date:   Sun Oct 30 12:13:33 2016 +0530
+
+     Minor restructuring
+
+[33mcommit 4a699e616c806d7d84d76732cd05f93694f2b090[m
+Author: Varun <vprasad@Varuns-MacBook-Pro-2.local>
+Date:   Sun Oct 30 09:51:13 2016 +0530
+
+    Added the entire celery stuff
+
+[33mcommit fa0b6a2713d769f237222fd1954388cfd0fddc08[m
+Author: Varun <vprasad@Varuns-MacBook-Pro-2.local>
+Date:   Fri Oct 28 00:37:38 2016 +0530
+
+     Made some progress on migration to django models
+
+[33mcommit 4f3e5b8463f5234024608244c21f90c607eada0c[m
+Author: Varun <vprasad@Varuns-MBP-2.blr.riftio.com>
+Date:   Thu Oct 27 16:24:38 2016 +0530
+
+    Partial migration
+
+[33mcommit daee09a8281776e6e49f3dbba0733770296d793d[m
+Author: Varun <vprasad@Varuns-MBP-2.blr.riftio.com>
+Date:   Wed Oct 26 15:04:21 2016 +0530
+
+    Created django models
+
+[33mcommit ab5b7d75029eb642c100845aaca8b21d5494c36b[m
+Author: Varun <vprasad@Varuns-MBP-2.blr.riftio.com>
+Date:   Tue Oct 25 14:28:33 2016 +0530
+
+    Initial commit

@@ -1,0 +1,83 @@
+category,name,sellingPrice,Gross,Net
+Chicken,Chicken Curry Cut - Skin On,96,525 Gms,500g
+Chicken,Chicken Boneless - Cube Cut,192,625 Gms,500 Gms
+Chicken,Chicken Curry Cut - Skinless,104,610 Gms,500 Gms
+Chicken,Chicken Lollipop,108,625 Gms,500 Gms
+Chicken,Whole Chicken - Skin On,193,1 Kg,1 Kg
+Chicken,Chicken Whole Leg - skinless,117,620 Gms,500 Gms
+Chicken,Chicken Breast Boneless - skinless,192,625 Gms,500 Gms
+Chicken,Chicken Drumstick - skin on,175,550 Gms,500 Gms
+Chicken,Chicken Biryani Cut - skinless,104,610 Gms,500 Gms
+Cold Cuts,Chicken Cocktail Sausage,184,250 Gms,250 Gms
+Cold Cuts,Chicken Bacon Strips,245,250 Gms,250 Gms
+Cold Cuts,Smoked chicken Breasts,527,500 Gms,500 Gms
+Cold Cuts,Mortadella Spicy,231,250 Gms,250 Gms
+Cold Cuts,Mortadella Pistachio,231,250 Gms,250 Gms
+Cold Cuts,Chicken Pepperoni,312,250 Gms,250 Gms
+Cold Cuts,Chicken Franks,194,250 Gms,250 Gms
+Cold Cuts,Chicken Breakfast Sausage,184,250 Gms,250 Gms
+Eggs,Natural Eggs,46,1 Pack,1 Pack
+Eggs,Free range Eggs,110,1 Pack,1 Pack
+Exotic,Imported Basa Fillet,475,1 Kg,1 Kg
+Exotic,Norwegian Salmon Steaks,690,200 Gms,200 Gms
+Exotic,Pasteurized canned Crab Meat,825,450 Gms,450 Gms
+Exotic,Norwegian Smoked Salmon Presliced,880,200 Gms,200 Gms
+Relishes,American Wing Glaze,89,160 Ml,160 Ml
+Relishes,Mediterranean Marinade,75,160 Ml,160 Ml
+Relishes,Kerala Masala Fish Pickle,202,160 Ml,160 Ml
+Relishes,Chilly Lime Cilantro Glaze,89,160 Ml,160 Ml
+Relishes,Chipotle Marinade,75,160 Ml,160 Ml
+Relishes,Red Marinade,89,160 Ml,160 Ml
+Relishes,Harissa Marinade,75,160 Ml,160 Ml
+Relishes,Goan Prawn Balchao Pickle,202,160 Ml,160 Ml
+Relishes,Andhra Mutton Pickle,280,160 Ml,160 Ml
+Relishes,Punjabi Murgh Aachar,168,160 Ml,160 Ml
+Relishes,Chipotle Chicken Spread,123,160 Ml,160 Ml
+Relishes,Peri Peri Glaze,89,160 Ml,160 Ml
+Relishes,Wasabi-limeTuna Spread,198,160 Ml,160 Ml
+Lamb / Goat,Lamb Curry Cut,348,590 Gms,500 Gms
+Lamb / Goat,Goat Biriyani Cut,387,580 Gms,500 Gms
+Lamb / Goat,Goat Boneless,267,380 Gms,250 Gms
+Lamb / Goat,Goat Mince/ Kheema,285,380 Gms,250 Gms
+Lamb / Goat,Goat Bones,75,250 Gms,250 Gms
+Lamb / Goat,Goat Curry Cut,348,550 Gms,500 Gms
+Lamb / Goat,Goat Rib Chops,232,310 Gms,250 Gms
+Lamb / Goat,Lamb Biriyani Cut,387,590 Gms,500 Gms
+Marinades,Harissa Chicken Legs,237,500 Gms,500 Gms
+Marinades,Andhra Chilly Chicken,253,500 Gms,500 Gms
+Marinades,Kerala Marination Kingfish Fry (Darne),298,250Gms,250Gms
+Marinades,Texas B.B.Q Chicken,258,500 Gms,500 Gms
+Marinades,Spicy Chicken Lollipop,157,500 Gms,500 Gms
+Marinades,Madras Chicken '65,258,500 Gms,500 Gms
+Marinades,Peri Peri Chicken Wings,145,500 Gms,500 Gms
+Marinades,Asian Chicken Satay,145,250 Gms,250 Gms
+Marinades,Half Tandoori Chicken,237,500 Gms,500 Gms
+Marinades,Harissa Prawn Skewers,345,250 Gms,250 Gms
+Marinades,Punjabi Fish Tikka,265,250 Gms,250 Gms
+Marinades,Malai Chicken Tikka,325,500 Gms,500 Gms
+Ready to Cook,Paner Shrimp Torpedos,314,250 Gms,250 Gms
+Ready to Cook,Breaded Crab Cakes,325,250 Gms,250 Gms
+Ready to Cook,Dynamite Shrimp Pops,219,250 Gms,250 Gms
+Ready to Cook,Peri Peri Chicken Poppers,134,250 Gms,250 Gms
+Ready to Cook,Poppy Fish Fingers,258,250 Gms,250 Gms
+Ready to Cook,Kolhapur Kheema Cutlets,353,250 Gms,250 Gms
+Ready to Cook,Chicken Burger Patty,157,250 Gms,250 Gms
+Ready to Cook,Habenaro Chicken Nuggets,140,250 Gms,250 Gms
+Ready to Cook,Masala Fish Croquettes,258,250 Gms,250 Gms
+Ready to Cook,Herb and garlic Chicken Fingers,163,250 Gms,250 Gms
+Ready to Cook,Chicken Sheek Kabab Plain,188,250 Gms,250 Gms
+Ready to Cook,Chicken Sheek Kabab Spicy,202,250 Gms,250 Gms
+Sea Food,Squid rings and tentacles,141,410 Gms,250 Gms
+Sea Food,"Lady Fish (Cleaned, Gutted and Whole Fish)",362,588 Gms,400 Gms
+Sea Food,"Prawns Peeled, De-viened and Tail On [Medium 45-50 Pcs/ Kg]",322,465 Gms,250 Gms
+Sea Food,"Sankara ( Cleaned, Gutted & Whole Fish )",267,694 Gms,500 Gms
+Sea Food,"Tuna Skinless, Boneless Cubes",229,1.25 Kg,500 Gms
+Sea Food,Red Snapper Fillet,454,930 Gms,500 Gms
+Sea Food,"Sea Bass (Cleaned, Gutted and Whole Fish )",438,750 Gms,500 Gms
+Sea Food,Seer Fish Slices,652,650 Gms,500 Gms
+Sea Food,Shark / Sura Cubes,278,875 Gms,250 Gms
+Sea Food,Prawns Peeled and De-viened [Sml 70-80 Pcs/ Kg],259,465 Gms,250 Gms
+Sea Food,"Tilapia  (Cleaned, Gutted and Whole Fish)",118,730 Gms,500 Gms
+Sea Food,"Rohu  (Cleaned, Gutted and Bengal Cut)",153,695 Gms,500 Gms
+Sea Food,Prawns [Large 25-30 Pcs/ Kg],397,510 Gms,250 Gms
+Sea Food,Barracuda Slices,415,795 Gms,500 Gms

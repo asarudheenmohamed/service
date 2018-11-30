@@ -1,0 +1,13 @@
+DELETE FROM core_config_data WHERE path='web/cookie/cookie_domain';
+DELETE FROM core_config_data WHERE path='web/cookie/cookie_path';
+UPDATE core_config_data SET VALUE = REPLACE(value, 'https://tendercuts.in', 'http://localhost') WHERE value like '%tendercuts.in%';
+DROP FUNCTION IF EXISTS RUN_ALLOCATION_RULE;
+CREATE FUNCTION `RUN_ALLOCATION_RULE`(store_type INT, online_allocation FLOAT, threshold FLOAT, qty FLOAT) RETURNS decimal(8,2) DETERMINISTIC RETURN FORMAT_NUM(CASE WHEN store_type = 1 THEN (qty * online_allocation) - threshold WHEN store_type = 2 THEN qty END);
+DROP FUNCTION IF EXISTS FORMAT_NUM;
+CREATE FUNCTION FORMAT_NUM(qty FLOAT) RETURNS decimal(8,2) DETERMINISTIC RETURN ROUND(GREATEST(IFNULL(qty, 0), 0),2);
+DROP FUNCTION IF EXISTS CONVERT_TO_UNITS;
+CREATE FUNCTION CONVERT_TO_UNITS(qty FLOAT, gpu INT)RETURNS INT DETERMINISTIC RETURN IFNULL(qty * IFNULL(1000/gpu, 1),0);
+DROP FUNCTION IF EXISTS INVENTORY;
+CREATE FUNCTION INVENTORY(store_type INT, online_allocation FLOAT, threshold FLOAT, gpu INT, qty FLOAT) RETURNS FLOAT DETERMINISTIC CASE WHEN store_type = 1 THEN (qty * online_allocation) - threshold WHEN store_type = 2 THEN qty END, gpu);
+DROP FUNCTION IF EXISTS SCH_INVENTORY;
+CREATE FUNCTION `SCH_INVENTORY`(store_type INT, qty FLOAT, expiring FLOAT, forecast FLOAT) RETURNS decimal(8,2) DETERMINISTIC RETURN FORMAT_NUM(CASE WHEN store_type = 1 THEN qty - expiring WHEN store_type = 2 THEN forecast END);

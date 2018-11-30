@@ -1,0 +1,6 @@
+{
+    "python.unitTest.pyTestArgs": [
+        "login"
+    ],
+    "python.unitTest.pyTestEnabled": true
+}
